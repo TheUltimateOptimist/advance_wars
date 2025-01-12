@@ -1,7 +1,6 @@
 #ifndef WEAPON_HPP
 #define WEAPON_HPP
 #include <string>
-#include <unit.hpp>
 
 enum class WeaponType {
     SMALL_ARMS = 0,
