@@ -3,26 +3,30 @@
 
 #include <string>
 #include <utility>
+#include "tile.hpp"
 
 // Enumerationen für Bewegungstyp und Waffenart
-enum class MovementType {
-    Foot,
-    Tracks,
-    Wheels,
-    Air,
-    Shipengine   
+enum class MovementType
+{
+    INFANTRY,
+    TRACKS,
+    WHEELS,
+    AIR,
+    SHIPENIGNE
 };
 
-enum class WeaponType {
-    Gun,
-    Rocket
+enum class WeaponType
+{
+    GUN,
+    ROCKET
 };
 
 // Deklaration der Unit-Klasse
-class Unit {
+class Unit
+{
 public:
     // Konstruktor
-    Unit(std::string name, int health, int speed, int attack, std::pair<int,int> range, MovementType movement, WeaponType weapon);
+    Unit(std::string name, int health, int speed, int attack, std::pair<int, int> range, MovementType movement, WeaponType weapon);
 
     // Getter-Methoden
     std::string getName() const;
@@ -51,6 +55,41 @@ private:
     WeaponType weapon;
     int x; // Position auf der x-Achse
     int y; // Position auf der y-Achse
+
+    // Definition der statischen Bewegungskosten
+    const std::map<std::pair<MovementType, TerrainType>, int> MOVEMENT_COSTS = {
+        {{MovementType::INFANTRY, TerrainType::PLAIN}, 1},
+        {{MovementType::INFANTRY, TerrainType::FOREST}, 2},
+        {{MovementType::INFANTRY, TerrainType::MOUNTAIN}, 2},
+        {{MovementType::INFANTRY, TerrainType::STREET}, 1},
+        {{MovementType::INFANTRY, TerrainType::WATER}, 999},
+        
+
+        {{MovementType::TRACKED, TerrainType::PLAIN}, 1},
+        {{MovementType::TRACKED, TerrainType::FOREST}, 2},
+        {{MovementType::TRACKED, TerrainType::MOUNTAIN}, 999},
+        {{MovementType::TRACKED, TerrainType::STREET}, 1},
+        {{MovementType::TRACKED, TerrainType::WATER}, 999},
+        
+
+        {{MovementType::WHEELED, TerrainType::PLAIN}, 2},
+        {{MovementType::WHEELED, TerrainType::FOREST}, 3},
+        {{MovementType::WHEELED, TerrainType::MOUNTAIN}, 999},
+        {{MovementType::WHEELED, TerrainType::STREET}, 1},
+        {{MovementType::WHEELED, TerrainType::WATER}, 999},
+        
+        {{MovementType::AIR, TerrainType::PLAIN}, 1},
+        {{MovementType::AIR, TerrainType::FOREST}, 1},
+        {{MovementType::AIR, TerrainType::MOUNTAIN}, 1},
+        {{MovementType::AIR, TerrainType::STREET}, 1},
+        {{MovementType::AIR, TerrainType::WATER}, 999},
+
+        {{MovementType::SHIPENGINE, TerrainType::PLAIN}, 999},
+        {{MovementType::SHIPENGINE, TerrainType::FOREST}, 999},
+        {{MovementType::SHIPENGINE, TerrainType::MOUNTAIN}, 999},
+        {{MovementType::SHIPENGINE, TerrainType::STREET}, 999},
+        {{MovementType::SHIPENGINE, TerrainType::WATER}, 1}      
+        };
 };
 
 #endif // UNIT_HPP

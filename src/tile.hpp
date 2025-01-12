@@ -1,8 +1,19 @@
 #ifndef TILE_HPP
 #define TILE_HPP
 
-class Tile {
-    public:
+enum class TerrainType
+{
+    PLAIN,
+    MOUNTAIN,
+    FOREST,
+    WATER,
+    STREET,
+    AIR
+};
+
+class Tile
+{
+public:
     Tile();
 };
 
