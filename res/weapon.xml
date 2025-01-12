@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Weapons>
+    <Weapon>
+        <Name>Machine Gun</Name>
+        <Type>SMALL_ARMS</Type>
+        <BaseDamage>50</BaseDamage>
+        <Ammunition>100</Ammunition>
+        <Traits>
+            <CanHitGround>true</CanHitGround>
+            <CanHitAir>false</CanHitAir>
+            <CanHitNaval>false</CanHitNaval>
+            <RangeMin>1</RangeMin>
+            <RangeMax>5</RangeMax>
+        </Traits>
+    </Weapon>
+    <Weapon>
+        <Name>Anti-Tank Gun</Name>
+        <Type>ANTI_TANK</Type>
+        <BaseDamage>200</BaseDamage>
+        <Ammunition>10</Ammunition>
+        <Traits>
+            <CanHitGround>true</CanHitGround>
+            <CanHitAir>false</CanHitAir>
+            <CanHitNaval>false</CanHitNaval>
+            <RangeMin>2</RangeMin>
+            <RangeMax>10</RangeMax>
+        </Traits>
+    </Weapon>
+    <Weapon>
+        <Name>Missile Launcher</Name>
+        <Type>MISSILES</Type>
+        <BaseDamage>500</BaseDamage>
+        <Ammunition>5</Ammunition>
+        <Traits>
+            <CanHitGround>true</CanHitGround>
+            <CanHitAir>true</CanHitAir>
+            <CanHitNaval>true</CanHitNaval>
+            <RangeMin>3</RangeMin>
+            <RangeMax>15</RangeMax>
+        </Traits>
+    </Weapon>
+</Weapons>
