@@ -19,7 +19,7 @@ enum class BuildingType {
     Factory,
     Airport,
     Seaport
-}
+};
 
 class Building{
     public:
