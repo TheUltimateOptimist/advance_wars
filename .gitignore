@@ -2,11 +2,14 @@ build/
 out/
 cmake-build-*/
 
+test.png
+
 .idea/
 .vscode/
 *.swp
 *.swo
 *~
+.cache/
 
 *.o
 *.obj

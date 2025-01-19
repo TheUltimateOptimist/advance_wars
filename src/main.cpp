@@ -1,22 +1,30 @@
-#include "window.hpp"
 #include "engine.hpp"
 #include "level.hpp"
+#include "spritesheet.hpp"
+#include "window.hpp"
 #include <vector>
 
 using namespace advanced_wars;
 
 int main() {
 
-    Window window("Advanced Wars", 800, 600);
+  Window window("Advanced Wars", 800, 600);
 
-    Level level("Osnabrück",20,20, std::vector<Tile>(), std::vector<Building>(),std::vector<Unit>());
+  Engine engine(window);
 
-    Engine engine(window, level);
+  Level level("Osnabrück", 20, 20, std::vector<Tile>(), std::vector<Building>(),
+              std::vector<Unit>());
 
-    while(!engine.exited()) {
-        engine.pump();
-        engine.render();
-    }
+  engine.set_scene(level);
 
-    return 0;
+  Spritesheet spritesheet("../test.png", engine);
+
+  engine.set_spritesheet(spritesheet);
+
+  while (!engine.exited()) {
+    engine.pump();
+    engine.render();
+  }
+
+  return 0;
 }

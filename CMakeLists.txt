@@ -7,13 +7,9 @@ project(ADVANCED_WARS
     LANGUAGES CXX
 )
 
-set(ADVANCED_WARS_SOURCES
-    src/scene.hpp
-    src/unit.cpp
-    src/building.cpp
-    src/level.cpp
-    src/engine.cpp
-    src/window.cpp
+file(GLOB ADVANCED_WARS_SOURCES
+    "${PROJECT_SOURCE_DIR}/src/*.cpp"
+    "${PROJECT_SOURCE_DIR}/src/*.hpp"
 )
 
 # C++ Standard festlegen
@@ -34,11 +30,17 @@ set(CMAKE_MODULE_PATH ${ADVANCED_WARS_SOURCE_DIR}/cmake/ ${CMAKE_MODULE_PATH})
 # SDL2
 find_package(SDL2 REQUIRED)
 find_package(SDL2_IMAGE REQUIRED)
+find_package(HDF5 REQUIRED COMPONENTS CXX)
 
 include_directories(${SDL2_INCLUDE_DIR})
 include_directories(${SDL2_IMG_INCLUDE_DIR})
+include_directories(${HDF5_INCLUDE_DIRS})
 
 # Executable erstellen
 add_executable(advanced_wars src/main.cpp ${ADVANCED_WARS_SOURCES})
-target_link_libraries(advanced_wars ${SDL2_LIBRARY} ${SDL2_IMG_LIBRARY})
-target_link_libraries(advanced_wars m)
+target_link_libraries(advanced_wars 
+    ${SDL2_LIBRARY} 
+    ${SDL2_IMG_LIBRARY}
+    ${HDF5_LIBRARIES}
+    m
+)
