@@ -1,45 +1,46 @@
-#ifndef ENGINE_HPP
-#define ENGINE_HPP
+#pragma once
 
-#include "window.hpp"
+#include "SDL_render.h"
 #include "scene.hpp"
+#include "spritesheet.hpp"
+#include "window.hpp"
 #include <SDL.h>
+#include <optional>
 #include <vector>
 
-namespace advanced_wars
-{
+namespace advanced_wars {
 
 /**
  * @brief The main window of the game
  */
-class Engine
-{
+class Engine {
 public:
+  Engine(Window &window);
 
-    Engine(Window &window, Scene &scene);
+  Engine(const Engine &) = delete;
+  Engine &operator=(const Engine &) = delete;
 
-    /**
-     * Forbids the creation of copies of a window
-     */
-    Engine(const Engine&) = delete;
-    Engine& operator=(const Engine&) = delete;
+  bool exited();
 
-    bool exited();
+  void pump();
 
-    void pump();
+  void set_scene(Scene &scene);
 
-    void set_scene();
+  void set_spritesheet(Spritesheet spritesheet);
 
-    void render();
+  void render();
+
+  SDL_Renderer *renderer();
+
+  ~Engine();
 
 private:
-    Window &window;
-    Scene &scene;
-    SDL_Renderer* renderer;
-    std::vector<SDL_Event> events;
-    bool quit;
+  Window &window;
+  SDL_Renderer *sdl_renderer;
+  std::optional<Scene *> scene;
+  std::optional<Spritesheet> spritesheet;
+  std::vector<SDL_Event> events;
+  bool quit;
 };
 
-}
-
-#endif
+} // namespace advanced_wars
