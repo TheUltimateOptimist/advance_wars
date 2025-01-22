@@ -3,6 +3,7 @@
 #include "spritesheet.hpp"
 #include "window.hpp"
 #include <vector>
+#include "ui/Menu.hpp"
 
 using namespace advanced_wars;
 
@@ -12,14 +13,20 @@ int main() {
 
   Engine engine(window);
 
-  Level level("Osnabrück", 20, 20, std::vector<Tile>(), std::vector<Building>(),
+  // render main menu
+
+  MainMenu menu(0);
+
+  engine.set_scene(menu);
+
+  /* Level level("Osnabrück", 20, 20, std::vector<Tile>(), std::vector<Building>(),
               std::vector<Unit>());
 
   engine.set_scene(level);
 
   Spritesheet spritesheet("../test.png", engine);
 
-  engine.set_spritesheet(spritesheet);
+  engine.set_spritesheet(spritesheet); */
 
   while (!engine.exited()) {
     engine.pump();
