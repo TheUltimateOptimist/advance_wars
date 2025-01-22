@@ -4,7 +4,7 @@
 #include "scene.hpp"
 #include "tile.hpp"
 #include "unit.hpp"
-#include <SDL.h>
+#include <SDL2/SDL.h>
 #include <string>
 #include <vector>
 

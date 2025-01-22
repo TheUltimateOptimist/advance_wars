@@ -4,7 +4,7 @@
 #include "scene.hpp"
 #include "spritesheet.hpp"
 #include "window.hpp"
-#include <SDL.h>
+#include <SDL2/SDL.h>
 #include <optional>
 #include <vector>
 
