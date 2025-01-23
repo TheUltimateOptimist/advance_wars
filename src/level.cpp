@@ -29,15 +29,15 @@ void Level::render(Engine &engine, std::vector<SDL_Event> &events) {
 
   for (int y = 0; y < this->height; y++) {
     for (int x = 0; x < this->width; x++) {
-      Spritesheet &spritesheet = engine.get_spritesheet();
+      Spritesheet *spritesheet = engine.get_spritesheet();
 
       SDL_Rect dst;
-      dst.x = x * spritesheet.get_tile_width();
-      dst.y = y * spritesheet.get_tile_height();
-      dst.w = spritesheet.get_tile_width();
-      dst.h = spritesheet.get_tile_height();
+      dst.x = x * spritesheet->get_tile_width();
+      dst.y = y * spritesheet->get_tile_height();
+      dst.w = spritesheet->get_tile_width();
+      dst.h = spritesheet->get_tile_height();
 
-      if (spritesheet.render_tile(engine.renderer(), 0, 0, &dst) == 0) {
+      if (spritesheet->render_tile(engine.renderer(), 0, 0, &dst) != 0) {
         throw std::runtime_error("error while rendering a tile: " +
                                  std::string(SDL_GetError()));
       }

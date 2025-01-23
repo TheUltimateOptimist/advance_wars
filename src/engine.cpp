@@ -36,11 +36,11 @@ Engine::Engine(Window &window) : window(window), quit(false) {
 
 void Engine::set_scene(Scene &scene) { this->scene = &scene; }
 
-void Engine::set_spritesheet(Spritesheet spritesheet) {
-  this->spritesheet = spritesheet;
+void Engine::set_spritesheet(Spritesheet &spritesheet) {
+  this->spritesheet = &spritesheet;
 }
 
-Spritesheet &Engine::get_spritesheet() { return spritesheet.value(); }
+Spritesheet *Engine::get_spritesheet() { return spritesheet.value(); }
 
 void Engine::pump() {
   SDL_Event e;

@@ -26,9 +26,9 @@ public:
 
   void set_scene(Scene &scene);
 
-  void set_spritesheet(Spritesheet spritesheet);
+  void set_spritesheet(Spritesheet &spritesheet);
 
-  Spritesheet &get_spritesheet();
+  Spritesheet *get_spritesheet();
 
   void render();
 
@@ -40,7 +40,7 @@ private:
   Window &window;
   SDL_Renderer *sdl_renderer;
   std::optional<Scene *> scene;
-  std::optional<Spritesheet> spritesheet;
+  std::optional<Spritesheet *> spritesheet;
   std::vector<SDL_Event> events;
   bool quit;
 };

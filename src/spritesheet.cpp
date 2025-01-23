@@ -1,12 +1,9 @@
 #include "spritesheet.hpp"
 #include "SDL_render.h"
-#include "SDL_stdinc.h"
 #include "SDL_surface.h"
 #include "engine.hpp"
 
 #include <SDL_image.h>
-#include <iostream>
-#include <ostream>
 #include <stdexcept>
 
 namespace advanced_wars {
@@ -52,18 +49,10 @@ int Spritesheet::render_tile(SDL_Renderer *renderer, int tile, int step,
   src.w = tile_width;
   src.h = tile_height;
 
-  std::cout << rect->x << " " << rect->y << " " << rect->w << " " << rect->h
-            << std::endl;
-
-  Uint32 format = 0;
-  int width = 0;
-  int height = 0;
-  int access = 0;
-
-  SDL_QueryTexture(texture, &format, &access, &width, &height);
-
-  std::cout << format << " " << width << " " << height << " " << access
-            << std::endl;
+  /*
+     std::cout << rect->x << " " << rect->y << " " << rect->w << " " << rect->h
+              << std::endl;
+    */
 
   return SDL_RenderCopyEx(renderer, texture, &src, rect, 0, NULL,
                           SDL_FLIP_NONE);
