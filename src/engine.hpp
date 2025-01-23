@@ -28,6 +28,8 @@ public:
 
   void set_spritesheet(Spritesheet spritesheet);
 
+  Spritesheet &get_spritesheet();
+
   void render();
 
   SDL_Renderer *renderer();

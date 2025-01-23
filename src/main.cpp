@@ -1,6 +1,7 @@
 #include "engine.hpp"
 #include "level.hpp"
 #include "spritesheet.hpp"
+#include "tile.hpp"
 #include "window.hpp"
 #include <vector>
 
@@ -17,7 +18,7 @@ int main() {
 
   engine.set_scene(level);
 
-  Spritesheet spritesheet("../test.png", engine);
+  Spritesheet spritesheet("/media/data/cpp/cpp-project/test.png", engine);
 
   engine.set_spritesheet(spritesheet);
 

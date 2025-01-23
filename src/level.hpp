@@ -1,6 +1,7 @@
 #pragma once
 
 #include "building.hpp"
+#include "engine.hpp"
 #include "scene.hpp"
 #include "tile.hpp"
 #include "unit.hpp"
@@ -18,7 +19,7 @@ public:
   Level(std::string name, int width, int height, std::vector<Tile> tiles,
         std::vector<Building> buildings, std::vector<Unit> units);
 
-  void render(SDL_Renderer *renderer, std::vector<SDL_Event> &events);
+  void render(Engine &engine, std::vector<SDL_Event> &events);
 
 private:
   std::string name;
