@@ -29,7 +29,7 @@ endif()
 set(ASSETS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/assets)
 set(OUTPUT_ASSETS_DIR ${CMAKE_CURRENT_BINARY_DIR}/assets)
 file(MAKE_DIRECTORY ${OUTPUT_ASSETS_DIR})
-file(GLOB FONT_FILES ${ASSETS_DIR}/*.ttf)
+file(GLOB FONT_FILES ${ASSETS_DIR}/*.TTF)
 
 # Executable erstellen
 add_executable(advanced_wars ${ADVANCED_WARS_SOURCES})

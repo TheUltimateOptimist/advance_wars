@@ -39,9 +39,12 @@ namespace advanced_wars
         }
 
         // Load a font
-        TTF_Font* font = TTF_OpenFont("/usr/share/fonts/ARCADECLASSIC.TTF", 24);
+        std::string basePath = SDL_GetBasePath();
+        std::string relativePath = "assets/ARCADECLASSIC.TTF";
+        std::string fullPath = basePath + relativePath;
+        TTF_Font* font = TTF_OpenFont(fullPath.c_str(), 24);
         if (!font) {
-            std::cerr << "Failed to load font: " << TTF_GetError() << std::endl;
+            std::cerr << "Failed to load font: " << fullPath << TTF_GetError() << std::endl;
             return;
         }
 
