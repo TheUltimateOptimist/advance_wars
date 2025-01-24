@@ -30,6 +30,7 @@ set(ASSETS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/assets)
 set(OUTPUT_ASSETS_DIR ${CMAKE_CURRENT_BINARY_DIR}/assets)
 file(MAKE_DIRECTORY ${OUTPUT_ASSETS_DIR})
 file(GLOB FONT_FILES ${ASSETS_DIR}/*.TTF)
+file(GLOB IMAGE_FILES ${ASSETS_DIR}/*.png)
 
 # Executable erstellen
 add_executable(advanced_wars ${ADVANCED_WARS_SOURCES})
@@ -39,6 +40,14 @@ foreach(FONT ${FONT_FILES})
             TARGET advanced_wars PRE_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy ${FONT} ${OUTPUT_ASSETS_DIR}
             COMMENT "Kopiere Font: ${FONT} nach ${OUTPUT_ASSETS_DIR}"
+    )
+endforeach()
+
+foreach(IMAGE ${IMAGE_FILES})
+    add_custom_command(
+            TARGET advanced_wars PRE_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy ${IMAGE} ${OUTPUT_ASSETS_DIR}
+            COMMENT "Kopiere Image: ${IMAGE} nach ${OUTPUT_ASSETS_DIR}"
     )
 endforeach()
 
