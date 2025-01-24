@@ -7,9 +7,10 @@
 
 using namespace advanced_wars;
 
-int main() {
+int main()
+{
 
-  Window window("Advanced Wars", 800, 600);
+  Window window("Advanced Wars", 960, 960);
 
   Engine engine(window);
 
@@ -18,11 +19,12 @@ int main() {
 
   engine.set_scene(level);
 
-  Spritesheet spritesheet("/media/data/cpp/cpp-project/test.png", engine);
+  Spritesheet spritesheet("../tiles.png", engine);
 
   engine.set_spritesheet(spritesheet);
 
-  while (!engine.exited()) {
+  while (!engine.exited())
+  {
     engine.pump();
     engine.render();
   }
