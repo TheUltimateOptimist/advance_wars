@@ -3,7 +3,7 @@
 #include "unit.hpp"
 #include <string>
 #include <iostream>
-#include <SDL2/SDL.h>
+#include <SDL.h>
 
 namespace advanced_wars
 {
