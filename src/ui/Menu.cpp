@@ -22,9 +22,9 @@ namespace advanced_wars
     void MainMenu::render(SDL_Renderer *renderer, std::vector<SDL_Event> &events) {
 
         if (events.size() > 0) {
-            for (auto event: events) {
-                handleEvent(event);
-            }
+            SDL_Event event = events.back();
+            events.pop_back();
+            handleEvent(event);
         }
         
 
