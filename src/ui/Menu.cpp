@@ -3,6 +3,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <SDL_image.h>
 #include "Menu.hpp"
 
 namespace advanced_wars 
@@ -10,13 +11,19 @@ namespace advanced_wars
 
     MainMenu::MainMenu(int selectedOption)
         : selectedOption(selectedOption), 
-        options({"Start Game", "Options", "Exit"}) 
+        options({"Start Game", "Options", "Exit"}),
+        backgroundTexture(nullptr)
     {
-        
+        if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)) {
+            std::cerr << "Failed to initialize SDL_image: " << IMG_GetError() << std::endl;
+        }
     }
 
     MainMenu::~MainMenu() {
-        
+        if (backgroundTexture) {
+            SDL_DestroyTexture(backgroundTexture);
+        }
+        IMG_Quit();
     };
 
     void MainMenu::render(SDL_Renderer *renderer, std::vector<SDL_Event> &events) {
@@ -28,9 +35,14 @@ namespace advanced_wars
         }
         
 
-        // Clear the screen with a background color
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-        SDL_RenderClear(renderer);
+        if (backgroundTexture) {
+            SDL_RenderCopy(renderer, backgroundTexture, nullptr, nullptr);
+        } else {
+            std::cout << "No background texture loaded" << std::endl;
+            // Falls kein Hintergrundbild vorhanden ist, cleare mit Schwarz
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+            SDL_RenderClear(renderer);
+        }
 
         // Initialize SDL_TTF if not already done
         if (TTF_Init() == -1) {
@@ -100,5 +112,23 @@ namespace advanced_wars
             }
         }
     }
+
+    void MainMenu::loadBackground(SDL_Renderer *renderer, const std::string& imagePath) {
+    // Lade das Hintergrundbild
+    SDL_Surface* backgroundSurface = IMG_Load(imagePath.c_str());
+    if (!backgroundSurface) {
+        std::cerr << "Failed to load background image: " << IMG_GetError() << std::endl;
+        return;
+    }
+
+    // Erstelle eine Textur aus der Oberfläche und speichere sie als Klassenmitglied
+    backgroundTexture = SDL_CreateTextureFromSurface(renderer, backgroundSurface);
+    SDL_FreeSurface(backgroundSurface); // Oberfläche freigeben, da sie nicht mehr benötigt wird
+
+    if (!backgroundTexture) {
+        std::cerr << "Failed to create background texture: " << SDL_GetError() << std::endl;
+    }
+}
+
 
 }

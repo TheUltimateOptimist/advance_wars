@@ -20,6 +20,7 @@ class MainMenu : public Scene {
 private:
     size_t selectedOption;
     std::array<std::string, 3> options;
+    SDL_Texture* backgroundTexture;
     
 public:
 
@@ -28,6 +29,8 @@ public:
     void render(SDL_Renderer *renderer, std::vector<SDL_Event> &events);
 
     void handleEvent(SDL_Event& event);
+
+    void loadBackground(SDL_Renderer *renderer, const std::string& imagePath);
 
     ~MainMenu();
 };

@@ -17,8 +17,12 @@ int main() {
 
   MainMenu menu(0);
 
-  engine.set_scene(menu);
+  std::string basePath = SDL_GetBasePath();
+  std::string relativePath = "assets/main_background.png";
+  std::string fullPath = basePath + relativePath;
+  menu.loadBackground(engine.renderer(), fullPath.c_str());
 
+  engine.set_scene(menu);
   /* Level level("Osnabrück", 20, 20, std::vector<Tile>(), std::vector<Building>(),
               std::vector<Unit>());
 
