@@ -16,6 +16,10 @@ public:
 
   ~Spritesheet();
 
+  Spritesheet(const Spritesheet &) = delete;
+
+  Spritesheet &operator=(const Spritesheet &) = delete;
+
   // Tiles
   int get_tile_steps(int tile);
 

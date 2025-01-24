@@ -36,9 +36,11 @@ Engine::Engine(Window &window) : window(window), quit(false) {
 
 void Engine::set_scene(Scene &scene) { this->scene = &scene; }
 
-void Engine::set_spritesheet(Spritesheet spritesheet) {
-  this->spritesheet = spritesheet;
+void Engine::set_spritesheet(Spritesheet &spritesheet) {
+  this->spritesheet = &spritesheet;
 }
+
+Spritesheet *Engine::get_spritesheet() { return spritesheet.value(); }
 
 void Engine::pump() {
   SDL_Event e;
@@ -63,7 +65,7 @@ void Engine::render() {
     return;
   }
 
-  this->scene.value()->render(this->sdl_renderer, this->events);
+  this->scene.value()->render(*this, this->events);
 
   SDL_RenderPresent(this->sdl_renderer);
 }
