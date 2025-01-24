@@ -7,6 +7,20 @@ project(ADVANCED_WARS
         LANGUAGES CXX
 )
 
+include(FetchContent)
+FetchContent_Declare(
+    highfive
+    GIT_REPOSITORY https://github.com/highfive-devs/highfive.git
+    GIT_TAG v2.10.1
+)
+
+set(HIGHFIVE_EXAMPLES OFF)
+set(HIGHFIVE_UNIT_TESTS OFF)
+
+FetchContent_MakeAvailable(highfive)
+
+
+
 # Quellen sammeln
 file(GLOB_RECURSE ADVANCED_WARS_SOURCES
         "${PROJECT_SOURCE_DIR}/src/*.cpp"
@@ -33,6 +47,11 @@ file(GLOB FONT_FILES ${ASSETS_DIR}/*.ttf)
 
 # Executable erstellen
 add_executable(advanced_wars ${ADVANCED_WARS_SOURCES})
+
+target_include_directories(advanced_wars
+    PRIVATE 
+        ${highfive_SOURCE_DIR}/include
+)
 
 foreach(FONT ${FONT_FILES})
     add_custom_command(
