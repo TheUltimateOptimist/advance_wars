@@ -1,14 +1,19 @@
 #pragma once
 
-#include <SDL_render.h>
+#include "SDL_events.h"
 #include "scene.hpp"
 #include "spritesheet.hpp"
 #include "window.hpp"
 #include <SDL.h>
+#include <SDL_render.h>
+#include <deque>
+#include <memory>
 #include <optional>
-#include <vector>
 
 namespace advanced_wars {
+
+// Forward declaration
+class Scene;
 
 /**
  * @brief The main window of the game
@@ -22,9 +27,15 @@ public:
 
   bool exited();
 
+  void exit();
+
   void pump();
 
-  void set_scene(Scene &scene);
+  void push_scene(std::shared_ptr<Scene> scene);
+
+  std::optional<std::shared_ptr<Scene>> pop_scene();
+
+  std::deque<SDL_Event> &events();
 
   void set_spritesheet(Spritesheet spritesheet);
 
@@ -37,9 +48,9 @@ public:
 private:
   Window &window;
   SDL_Renderer *sdl_renderer;
-  std::optional<Scene *> scene;
+  std::vector<std::shared_ptr<Scene>> scenes;
   std::optional<Spritesheet> spritesheet;
-  std::vector<SDL_Event> events;
+  std::deque<SDL_Event> _events;
   bool quit;
 };
 

@@ -18,7 +18,7 @@ public:
   Level(std::string name, int width, int height, std::vector<Tile> tiles,
         std::vector<Building> buildings, std::vector<Unit> units);
 
-  void render(SDL_Renderer *renderer, std::vector<SDL_Event> &events);
+  void render(Engine *events);
 
 private:
   std::string name;

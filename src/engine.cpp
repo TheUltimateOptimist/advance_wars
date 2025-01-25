@@ -1,12 +1,15 @@
 #include "engine.hpp"
-#include <SDL_render.h>
+#include "SDL_events.h"
 #include "scene.hpp"
 #include "spritesheet.hpp"
 #include "window.hpp"
 #include <SDL.h>
 #include <SDL_image.h>
+#include <SDL_render.h>
+#include <deque>
+#include <memory>
+#include <optional>
 #include <stdexcept>
-#include <vector>
 
 namespace advanced_wars {
 
@@ -34,7 +37,22 @@ Engine::Engine(Window &window) : window(window), quit(false) {
   }
 }
 
-void Engine::set_scene(Scene &scene) { this->scene = &scene; }
+std::deque<SDL_Event> &Engine::events() { return this->_events; }
+
+void Engine::push_scene(std::shared_ptr<Scene> scene) {
+  this->scenes.push_back(scene);
+}
+
+std::optional<std::shared_ptr<Scene>> Engine::pop_scene() {
+  if (!this->scenes.empty()) {
+    return std::nullopt;
+  } else {
+    std::shared_ptr<Scene> tmp = scenes.at(scenes.size() - 1);
+    this->scenes.pop_back();
+
+    return std::optional<std::shared_ptr<Scene>>(tmp);
+  }
+}
 
 void Engine::set_spritesheet(Spritesheet spritesheet) {
   this->spritesheet = spritesheet;
@@ -46,10 +64,12 @@ void Engine::pump() {
     if (e.type == SDL_QUIT) {
       this->quit = true;
     } else {
-      this->events.push_back(e);
+      this->_events.push_back(e);
     }
   }
 }
+
+void Engine::exit() { this->quit = true; }
 
 bool Engine::exited() { return this->quit; }
 
@@ -59,11 +79,11 @@ void Engine::render() {
                              std::string(SDL_GetError()));
   }
 
-  if (!scene.has_value()) {
+  if (scenes.empty()) {
     return;
   }
 
-  this->scene.value()->render(this->sdl_renderer, this->events);
+  this->scenes.at(scenes.size() - 1)->render(this);
 
   SDL_RenderPresent(this->sdl_renderer);
 }
