@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Units>
+    <Unit id="1" type="Infantry">
+        <Description>Basic ground unit, useful for capturing properties.</Description>
+        <Cost>1000</Cost>
+        <minRange>1</minRange>
+        <maxRange>1</maxRange>
+        <MovementType>Infantry</MovementType>
+        <MovementPoints>3</MovementPoints>
+        <Weapons>
+            <PrimaryWeapon>Machine Gun</PrimaryWeapon>
+            <SecondaryWeapon>None</SecondaryWeapon>
+        </Weapons>
+        <Attack>
+            <Infantry>55</Infantry>
+            <Mech>45</Mech>
+            <Tank>5</Tank>
+        </Attack>
+    </Unit>
+    <Unit id="2" type="Mech">
+        <Description>Advanced infantry unit, equipped with rockets for anti-vehicle combat.</Description>
+        <Cost>3000</Cost>
+        <minRange>1</minRange>
+        <maxRange>1</maxRange>
+        <MovementType>Infantry</MovementType>
+        <MovementPoints>2</MovementPoints>
+        <Weapons>
+            <PrimaryWeapon>Rockets</PrimaryWeapon>
+            <SecondaryWeapon>Machine Gun</SecondaryWeapon>
+        </Weapons>
+        <Attack>
+            <Infantry>65</Infantry>
+            <Mech>55</Mech>
+            <Tank>55</Tank>
+        </Attack>
+    </Unit>
+    <Unit id="3" type="Tank">
+        <Description>Basic vehicle unit, effective against infantry and light vehicles.</Description>
+        <Cost>7000</Cost>
+        <minRange>1</minRange>
+        <maxRange>1</maxRange>
+        <MovementType>Tread</MovementType>
+        <MovementPoints>6</MovementPoints>
+        <Weapons>
+            <PrimaryWeapon>Bazooka</PrimaryWeapon>
+            <SecondaryWeapon>Machine Gun</SecondaryWeapon>
+        </Weapons>
+        <Attack>
+            <Infantry>75</Infantry>
+            <Mech>70</Mech>
+            <Tank>55</Tank>
+        </Attack>
+    </Unit>
+</Units>
+<Buildings>
+    <Building id="1" type="City">
+        <Description>Basic infrastructure</Description>
+        <Profit>1000</Profit>
+        <Recruting-Types>
+            <None>
+        </Recruting-Types>
+    </Building>
+    <Building id="2" type="Factory">
+        <Description>Infrastructure for recruting Ground-Forces</Description>
+        <Profit>1000</Profit>
+        <Recruting-Types>
+            <Type>Infantry</Type>
+            <Type>Mech</Type>
+            <Type>Tank</Type>
+        </Recruting-Types>
+    </Building>
+</Buildings>
+

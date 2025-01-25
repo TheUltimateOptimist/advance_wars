@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Units>
+    <Unit id="1" type="Infantry">
+        <Description>Basic ground unit, useful for capturing properties.</Description>
+        <Cost>1000</Cost>
+        <minRange>1</minRange>
+        <maxRange>1</maxRange>
+        <MovementType>Infantry</MovementType>
+        <MovementPoints>3</MovementPoints>
+        <Weapons>
+            <PrimaryWeapon>Machine Gun</PrimaryWeapon>
+            <SecondaryWeapon>None</SecondaryWeapon>
+        </Weapons>
+    </Unit>
+    <Unit id="2" type="Mech">
+        <Description>Advanced infantry unit, equipped with rockets for anti-vehicle combat.</Description>
+        <Cost>3000</Cost>
+        <minRange>1</minRange>
+        <maxRange>1</maxRange>
+        <MovementType>Infantry</MovementType>
+        <MovementPoints>2</MovementPoints>
+        <Weapons>
+            <PrimaryWeapon>Rockets</PrimaryWeapon>
+            <SecondaryWeapon>Machine Gun</SecondaryWeapon>
+        </Weapons>
+    </Unit>
+    <Unit id="3" type="Tank">
+        <Description>Basic vehicle unit, effective against infantry and light vehicles.</Description>
+        <Cost>7000</Cost>
+        <minRange>1</minRange>
+        <maxRange>1</maxRange>
+        <MovementType>Tread</MovementType>
+        <MovementPoints>6</MovementPoints>
+        <Weapons>
+            <PrimaryWeapon>Bazooka</PrimaryWeapon>
+            <SecondaryWeapon>Machine Gun</SecondaryWeapon>
+        </Weapons>
+    </Unit>
+    <Unit id="4" type="Medium Tank">
+        <Description>Heavily armored tank, excellent against most ground units.</Description>
+        <Cost>16000</Cost>
+        <minRange>1</minRange>
+        <maxRange>1</maxRange>
+        <MovementType>Tread</MovementType>
+        <MovementPoints>5</MovementPoints>
+        <Weapons>
+            <PrimaryWeapon>Cannon</PrimaryWeapon>
+            <SecondaryWeapon>Machine Gun</SecondaryWeapon>
+        </Weapons>
+    </Unit>
+    <Unit id="5" type="Neo Tank">
+        <Description>Cutting-edge tank with superior firepower and speed.</Description>
+        <Cost>22000</Cost>
+        <minRange>1</minRange>
+        <maxRange>1</maxRange>
+        <MovementType>Tread</MovementType>
+        <MovementPoints>6</MovementPoints>
+        <Weapons>
+            <PrimaryWeapon>Cannon</PrimaryWeapon>
+            <SecondaryWeapon>Machine Gun</SecondaryWeapon>
+        </Weapons>
+    </Unit>
+    <Unit id="6" type="Megatank">
+        <Description>The strongest tank on Earth. But Movement is low.</Description>
+        <Cost>28000</Cost>
+        <minRange>1</minRange>
+        <maxRange>1</maxRange>
+        <MovementType>Tread</MovementType>
+        <MovementPoints>4</MovementPoints>
+        <Weapons>
+            <PrimaryWeapon>Cannon</PrimaryWeapon>
+            <SecondaryWeapon>Machine Gun</SecondaryWeapon>
+        </Weapons>
+    </Unit>
+    <Unit id="7" type="Artillery">
+        <Description>Indirect fire unit with long-range attack capabilities.</Description>
+        <Cost>6000</Cost>
+        <minRange>2</minRange>
+        <maxRange>3</maxRange>
+        <MovementType>Tread</MovementType>
+        <MovementPoints>5</MovementPoints>
+        <Weapons>
+            <PrimaryWeapon>Howitzer</PrimaryWeapon>
+            <SecondaryWeapon>None</SecondaryWeapon>
+        </Weapons>
+    </Unit>
+    <Unit id="8" type="Rocket">
+        <Description>Long-range missile launcher, devastating against all ground units.</Description>
+        <Cost>15000</Cost>
+        <minRange>3</minRange>
+        <maxRange>5</maxRange>
+        <MovementType>Tires</MovementType>
+        <MovementPoints>5</MovementPoints>
+        <Weapons>
+            <PrimaryWeapon>Missile Launcher</PrimaryWeapon>
+            <SecondaryWeapon>None</SecondaryWeapon>
+        </Weapons>
+    </Unit>
+    <Unit id="9" type="Missiles">
+        <Description>Missile units are essential in defending against air units.</Description>
+        <Cost>12000</Cost>
+        <minRange>3</minRange>
+        <maxRange>5</maxRange>
+        <MovementType>Tires</MovementType>
+        <MovementPoints>5</MovementPoints>
+        <Weapons>
+            <PrimaryWeapon>Missiles</PrimaryWeapon>
+            <SecondaryWeapon>None</SecondaryWeapon>
+        </Weapons>
+    </Unit>
+    <Unit id="10" type="Anti-Air">
+        <Description>Highly effective against air units and infantry.</Description>
+        <Cost>8000</Cost>
+        <minRange>1</minRange>
+        <maxRange>1</maxRange>
+        <MovementType>Tires</MovementType>
+        <MovementPoints>6</MovementPoints>
+        <Weapons>
+            <PrimaryWeapon>Vulcan</PrimaryWeapon>
+            <SecondaryWeapon>None</SecondaryWeapon>
+        </Weapons>
+    </Unit>
+    <Unit id="12" type="Recon">
+        <Description>Recons have a high movement range and vision. Good against infantry.</Description>
+        <Cost>4000</Cost>
+        <minRange>1</minRange>
+        <maxRange>1</maxRange>
+        <MovementType>Tires</MovementType>
+        <MovementPoints>8</MovementPoints>
+        <Weapons>
+            <PrimaryWeapon>None</PrimaryWeapon>
+            <SecondaryWeapon>Machine Gun</SecondaryWeapon>
+        </Weapons>
+    </Unit>
+    <Unit id="13" type="Fighter">
+        <Description>Fighter units are strong vs. other air units. They also have the highest movement.</Description>
+        <Cost>20000</Cost>
+        <minRange>1</minRange>
+        <maxRange>1</maxRange>
+        <MovementType>Air</MovementType>
+        <MovementPoints>9</MovementPoints>
+        <Weapons>
+            <PrimaryWeapon>Missiles</PrimaryWeapon>
+            <SecondaryWeapon>None</SecondaryWeapon>
+        </Weapons>
+    </Unit>
+    <Unit id="14" type="Bomber">
+        <Description>Bomber units can fire on ground and naval units with a high destructive force.</Description>
+        <Cost>22000</Cost>
+        <minRange>1</minRange>
+        <maxRange>1</maxRange>
+        <MovementType>Air</MovementType>
+        <MovementPoints>7</MovementPoints>
+        <Weapons>
+            <PrimaryWeapon>Bombs</PrimaryWeapon>
+            <SecondaryWeapon>None</SecondaryWeapon>
+        </Weapons>
+    </Unit>
+    <Unit id="13" type="B Copter">
+        <Description>B (Battle) copter units can fire on many unit types, so they're quite valuable.</Description>
+        <Cost>9000</Cost>
+        <minRange>1</minRange>
+        <maxRange>1</maxRange>
+        <MovementType>Air</MovementType>
+        <MovementPoints>6</MovementPoints>
+        <Weapons>
+            <PrimaryWeapon>Missiles</PrimaryWeapon>
+            <SecondaryWeapon>Machine Gun</SecondaryWeapon>
+        </Weapons>
+    </Unit>
+    <Unit id="16" type="Battleship">
+        <Description>Battleships have a larger attack range than even rocket units.</Description>
+        <Cost>28000</Cost>
+        <minRange>2</minRange>
+        <maxRange>6</maxRange>
+        <MovementType>Ship-Engine</MovementType>
+        <MovementPoints>5</MovementPoints>
+        <Weapons>
+            <PrimaryWeapon>Cannon</PrimaryWeapon>
+            <SecondaryWeapon>None</SecondaryWeapon>
+        </Weapons>
+    </Unit>
+    <Unit id="17" type="Cruiser">
+        <Description>Strong against subs and air units. Can load and supply two copter units.</Description>
+        <Cost>18000</Cost>
+        <minRange>1</minRange>
+        <maxRange>1</maxRange>
+        <MovementType>Ship-Engine</MovementType>
+        <MovementPoints>6</MovementPoints>
+        <Weapons>
+            <PrimaryWeapon>Missiles</PrimaryWeapon>
+            <SecondaryWeapon>Anti-Air Gun</SecondaryWeapon>
+        </Weapons>
+    </Unit>
+</Units>
+

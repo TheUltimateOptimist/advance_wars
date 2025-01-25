@@ -9,8 +9,8 @@
 enum class MovementType
 {
     INFANTRY,
-    TRACKS,
-    WHEELS,
+    Tread,
+    Tires,
     AIR,
     SHIPENIGNE
 };
