@@ -25,6 +25,7 @@ private:
   std::string name;
   int width;
   int height;
+  std::vector<Tile> tiles;
   std::vector<Building> buildings;
   std::vector<Unit> units;
 };

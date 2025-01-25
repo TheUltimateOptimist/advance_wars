@@ -1,3 +1,6 @@
 #include "tile.hpp"
 
-Tile::Tile() {};
+Tile::Tile(TileId id)
+    : id(id) {
+
+      };
