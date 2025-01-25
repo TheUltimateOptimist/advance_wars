@@ -1,7 +1,9 @@
 #pragma once
 
-#include <SDL_render.h>
+#include "building.hpp"
+#include "common.h"
 #include <SDL.h>
+#include <SDL_render.h>
 #include <string>
 #include <vector>
 
@@ -29,15 +31,26 @@ public:
 
   int render_tile(SDL_Renderer *renderer, int tile, int step, SDL_Rect *rect);
 
+  // Buildings: TODO
+  int get_building_width();
+
+  int get_building_height();
+
+  int render_building(SDL_Renderer *renderer, BuildingId id, Faction faction,
+                      SDL_Rect *rect);
+
   // Units: TODO
 
-  // Buildings: TODO
-
 private:
-  SDL_Texture *texture;
   // Tiles
+  SDL_Texture *tile_texture;
   int tile_width;
   int tile_height;
   std::vector<std::pair<int, int>> tiles;
+
+  // Buildings
+  std::vector<SDL_Texture *> building_textures;
+  int building_width;
+  int building_height;
 };
 } // namespace advanced_wars

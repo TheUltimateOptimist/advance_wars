@@ -1,14 +1,21 @@
-#ifndef BUILDING_HPP
-#define BUILDING_HPP
+#pragma once
 
-class Building{
-    public:
-    Building(int x, int y);
+#include "common.h"
 
-    private:
-        // Position
-        int x;
-        int y;
+enum BuildingId {
+  HEADQUARTER = 0,
+  CITY = 1,
+  FACTORY = 2,
+  PORT = 3,
+  SATELLITE = 4,
 };
 
-#endif
+class Building {
+public:
+  Building(int x, int y, BuildingId id, Faction faction);
+
+  int x;
+  int y;
+  BuildingId id;
+  Faction faction;
+};

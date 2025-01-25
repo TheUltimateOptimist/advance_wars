@@ -1,8 +1,11 @@
+#include "building.hpp"
+#include "common.h"
 #include "engine.hpp"
 #include "level.hpp"
 #include "spritesheet.hpp"
 #include "tile.hpp"
 #include "window.hpp"
+#include <cstddef>
 #include <vector>
 
 using namespace advanced_wars;
@@ -43,8 +46,19 @@ int main() {
   tiles.at(18 * 20 + 1) = Tile(TileId::CLIFF_CORNER_BOTTOM_LEFT);
   tiles.at(18 * 20 + 18) = Tile(TileId::CLIFF_CORNER_BOTTOM_RIGHT);
 
-  Level level("Osnabrück", 20, 20, tiles, std::vector<Building>(),
-              std::vector<Unit>());
+  // Buildings
+  std::vector<Building> buildings;
+
+  for (int y = 0; y < 6; y++) {
+    for (int x = 0; x < 5; x++) {
+      BuildingId id = static_cast<BuildingId>(x);
+      Faction faction = static_cast<Faction>(y);
+
+      buildings.push_back(Building(3 + x, 3 + 2 * y, id, faction));
+    }
+  }
+
+  Level level("Osnabrück", 20, 20, tiles, buildings, std::vector<Unit>());
 
   engine.set_scene(level);
 

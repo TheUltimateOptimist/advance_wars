@@ -32,9 +32,11 @@ void Level::render(Engine &engine, std::vector<SDL_Event> &events) {
 
   int stage = SDL_GetTicks() / 300;
 
+  Spritesheet *spritesheet = engine.get_spritesheet();
+
+  // Tiles
   for (int y = 0; y < this->height; y++) {
     for (int x = 0; x < this->width; x++) {
-      Spritesheet *spritesheet = engine.get_spritesheet();
 
       SDL_Rect dst;
       dst.x = x * spritesheet->get_tile_width() * RENDERING_SCALE;
@@ -53,6 +55,18 @@ void Level::render(Engine &engine, std::vector<SDL_Event> &events) {
 
       idx += 1;
     }
+  }
+
+  // Buildings
+  for (Building building : buildings) {
+    SDL_Rect dst;
+    dst.x = building.x * spritesheet->get_tile_width() * RENDERING_SCALE;
+    dst.y = (building.y - 1) * spritesheet->get_tile_height() * RENDERING_SCALE;
+    dst.w = spritesheet->get_building_width() * RENDERING_SCALE;
+    dst.h = spritesheet->get_building_height() * RENDERING_SCALE;
+
+    spritesheet->render_building(engine.renderer(), building.id,
+                                 building.faction, &dst);
   }
 
   // Set background color for renderer
