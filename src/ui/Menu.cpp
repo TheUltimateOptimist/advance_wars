@@ -9,7 +9,7 @@
 namespace advanced_wars 
 {
 
-    MainMenu::MainMenu(int selectedOption)
+    Menu::Menu(int selectedOption)
         : selectedOption(selectedOption), 
         options({"Start Game", "Options", "Exit"}),
         backgroundTexture(nullptr)
@@ -19,14 +19,14 @@ namespace advanced_wars
         }
     }
 
-    MainMenu::~MainMenu() {
+    Menu::~Menu() {
         if (backgroundTexture) {
             SDL_DestroyTexture(backgroundTexture);
         }
         IMG_Quit();
     };
 
-    void MainMenu::render(SDL_Renderer *renderer, std::vector<SDL_Event> &events) {
+    void Menu::render(SDL_Renderer *renderer, std::vector<SDL_Event> &events) {
 
     if (events.size() > 0) {
         SDL_Event event = events.back();
@@ -96,7 +96,7 @@ namespace advanced_wars
 }
 
 
-    void MainMenu::handleEvent(SDL_Event& event) {
+    void Menu::handleEvent(SDL_Event& event) {
         if (event.type == SDL_KEYDOWN) {
             if (event.key.keysym.sym == SDLK_DOWN) {
                 selectedOption = (selectedOption + 1) % options.size();
@@ -111,7 +111,7 @@ namespace advanced_wars
         }
     }
 
-    void MainMenu::loadBackground(SDL_Renderer *renderer, const std::string& imagePath) {
+    void Menu::loadBackground(SDL_Renderer *renderer, const std::string& imagePath) {
     // Lade das Hintergrundbild
     SDL_Surface* backgroundSurface = IMG_Load(imagePath.c_str());
     if (!backgroundSurface) {

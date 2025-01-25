@@ -15,7 +15,7 @@ int main() {
 
   // render main menu
 
-  MainMenu menu(0);
+  Menu menu(0);
 
   std::string basePath = SDL_GetBasePath();
   std::string relativePath = "assets/main_background.png";
