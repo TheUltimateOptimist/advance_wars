@@ -1,6 +1,10 @@
 #pragma once
 
 #include "common.h"
+#include "scene.hpp"
+#include "engine.hpp"
+
+namespace advanced_wars {
 
 enum BuildingId {
   HEADQUARTER = 0,
@@ -10,7 +14,7 @@ enum BuildingId {
   SATELLITE = 4,
 };
 
-class Building {
+class Building : public Scene{
 public:
   Building(int x, int y, BuildingId id, Faction faction);
 
@@ -18,4 +22,8 @@ public:
   int y;
   BuildingId id;
   Faction faction;
+
+  void render(Engine &engine, std::vector<SDL_Event> &events) override;
 };
+
+} // namespace advanced_wars

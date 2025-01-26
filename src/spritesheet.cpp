@@ -137,18 +137,10 @@ int Spritesheet::get_building_width() { return this->building_width; }
 
 int Spritesheet::get_building_height() { return this->building_height; }
 
-int Spritesheet::render_building(SDL_Renderer *renderer, BuildingId id,
-                                 Faction faction, SDL_Rect *rect) {
-  SDL_Rect src;
-  src.x = static_cast<int>(id) * this->get_building_width();
-  src.y = 0;
-  src.w = this->get_building_width();
-  src.h = this->get_building_height();
-
-  return SDL_RenderCopyEx(renderer,
-                          building_textures[static_cast<int>(faction)], &src,
-                          rect, 0, NULL, SDL_FLIP_NONE);
+std::vector<SDL_Texture*> Spritesheet::get_building_textures() {
+  return building_textures;
 }
+
 
 Spritesheet::~Spritesheet() { SDL_DestroyTexture(tile_texture); }
 

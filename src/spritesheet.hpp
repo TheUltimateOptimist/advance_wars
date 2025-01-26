@@ -1,6 +1,5 @@
 #pragma once
 
-#include "building.hpp"
 #include "common.h"
 #include <SDL.h>
 #include <SDL_render.h>
@@ -38,8 +37,7 @@ public:
 
   int get_building_height();
 
-  int render_building(SDL_Renderer *renderer, BuildingId id, Faction faction,
-                      SDL_Rect *rect);
+  std::vector<SDL_Texture*> get_building_textures();
 
   // Units: TODO
 
