@@ -4,6 +4,11 @@
 #include <SDL_ttf.h>
 #include <iostream>
 #include <string>
+#include "../level.hpp"
+#include "../building.hpp"
+#include "../unit.hpp"
+#include "../tile.hpp"
+#include "../spritesheet.hpp"
 
 namespace advanced_wars {
 
@@ -112,6 +117,27 @@ void Menu::handleEvent(Engine *engine, SDL_Event &event) {
       if (options[selectedOption] == "Exit") {
         std::cout << "Exiting game..." << std::endl;
         engine->exit();
+      } else if (options[selectedOption] == "Start Game") {
+        std::cout << "Starting game..." << std::endl;
+
+        /* TODO REMOVE THIS BOILERPLATE CODE BEFORE MERGE */
+
+        Level level("Osnabrück", 20, 20, std::vector<Tile>(),
+        std::vector<Building>(), std::vector<Unit>());
+
+        engine->push_scene(std::make_shared<advanced_wars::Level>(level));
+
+        std::string basePath = SDL_GetBasePath();
+        std::string relativePath = "assets/test.png";
+        std::string fullPath = basePath + relativePath;
+        Spritesheet spritesheet(fullPath, *engine);
+
+        engine->set_spritesheet(spritesheet);
+
+        /* END OF BOILERPLATE CODE */
+
+      } else if (options[selectedOption] == "Options") {
+        std::cout << "Opening options..." << std::endl;
       }
     }
   }
