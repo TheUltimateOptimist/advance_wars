@@ -29,7 +29,9 @@ public:
 
   int get_tile_height();
 
-  int render_tile(SDL_Renderer *renderer, int tile, int step, SDL_Rect *rect);
+  std::vector<std::pair<int, int>> get_tiles();
+
+  SDL_Texture* get_tile_texture();
 
   // Buildings: TODO
   int get_building_width();

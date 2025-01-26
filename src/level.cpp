@@ -35,26 +35,9 @@ void Level::render(Engine &engine, std::vector<SDL_Event> &events) {
   Spritesheet *spritesheet = engine.get_spritesheet();
 
   // Tiles
-  for (int y = 0; y < this->height; y++) {
-    for (int x = 0; x < this->width; x++) {
-
-      SDL_Rect dst;
-      dst.x = x * spritesheet->get_tile_width() * RENDERING_SCALE;
-      dst.y = y * spritesheet->get_tile_height() * RENDERING_SCALE;
-      dst.w = spritesheet->get_tile_width() * RENDERING_SCALE;
-      dst.h = spritesheet->get_tile_height() * RENDERING_SCALE;
-
-      int tile_id = static_cast<int>(tiles.at(idx).id);
-
-      if (spritesheet->render_tile(engine.renderer(), tile_id,
-                                   stage % spritesheet->get_tile_steps(tile_id),
-                                   &dst) != 0) {
-        throw std::runtime_error("error while rendering a tile: " +
-                                 std::string(SDL_GetError()));
-      }
-
-      idx += 1;
-    }
+  for(Tile t : tiles)
+  {
+    t.render(engine, events);
   }
 
   // Buildings

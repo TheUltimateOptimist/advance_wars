@@ -17,34 +17,40 @@ int main() {
   Engine engine(window);
 
   // Construct a level
-  std::vector<Tile> tiles(20 * 20, Tile(TileId::PLAIN));
+  std::vector<Tile> tiles;
+  for(int y = 0; y < 20; y++) {
+    for(int x = 0; x < 20; x++) {
+      tiles.push_back(Tile(TileId::PLAIN, x, y));
+    }
+  }
+
 
   // Fill the edges with water
   for (size_t n = 0; n < 20; n++) {
     // Vertical
-    tiles.at(n * 20) = Tile(TileId::WATER);
-    tiles.at(n * 20 + 19) = Tile(TileId::WATER);
+    tiles.at(n * 20) = Tile(TileId::WATER, 0, n);
+    tiles.at(n * 20 + 19) = Tile(TileId::WATER, 19, n);
     // Horizontal
-    tiles.at(n) = Tile(TileId::WATER);
-    tiles.at(19 * 20 + n) = Tile(TileId::WATER);
+    tiles.at(n) = Tile(TileId::WATER, n, 0);
+    tiles.at(19 * 20 + n) = Tile(TileId::WATER, n, 19);
   }
 
   // Make the edges cliffs
   for (size_t n = 1; n < 19; n++) {
     // Vertical
-    tiles.at(n * 20 + 1) = Tile(TileId::CLIFF_RIGHT);
-    tiles.at(n * 20 + 18) = Tile(TileId::CLIFF_LEFT);
+    tiles.at(n * 20 + 1) = Tile(TileId::CLIFF_RIGHT, 1, n);
+    tiles.at(n * 20 + 18) = Tile(TileId::CLIFF_LEFT, 18, n);
 
     // Horizontal
-    tiles.at(20 + n) = Tile(TileId::CLIFF_BOTTOM);
-    tiles.at(18 * 20 + n) = Tile(TileId::CLIFF_TOP);
+    tiles.at(20 + n) = Tile(TileId::CLIFF_BOTTOM, n, 1);
+    tiles.at(18 * 20 + n) = Tile(TileId::CLIFF_TOP, n, 18);
   }
 
   // Fix the corners
-  tiles.at(20 + 1) = Tile(TileId::CLIFF_CORNER_TOP_LEFT);
-  tiles.at(20 + 18) = Tile(TileId::CLIFF_CORNER_TOP_RIGHT);
-  tiles.at(18 * 20 + 1) = Tile(TileId::CLIFF_CORNER_BOTTOM_LEFT);
-  tiles.at(18 * 20 + 18) = Tile(TileId::CLIFF_CORNER_BOTTOM_RIGHT);
+  tiles.at(20 + 1) = Tile(TileId::CLIFF_CORNER_TOP_LEFT, 1, 1);
+  tiles.at(20 + 18) = Tile(TileId::CLIFF_CORNER_TOP_RIGHT, 18, 1);
+  tiles.at(18 * 20 + 1) = Tile(TileId::CLIFF_CORNER_BOTTOM_LEFT, 1, 18);
+  tiles.at(18 * 20 + 18) = Tile(TileId::CLIFF_CORNER_BOTTOM_RIGHT, 18, 18);
 
   // Buildings
   std::vector<Building> buildings;

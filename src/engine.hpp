@@ -30,6 +30,8 @@ public:
 
   Spritesheet *get_spritesheet();
 
+  int get_stage();
+
   void render();
 
   SDL_Renderer *renderer();
@@ -43,6 +45,7 @@ private:
   std::optional<Spritesheet *> spritesheet;
   std::vector<SDL_Event> events;
   bool quit;
+  int stage;
 };
 
 } // namespace advanced_wars

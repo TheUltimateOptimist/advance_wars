@@ -55,6 +55,8 @@ void Engine::pump() {
 
 bool Engine::exited() { return this->quit; }
 
+int Engine::get_stage() { return this->stage; }
+
 void Engine::render() {
   if (SDL_RenderClear(this->sdl_renderer) != 0) {
     throw std::runtime_error("Could not clear renderer: " +
@@ -64,6 +66,8 @@ void Engine::render() {
   if (!scene.has_value()) {
     return;
   }
+
+  stage = SDL_GetTicks() / 300;
 
   this->scene.value()->render(*this, this->events);
 

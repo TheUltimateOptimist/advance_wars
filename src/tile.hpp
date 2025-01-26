@@ -1,5 +1,10 @@
 #pragma once
 
+#include "scene.hpp"
+#include "engine.hpp"
+
+namespace advanced_wars {
+
 enum TileId {
   PLAIN = 0,
   WATER = 1,
@@ -24,8 +29,14 @@ enum TileId {
   CLIFF_INVERSE_CORNER_BOTTOM_RIGHT = 20,
 };
 
-class Tile {
+class Tile : public Scene{
 public:
-  Tile(TileId id);
+  Tile(TileId id, int x, int y);
   TileId id;
+  int x;
+  int y;
+
+  void render(Engine &engine, std::vector<SDL_Event>& events) override;
 };
+
+} // namespace advanced_wars

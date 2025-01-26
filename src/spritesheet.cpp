@@ -128,26 +128,9 @@ int Spritesheet::get_tile_width() { return tile_width; }
 
 int Spritesheet::get_tile_height() { return tile_height; }
 
-int Spritesheet::render_tile(SDL_Renderer *renderer, int tile, int step,
-                             SDL_Rect *rect) {
-  int max_steps = this->get_tile_steps(tile);
+std::vector<std::pair<int, int>> Spritesheet::get_tiles() { return tiles; }
 
-  if (step >= max_steps || step < 0) {
-    throw std::runtime_error("Tried to access step " + std::to_string(step) +
-                             " for tile " + std::to_string(tile));
-  }
-
-  int offset = tiles.at(tile).first;
-
-  SDL_Rect src;
-  src.x = offset * tile_width + step * tile_width;
-  src.y = 0;
-  src.w = tile_width;
-  src.h = tile_height;
-
-  return SDL_RenderCopyEx(renderer, tile_texture, &src, rect, 0, NULL,
-                          SDL_FLIP_NONE);
-}
+SDL_Texture *Spritesheet::get_tile_texture() { return tile_texture; }
 
 // Buildings
 int Spritesheet::get_building_width() { return this->building_width; }
