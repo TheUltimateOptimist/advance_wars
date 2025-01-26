@@ -98,7 +98,7 @@ Spritesheet::Spritesheet(std::string path, Engine &engine) {
 
     if (tmp == nullptr) {
       throw std::runtime_error(
-          "Fehler beim Erstellen der Textur für die Tiles: " +
+          "Fehler beim Erstellen der Textur für die Buildings: " +
           std::string(SDL_GetError()));
     }
 
@@ -106,7 +106,7 @@ Spritesheet::Spritesheet(std::string path, Engine &engine) {
                           buildings_frames.size() * 16 * sizeof(int32_t)) !=
         0) {
       throw std::runtime_error(
-          "Fehler beim updaten der Textur für die Tiles: " +
+          "Fehler beim updaten der Textur für die Buildings: " +
           std::string(SDL_GetError()));
     }
 
@@ -174,14 +174,14 @@ Spritesheet::Spritesheet(std::string path, Engine &engine) {
 
         if (tmp == nullptr) {
           throw std::runtime_error(
-              "Fehler beim Erstellen der Textur für die Tiles: " +
+              "Fehler beim Erstellen der Textur für die Units: " +
               std::string(SDL_GetError()));
         }
 
         if (SDL_UpdateTexture(tmp, NULL, unit_buffer.data(),
                               unit_frames.size() * 16 * sizeof(int32_t)) != 0) {
           throw std::runtime_error(
-              "Fehler beim updaten der Textur für die Tiles: " +
+              "Fehler beim updaten der Textur für die Units: " +
               std::string(SDL_GetError()));
         }
 
@@ -222,14 +222,14 @@ Spritesheet::Spritesheet(std::string path, Engine &engine) {
 
         if (tmp == nullptr) {
           throw std::runtime_error(
-              "Fehler beim Erstellen der Textur für die Tiles: " +
+              "Fehler beim Erstellen der Textur für die Units: " +
               std::string(SDL_GetError()));
         }
 
         if (SDL_UpdateTexture(tmp, NULL, unit_buffer.data(),
                               unit_frames.size() * 24 * sizeof(int32_t)) != 0) {
           throw std::runtime_error(
-              "Fehler beim updaten der Textur für die Tiles: " +
+              "Fehler beim updaten der Textur für die Units: " +
               std::string(SDL_GetError()));
         }
 
@@ -277,7 +277,7 @@ Spritesheet::Spritesheet(std::string path, Engine &engine) {
 
     if (tmp == nullptr) {
       throw std::runtime_error(
-          "Fehler beim Erstellen der Textur für die Tiles: " +
+          "Fehler beim Erstellen der Textur für die Effects: " +
           std::string(SDL_GetError()));
     }
 
