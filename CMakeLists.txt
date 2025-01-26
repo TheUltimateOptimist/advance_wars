@@ -106,7 +106,13 @@ else()
         -lSDL2_ttf
         m
     )
-
-
 endif()
 
+add_executable(writelevel ${PROJECT_SOURCE_DIR}/writelevel.cpp)
+target_include_directories(writelevel
+    PRIVATE 
+        ${highfive_SOURCE_DIR}/include
+)
+target_link_libraries(writelevel
+        ${HDF5_LIBRARIES}
+    )
