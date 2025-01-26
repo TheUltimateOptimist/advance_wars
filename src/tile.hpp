@@ -1,7 +1,7 @@
 #pragma once
 
-#include "scene.hpp"
 #include "engine.hpp"
+#include "scene.hpp"
 
 namespace advanced_wars {
 
@@ -29,14 +29,14 @@ enum TileId {
   CLIFF_INVERSE_CORNER_BOTTOM_RIGHT = 20,
 };
 
-class Tile : public Scene{
+class Tile {
 public:
   Tile(TileId id, int x, int y);
   TileId id;
   int x;
   int y;
 
-  void render(Engine &engine, std::vector<SDL_Event>& events) override;
+  void render(Engine &engine, int scale);
 };
 
 } // namespace advanced_wars

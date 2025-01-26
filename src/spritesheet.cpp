@@ -1,11 +1,7 @@
 #include "spritesheet.hpp"
 #include "SDL_pixels.h"
-#include "SDL_surface.h"
-#include "building.hpp"
-#include "common.h"
 #include "engine.hpp"
 #include "highfive/H5File.hpp"
-#include "highfive/highfive.hpp"
 #include <SDL_image.h>
 #include <SDL_render.h>
 #include <cstddef>
@@ -71,10 +67,10 @@ Spritesheet::Spritesheet(std::string path, Engine &engine) {
   this->tile_height = 16;
 
   // Buildings
-  std::vector<std::string> factions(
+  std::vector<std::string> building_factions(
       {"red", "blue", "yellow", "green", "purple", "neutral"});
 
-  for (std::string faction : factions) {
+  for (std::string faction : building_factions) {
     HighFive::DataSet buildings_ds = file.getDataSet("buildings/" + faction);
 
     std::vector<std::vector<std::vector<uint32_t>>> buildings_frames;
@@ -119,6 +115,135 @@ Spritesheet::Spritesheet(std::string path, Engine &engine) {
 
   this->building_width = 16;
   this->building_height = 32;
+
+  // Units
+  std::vector<std::string> unit_factions(
+      {"red", "blue", "green", "yellow", "purple"});
+
+  std::vector<std::string> units(
+      {"infantery", "mechanized_infantery", "recon", "medium_tank",
+       "heavy_tank", "neo_tank", "apc", "anti_air_tank", "artillery",
+       "rocket_artillery", "anti_air_missile_launcher", "fighter", "bomber",
+       "battle_helicopter", "transport_helicopter", "battleship", "cruiser",
+       "lander", "submarine"});
+
+  std::vector<std::string> unit_states({"idle", "unavailable"});
+  std::vector<std::string> unit_movement_states(
+      {"left", "right", "down", "up"});
+
+  for (size_t faction_idx = 0; faction_idx < unit_factions.size();
+       faction_idx++) {
+    std::string faction = unit_factions.at(faction_idx);
+    // Create entry for units for in a faction
+    unit_textures.push_back(
+        std::vector<std::vector<std::pair<SDL_Texture *, int>>>());
+
+    for (size_t unit_idx = 0; unit_idx < units.size(); unit_idx++) {
+      std::string unit = units.at(unit_idx);
+
+      // Create entry for states for a unit
+      unit_textures.at(faction_idx)
+          .push_back(std::vector<std::pair<SDL_Texture *, int>>());
+
+      for (size_t state_idx = 0; state_idx < unit_states.size(); state_idx++) {
+        std::string unit_state = unit_states.at(state_idx);
+
+        HighFive::DataSet units_ds =
+            file.getDataSet("units/" + faction + "/" + unit + "/" + unit_state);
+
+        std::vector<std::vector<std::vector<uint32_t>>> unit_frames;
+        units_ds.read(unit_frames);
+
+        std::vector<uint32_t> unit_buffer(16 * 16 * unit_frames.size(), 0);
+
+        for (size_t n = 0; n < unit_frames.size(); n++) {
+          for (size_t y = 0; y < 16; y++) {
+            for (size_t x = 0; x < 16; x++) {
+              size_t index = (y * unit_frames.size() * 16) + (n * 16 + x);
+
+              unit_buffer.at(index) = unit_frames.at(n).at(16 - y - 1).at(x);
+            }
+          }
+        }
+
+        SDL_Texture *tmp = SDL_CreateTexture(
+            engine.renderer(), SDL_PIXELFORMAT_RGBA8888,
+            SDL_TEXTUREACCESS_STATIC, unit_frames.size() * 16, 16);
+
+        SDL_SetTextureBlendMode(tmp, SDL_BLENDMODE_BLEND);
+
+        if (tmp == nullptr) {
+          throw std::runtime_error(
+              "Fehler beim Erstellen der Textur für die Tiles: " +
+              std::string(SDL_GetError()));
+        }
+
+        if (SDL_UpdateTexture(tmp, NULL, unit_buffer.data(),
+                              unit_frames.size() * 16 * sizeof(int32_t)) != 0) {
+          throw std::runtime_error(
+              "Fehler beim updaten der Textur für die Tiles: " +
+              std::string(SDL_GetError()));
+        }
+
+        unit_textures.at(faction_idx)
+            .at(unit_idx)
+            .push_back(std::pair<SDL_Texture *, int>(tmp, unit_frames.size()));
+      }
+
+      for (size_t movement_state_idx = 0;
+           movement_state_idx < unit_movement_states.size();
+           movement_state_idx++) {
+        std::string movement_state =
+            unit_movement_states.at(movement_state_idx);
+
+        HighFive::DataSet units_ds = file.getDataSet(
+            "units/" + faction + "/" + unit + "/movement/" + movement_state);
+
+        std::vector<std::vector<std::vector<uint32_t>>> unit_frames;
+        units_ds.read(unit_frames);
+
+        std::vector<uint32_t> unit_buffer(24 * 24 * unit_frames.size(), 0);
+
+        for (size_t n = 0; n < unit_frames.size(); n++) {
+          for (size_t y = 0; y < 24; y++) {
+            for (size_t x = 0; x < 24; x++) {
+              size_t index = (y * unit_frames.size() * 24) + (n * 24 + x);
+
+              unit_buffer.at(index) = unit_frames.at(n).at(24 - y - 1).at(x);
+            }
+          }
+        }
+
+        SDL_Texture *tmp = SDL_CreateTexture(
+            engine.renderer(), SDL_PIXELFORMAT_RGBA8888,
+            SDL_TEXTUREACCESS_STATIC, unit_frames.size() * 24, 24);
+
+        SDL_SetTextureBlendMode(tmp, SDL_BLENDMODE_BLEND);
+
+        if (tmp == nullptr) {
+          throw std::runtime_error(
+              "Fehler beim Erstellen der Textur für die Tiles: " +
+              std::string(SDL_GetError()));
+        }
+
+        if (SDL_UpdateTexture(tmp, NULL, unit_buffer.data(),
+                              unit_frames.size() * 24 * sizeof(int32_t)) != 0) {
+          throw std::runtime_error(
+              "Fehler beim updaten der Textur für die Tiles: " +
+              std::string(SDL_GetError()));
+        }
+
+        unit_textures.at(faction_idx)
+            .at(unit_idx)
+            .push_back(std::pair<SDL_Texture *, int>(tmp, unit_frames.size()));
+      }
+    }
+  }
+
+  this->unit_width = 16;
+  this->unit_height = 16;
+  this->unit_moving_width = 24;
+  this->unit_moving_height = 24;
 }
 
 // Tiles
@@ -137,10 +262,23 @@ int Spritesheet::get_building_width() { return this->building_width; }
 
 int Spritesheet::get_building_height() { return this->building_height; }
 
-std::vector<SDL_Texture*> Spritesheet::get_building_textures() {
+std::vector<SDL_Texture *> &Spritesheet::get_building_textures() {
   return building_textures;
 }
 
+// Units
+int Spritesheet::get_unit_width() { return this->unit_width; }
+
+int Spritesheet::get_unit_height() { return this->unit_height; }
+
+int Spritesheet::get_unit_moving_width() { return this->unit_moving_width; }
+
+int Spritesheet::get_unit_moving_height() { return this->unit_moving_height; }
+
+std::vector<std::vector<std::vector<std::pair<SDL_Texture *, int>>>> &
+Spritesheet::get_unit_textures() {
+  return this->unit_textures;
+}
 
 Spritesheet::~Spritesheet() { SDL_DestroyTexture(tile_texture); }
 

@@ -1,9 +1,9 @@
 #include "building.hpp"
-#include "common.h"
 #include "engine.hpp"
 #include "level.hpp"
 #include "spritesheet.hpp"
 #include "tile.hpp"
+#include "unit.hpp"
 #include "window.hpp"
 #include <cstddef>
 #include <vector>
@@ -18,12 +18,11 @@ int main() {
 
   // Construct a level
   std::vector<Tile> tiles;
-  for(int y = 0; y < 20; y++) {
-    for(int x = 0; x < 20; x++) {
+  for (int y = 0; y < 20; y++) {
+    for (int x = 0; x < 20; x++) {
       tiles.push_back(Tile(TileId::PLAIN, x, y));
     }
   }
-
 
   // Fill the edges with water
   for (size_t n = 0; n < 20; n++) {
@@ -58,13 +57,24 @@ int main() {
   for (int y = 0; y < 6; y++) {
     for (int x = 0; x < 5; x++) {
       BuildingId id = static_cast<BuildingId>(x);
-      Faction faction = static_cast<Faction>(y);
+      BuildingFaction faction = static_cast<BuildingFaction>(y);
 
       buildings.push_back(Building(3 + x, 3 + 2 * y, id, faction));
     }
   }
 
-  Level level("Osnabrück", 20, 20, tiles, buildings, std::vector<Unit>());
+  // Units
+
+  std::vector<Unit> units;
+
+  for (int y = 0; y < 19; y++) {
+    for (int x = 0; x < 6; x++) {
+      units.push_back(Unit(x + 9, y + 2, UnitFaction::URED,
+                           static_cast<UnitId>(y), static_cast<UnitState>(x)));
+    }
+  }
+
+  Level level("Osnabrück", 20, 20, tiles, buildings, units);
 
   engine.set_scene(level);
 

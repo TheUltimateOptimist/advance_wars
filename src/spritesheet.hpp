@@ -1,6 +1,5 @@
 #pragma once
 
-#include "common.h"
 #include <SDL.h>
 #include <SDL_render.h>
 #include <string>
@@ -30,16 +29,26 @@ public:
 
   std::vector<std::pair<int, int>> get_tiles();
 
-  SDL_Texture* get_tile_texture();
+  SDL_Texture *get_tile_texture();
 
-  // Buildings: TODO
+  // Buildings
   int get_building_width();
 
   int get_building_height();
 
-  std::vector<SDL_Texture*> get_building_textures();
+  std::vector<SDL_Texture *> &get_building_textures();
 
-  // Units: TODO
+  // Units
+  int get_unit_width();
+
+  int get_unit_height();
+
+  int get_unit_moving_width();
+
+  int get_unit_moving_height();
+
+  std::vector<std::vector<std::vector<std::pair<SDL_Texture *, int>>>> &
+  get_unit_textures();
 
 private:
   // Tiles
@@ -52,5 +61,13 @@ private:
   std::vector<SDL_Texture *> building_textures;
   int building_width;
   int building_height;
+
+  // Units
+  std::vector<std::vector<std::vector<std::pair<SDL_Texture *, int>>>>
+      unit_textures;
+  int unit_width;
+  int unit_height;
+  int unit_moving_width;
+  int unit_moving_height;
 };
 } // namespace advanced_wars

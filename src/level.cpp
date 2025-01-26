@@ -29,15 +29,18 @@ void Level::render(Engine &engine, std::vector<SDL_Event> &events) {
   }
 
   // Tiles
-  for(Tile t : tiles)
-  {
-    t.render(engine, events);
+  for (Tile tile : tiles) {
+    tile.render(engine, RENDERING_SCALE);
   }
 
   // Buildings
-  for (Building building : buildings)
-  {
-    building.render(engine, events);
+  for (Building building : buildings) {
+    building.render(engine, RENDERING_SCALE);
+  }
+
+  // Units
+  for (Unit unit : units) {
+    unit.render(engine, RENDERING_SCALE);
   }
 
   // Set background color for renderer
