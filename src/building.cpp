@@ -10,7 +10,7 @@ void Building::render(Engine &engine, int scale) {
   Spritesheet *spritesheet = engine.get_spritesheet();
 
   SDL_Rect src;
-  src.x = id * spritesheet->get_building_width();
+  src.x = static_cast<int>(id) * spritesheet->get_building_width();
   src.y = 0;
   src.w = spritesheet->get_building_width();
   src.h = spritesheet->get_building_height();
@@ -21,9 +21,10 @@ void Building::render(Engine &engine, int scale) {
   dst.w = spritesheet->get_building_width() * scale;
   dst.h = spritesheet->get_building_height() * scale;
 
-  SDL_RenderCopyEx(engine.renderer(),
-                   spritesheet->get_building_textures()[faction], &src, &dst, 0,
-                   NULL, SDL_FLIP_NONE);
+  SDL_RenderCopyEx(
+      engine.renderer(),
+      spritesheet->get_building_textures()[static_cast<int>(faction)], &src,
+      &dst, 0, NULL, SDL_FLIP_NONE);
 }
 
 } // namespace advanced_wars

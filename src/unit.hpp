@@ -4,7 +4,7 @@
 
 namespace advanced_wars {
 
-enum UnitFaction {
+enum class UnitFaction {
   URED = 0,
   UBLUE = 1,
   UGREEN = 2,
@@ -12,7 +12,7 @@ enum UnitFaction {
   UPURPLE = 4,
 };
 
-enum UnitId {
+enum class UnitId {
   INFANTERY = 0,
   MECHANIZED_INFANTERY = 1,
   RECON = 2,
@@ -34,13 +34,22 @@ enum UnitId {
   SUBMARINE = 18,
 };
 
-enum UnitState {
+enum class UnitState {
   IDLE = 0,
   UNAVAILABLE = 1,
   MOVEMENTLEFT = 2,
   MOVEMENTRIGHT = 3,
   MOVEMENTDOWN = 4,
   MOVEMENTUP = 5,
+};
+
+enum class MovementType {
+  FOOT = 0,
+  TIRES = 1,
+  TREAD = 2,
+  AIR = 3,
+  SHIP = 4,
+  LANDER = 5,
 };
 
 class Unit {

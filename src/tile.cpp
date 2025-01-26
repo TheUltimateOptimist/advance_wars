@@ -1,6 +1,5 @@
 #include "tile.hpp"
 #include "spritesheet.hpp"
-#include <stdexcept>
 #include <vector>
 
 namespace advanced_wars {
@@ -15,13 +14,6 @@ void Tile::render(Engine &engine, int scale) {
 
   int step = engine.get_stage() %
              spritesheet->get_tile_textures().at(static_cast<int>(id)).second;
-
-  if (step >=
-          spritesheet->get_tile_textures().at(static_cast<int>(id)).second ||
-      step < 0) {
-    throw std::runtime_error("Tried to access step " + std::to_string(step) +
-                             " for tile " + std::to_string(this->id));
-  }
 
   SDL_Rect src;
   src.x = step * spritesheet->get_tile_width();

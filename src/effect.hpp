@@ -4,7 +4,7 @@
 
 namespace advanced_wars {
 
-enum EffectId {
+enum class EffectId {
   LAND_EXPLOSION = 0,
   AIR_EXPLOSION = 1,
   NAVAL_EXPLOSION = 2,

@@ -5,16 +5,16 @@
 
 namespace advanced_wars {
 
-enum BuildingFaction {
-  BRED = 0,
-  BBLUE = 1,
-  BYELLOW = 2,
-  BGREEN = 3,
-  BPURPLE = 4,
-  BNEUTRAL = 5,
+enum class BuildingFaction {
+  RED = 0,
+  BLUE = 1,
+  YELLOW = 2,
+  GREEN = 3,
+  PURPLE = 4,
+  NEUTRAL = 5,
 };
 
-enum BuildingId {
+enum class BuildingId {
   HEADQUARTER = 0,
   CITY = 1,
   FACTORY = 2,

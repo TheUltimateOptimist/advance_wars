@@ -5,7 +5,7 @@
 
 namespace advanced_wars {
 
-enum TileId {
+enum class TileId {
   PLAIN = 0,
   WATER = 1,
   FOREST = 2,
