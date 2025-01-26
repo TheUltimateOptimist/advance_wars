@@ -21,15 +21,12 @@ public:
   Spritesheet &operator=(const Spritesheet &) = delete;
 
   // Tiles
-  int get_tile_steps(int tile);
 
   int get_tile_width();
 
   int get_tile_height();
 
-  std::vector<std::pair<int, int>> get_tiles();
-
-  SDL_Texture *get_tile_texture();
+  std::vector<std::pair<SDL_Texture *, int>> &get_tile_textures();
 
   // Buildings
   int get_building_width();
@@ -59,10 +56,9 @@ public:
 
 private:
   // Tiles
-  SDL_Texture *tile_texture;
   int tile_width;
   int tile_height;
-  std::vector<std::pair<int, int>> tiles;
+  std::vector<std::pair<SDL_Texture *, int>> tile_textures;
 
   // Buildings
   std::vector<SDL_Texture *> building_textures;

@@ -17,50 +17,76 @@ Spritesheet::Spritesheet(std::string path, Engine &engine) {
   HighFive::File file(path, HighFive::File::ReadOnly);
 
   // Tiles
-  HighFive::DataSet tile_frames_ds = file.getDataSet("tiles/frames");
+  std::vector<std::string> tiles({"plain",
+                                  "water",
+                                  "forest",
+                                  "mountain",
+                                  "bridge_horizontal",
+                                  "bridge_vertical",
+                                  "street_horizontal",
+                                  "street_vertical",
+                                  "street_crossing",
+                                  "street_junction_right",
+                                  "street_junction_left",
+                                  "street_junction_down",
+                                  "street_junction_up",
+                                  "street_corner_top_left",
+                                  "street_corner_top_right",
+                                  "street_corner_bottom_left",
+                                  "street_corner_bottom_right",
+                                  "riff",
+                                  "cliff_top",
+                                  "cliff_bottom",
+                                  "cliff_left",
+                                  "cliff_right",
+                                  "cliff_corner_top_left",
+                                  "cliff_corner_top_right",
+                                  "cliff_corner_bottom_left",
+                                  "cliff_corner_bottom_right",
+                                  "cliff_inverse_corner_top_left",
+                                  "cliff_inverse_corner_top_right",
+                                  "cliff_inverse_corner_bottom_left",
+                                  "cliff_inverse_corner_bottom_right"});
 
-  HighFive::DataSet tile_num_frames_ds = file.getDataSet("tiles/num_frames");
+  for (size_t tile_idx = 0; tile_idx < tiles.size(); tile_idx++) {
+    HighFive::DataSet units_ds = file.getDataSet("tiles/" + tiles[tile_idx]);
 
-  std::vector<std::vector<std::vector<uint32_t>>> tile_frames;
+    std::vector<std::vector<std::vector<uint32_t>>> tile_frames;
+    units_ds.read(tile_frames);
 
-  tile_frames_ds.read(tile_frames);
+    std::vector<uint32_t> tile_buffer(16 * 16 * tile_frames.size(), 0);
 
-  std::vector<uint32_t> tile_num_frames;
+    for (size_t n = 0; n < tile_frames.size(); n++) {
+      for (size_t y = 0; y < 16; y++) {
+        for (size_t x = 0; x < 16; x++) {
+          size_t index = (y * tile_frames.size() * 16) + (n * 16 + x);
 
-  tile_num_frames_ds.read(tile_num_frames);
-
-  std::vector<uint32_t> tile_buffer(16 * 16 * tile_frames.size(), 0);
-
-  for (size_t n = 0; n < tile_frames.size(); n++) {
-    for (size_t y = 0; y < 16; y++) {
-      for (size_t x = 0; x < 16; x++) {
-        size_t index = (y * tile_frames.size() * 16) + (n * 16 + x);
-
-        tile_buffer.at(index) = tile_frames.at(n).at(y).at(x);
+          tile_buffer.at(index) = tile_frames.at(n).at(16 - y - 1).at(x);
+        }
       }
     }
-  }
 
-  int count = 0;
-  for (size_t n = 0; n < tile_num_frames.size(); n++) {
-    this->tiles.push_back(std::pair(count, tile_num_frames.at(n)));
+    SDL_Texture *tmp = SDL_CreateTexture(
+        engine.renderer(), SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STATIC,
+        tile_frames.size() * 16, 16);
 
-    count += tile_num_frames.at(n);
-  }
+    SDL_SetTextureBlendMode(tmp, SDL_BLENDMODE_BLEND);
 
-  tile_texture = SDL_CreateTexture(engine.renderer(), SDL_PIXELFORMAT_RGBA8888,
-                                   SDL_TEXTUREACCESS_STATIC, count * 16, 16);
+    if (tmp == nullptr) {
+      throw std::runtime_error(
+          "Fehler beim Erstellen der Textur für die Units: " +
+          std::string(SDL_GetError()));
+    }
 
-  if (tile_texture == nullptr) {
-    throw std::runtime_error(
-        "Fehler beim Erstellen der Textur für die Tiles: " +
-        std::string(SDL_GetError()));
-  }
+    if (SDL_UpdateTexture(tmp, NULL, tile_buffer.data(),
+                          tile_frames.size() * 16 * sizeof(int32_t)) != 0) {
+      throw std::runtime_error(
+          "Fehler beim updaten der Textur für die Units: " +
+          std::string(SDL_GetError()));
+    }
 
-  if (SDL_UpdateTexture(tile_texture, NULL, tile_buffer.data(),
-                        count * 16 * sizeof(int32_t)) != 0) {
-    throw std::runtime_error("Fehler beim updaten der Textur für die Tiles: " +
-                             std::string(SDL_GetError()));
+    tile_textures.push_back(
+        std::pair<SDL_Texture *, int>(tmp, tile_frames.size()));
   }
 
   this->tile_width = 16;
@@ -297,15 +323,14 @@ Spritesheet::Spritesheet(std::string path, Engine &engine) {
 }
 
 // Tiles
-int Spritesheet::get_tile_steps(int tile) { return tiles.at(tile).second; }
 
 int Spritesheet::get_tile_width() { return tile_width; }
 
 int Spritesheet::get_tile_height() { return tile_height; }
 
-std::vector<std::pair<int, int>> Spritesheet::get_tiles() { return tiles; }
-
-SDL_Texture *Spritesheet::get_tile_texture() { return tile_texture; }
+std::vector<std::pair<SDL_Texture *, int>> &Spritesheet::get_tile_textures() {
+  return tile_textures;
+}
 
 // Buildings
 int Spritesheet::get_building_width() { return this->building_width; }
@@ -339,6 +364,23 @@ std::vector<std::pair<SDL_Texture *, int>> &Spritesheet::get_effect_textures() {
   return this->effect_textures;
 }
 
-Spritesheet::~Spritesheet() { SDL_DestroyTexture(tile_texture); }
+Spritesheet::~Spritesheet() {
+  for (std::pair<SDL_Texture *, int> tile_texture : tile_textures) {
+    SDL_DestroyTexture(tile_texture.first);
+  }
+
+  for (SDL_Texture *building_texture : building_textures) {
+    SDL_DestroyTexture(building_texture);
+  }
+
+  for (std::vector<std::vector<std::pair<SDL_Texture *, int>>> faction :
+       unit_textures) {
+    for (std::vector<std::pair<SDL_Texture *, int>> unit : faction) {
+      for (std::pair<SDL_Texture *, int> state : unit) {
+        SDL_DestroyTexture(state.first);
+      }
+    }
+  }
+}
 
 } // namespace advanced_wars
