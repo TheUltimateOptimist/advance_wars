@@ -19,7 +19,7 @@ private:
 public:
   Menu(int selectedOption);
 
-  void render(Engine *engine);
+  void render(Engine *engine) override;
 
   void handleEvent(Engine *engine, SDL_Event &event);
 
