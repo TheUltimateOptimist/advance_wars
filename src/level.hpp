@@ -19,6 +19,7 @@ public:
         std::vector<Building> buildings, std::vector<Unit> units);
 
   void render(Engine *events);
+  void handleEvent(Engine *engine, SDL_Event &event);
 
 private:
   std::string name;

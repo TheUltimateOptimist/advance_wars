@@ -128,7 +128,7 @@ void Menu::handleEvent(Engine *engine, SDL_Event &event) {
         engine->push_scene(std::make_shared<advanced_wars::Level>(level));
 
         std::string basePath = SDL_GetBasePath();
-        std::string relativePath = "assets/test.png";
+        std::string relativePath = "assets/main_background.png";
         std::string fullPath = basePath + relativePath;
         Spritesheet spritesheet(fullPath, *engine);
 
