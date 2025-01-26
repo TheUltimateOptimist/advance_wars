@@ -1,6 +1,7 @@
 #include "level.hpp"
 #include "SDL_error.h"
 #include "building.hpp"
+#include "effect.hpp"
 #include "engine.hpp"
 #include "spritesheet.hpp"
 #include "unit.hpp"
@@ -11,9 +12,10 @@
 namespace advanced_wars {
 
 Level::Level(std::string name, int width, int height, std::vector<Tile> tiles,
-             std::vector<Building> buildings, std::vector<Unit> units)
+             std::vector<Building> buildings, std::vector<Unit> units,
+             std::vector<Effect> effects)
     : name(name), width(width), height(height), tiles(tiles),
-      buildings(buildings), units(units) {
+      buildings(buildings), units(units), effects(effects) {
 
   if ((size_t)(width * height) != tiles.size()) {
     throw std::runtime_error("level tile mismatch");
@@ -29,18 +31,23 @@ void Level::render(Engine &engine, std::vector<SDL_Event> &events) {
   }
 
   // Tiles
-  for (Tile tile : tiles) {
+  for (Tile &tile : tiles) {
     tile.render(engine, RENDERING_SCALE);
   }
 
   // Buildings
-  for (Building building : buildings) {
+  for (Building &building : buildings) {
     building.render(engine, RENDERING_SCALE);
   }
 
   // Units
-  for (Unit unit : units) {
+  for (Unit &unit : units) {
     unit.render(engine, RENDERING_SCALE);
+  }
+
+  // Effects
+  for (Effect &effect : effects) {
+    effect.render(engine, RENDERING_SCALE);
   }
 
   // Set background color for renderer

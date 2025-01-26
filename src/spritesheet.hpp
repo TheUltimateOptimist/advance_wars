@@ -50,6 +50,13 @@ public:
   std::vector<std::vector<std::vector<std::pair<SDL_Texture *, int>>>> &
   get_unit_textures();
 
+  // Effects
+  int get_effect_width();
+
+  int get_effect_height();
+
+  std::vector<std::pair<SDL_Texture *, int>> &get_effect_textures();
+
 private:
   // Tiles
   SDL_Texture *tile_texture;
@@ -69,5 +76,10 @@ private:
   int unit_height;
   int unit_moving_width;
   int unit_moving_height;
+
+  // Effects
+  std::vector<std::pair<SDL_Texture *, int>> effect_textures;
+  int effect_width;
+  int effect_height;
 };
 } // namespace advanced_wars

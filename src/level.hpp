@@ -1,6 +1,7 @@
 #pragma once
 
 #include "building.hpp"
+#include "effect.hpp"
 #include "engine.hpp"
 #include "scene.hpp"
 #include "tile.hpp"
@@ -17,7 +18,8 @@ namespace advanced_wars {
 class Level : public Scene {
 public:
   Level(std::string name, int width, int height, std::vector<Tile> tiles,
-        std::vector<Building> buildings, std::vector<Unit> units);
+        std::vector<Building> buildings, std::vector<Unit> units,
+        std::vector<Effect>);
 
   void render(Engine &engine, std::vector<SDL_Event> &events);
 
@@ -28,6 +30,7 @@ private:
   std::vector<Tile> tiles;
   std::vector<Building> buildings;
   std::vector<Unit> units;
+  std::vector<Effect> effects;
 };
 
 } // namespace advanced_wars

@@ -1,4 +1,5 @@
 #include "building.hpp"
+#include "effect.hpp"
 #include "engine.hpp"
 #include "level.hpp"
 #include "spritesheet.hpp"
@@ -64,7 +65,6 @@ int main() {
   }
 
   // Units
-
   std::vector<Unit> units;
 
   for (int y = 0; y < 19; y++) {
@@ -74,7 +74,11 @@ int main() {
     }
   }
 
-  Level level("Osnabrück", 20, 20, tiles, buildings, units);
+  std::vector<Effect> effects({Effect(3, 15, EffectId::LAND_EXPLOSION, false),
+                               Effect(5, 15, EffectId::AIR_EXPLOSION, true),
+                               Effect(5, 18, EffectId::NAVAL_EXPLOSION, true)});
+
+  Level level("Osnabrück", 20, 20, tiles, buildings, units, effects);
 
   engine.set_scene(level);
 

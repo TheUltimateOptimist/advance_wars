@@ -244,6 +244,56 @@ Spritesheet::Spritesheet(std::string path, Engine &engine) {
   this->unit_height = 16;
   this->unit_moving_width = 24;
   this->unit_moving_height = 24;
+
+  // Effects
+  std::vector<std::string> effects({"land_explosion", "air_explosion",
+                                    "naval_explosion", "submarine_hide",
+                                    "submarine_appear"});
+
+  for (size_t effect_idx = 0; effect_idx < effects.size(); effect_idx++) {
+    HighFive::DataSet effect_ds =
+        file.getDataSet("effects/" + effects[effect_idx]);
+
+    std::vector<std::vector<std::vector<uint32_t>>> effect_frames;
+    effect_ds.read(effect_frames);
+
+    std::vector<uint32_t> effect_buffer(32 * 32 * effect_frames.size(), 0);
+
+    for (size_t n = 0; n < effect_frames.size(); n++) {
+      for (size_t y = 0; y < 32; y++) {
+        for (size_t x = 0; x < 32; x++) {
+          size_t index = (y * effect_frames.size() * 32) + (n * 32 + x);
+
+          effect_buffer.at(index) = effect_frames.at(n).at(32 - y - 1).at(x);
+        }
+      }
+    }
+
+    SDL_Texture *tmp = SDL_CreateTexture(
+        engine.renderer(), SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STATIC,
+        effect_frames.size() * 32, 32);
+
+    SDL_SetTextureBlendMode(tmp, SDL_BLENDMODE_BLEND);
+
+    if (tmp == nullptr) {
+      throw std::runtime_error(
+          "Fehler beim Erstellen der Textur für die Tiles: " +
+          std::string(SDL_GetError()));
+    }
+
+    if (SDL_UpdateTexture(tmp, NULL, effect_buffer.data(),
+                          effect_frames.size() * 32 * sizeof(int32_t)) != 0) {
+      throw std::runtime_error(
+          "Fehler beim updaten der Textur für die Tiles: " +
+          std::string(SDL_GetError()));
+    }
+
+    effect_textures.push_back(
+        std::pair<SDL_Texture *, int>(tmp, effect_frames.size()));
+  }
+
+  this->effect_width = 32;
+  this->effect_height = 32;
 }
 
 // Tiles
@@ -278,6 +328,15 @@ int Spritesheet::get_unit_moving_height() { return this->unit_moving_height; }
 std::vector<std::vector<std::vector<std::pair<SDL_Texture *, int>>>> &
 Spritesheet::get_unit_textures() {
   return this->unit_textures;
+}
+
+// Effects
+int Spritesheet::get_effect_width() { return this->effect_width; }
+
+int Spritesheet::get_effect_height() { return this->effect_height; }
+
+std::vector<std::pair<SDL_Texture *, int>> &Spritesheet::get_effect_textures() {
+  return this->effect_textures;
 }
 
 Spritesheet::~Spritesheet() { SDL_DestroyTexture(tile_texture); }

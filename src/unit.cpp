@@ -1,5 +1,4 @@
 #include "unit.hpp"
-#include <iostream>
 
 namespace advanced_wars {
 
