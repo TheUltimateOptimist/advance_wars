@@ -4,7 +4,7 @@ namespace advanced_wars {
 
 Unit::Unit(int x, int y, UnitFaction faction, UnitId id, UnitState state)
     : x(x), y(y), faction(faction), id(id), state(state) {
-
+        health = max_health;
       };
 
 void Unit::render(Engine &engine, int scale) {
@@ -64,11 +64,15 @@ void Unit::render(Engine &engine, int scale) {
 
 //Placeholder
 MatchupTabel damageMatrix = {
-    { UnitId::INFANTRY, {{ UnitId::INFANTRY, 50 }, { UnitId::TANK, 5 }} },
-    { UnitId::TANK, {{ UnitId::INFANTRY, 90 }, { UnitId::TANK, 50 }} }
+    { UnitId::INFANTRY, {{ UnitId::INFANTRY, 50 }, { UnitId::MEDIUM_TANK, 5 }} },
+    { UnitId::MEDIUM_TANK, {{ UnitId::INFANTRY, 90 }, { UnitId::MEDIUM_TANK, 50 }} }
 };
+
 void Unit::attack(Unit &enemy) {
 
+    //checks to be run:
+    //is unit in range?
+    //has unit not attacked this turn?
 
     //Start Attack: choose the appropriate weapon:
     int offDamage = damageMatrix[this->id][enemy->id] * ((this->health)/(this->max_health));
@@ -77,6 +81,11 @@ void Unit::attack(Unit &enemy) {
     enemy->health = enemy->health - offDamage;
     if(enemy->health > 0) {
         this->health = this->health - defDamage;
+        if(this->health <= 0) {
+            this->~Unit();
+        }
+    } else {
+        enemy->~Unit();
     }
 }
 

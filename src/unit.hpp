@@ -60,9 +60,11 @@ using MatchupTabel = std::unordered_map<u_int8_t, std::unordered_map<u_int8_t, i
 class Unit {
 public:
   Unit(int x, int y, UnitFaction faction, UnitId id, UnitState state);
+  ~Unit() {
+        //Assuming that the destruktion of a unit triggers events
+    }
 
   void render(Engine &engine, int scale);
-
 
   /*
   The attacker will move towards the defender and thus initiate combat
@@ -86,8 +88,6 @@ public:
   */
   void calculate_movement();
 
-
-
 private:
   int x;
   int y;
@@ -96,7 +96,8 @@ private:
   UnitId id;
   UnitState state;
 
-  int health;
+  int health; //health equals max_health at construction
+  int max_health; // max_health required for damage_scaling
   int range;
   int fuel;
   int max_fuel;
