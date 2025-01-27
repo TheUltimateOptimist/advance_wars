@@ -30,7 +30,7 @@ Aus den einzelnen Werte in dem Array lassen sich die IDs der entsprechenden Geba
 ...  
 Allgemein:  
 Sei t ein Wert im Tiles Array, dann gillt  
-falls t < 50: Terrain ID = t  
+falls t < 30: Terrain ID = t  
 falls t >= 50: Faction ID = (t - 50) / 5   Gebaeude ID = (t - 50) % 5  
 t wird ermittelt mit entweder t = Terrain ID fuer Terrains  
 oder t = 50 + 5*Faction Id + Gebaeude ID fuer Gebaeude
