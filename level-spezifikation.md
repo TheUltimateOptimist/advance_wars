@@ -10,7 +10,7 @@ Ein weiters Dataset, das letztlich ein array<uint8_t> ist, welches die Levelmap 
 <level>
     <width>20</width> <!-- Breite des Levels -->
     <height>20</height> <!-- Hoehe des Levels -->
-    <name>Giles Level<name><!-- Name des Levels -->
+    <name>Geiles Level<name><!-- Name des Levels -->
 </level>
 ```
 
