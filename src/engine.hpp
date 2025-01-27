@@ -1,10 +1,10 @@
 #pragma once
 
-#include <SDL_render.h>
 #include "scene.hpp"
 #include "spritesheet.hpp"
 #include "window.hpp"
 #include <SDL.h>
+#include <SDL_render.h>
 #include <optional>
 #include <vector>
 
@@ -30,6 +30,8 @@ public:
 
   Spritesheet *get_spritesheet();
 
+  int get_stage();
+
   void render();
 
   SDL_Renderer *renderer();
@@ -43,6 +45,7 @@ private:
   std::optional<Spritesheet *> spritesheet;
   std::vector<SDL_Event> events;
   bool quit;
+  int stage;
 };
 
 } // namespace advanced_wars
