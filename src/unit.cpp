@@ -62,4 +62,22 @@ void Unit::render(Engine &engine, int scale) {
   }
 }
 
+//Placeholder
+MatchupTabel damageMatrix = {
+    { UnitId::INFANTRY, {{ UnitId::INFANTRY, 50 }, { UnitId::TANK, 5 }} },
+    { UnitId::TANK, {{ UnitId::INFANTRY, 90 }, { UnitId::TANK, 50 }} }
+};
+void Unit::attack(Unit &enemy) {
+
+
+    //Start Attack: choose the appropriate weapon:
+    int offDamage = damageMatrix[this->id][enemy->id] * ((this->health)/(this->max_health));
+    int defDamage = damageMatrix[this->id][enemy->id] * ((enemy->health)/(enemy->max_health));
+
+    enemy->health = enemy->health - offDamage;
+    if(enemy->health > 0) {
+        this->health = this->health - defDamage;
+    }
+}
+
 } // namespace advanced_wars
