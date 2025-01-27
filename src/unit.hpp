@@ -54,6 +54,9 @@ enum class MovementType {
   LANDER = 5,
 };
 
+//Fill the MatchupTabel
+using MatchupTabel = std::unordered_map<u_int8_t, std::unordered_map<u_int8_t, int>>;
+
 class Unit {
 public:
   Unit(int x, int y, UnitFaction faction, UnitId id, UnitState state);
@@ -68,7 +71,7 @@ public:
   Will Update the health for both units
   Attacker deals damage to the defender first
   */
-  void init_combat(Unit &defender);
+  void attack(Unit &enemy);
 
 
   /*
@@ -82,6 +85,8 @@ public:
   MUST show all movements possible
   */
   void calculate_movement();
+
+
 
 private:
   int x;
