@@ -60,6 +60,29 @@ public:
 
   void render(Engine &engine, int scale);
 
+
+  /*
+  The attacker will move towards the defender and thus initiate combat
+  @params Takes a reference to the defender
+
+  Will Update the health for both units
+  Attacker deals damage to the defender first
+  */
+  void init_combat(Unit &defender);
+
+
+  /*
+  @params Takes the desired position of the unit and updates its values
+  */
+  void update_position(int posX, int posY);
+
+  /*
+  This function needs to be able to determine the possible movement-paths the unit can take
+  MUST take into consideration that different units behave differently on certain terrain
+  MUST show all movements possible
+  */
+  void calculate_movement();
+
 private:
   int x;
   int y;
