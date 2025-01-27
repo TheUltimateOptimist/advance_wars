@@ -19,6 +19,18 @@ set(HIGHFIVE_UNIT_TESTS OFF)
 
 FetchContent_MakeAvailable(highfive)
 
+FetchContent_Declare(
+    box2d
+    GIT_REPOSITORY https://github.com/erincatto/box2d.git
+    GIT_TAG v3.0.0
+)
+
+# Box2D Build-Optionen konfigurieren
+set(BOX2D_BUILD_TESTBED OFF CACHE BOOL "" FORCE)
+set(BOX2D_BUILD_UNIT_TESTS OFF CACHE BOOL "" FORCE)
+set(BOX2D_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+
+FetchContent_MakeAvailable(box2d)
 
 
 # Quellen sammeln
@@ -80,6 +92,7 @@ if(APPLE)
             ${SDL2_PATH}/SDL2.framework/SDL2
             ${SDL2_PATH}/SDL2_image.framework/SDL2_image
             ${SDL2_PATH}/SDL2_ttf.framework/SDL2_ttf
+            box2d
     )
 
     # Debug-Ausgaben
@@ -100,11 +113,12 @@ else()
     include_directories(${HDF5_INCLUDE_DIRS})
 
     target_link_libraries(advanced_wars
-        ${HDF5_LIBRARIES}
-        -lSDL2
-        -lSDL2_image
-        -lSDL2_ttf
-        m
+            ${HDF5_LIBRARIES}
+            -lSDL2
+            -lSDL2_image
+            -lSDL2_ttf
+            box2d
+            m
     )
 
 
