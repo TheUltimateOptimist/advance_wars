@@ -44,15 +44,28 @@ Level::Level(std::string name, int width, int height, std::vector<Tile> tiles,
   int width = pt.get<int>("level.width");
   int height = pt.get<int>("level.height");
   std::string name = pt.get<std::string>("level.name");
+
+  // create tiles and buildings vector from tiles array
   std::vector<Tile> tiles;
+  std::vector<Building> buildings;
   tiles.reserve(width*height);
-  for (uint8_t value : level_tilesarray)
+  for (int i = 0; i < level_tilesarray.size(); i++) 
   {
-    tiles.push_back(Tile())
+    int x = i % width;
+    int y = i / width;
+    if (level_tilesarray[i] >= 50) {
+      tiles.push_back(Tile(TileId(TileId::PLAIN), x, y));
+      BuildingId building_id = static_cast<BuildingId>((level_tilesarray[i] - 50) % 5);
+      BuildingFaction faction_id = static_cast<BuildingFaction>((level_tilesarray[i] - 50) / 5);
+      buildings.push_back(Building(x, y, building_id, faction_id));
+    }
+    else {
+      TileId tile_id = static_cast<TileId>(level_tilesarray[i]);
+      tiles.push_back(Tile(tile_id, x, y));
+    }
   }
 
-
-  throw std::runtime_error("some");
+  return Level(name, width, height, tiles, buildings, {}, {});
 };
 
 void Level::render(Engine &engine, std::vector<SDL_Event> &events) {
