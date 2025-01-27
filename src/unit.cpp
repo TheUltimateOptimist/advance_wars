@@ -1,4 +1,5 @@
 #include "unit.hpp"
+#include <tinyxml2.h>
 
 namespace advanced_wars {
 
@@ -62,17 +63,11 @@ void Unit::render(Engine &engine, int scale) {
   }
 }
 
-//Placeholder
-MatchupTabel damageMatrix = {
-    { UnitId::INFANTRY, {{ UnitId::INFANTRY, 50 }, { UnitId::MEDIUM_TANK, 5 }} },
-    { UnitId::MEDIUM_TANK, {{ UnitId::INFANTRY, 90 }, { UnitId::MEDIUM_TANK, 50 }} }
-};
-
 void Unit::attack(Unit &enemy) {
 
     //has unit not attacked this turn?
-    if(!inRange(Unit &enemy)) {
-        //Render enemies as not in Range
+    if(!inRange(enemy)) {
+        //Render enemies as not in Range => use the UNAVAILABLE Texture for that
     }
 
     if (this->has_attacked) {
@@ -103,4 +98,44 @@ void Unit::inRange(Unit &enemy) {
     return false; 
 }
 
+void loadXML(const char* filename) {
+
+    tinyxml2::XMLDocument doc;
+    if (doc.LoadFile(filename) != tinyxml2::XML_SUCCESS) {
+        std::cerr << "Fehler beim Laden der XML-Datei!" << std::endl;
+        return;
+    }
+
+    MatchupTabel damageMatrix;
+    tinyxml2::XMLElement* unitElement = doc.FirstChildElement("Units")->FirstChildElement("Unit");
+
+    //get all Units
+    while(unitElement) {
+
+        const u_int8_t UnitId = unitElement->Attribute("id");
+
+        std::unordered_map<u_int8_t, int> attackValues;
+        tinyxml2::XMLElement* attackElement = unitElement->FirstChildElement("Attack");
+
+        //get all attack-values
+        while(attackElement) {
+            
+            tinyxml2::XMLElement* attackTypeElement = attackElement->FirstChildElement();
+
+            while(attackTypeElement) {
+                 UnitId Unit_Id = static_cast<UnitId> attackTypeElement->Name(); //wenn das geht kauf ich maggus sein kochbuch
+
+                 int attackValue = attackTypeElement->IntText();
+
+                 attackValues[Unit_Id] = attackValue;
+
+                 attackTypeElement = attackTypeElement->NextSiblingElement();
+            }
+        }
+
+        damageMatrix[unitElement][attackValues];
+        unitElement = unitElement->NextSiblingElement("Unit");
+    }
+    
+}
 } // namespace advanced_wars

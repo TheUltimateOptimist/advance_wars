@@ -71,7 +71,7 @@ public:
   TODO: This should probably tie back into rendering the units differently
   If a unit is selected, it should call inRange on all other enemy units on the field
   */
- 
+
  bool inRange(Unit &enemy);
 
   /*
@@ -95,6 +95,11 @@ public:
   MUST show all movements possible
   */
   void calculate_movement();
+
+ /*
+ Load the XML and iterate over the entire datastructure
+ */
+void loadXML(const char* filename);
 
 private:
   int x;
