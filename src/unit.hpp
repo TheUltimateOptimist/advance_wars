@@ -67,6 +67,14 @@ public:
   void render(Engine &engine, int scale);
 
   /*
+  Check if attacker is in Range to initiate combat
+  TODO: This should probably tie back into rendering the units differently
+  If a unit is selected, it should call inRange on all other enemy units on the field
+  */
+ 
+ bool inRange(Unit &enemy);
+
+  /*
   The attacker will move towards the defender and thus initiate combat
   @params Takes a reference to the defender
 

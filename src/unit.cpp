@@ -70,9 +70,14 @@ MatchupTabel damageMatrix = {
 
 void Unit::attack(Unit &enemy) {
 
-    //checks to be run:
-    //is unit in range?
     //has unit not attacked this turn?
+    if(!inRange(Unit &enemy)) {
+        //Render enemies as not in Range
+    }
+
+    if (this->has_attacked) {
+        //display the unit as not able to attack (maybe greyscale?)
+    }
 
     //Start Attack: choose the appropriate weapon:
     int offDamage = damageMatrix[this->id][enemy->id] * ((this->health)/(this->max_health));
@@ -87,6 +92,15 @@ void Unit::attack(Unit &enemy) {
     } else {
         enemy->~Unit();
     }
+}
+
+void Unit::inRange(Unit &enemy) {
+    if (this->x == enemy.x) {
+        return abs(this->y - enemy.y) <= this->range;
+    } else if (this->y == enemy.y) {
+        return abs(this->x - enemy.x) <= this->range;
+    }
+    return false; 
 }
 
 } // namespace advanced_wars
