@@ -19,7 +19,10 @@ set(HIGHFIVE_UNIT_TESTS OFF)
 
 FetchContent_MakeAvailable(highfive)
 
-
+set(Boost_USE_STATIC_LIBS OFF)
+set(Boost_USE_MULTITHREADED ON)
+set(Boost_USE_STATIC_RUNTIME OFF)
+find_package(Boost 1.71.0 REQUIRED COMPONENTS graph)
 
 # Quellen sammeln
 file(GLOB_RECURSE ADVANCED_WARS_SOURCES
@@ -51,6 +54,7 @@ add_executable(advanced_wars ${ADVANCED_WARS_SOURCES})
 target_include_directories(advanced_wars
     PRIVATE 
         ${highfive_SOURCE_DIR}/include
+        ${Boost_INCLUDE_DIRS}
 )
 
 foreach(FONT ${FONT_FILES})
@@ -80,12 +84,13 @@ if(APPLE)
             ${SDL2_PATH}/SDL2.framework/SDL2
             ${SDL2_PATH}/SDL2_image.framework/SDL2_image
             ${SDL2_PATH}/SDL2_ttf.framework/SDL2_ttf
+            Boost::graph  
     )
 
-    # Debug-Ausgaben
     message(STATUS "Include Dir (SDL2): ${SDL2_PATH}/SDL2.framework/Headers")
     message(STATUS "Include Dir (SDL2_image): ${SDL2_PATH}/SDL2_image.framework/Headers")
     message(STATUS "Include Dir (SDL2_ttf): ${SDL2_PATH}/SDL2_ttf.framework/Headers")
+    message(STATUS "Boost Include Dirs: ${Boost_INCLUDE_DIRS}")
 else()
     find_package(SDL2 REQUIRED)
     find_package(SDL2_IMAGE REQUIRED)
@@ -104,9 +109,7 @@ else()
         -lSDL2
         -lSDL2_image
         -lSDL2_ttf
+        Boost::graph
         m
     )
-
-
 endif()
-
