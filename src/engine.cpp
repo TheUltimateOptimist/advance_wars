@@ -1,28 +1,16 @@
 #include "engine.hpp"
-#include <SDL_render.h>
 #include "scene.hpp"
 #include "spritesheet.hpp"
 #include "window.hpp"
 #include <SDL.h>
 #include <SDL_image.h>
+#include <SDL_render.h>
 #include <stdexcept>
 #include <vector>
 
 namespace advanced_wars {
 
 Engine::Engine(Window &window) : window(window), quit(false) {
-
-  if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-    throw std::runtime_error("SDL could not initialize: " +
-                             std::string(SDL_GetError()));
-  }
-
-  int imgFlags = IMG_INIT_PNG;
-  if (!(IMG_Init(imgFlags) & imgFlags)) {
-    throw std::runtime_error(
-        "SDL_image could not initialize! SDL_image Error: " +
-        std::string(IMG_GetError()));
-  }
 
   this->sdl_renderer =
       SDL_CreateRenderer(this->window.sdl_window(), -1,
@@ -55,6 +43,8 @@ void Engine::pump() {
 
 bool Engine::exited() { return this->quit; }
 
+int Engine::get_stage() { return this->stage; }
+
 void Engine::render() {
   if (SDL_RenderClear(this->sdl_renderer) != 0) {
     throw std::runtime_error("Could not clear renderer: " +
@@ -64,6 +54,8 @@ void Engine::render() {
   if (!scene.has_value()) {
     return;
   }
+
+  stage = SDL_GetTicks() / 300;
 
   this->scene.value()->render(*this, this->events);
 

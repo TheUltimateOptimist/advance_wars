@@ -1,7 +1,7 @@
 #pragma once
 
-#include <SDL_render.h>
 #include <SDL.h>
+#include <SDL_render.h>
 #include <string>
 #include <vector>
 
@@ -21,23 +21,61 @@ public:
   Spritesheet &operator=(const Spritesheet &) = delete;
 
   // Tiles
-  int get_tile_steps(int tile);
 
   int get_tile_width();
 
   int get_tile_height();
 
-  int render_tile(SDL_Renderer *renderer, int tile, int step, SDL_Rect *rect);
+  std::vector<std::pair<SDL_Texture *, int>> &get_tile_textures();
 
-  // Units: TODO
+  // Buildings
+  int get_building_width();
 
-  // Buildings: TODO
+  int get_building_height();
+
+  std::vector<SDL_Texture *> &get_building_textures();
+
+  // Units
+  int get_unit_width();
+
+  int get_unit_height();
+
+  int get_unit_moving_width();
+
+  int get_unit_moving_height();
+
+  std::vector<std::vector<std::vector<std::pair<SDL_Texture *, int>>>> &
+  get_unit_textures();
+
+  // Effects
+  int get_effect_width();
+
+  int get_effect_height();
+
+  std::vector<std::pair<SDL_Texture *, int>> &get_effect_textures();
 
 private:
-  SDL_Texture *texture;
   // Tiles
   int tile_width;
   int tile_height;
-  std::vector<std::pair<int, int>> tiles;
+  std::vector<std::pair<SDL_Texture *, int>> tile_textures;
+
+  // Buildings
+  std::vector<SDL_Texture *> building_textures;
+  int building_width;
+  int building_height;
+
+  // Units
+  std::vector<std::vector<std::vector<std::pair<SDL_Texture *, int>>>>
+      unit_textures;
+  int unit_width;
+  int unit_height;
+  int unit_moving_width;
+  int unit_moving_height;
+
+  // Effects
+  std::vector<std::pair<SDL_Texture *, int>> effect_textures;
+  int effect_width;
+  int effect_height;
 };
 } // namespace advanced_wars
