@@ -98,6 +98,7 @@ public:
 
  /*
  Load the XML and iterate over the entire datastructure
+ For every Unit, get Unit_Id and create a map for Unit_Id -> {Unit_Id -> damageType}
  */
 void loadXML(const char* filename);
 
