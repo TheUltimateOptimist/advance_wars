@@ -12,18 +12,6 @@ namespace advanced_wars {
 
 Engine::Engine(Window &window) : window(window), quit(false) {
 
-  if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-    throw std::runtime_error("SDL could not initialize: " +
-                             std::string(SDL_GetError()));
-  }
-
-  int imgFlags = IMG_INIT_PNG;
-  if (!(IMG_Init(imgFlags) & imgFlags)) {
-    throw std::runtime_error(
-        "SDL_image could not initialize! SDL_image Error: " +
-        std::string(IMG_GetError()));
-  }
-
   this->sdl_renderer =
       SDL_CreateRenderer(this->window.sdl_window(), -1,
                          SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
