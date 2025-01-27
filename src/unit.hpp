@@ -1,6 +1,8 @@
 #pragma once
 
 #include "engine.hpp"
+#include "weapon.hpp"
+#include <optional>
 
 namespace advanced_wars {
 
@@ -61,9 +63,24 @@ public:
 private:
   int x;
   int y;
+
   UnitFaction faction;
   UnitId id;
   UnitState state;
+
+  int health;
+  int range;
+  int fuel;
+  int max_fuel;
+
+  bool has_moved;
+  bool has_attacked;
+
+  // Primary weapon ammo
+  int ammo;
+
+  std::optional<Weapon> primary;
+  std::optional<Weapon> secondary;
 };
 
 } // namespace advanced_wars
