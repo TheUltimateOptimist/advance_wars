@@ -23,7 +23,7 @@ public:
    * Forbids the creation of copies of a window
    */
   Window(const Window &) = delete;
-  // Window& operator=(const Window&) = delete;
+  Window &operator=(const Window &) = delete;
 
   /***
    * Destructor.
