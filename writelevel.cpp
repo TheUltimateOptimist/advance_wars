@@ -35,7 +35,7 @@ int main() {
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         };
-    HighFive::File file("level.h5", HighFive::File::ReadWrite);
+    HighFive::File file("spritesheet.h5", HighFive::File::ReadWrite);
     file.createDataSet<std::string>("level/metadata", HighFive::DataSpace::From(xmlStream)).write(xml_data);
     file.createDataSet<uint8_t>("level/tilesarray", HighFive::DataSpace::From(levelmap)).write(levelmap);
 }
