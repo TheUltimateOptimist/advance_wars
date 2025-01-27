@@ -30,6 +30,8 @@ int main() {
   Window window("Advanced Wars", 960, 960);
 
   Engine engine(window);
+  Level levell = Level::loadLevel("level.h5");
+  return 0;
 
   // Construct a level
   std::vector<Tile> tiles;

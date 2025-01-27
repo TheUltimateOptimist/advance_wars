@@ -21,6 +21,8 @@ public:
         std::vector<Building> buildings, std::vector<Unit> units,
         std::vector<Effect>);
 
+  static Level loadLevel(std::string path);
+
   void render(Engine &engine, std::vector<SDL_Event> &events);
 
 private:
