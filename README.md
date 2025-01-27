@@ -57,3 +57,6 @@ CMake kann mit verschiedenen Optionen konfiguriert werden:
 cmake .. -DCMAKE_BUILD_TYPE=Release    # Release-Build
 cmake .. -DCMAKE_BUILD_TYPE=Debug      # Debug-Build
 ```
+
+## Prerequisites for Leveleditor
+- QT 6: ```sudo apt install qt6-base-dev```

@@ -108,6 +108,9 @@ else()
     )
 endif()
 
+# leveleditor
+add_subdirectory(leveleditor)
+
 # writelevel
 add_executable(writelevel ${PROJECT_SOURCE_DIR}/writelevel.cpp)
 target_include_directories(writelevel
