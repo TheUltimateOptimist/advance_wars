@@ -5,7 +5,7 @@ Unit::Unit(std::string name, int health, int speed, int attack, std::pair<int, i
 
 
 //TODO: IF necessary, implement scaling attack by remaining health
-void Unit::init_combat(Unit defender)
+void Unit::init_combat(Unit &defender)
 {
     //Attacker gets first move, inflicts its damage upon the the defender
     defender.setHealth(defender.getHealth() - this.getAttack());
