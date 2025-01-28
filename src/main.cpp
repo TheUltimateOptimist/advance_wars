@@ -1,6 +1,7 @@
 #include "engine.hpp"
 #include "spritesheet.hpp"
 #include "ui/Menu.hpp"
+#include "ui/ContextMenu.hpp"
 #include "window.hpp"
 #include <memory>
 
@@ -15,13 +16,16 @@ int main() {
   // render main menu
 
   std::shared_ptr<Menu> menu = std::make_shared<Menu>(0);
+  std::shared_ptr<ContextMenu> context_menu = std::make_shared<ContextMenu>();
+  context_menu->setOptions({"Move", "Info", "Wait"});
+
 
   std::string basePath = SDL_GetBasePath();
   std::string relativePath = "assets/main_background.png";
   std::string fullPath = basePath + relativePath;
   menu->loadBackground(engine.renderer(), fullPath.c_str());
 
-  engine.push_scene(menu);
+  engine.push_scene(context_menu);
   /* Level level("Osnabrück", 20, 20, std::vector<Tile>(),
   std::vector<Building>(), std::vector<Unit>());
 
