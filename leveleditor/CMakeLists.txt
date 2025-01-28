@@ -9,8 +9,8 @@ file(GLOB_RECURSE LEVELEDITOR_SOURCES
 # Add executable
 add_executable(editor ${LEVELEDITOR_SOURCES})
 
-# Link Qt libraries
-target_link_libraries(editor PRIVATE Qt6::Widgets)
-
-
-
+target_include_directories(editor
+    PRIVATE 
+        ${highfive_SOURCE_DIR}/include
+)
+target_link_libraries(editor ${HDF5_LIBRARIES} Qt6::Widgets)
