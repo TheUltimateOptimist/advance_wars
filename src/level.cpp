@@ -14,8 +14,7 @@ namespace advanced_wars {
 Level::Level(std::string name, int width, int height, std::vector<Tile> tiles,
              std::vector<Building> buildings, std::vector<Unit> units,
              std::vector<Effect> effects)
-    : name(name), width(width), height(height), tiles(tiles), buildings(),
-      units(), effects() {
+    : name(name), width(width), height(height), tiles(tiles), id(0) {
 
   for (Building building : buildings) {
     this->add_building(building);
