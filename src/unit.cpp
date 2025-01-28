@@ -82,13 +82,18 @@ namespace advanced_wars
         }
 
         // Start Attack: choose the appropriate weapon:
+        /*
         int offDamage = damageMatrix[static_cast<u_int8_t>(ally->id)][static_cast<u_int8_t>(enemy->id)] * ((ally->health) / (ally->max_health));
-        int defDamage = damageMatrix[static_cast<u_int8_t>(ally->id)][static_cast<u_int8_t>(enemy->id)] * ((enemy->health) / (enemy->max_health));
+        int defDamage = damageMatrix[static_cast<u_int8_t>(enemy->id)][static_cast<u_int8_t>(ally->id)] * ((enemy->health) / (enemy->max_health));
+        */
+        int offDamage = 10;
+        int defDamage = 1000;
 
         enemy->health = enemy->health - offDamage;
         if (enemy->health > 0)
         {
             ally->health = ally->health - defDamage;
+            std::cout << "Health ally:" << ally->health << std::endl;
             if (ally->health <= 0)
             {
                 ally->~Unit();
