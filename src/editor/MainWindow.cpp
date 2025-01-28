@@ -5,6 +5,7 @@
 #include "TopBar.hpp"
 #include "TileSelector.hpp"
 #include "LevelScene.hpp"
+#include <iostream>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     //CREATE MAIN WINDOW ------------------------------------------
@@ -18,7 +19,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
     //CREATE LEVELMAP
     QGraphicsView* mapWidget = new QGraphicsView(this);
-    LevelScene* scene = new LevelScene(20, 20, this);
+    std::cout << "Creating level scene" << std::endl;
+    LevelScene* scene = LevelScene::empty(20, 20, this);
     mapWidget->setScene(scene);
     mapWidget->setAlignment(Qt::AlignCenter);
     mapWidget->scale(2, 2);

@@ -9,12 +9,15 @@
 
 class LevelScene : public QGraphicsScene {
 public:
-    LevelScene(int width, int height, QWidget *parent = nullptr);
+    LevelScene(int width, int height, uint8_t* tiles, QWidget *parent = nullptr);
+    ~LevelScene();
+    static LevelScene* empty(int width, int height, QWidget *parent = nullptr);
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
     int width;
     int height;
+    uint8_t* tiles;
 };
 
 #endif // LEVELSCENE_HPP

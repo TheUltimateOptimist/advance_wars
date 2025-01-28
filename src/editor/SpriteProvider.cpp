@@ -1,19 +1,26 @@
 #include "SpriteProvider.hpp"
 #include <iostream>
+#include <stdexcept>
 
-SpriteProvider::SpriteProvider(std::vector<QPixmap> sprites) : sprites(sprites){}
+std::vector<QPixmap> SpriteProvider::sprites = std::vector<QPixmap>();
 
 QPixmap SpriteProvider::get_sprite(uint8_t id) {
-    if (id >= 50) {
-        return sprites[id - 20];
+    if (sprites.empty()) {
+        throw std::runtime_error("Sprites accessed before initilization");
     }
-    return sprites[id];
+    if (id >= 50) {
+        return SpriteProvider::sprites[id - 20];
+    }
+    return SpriteProvider::sprites[id];
 }
 
-SpriteProvider SpriteProvider::from_spritesheet(const std::string path)
+void SpriteProvider::initialize(const std::string& path)
 {
+    if (sprites.size() > 0) {
+        return;
+    }
+
     HighFive::File file(path, HighFive::File::ReadOnly);
-    std::vector<QPixmap> sprites;
     sprites.reserve(60);
 
     //load terrains
@@ -31,7 +38,6 @@ SpriteProvider SpriteProvider::from_spritesheet(const std::string path)
             sprites.push_back(SpriteProvider::load_pixmap(pixels, i));
         } 
     }
-    return SpriteProvider(sprites);
 }
 
 QPixmap SpriteProvider::load_pixmap(std::vector<std::vector<std::vector<uint32_t>>> pixels, int index) {

@@ -38,11 +38,11 @@ const std::vector<std::string> faction_names(
 
 class SpriteProvider {
 public: 
-    SpriteProvider(std::vector<QPixmap> sprites);
-    QPixmap get_sprite(uint8_t id);
-    SpriteProvider static from_spritesheet(const std::string path);
+    SpriteProvider() = delete;
+    static QPixmap get_sprite(uint8_t id);
+    static void initialize(const std::string& path);
 
 private:
     static QPixmap load_pixmap(std::vector<std::vector<std::vector<uint32_t>>> pixels, int index);
-    std::vector<QPixmap> sprites;
+    static std::vector<QPixmap> sprites;
 };
