@@ -6,10 +6,11 @@
 #include "tile.hpp"
 #include "unit.hpp"
 #include "window.hpp"
-#include <cstddef>
-#include <vector>
 #include <SDL2/SDL.h>
 #include <SDL_image.h>
+#include <cstddef>
+#include <stdexcept>
+#include <vector>
 
 using namespace advanced_wars;
 
