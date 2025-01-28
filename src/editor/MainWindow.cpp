@@ -1,9 +1,10 @@
 #include <QGraphicsScene>
-#include <QVBoxLayout>
+#include <QHBoxLayout>
 #include <QGraphicsView>
 #include "SpriteProvider.hpp"
 #include "MainWindow.hpp"
 #include "TopBar.hpp"
+#include "TileSelector.hpp"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     //CREATE MAIN WINDOW ------------------------------------------
