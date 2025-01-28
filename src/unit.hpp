@@ -14,7 +14,7 @@ enum class UnitFaction {
   UYELLOW = 3,
   UPURPLE = 4,
 };
-
+/*
 enum class UnitId {
   INFANTERY = 0,
   MECHANIZED_INFANTERY = 1,
@@ -35,6 +35,29 @@ enum class UnitId {
   CRUISER = 16,
   LANDER = 17,
   SUBMARINE = 18,
+};
+*/
+
+enum class UnitId {
+  INFANTERY,
+  MECH,
+  RECON,
+  MEDIUM_TANK,
+  HEAVY_TANK,
+  NEO_TANK,
+  APC,
+  ANTI_AIR_TANK,
+  ARTILLERY,
+  ROCKET_ARTILLERY,
+  ANTI_AIR_MISSILE_LAUNCHER,
+  FIGHTER,
+  BOMBER,
+  BATTLE_HELICOPTER,
+  TRANSPORT_HELICOPTER,
+  BATTLESHIP,
+  CRUISER,
+  LANDER,
+  SUBMARINE,
 };
 
 enum class UnitState {
