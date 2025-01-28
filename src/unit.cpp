@@ -106,6 +106,19 @@ namespace advanced_wars
         this->y = posY;
     }
 
+/*
+Features:
+//select unit 
+    - show context menu
+    - show move range
+    - MAYBE show valid targets
+
+//deselect unit
+
+//attack unit
+    - show context menu
+
+*/
     void Unit::onClick(SDL_Event event, std::vector<Unit> &unitVector)
     {
 
@@ -129,6 +142,8 @@ namespace advanced_wars
                 };
             }
             */
+
+           //make move range calc
             break;
         case SDL_BUTTON_RIGHT:
 

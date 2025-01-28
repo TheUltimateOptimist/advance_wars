@@ -34,6 +34,9 @@ private:
   std::vector<Unit> units;
   std::vector<Effect> effects;
   Unit* selectedUnit;
+  Building* selectedBuilding;
+  bool selectUnit (int tileX, int tileY);
+  bool selectBuilding(int tileX, int tileY);
 
   bool clickCheck(int mouseX, int mouseY);
 };

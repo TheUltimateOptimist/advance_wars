@@ -29,6 +29,16 @@ bool Level::clickCheck(int mouseX, int mouseY) {
   int tileX = mouseX/(16*RENDERING_SCALE);
   int tileY = mouseY/(16*RENDERING_SCALE);
 
+  if(selectUnit(tileX, tileY)) return true;
+  if(selectBuilding(tileX, tileY)) return true;
+
+  std::cout << "Neither building nor unit clicked" << std::endl;
+  
+  return false;
+}
+
+bool Level::selectUnit (int tileX, int tileY) {
+
   for (auto& unit : units) {
 
     if(unit.x == tileX && unit.y == tileY) {
@@ -37,8 +47,23 @@ bool Level::clickCheck(int mouseX, int mouseY) {
       return true;
     }
   }
+  selectedUnit = nullptr;
+  return false;
 }
 
+bool Level::selectBuilding (int tileX, int tileY) {
+
+  for (auto& building : buildings) {
+
+    if(building.x == tileX && building.y == tileY) {
+      //std::cout << "X:" << unit.x << "Y:" << unit.y << std::endl;
+      selectedBuilding = &building;
+      return true;
+    }
+  }
+  selectedBuilding = nullptr;
+  return false;
+}
 
 void Level::handleEvent(Engine &engine, SDL_Event &event) {
 
@@ -50,7 +75,15 @@ void Level::handleEvent(Engine &engine, SDL_Event &event) {
   {
   case SDL_MOUSEBUTTONDOWN:
       if(clickCheck(event.button.x, event.button.y)) {
-        selectedUnit->onClick(event, units);
+        
+        if(selectedUnit) {
+          selectedUnit->onClick(event, units);
+        }
+
+        if(selectedBuilding) {
+          //building stuff
+        }
+        
       }
     break;
   
