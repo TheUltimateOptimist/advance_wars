@@ -11,6 +11,12 @@ Unit::Unit(int x, int y, UnitFaction faction, UnitId id, UnitState state)
 void Unit::render(Engine &engine, int scale) {
   Spritesheet *spritesheet = engine.get_spritesheet();
 
+    while (engine.events not empty)
+    {
+        handle_event(events.pop_front());
+
+    }
+
   int step = engine.get_stage() % spritesheet->get_unit_textures()
                                       .at(static_cast<int>(faction))
                                       .at(static_cast<int>(id))
@@ -92,6 +98,7 @@ void Unit::onClick(SDL_Event event) {
     switch (event.button.button) {
         case SDL_BUTTON_LEFT:
             
+            //we have to re-initialize the unit.state (probably to idle)
             this->is_selected = true;
 
             for (Unit &unit : units) {
