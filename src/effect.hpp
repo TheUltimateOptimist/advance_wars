@@ -2,27 +2,30 @@
 
 #include "engine.hpp"
 
-namespace advanced_wars {
+namespace advanced_wars
+{
 
-enum class EffectId {
-  LAND_EXPLOSION = 0,
-  AIR_EXPLOSION = 1,
-  NAVAL_EXPLOSION = 2,
-  SUBMARINE_HIDE = 3,
-  SUBMARINE_APPEAR = 4
+enum class EffectId
+{
+    LAND_EXPLOSION = 0,
+    AIR_EXPLOSION = 1,
+    NAVAL_EXPLOSION = 2,
+    SUBMARINE_HIDE = 3,
+    SUBMARINE_APPEAR = 4
 };
 
-class Effect {
-public:
-  Effect(int x, int y, EffectId id, bool repeat);
+class Effect
+{
+    public:
+        Effect(int x, int y, EffectId id, bool repeat);
 
-  void render(Engine &engine, int scale);
+        void render(Engine& engine, int scale);
 
-  int x;
-  int y;
-  EffectId id;
-  bool repeat;
-  int start;
+        int      x;
+        int      y;
+        EffectId id;
+        bool     repeat;
+        int      start;
 };
 
 } // namespace advanced_wars

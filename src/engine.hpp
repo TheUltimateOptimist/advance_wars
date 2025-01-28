@@ -8,44 +8,46 @@
 #include <optional>
 #include <vector>
 
-namespace advanced_wars {
+namespace advanced_wars
+{
 
 /**
  * @brief The main window of the game
  */
-class Engine {
-public:
-  Engine(Window &window);
+class Engine
+{
+    public:
+        Engine(Window& window);
 
-  Engine(const Engine &) = delete;
-  Engine &operator=(const Engine &) = delete;
+        Engine(const Engine&) = delete;
+        Engine& operator=(const Engine&) = delete;
 
-  bool exited();
+        bool exited();
 
-  void pump();
+        void pump();
 
-  void set_scene(Scene &scene);
+        void set_scene(Scene& scene);
 
-  void set_spritesheet(Spritesheet &spritesheet);
+        void set_spritesheet(Spritesheet& spritesheet);
 
-  Spritesheet *get_spritesheet();
+        Spritesheet* get_spritesheet();
 
-  int get_stage();
+        int get_stage();
 
-  void render();
+        void render();
 
-  SDL_Renderer *renderer();
+        SDL_Renderer* renderer();
 
-  ~Engine();
+        ~Engine();
 
-private:
-  Window &window;
-  SDL_Renderer *sdl_renderer;
-  std::optional<Scene *> scene;
-  std::optional<Spritesheet *> spritesheet;
-  std::vector<SDL_Event> events;
-  bool quit;
-  int stage;
+    private:
+        Window&                     window;
+        SDL_Renderer*               sdl_renderer;
+        std::optional<Scene*>       scene;
+        std::optional<Spritesheet*> spritesheet;
+        std::vector<SDL_Event>      events;
+        bool                        quit;
+        int                         stage;
 };
 
 } // namespace advanced_wars

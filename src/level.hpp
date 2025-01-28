@@ -10,27 +10,29 @@
 #include <string>
 #include <vector>
 
-namespace advanced_wars {
+namespace advanced_wars
+{
 
 /**
  * @brief The main window of the game
  */
-class Level : public Scene {
-public:
-  Level(std::string name, int width, int height, std::vector<Tile> tiles,
-        std::vector<Building> buildings, std::vector<Unit> units,
-        std::vector<Effect>);
+class Level : public Scene
+{
+    public:
+        Level(
+            std::string name, int width, int height, std::vector<Tile> tiles,
+            std::vector<Building> buildings, std::vector<Unit> units, std::vector<Effect>);
 
-  void render(Engine &engine, std::vector<SDL_Event> &events);
+        void render(Engine& engine, std::vector<SDL_Event>& events);
 
-private:
-  std::string name;
-  int width;
-  int height;
-  std::vector<Tile> tiles;
-  std::vector<Building> buildings;
-  std::vector<Unit> units;
-  std::vector<Effect> effects;
+    private:
+        std::string           name;
+        int                   width;
+        int                   height;
+        std::vector<Tile>     tiles;
+        std::vector<Building> buildings;
+        std::vector<Unit>     units;
+        std::vector<Effect>   effects;
 };
 
 } // namespace advanced_wars
