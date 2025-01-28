@@ -72,36 +72,17 @@ namespace advanced_wars
 
     MatchupTabel damageMatrix;
     std::vector<Unit*> units;
+    
+    void Unit::attack(Unit& enemy) {
 
-    void Unit::attack(Unit *ally, Unit *enemy)
-    {
-
-        if (ally->has_attacked)
-        {
-            // display the unit as not able to attack (maybe greyscale?)
-        }
-
-        // Start Attack: choose the appropriate weapon:
-        /*
-        int offDamage = damageMatrix[static_cast<u_int8_t>(ally->id)][static_cast<u_int8_t>(enemy->id)] * ((ally->health) / (ally->max_health));
-        int defDamage = damageMatrix[static_cast<u_int8_t>(enemy->id)][static_cast<u_int8_t>(ally->id)] * ((enemy->health) / (enemy->max_health));
-        */
-        int offDamage = 10;
+        int offDamage = 50;
         int defDamage = 1000;
 
-        enemy->health = enemy->health - offDamage;
-        if (enemy->health > 0)
-        {
-            ally->health = ally->health - defDamage;
-            std::cout << "Health ally:" << ally->health << std::endl;
-            if (ally->health <= 0)
-            {
-                ally->~Unit();
-            }
-        }
-        else
-        {
-            enemy->~Unit();
+        enemy.health = enemy.health - offDamage;
+        std::cout << "Enemy health:" << enemy.health << std::endl;
+        if (enemy.health > 0) {
+            this->health = this->health - defDamage;
+            std::cout << "Health ally:" << this->health << std::endl;
         }
     }
 
@@ -175,7 +156,7 @@ Features:
 
             if (attacker != nullptr && defender != nullptr)
             {
-                attack(attacker, defender);
+                //attack(attacker, defender);
                 std::cout << "We are fighting!!" << std::endl;
                 break;
             }

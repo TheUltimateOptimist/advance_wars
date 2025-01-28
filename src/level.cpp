@@ -8,6 +8,7 @@
 #include <SDL.h>
 #include <iostream>
 #include <string>
+#include <algorithm> 
 
 namespace advanced_wars {
 
@@ -74,7 +75,8 @@ void Level::handleEvent(Engine &engine, SDL_Event &event) {
   switch (event.type)
   {
   case SDL_MOUSEBUTTONDOWN:
-      if(clickCheck(event.button.x, event.button.y)) {
+      if (event.button.button == SDL_BUTTON_LEFT) {
+        if(clickCheck(event.button.x, event.button.y)) {
         
         if(selectedUnit) {
           selectedUnit->onClick(event, units);
@@ -83,8 +85,28 @@ void Level::handleEvent(Engine &engine, SDL_Event &event) {
         if(selectedBuilding) {
           //building stuff
         }
-        
       }
+      } else if (event.button.button == SDL_BUTTON_RIGHT) {
+
+        if(selectedUnit) {
+          int tileX = event.button.x/(16*RENDERING_SCALE);
+          int tileY = event.button.y/(16*RENDERING_SCALE);
+          for (auto& unit : units) {
+
+            if(unit.x == tileX && unit.y == tileY) {
+            //std::cout << "X:" << unit.x << "Y:" << unit.y << std::endl;
+            
+            selectedUnit->attack(unit);
+
+            units.erase(
+            std::remove_if(units.begin(), units.end(),
+                       [](const Unit& unit) { return unit.health < 0; }),
+            units.end());
+          }
+  }
+        }
+      }
+      
     break;
   
   default:
