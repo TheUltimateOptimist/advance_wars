@@ -60,6 +60,10 @@ using MatchupTabel = std::unordered_map<u_int8_t, std::unordered_map<u_int8_t, i
 
 class Unit {
 public:
+  int x;
+  int y;
+
+
   Unit(int x, int y, UnitFaction faction, UnitId id, UnitState state);
   ~Unit() {
         //Assuming that the destruktion of a unit triggers events
@@ -109,12 +113,9 @@ void loadXML(const char* filename);
 This function will be called by an external event-handler, eventually.
 Currently, it should be called if a Unit is interacted with and the resulting SDL_EVENT is passed through, and then decided upon
 */
-void onClick(SDL_Event event);
+void onClick(SDL_Event event, std::vector<Unit> &unitVector);
 
 private:
-  int x;
-  int y;
-
   UnitFaction faction;
   UnitId id;
   UnitState state;

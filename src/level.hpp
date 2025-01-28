@@ -23,6 +23,8 @@ public:
 
   void render(Engine &engine, std::vector<SDL_Event> &events);
 
+  void handleEvent(Engine &engine, SDL_Event &event);
+
 private:
   std::string name;
   int width;
@@ -31,6 +33,9 @@ private:
   std::vector<Building> buildings;
   std::vector<Unit> units;
   std::vector<Effect> effects;
+  Unit* selectedUnit;
+
+  bool clickCheck(int mouseX, int mouseY);
 };
 
 } // namespace advanced_wars

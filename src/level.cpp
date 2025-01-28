@@ -22,11 +22,50 @@ Level::Level(std::string name, int width, int height, std::vector<Tile> tiles,
   }
 };
 
-void Level::render(Engine &engine, std::vector<SDL_Event> &events) {
-  const int RENDERING_SCALE = 3;
+const int RENDERING_SCALE = 3;
 
+bool Level::clickCheck(int mouseX, int mouseY) {
+  
+  int tileX = mouseX/(16*RENDERING_SCALE);
+  int tileY = mouseY/(16*RENDERING_SCALE);
+
+  for (auto& unit : units) {
+
+    if(unit.x == tileX && unit.y == tileY) {
+      //std::cout << "X:" << unit.x << "Y:" << unit.y << std::endl;
+      selectedUnit = &unit;
+      return true;
+    }
+  }
+}
+
+
+void Level::handleEvent(Engine &engine, SDL_Event &event) {
+
+  //handle following events:
+  //clicks/mouseDown
+  //escape (esc)
+
+  switch (event.type)
+  {
+  case SDL_MOUSEBUTTONDOWN:
+      if(clickCheck(event.button.x, event.button.y)) {
+        selectedUnit->onClick(event, units);
+      }
+    break;
+  
+  default:
+    break;
+  }
+}
+
+void Level::render(Engine &engine, std::vector<SDL_Event> &events) {
+  
   // Iterate over all events
   while (!events.empty()) {
+    //events.erase(events.begin());
+
+    handleEvent(engine, events.at(0));
     events.erase(events.begin());
   }
 
