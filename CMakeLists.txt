@@ -23,8 +23,8 @@ FetchContent_MakeAvailable(highfive)
 
 # Quellen sammeln
 file(GLOB_RECURSE ADVANCED_WARS_SOURCES
-        "${PROJECT_SOURCE_DIR}/src/*.cpp"
-        "${PROJECT_SOURCE_DIR}/src/*.hpp"
+        "${PROJECT_SOURCE_DIR}/src/game/*.cpp"
+        "${PROJECT_SOURCE_DIR}/src/game/*.hpp"
 )
 
 # C++ Standard festlegen
@@ -109,10 +109,23 @@ else()
 endif()
 
 # leveleditor
-add_subdirectory(leveleditor)
+# Find Qt
+find_package(Qt6 REQUIRED COMPONENTS Widgets)
+
+file(GLOB_RECURSE LEVELEDITOR_SOURCES
+        "${PROJECT_SOURCE_DIR}/src/editor/*.cpp"
+        "${PROJECT_SOURCE_DIR}/src/editor/*.hpp"
+)
+
+# Add executable
+add_executable(editor ${LEVELEDITOR_SOURCES})
+
+# Link Qt libraries
+target_link_libraries(editor PRIVATE Qt6::Widgets)
+
 
 # writelevel
-add_executable(writelevel ${PROJECT_SOURCE_DIR}/writelevel.cpp)
+add_executable(writelevel ${PROJECT_SOURCE_DIR}/src/util/writelevel.cpp)
 target_include_directories(writelevel
     PRIVATE 
         ${highfive_SOURCE_DIR}/include

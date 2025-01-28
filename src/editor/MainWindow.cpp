@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
     QGraphicsScene* scene = new QGraphicsScene(this);
     scene->setSceneRect(0, 0, 400, 400); // Set the scene dimensions
-    SpriteProvider tileprovider = SpriteProvider::from_spritesheet("spritesheet.h5");
+    SpriteProvider tileprovider = SpriteProvider::from_spritesheet("../res/spritesheet.h5");
     QPixmap pixmap = tileprovider.get_sprite(0);
     QGraphicsPixmapItem* pixmapitem = scene->addPixmap(pixmap);
 

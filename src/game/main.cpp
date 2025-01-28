@@ -97,7 +97,7 @@ int main() {
 
   engine.set_scene(level);
 
-  Spritesheet spritesheet("/media/data/rust/sprite-extractor/spritesheet.h5",
+  Spritesheet spritesheet("../res/spritesheet.h5",
                           engine);
 
   engine.set_spritesheet(spritesheet);
