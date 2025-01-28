@@ -121,7 +121,12 @@ file(GLOB_RECURSE LEVELEDITOR_SOURCES
 add_executable(editor ${LEVELEDITOR_SOURCES})
 
 # Link Qt libraries
-target_link_libraries(editor PRIVATE Qt6::Widgets)
+target_link_libraries(editor PRIVATE Qt6::Widgets ${HDF5_LIBRARIES})
+
+target_include_directories(editor
+    PRIVATE 
+        ${highfive_SOURCE_DIR}/include
+)
 
 
 # writelevel
