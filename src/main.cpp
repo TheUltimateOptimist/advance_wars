@@ -89,7 +89,7 @@ int main() {
     }
   }
 
-  std::vector<Effect> effects({Effect(3, 15, EffectId::LAND_EXPLOSION, true),
+  std::vector<Effect> effects({Effect(3, 15, EffectId::LAND_EXPLOSION, false),
                                Effect(5, 15, EffectId::AIR_EXPLOSION, true),
                                Effect(5, 18, EffectId::NAVAL_EXPLOSION, true)});
 
