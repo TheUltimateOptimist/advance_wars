@@ -102,6 +102,8 @@ public:
  */
 void loadXML(const char* filename);
 
+void onClick(SDL_EVENT event);
+
 private:
   int x;
   int y;
@@ -118,6 +120,8 @@ private:
 
   bool has_moved;
   bool has_attacked;
+  bool is_selected;
+  bool is_targeted;
 
   // Primary weapon ammo
   int ammo;

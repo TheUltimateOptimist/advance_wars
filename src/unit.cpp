@@ -63,33 +63,73 @@ void Unit::render(Engine &engine, int scale) {
   }
 }
 
-void Unit::attack(Unit &enemy) {
+void Unit::attack(Unit &ally, Unit &enemy) {
 
-    //has unit not attacked this turn?
-    if(!inRange(enemy)) {
-        //Render enemies as not in Range => use the UNAVAILABLE Texture for that
-    }
-
-    if (this->has_attacked) {
+    if (ally->has_attacked) {
         //display the unit as not able to attack (maybe greyscale?)
     }
 
     //Start Attack: choose the appropriate weapon:
-    int offDamage = damageMatrix[this->id][enemy->id] * ((this->health)/(this->max_health));
-    int defDamage = damageMatrix[this->id][enemy->id] * ((enemy->health)/(enemy->max_health));
+    int offDamage = damageMatrix[ally->id][enemy->id] * ((ally->health)/(ally->max_health));
+    int defDamage = damageMatrix[ally->id][enemy->id] * ((enemy->health)/(enemy->max_health));
 
     enemy->health = enemy->health - offDamage;
     if(enemy->health > 0) {
-        this->health = this->health - defDamage;
-        if(this->health <= 0) {
-            this->~Unit();
+        ally->health = ally->health - defDamage;
+        if(ally->health <= 0) {
+            ally->~Unit();
         }
     } else {
         enemy->~Unit();
     }
 }
 
-void Unit::inRange(Unit &enemy) {
+void Unit::onClick(SDL_Event event) {
+
+    Unit &defender;
+    Unit &attacker;
+
+    switch (event.button.button) {
+        case SDL_BUTTON_LEFT:
+            
+            this->is_selected = true;
+
+            for (Unit &unit : units) {
+                if(inRange(unit)) {
+                    unit.state = UNAVAILABLE;
+                };
+            }
+        break;
+        case SDL_BUTTON_RIGHT:
+
+            this->is_targeted = true;
+
+            for (Unit &unit : units) {
+                if(unit.state = UNAVAILABLE) {
+                    continue;
+                }
+
+                if(unit.is_selected) {
+                    attacker = &unit;
+                }
+
+                if(unit.is_targeted) {
+                    defender = &unit;
+                }
+            }
+
+            if(attacker && defender) {
+                attack(attacker, defender);
+                break;
+            } else {
+                stderr("Could not init the attack!");
+                break;
+            }
+
+    }
+}
+
+bool Unit::inRange(Unit &enemy) {
     if (this->x == enemy.x) {
         return abs(this->y - enemy.y) <= this->range;
     } else if (this->y == enemy.y) {
@@ -98,7 +138,7 @@ void Unit::inRange(Unit &enemy) {
     return false; 
 }
 
-void loadXML(const char* filename) {
+void Unit::loadXML(const char* filename) {
 
     tinyxml2::XMLDocument doc;
     if (doc.LoadFile(filename) != tinyxml2::XML_SUCCESS) {
