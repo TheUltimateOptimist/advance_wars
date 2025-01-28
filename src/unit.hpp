@@ -1,5 +1,6 @@
 #pragma once
 
+#include <unordered_map>
 #include "engine.hpp"
 #include "weapon.hpp"
 #include <optional>
@@ -72,7 +73,7 @@ public:
   If a unit is selected, it should call inRange on all other enemy units on the field
   */
 
- bool inRange(Unit &enemy);
+ bool inRange(Unit *enemy);
 
   /*
   The attacker will move towards the defender and thus initiate combat
@@ -81,7 +82,7 @@ public:
   Will Update the health for both units
   Attacker deals damage to the defender first
   */
-  void attack(Unit &ally ,Unit &enemy);
+  void attack(Unit *ally ,Unit *enemy);
 
 
   /*
@@ -108,7 +109,7 @@ void loadXML(const char* filename);
 This function will be called by an external event-handler, eventually.
 Currently, it should be called if a Unit is interacted with and the resulting SDL_EVENT is passed through, and then decided upon
 */
-void onClick(SDL_EVENT event);
+void onClick(SDL_Event event);
 
 private:
   int x;
@@ -131,9 +132,10 @@ private:
 
   // Primary weapon ammo
   int ammo;
-
+  /*
   std::optional<Weapon> primary;
   std::optional<Weapon> secondary;
+  */
 };
 
 } // namespace advanced_wars

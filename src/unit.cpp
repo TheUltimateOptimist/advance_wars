@@ -1,5 +1,6 @@
 #include "unit.hpp"
 #include <tinyxml2.h>
+#include <iostream>
 
 namespace advanced_wars
 {
@@ -13,11 +14,6 @@ namespace advanced_wars
     void Unit::render(Engine &engine, int scale)
     {
         Spritesheet *spritesheet = engine.get_spritesheet();
-
-        while (engine.events not empty)
-        {
-            handle_event(events.pop_front());
-        }
 
         int step = engine.get_stage() % spritesheet->get_unit_textures()
                                             .at(static_cast<int>(faction))
@@ -74,7 +70,10 @@ namespace advanced_wars
         }
     }
 
-    void Unit::attack(Unit &ally, Unit &enemy)
+    MatchupTabel damageMatrix;
+    std::vector<Unit*> units;
+
+    void Unit::attack(Unit *ally, Unit *enemy)
     {
 
         if (ally->has_attacked)
@@ -83,8 +82,8 @@ namespace advanced_wars
         }
 
         // Start Attack: choose the appropriate weapon:
-        int offDamage = damageMatrix[ally->id][enemy->id] * ((ally->health) / (ally->max_health));
-        int defDamage = damageMatrix[ally->id][enemy->id] * ((enemy->health) / (enemy->max_health));
+        int offDamage = damageMatrix[static_cast<u_int8_t>(ally->id)][static_cast<u_int8_t>(enemy->id)] * ((ally->health) / (ally->max_health));
+        int defDamage = damageMatrix[static_cast<u_int8_t>(ally->id)][static_cast<u_int8_t>(enemy->id)] * ((enemy->health) / (enemy->max_health));
 
         enemy->health = enemy->health - offDamage;
         if (enemy->health > 0)
@@ -107,11 +106,11 @@ namespace advanced_wars
         this->y = posY;
     }
 
-    void Unit::onClick(SDL_EVENT event)
+    void Unit::onClick(SDL_Event event)
     {
 
-        Unit & defender;
-        Unit & attacker;
+        Unit *defender = nullptr;
+        Unit *attacker = nullptr;
 
         switch (event.button.button)
         {
@@ -120,11 +119,11 @@ namespace advanced_wars
             // we have to re-initialize the unit.state (probably to idle)
             this->is_selected = true;
 
-            for (Unit &unit : units)
+            for (Unit *unit : units)
             {
                 if (inRange(unit))
                 {
-                    unit.state = UNAVAILABLE;
+                    unit->state = advanced_wars::UnitState::UNAVAILABLE;
                 };
             }
             break;
@@ -132,21 +131,21 @@ namespace advanced_wars
 
             this->is_targeted = true;
 
-            for (Unit &unit : units)
+            for (Unit *unit : units)
             {
-                if (unit.state = UNAVAILABLE)
+                if (unit->state == advanced_wars::UnitState::UNAVAILABLE)
                 {
                     continue;
                 }
 
-                if (unit.is_selected)
+                if (unit->is_selected)
                 {
-                    attacker = &unit;
+                    attacker = unit;
                 }
 
-                if (unit.is_targeted)
+                if (unit->is_targeted)
                 {
-                    defender = &unit;
+                    defender = unit;
                 }
             }
 
@@ -157,25 +156,25 @@ namespace advanced_wars
             }
             else
             {
-                stderr("Could not init the attack!");
+                std::cerr << "Fehler beim Laden der XML-Datei!" << std::endl;
                 break;
             }
         }
     }
 
-    bool Unit::inRange(Unit &enemy)
+    bool Unit::inRange(Unit *enemy)
     {
-        if (this->x == enemy.x)
+        if (this->x == enemy->x)
         {
-            return abs(this->y - enemy.y) <= this->range;
+            return abs(this->y - enemy->y) <= this->range;
         }
-        else if (this->y == enemy.y)
+        else if (this->y == enemy->y)
         {
-            return abs(this->x - enemy.x) <= this->range;
+            return abs(this->x - enemy->x) <= this->range;
         }
         return false;
     }
-
+    /*
     void Unit::loadXML(const char *filename)
     {
 
@@ -220,4 +219,5 @@ namespace advanced_wars
             unitElement = unitElement->NextSiblingElement("Unit");
         }
     }
+    */
 } // namespace advanced_wars
