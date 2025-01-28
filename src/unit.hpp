@@ -81,11 +81,12 @@ public:
   Will Update the health for both units
   Attacker deals damage to the defender first
   */
-  void attack(Unit &enemy);
+  void attack(Unit &ally ,Unit &enemy);
 
 
   /*
   @params Takes the desired position of the unit and updates its values
+  This will teleport the unit, there is no smooth transition between tiles
   */
   void update_position(int posX, int posY);
 
@@ -102,6 +103,11 @@ public:
  */
 void loadXML(const char* filename);
 
+
+/*
+This function will be called by an external event-handler, eventually.
+Currently, it should be called if a Unit is interacted with and the resulting SDL_EVENT is passed through, and then decided upon
+*/
 void onClick(SDL_EVENT event);
 
 private:
