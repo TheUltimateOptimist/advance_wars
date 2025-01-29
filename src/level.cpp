@@ -8,6 +8,7 @@
 #include <SDL.h>
 #include <iostream>
 #include <string>
+#include <algorithm> 
 
 namespace advanced_wars {
 
@@ -22,11 +23,104 @@ Level::Level(std::string name, int width, int height, std::vector<Tile> tiles,
   }
 };
 
-void Level::render(Engine &engine, std::vector<SDL_Event> &events) {
-  const int RENDERING_SCALE = 3;
+const int RENDERING_SCALE = 3;
 
+bool Level::clickCheck(int mouseX, int mouseY) {
+  
+  int tileX = mouseX/(16*RENDERING_SCALE);
+  int tileY = mouseY/(16*RENDERING_SCALE);
+
+  if(selectUnit(tileX, tileY)) return true;
+  if(selectBuilding(tileX, tileY)) return true;
+
+  std::cout << "Neither building nor unit clicked" << std::endl;
+  
+  return false;
+}
+
+bool Level::selectUnit (int tileX, int tileY) {
+
+  for (auto& unit : units) {
+
+    if(unit.x == tileX && unit.y == tileY) {
+      //std::cout << "X:" << unit.x << "Y:" << unit.y << std::endl;
+      selectedUnit = &unit;
+      return true;
+    }
+  }
+  selectedUnit = nullptr;
+  return false;
+}
+
+bool Level::selectBuilding (int tileX, int tileY) {
+
+  for (auto& building : buildings) {
+
+    if(building.x == tileX && building.y == tileY) {
+      //std::cout << "X:" << unit.x << "Y:" << unit.y << std::endl;
+      selectedBuilding = &building;
+      return true;
+    }
+  }
+  selectedBuilding = nullptr;
+  return false;
+}
+
+void Level::handleEvent(Engine &engine, SDL_Event &event) {
+
+  //handle following events:
+  //clicks/mouseDown
+  //escape (esc)
+
+  switch (event.type)
+  {
+  case SDL_MOUSEBUTTONDOWN:
+      if (event.button.button == SDL_BUTTON_LEFT) {
+        if(clickCheck(event.button.x, event.button.y)) {
+        
+        if(selectedUnit) {
+          selectedUnit->onClick(event, units);
+        }
+
+        if(selectedBuilding) {
+          //building stuff
+        }
+      }
+      } else if (event.button.button == SDL_BUTTON_RIGHT) {
+
+        if(selectedUnit) {
+          int tileX = event.button.x/(16*RENDERING_SCALE);
+          int tileY = event.button.y/(16*RENDERING_SCALE);
+          for (auto& unit : units) {
+
+            if(unit.x == tileX && unit.y == tileY) {
+            //std::cout << "X:" << unit.x << "Y:" << unit.y << std::endl;
+            
+            selectedUnit->attack(unit);
+
+            units.erase(
+            std::remove_if(units.begin(), units.end(),
+                       [](const Unit& unit) { return unit.health < 0; }),
+            units.end());
+          }
+  }
+        }
+      }
+      
+    break;
+  
+  default:
+    break;
+  }
+}
+
+void Level::render(Engine &engine, std::vector<SDL_Event> &events) {
+  
   // Iterate over all events
   while (!events.empty()) {
+    //events.erase(events.begin());
+
+    handleEvent(engine, events.at(0));
     events.erase(events.begin());
   }
 

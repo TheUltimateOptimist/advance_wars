@@ -87,6 +87,11 @@ using MatchupTabel_primaryweapon = std::unordered_map<UnitId, std::unordered_map
 
 class Unit {
 public:
+  int x;
+  int y;
+  int health; //health equals max_health at construction
+
+
   Unit(int x, int y, UnitFaction faction, UnitId id, UnitState state);
   ~Unit() {
         //Assuming that the destruktion of a unit triggers events
@@ -109,7 +114,8 @@ public:
   Will Update the health for both units
   Attacker deals damage to the defender first
   */
-  void attack(Unit *ally ,Unit *enemy);
+
+  void attack(Unit& enemy);
 
 
   /*
@@ -134,21 +140,19 @@ void loadXML(const char* filename);
 static void readXML();
 
 
+
 /*
 This function will be called by an external event-handler, eventually.
 Currently, it should be called if a Unit is interacted with and the resulting SDL_EVENT is passed through, and then decided upon
 */
-void onClick(SDL_Event event);
+void onClick(SDL_Event event, std::vector<Unit> &unitVector);
 
 private:
-  int x;
-  int y;
-
   UnitFaction faction;
   UnitId id;
   UnitState state;
 
-  int health; //health equals max_health at construction
+ 
   int max_health; // max_health required for damage_scaling
   int range;
   int fuel;

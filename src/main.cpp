@@ -95,7 +95,7 @@ int main()
 
   engine.set_scene(level);
 
-  Spritesheet spritesheet("/home/lorenz/Hochschule/5.Semester/C++/Projekt2/spritesheet.h5",
+  Spritesheet spritesheet("./spritesheet.h5",
                           engine);
 
   engine.set_spritesheet(spritesheet);

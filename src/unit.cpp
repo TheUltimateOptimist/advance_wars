@@ -10,7 +10,7 @@ namespace advanced_wars
     MatchupTabel_secondaryweapon primWeapon;
 
     Unit::Unit(int x, int y, UnitFaction faction, UnitId id, UnitState state)
-        : x(x), y(y), faction(faction), id(id), state(state)
+        : x(x), y(y), faction(faction), id(id), state(state), max_health(100)
     {
         health = max_health;
     };
@@ -75,32 +75,18 @@ namespace advanced_wars
     }
 
     MatchupTabel damageMatrix;
-    std::vector<Unit *> units;
+    std::vector<Unit*> units;
+    
+    void Unit::attack(Unit& enemy) {
 
-    void Unit::attack(Unit *ally, Unit *enemy)
-    {
+        int offDamage = 50;
+        int defDamage = 1000;
 
-        if (ally->has_attacked)
-        {
-            // display the unit as not able to attack (maybe greyscale?)
-        }
-
-        // Start Attack: choose the appropriate weapon:
-        int offDamage = damageMatrix[static_cast<u_int8_t>(ally->id)][static_cast<u_int8_t>(enemy->id)] * ((ally->health) / (ally->max_health));
-        int defDamage = damageMatrix[static_cast<u_int8_t>(ally->id)][static_cast<u_int8_t>(enemy->id)] * ((enemy->health) / (enemy->max_health));
-
-        enemy->health = enemy->health - offDamage;
-        if (enemy->health > 0)
-        {
-            ally->health = ally->health - defDamage;
-            if (ally->health <= 0)
-            {
-                ally->~Unit();
-            }
-        }
-        else
-        {
-            enemy->~Unit();
+        enemy.health = enemy.health - offDamage;
+        std::cout << "Enemy health:" << enemy.health << std::endl;
+        if (enemy.health > 0) {
+            this->health = this->health - defDamage;
+            std::cout << "Health ally:" << this->health << std::endl;
         }
     }
 
@@ -110,7 +96,20 @@ namespace advanced_wars
         this->y = posY;
     }
 
-    void Unit::onClick(SDL_Event event)
+/*
+Features:
+//select unit 
+    - show context menu
+    - show move range
+    - MAYBE show valid targets
+
+//deselect unit
+
+//attack unit
+    - show context menu
+
+*/
+    void Unit::onClick(SDL_Event event, std::vector<Unit> &unitVector)
     {
 
         Unit *defender = nullptr;
@@ -122,45 +121,52 @@ namespace advanced_wars
 
             // we have to re-initialize the unit.state (probably to idle)
             this->is_selected = true;
+            std::cout << "I am selected!!" << std::endl;
 
+            /*
             for (Unit *unit : units)
             {
-                if (inRange(unit))
+                if (!inRange(unit))
                 {
                     unit->state = advanced_wars::UnitState::UNAVAILABLE;
                 };
             }
+            */
+
+           //make move range calc
             break;
         case SDL_BUTTON_RIGHT:
 
             this->is_targeted = true;
+            std::cout << "I am targeted!!" << std::endl;
 
-            for (Unit *unit : units)
+            for (Unit unit : unitVector)
             {
-                if (unit->state == advanced_wars::UnitState::UNAVAILABLE)
+                if (unit.state == advanced_wars::UnitState::UNAVAILABLE)
                 {
                     continue;
                 }
 
-                if (unit->is_selected)
+                if (unit.is_selected)
                 {
-                    attacker = unit;
+                    attacker = &unit;
                 }
 
-                if (unit->is_targeted)
+                if (unit.is_targeted)
                 {
-                    defender = unit;
+                    defender = &unit;
                 }
             }
 
-            if (attacker && defender)
+            if (attacker != nullptr && defender != nullptr)
             {
-                attack(attacker, defender);
+                //attack(attacker, defender);
+                std::cout << "We are fighting!!" << std::endl;
                 break;
             }
             else
             {
-                std::cerr << "Fehler beim Laden der XML-Datei!" << std::endl;
+                std::cerr << "Angriff konnte nicht gestartet werden!" << std::endl;
                 break;
             }
         }
