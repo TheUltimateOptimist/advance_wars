@@ -6,6 +6,9 @@
 namespace advanced_wars
 {
 
+    MatchupTabel_secondaryweapon secWeapon;
+    MatchupTabel_secondaryweapon primWeapon;
+
     Unit::Unit(int x, int y, UnitFaction faction, UnitId id, UnitState state)
         : x(x), y(y), faction(faction), id(id), state(state)
     {
@@ -180,8 +183,6 @@ namespace advanced_wars
 
     void Unit::readXML()
     {
-        MatchupTabel_secondaryweapon secWeapon;
-        MatchupTabel_secondaryweapon primWeapon;
 
         Config config(secWeapon, primWeapon);
         // Lade Konfigurationsdaten von XML

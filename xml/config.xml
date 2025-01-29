@@ -27,13 +27,13 @@
             <PrimaryWeapon name="Rockets">
                 <DamageTable>
                     <Damage unitId="infantry" value="65"/>
-                    <Damage unitId="infantry" value="55"/>
+                    <Damage unitId="Mech" value="55"/>
                 </DamageTable>
             </PrimaryWeapon>
             <SecondaryWeapon name="Machine-Gun">
                 <DamageTable>
                     <Damage unitId="infantry" value="65"/>
-                    <Damage unitId="infantry" value="55"/>
+                    <Damage unitId="Mech" value="55"/>
                 </DamageTable>
             </SecondaryWeapon>
         </Weapons>

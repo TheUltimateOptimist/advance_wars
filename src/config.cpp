@@ -53,6 +53,7 @@ namespace advanced_wars
                 unit_minRange[unitId] = minRange;
                 unit_maxRange[unitId] = maxRange;
 
+                /*
                 for (const auto &weapon : unit.second.get_child("Weapons"))
                 {
                     if (weapon.first == "PrimaryWeapon")
@@ -65,7 +66,7 @@ namespace advanced_wars
                         std::string weaponName = weapon.second.get<std::string>("<xmlattr>.name");
                         unit_secondaryweapon[unitId] = weaponName;
                     }
-                }
+                }*/
 
                 for (const auto &weapon : unit.second.get_child("Weapons"))
                 {
