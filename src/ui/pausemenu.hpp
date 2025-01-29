@@ -1,5 +1,4 @@
-#ifndef PAUSE_MENU_HPP
-#define PAUSE_MENU_HPP
+#pragma once
 
 #include "../scene.hpp"
 #include <SDL.h>
@@ -91,5 +90,3 @@ public:
 };
 
 } // namespace advanced_wars
-
-#endif // PAUSE_MENU_HPP

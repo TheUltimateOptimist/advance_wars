@@ -1,5 +1,4 @@
-#ifndef MENU_SYSTEM_HPP
-#define MENU_SYSTEM_HPP
+#pragma once
 
 #include "../scene.hpp"
 #include <SDL.h>
@@ -85,5 +84,3 @@ public:
 };
 
 } // namespace advanced_wars
-
-#endif // MENU_SYSTEM_HPP

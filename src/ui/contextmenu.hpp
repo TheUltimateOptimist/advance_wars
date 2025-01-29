@@ -1,5 +1,4 @@
-#ifndef CONTEXTMENU_HPP
-#define CONTEXTMENU_HPP
+#pragma once
 
 #include <SDL.h>
 #include <vector>
@@ -33,5 +32,3 @@ public:
 };
 
 }
-
-#endif // CONTEXTMENU_HPP
