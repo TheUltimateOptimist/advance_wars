@@ -148,19 +148,19 @@ void LevelScene::onTileEntered(Tile *tile)
 {
     std::cout << "Tile entered" << std::endl;
     //initialize active tile/active_tile_marker
-    if (active_tile_marker != nullptr) {
-        this->removeItem(active_tile_marker);
-    }
     active_tile = tile;
     QColor active_tile_color(0, 0, 0, 128);
     QGraphicsRectItem* item = this->addRect(0, 0, 16, 16, QPen(Qt::transparent), QBrush(active_tile_color));
     item->setZValue(width*height + 10);
     item->setPos(tile->x(), tile->y());
-    active_tile_marker = item;
+    hovered_tile_marker = item;
 }
 
 void LevelScene::onTileExited(Tile *tile)
 {
+    if (hovered_tile_marker != nullptr) {
+        this->removeItem(hovered_tile_marker);
+    }
 }
 
 void LevelScene::onTileClicked(Tile *tile)
