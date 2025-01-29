@@ -64,6 +64,21 @@ LevelScene *LevelScene::fromFile(const std::string &file_path, QWidget *parent)
     return new LevelScene(name, width, height, level_tilesarray, file_path, parent);
 }
 
+std::string LevelScene::getName()
+{
+    return name;
+}
+
+int LevelScene::getWidth()
+{
+    return width;
+}
+
+int LevelScene::getHeight()
+{
+    return height;
+}
+
 void LevelScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     QGraphicsScene::mousePressEvent(event);

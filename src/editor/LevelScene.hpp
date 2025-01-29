@@ -12,6 +12,9 @@ public:
     LevelScene(const std::string& name, int width, int height, std::vector<uint8_t> tiles, const std::string& file_path, QWidget *parent = nullptr);
     static LevelScene* empty(const std::string& name, int width, int height, QWidget *parent = nullptr);
     static LevelScene* fromFile(const std::string& file_path, QWidget *parent = nullptr);
+    std::string getName();
+    int getWidth();
+    int getHeight();
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;

@@ -1,7 +1,7 @@
 #include <QMainWindow>
-#include <QGraphicsScene>
+#include "LevelScene.hpp"
 
 class MainWindow : public QMainWindow {
 public:
-    MainWindow(QGraphicsScene* level, QWidget *parent = nullptr);
+    MainWindow(LevelScene* level, QWidget *parent = nullptr);
 };
