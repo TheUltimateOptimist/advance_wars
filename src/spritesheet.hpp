@@ -5,77 +5,77 @@
 #include <string>
 #include <vector>
 
-namespace advanced_wars {
+namespace advanced_wars
+{
 
 // Forward declaration
 class Engine;
 
-class Spritesheet {
-public:
-  Spritesheet(std::string path, Engine &engine);
+class Spritesheet
+{
+    public:
+        Spritesheet(std::string path, Engine& engine);
 
-  ~Spritesheet();
+        ~Spritesheet();
 
-  Spritesheet(const Spritesheet &) = delete;
+        Spritesheet(const Spritesheet&) = delete;
 
-  Spritesheet &operator=(const Spritesheet &) = delete;
+        Spritesheet& operator=(const Spritesheet&) = delete;
 
-  // Tiles
+        // Tiles
 
-  int get_tile_width();
+        int get_tile_width();
 
-  int get_tile_height();
+        int get_tile_height();
 
-  std::vector<std::pair<SDL_Texture *, int>> &get_tile_textures();
+        std::vector<std::pair<SDL_Texture*, int>>& get_tile_textures();
 
-  // Buildings
-  int get_building_width();
+        // Buildings
+        int get_building_width();
 
-  int get_building_height();
+        int get_building_height();
 
-  std::vector<SDL_Texture *> &get_building_textures();
+        std::vector<SDL_Texture*>& get_building_textures();
 
-  // Units
-  int get_unit_width();
+        // Units
+        int get_unit_width();
 
-  int get_unit_height();
+        int get_unit_height();
 
-  int get_unit_moving_width();
+        int get_unit_moving_width();
 
-  int get_unit_moving_height();
+        int get_unit_moving_height();
 
-  std::vector<std::vector<std::vector<std::pair<SDL_Texture *, int>>>> &
-  get_unit_textures();
+        std::vector<std::vector<std::vector<std::pair<SDL_Texture*, int>>>>& get_unit_textures();
 
-  // Effects
-  int get_effect_width();
+        // Effects
+        int get_effect_width();
 
-  int get_effect_height();
+        int get_effect_height();
 
-  std::vector<std::pair<SDL_Texture *, int>> &get_effect_textures();
+        std::vector<std::pair<SDL_Texture*, int>>& get_effect_textures();
 
-private:
-  // Tiles
-  int tile_width;
-  int tile_height;
-  std::vector<std::pair<SDL_Texture *, int>> tile_textures;
+    private:
+        // Tiles
+        int                                       tile_width;
+        int                                       tile_height;
+        std::vector<std::pair<SDL_Texture*, int>> tile_textures;
 
-  // Buildings
-  std::vector<SDL_Texture *> building_textures;
-  int building_width;
-  int building_height;
+        // Buildings
+        std::vector<SDL_Texture*> building_textures;
+        int                       building_width;
+        int                       building_height;
 
-  // Units
-  std::vector<std::vector<std::vector<std::pair<SDL_Texture *, int>>>>
-      unit_textures;
-  int unit_width;
-  int unit_height;
-  int unit_moving_width;
-  int unit_moving_height;
+        // Units
+        std::vector<std::vector<std::vector<std::pair<SDL_Texture*, int>>>> unit_textures;
+        int                                                                 unit_width;
+        int                                                                 unit_height;
+        int                                                                 unit_moving_width;
+        int                                                                 unit_moving_height;
 
-  // Effects
-  std::vector<std::pair<SDL_Texture *, int>> effect_textures;
-  int effect_width;
-  int effect_height;
+        // Effects
+        std::vector<std::pair<SDL_Texture*, int>> effect_textures;
+        int                                       effect_width;
+        int                                       effect_height;
 };
 } // namespace advanced_wars
