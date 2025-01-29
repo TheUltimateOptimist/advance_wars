@@ -18,12 +18,12 @@ public:
     int getWidth();
     int getHeight();
 private:
-    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
     void onLevelNameUpdated(std::string new_name) override;
     void onLevelWriteRequested() override;
     void onTileEntered(Tile* tile) override;  
     void onTileExited(Tile* tile) override;
     void onTileClicked(Tile* tile) override;
+    void onTileSelected(uint8_t id) override;
     Tile* active_tile;
     QGraphicsRectItem* active_tile_marker;
     QGraphicsRectItem* hovered_tile_marker;

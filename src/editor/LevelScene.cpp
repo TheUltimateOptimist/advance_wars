@@ -27,13 +27,6 @@ LevelScene::LevelScene(const std::string& name, int width, int height, std::vect
             tile->getChild()->setZValue(2 + index);
         }
     }
-
-    // initialize active tile/active_tile_marker
-    //QColor active_tile_color(0, 0, 0, 128);
-    //QGraphicsRectItem* item = this->addRect(0, 0, 16, 16, QPen(Qt::transparent), QBrush(active_tile_color));
-    //item->setZValue(height*16);
-    //active_tile = 0;
-    //active_tile_marker = item;
 }
 
 LevelScene *LevelScene::empty(const std::string& name, int width, int height, QWidget *parent) {
@@ -87,34 +80,6 @@ int LevelScene::getHeight()
     return height;
 }
 
-void LevelScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
-{
-    QGraphicsScene::mousePressEvent(event);
-    QPointF clickPosition = event->scenePos();
-    int x = (int) clickPosition.rx() / 16;
-    int y = (int) clickPosition.ry() / 16;
-    if (x < 0 || x >= width || y < 0 || y >= height) {
-        return;
-    }
-    int tile_index = y * width + x;
-    /**
-    if (tiles[tile_index] != 0) {
-        QGraphicsPixmapItem* item = (QGraphicsPixmapItem*) this->itemAt(clickPosition, QTransform());
-        this->removeItem(item);
-        tiles[tile_index] = 0;
-    } else {
-    QPixmap new_pixmap = SpriteProvider::get_sprite(50);
-    QGraphicsPixmapItem* new_item = this->addPixmap(new_pixmap);
-    new_item->setPos(x*16, y*16 - 16);
-    new_item->setZValue(2 + y*16);
-    tiles[tile_index] = 50;
-    }
-    */
-    //active_tile_marker->setPos(x*16, y*16);
-    //active_tile = tile_index;
-
-}
-
 void LevelScene::onLevelNameUpdated(std::string new_name)
 {
     this->name = new_name;
@@ -146,9 +111,6 @@ void LevelScene::onLevelWriteRequested()
 
 void LevelScene::onTileEntered(Tile *tile)
 {
-    std::cout << "Tile entered" << std::endl;
-    //initialize active tile/active_tile_marker
-    active_tile = tile;
     QColor active_tile_color(0, 0, 0, 128);
     QGraphicsRectItem* item = this->addRect(0, 0, 16, 16, QPen(Qt::transparent), QBrush(active_tile_color));
     item->setZValue(width*height + 10);
@@ -174,4 +136,37 @@ void LevelScene::onTileClicked(Tile *tile)
     item->setZValue(width*height + 10);
     item->setPos(tile->x(), tile->y());
     active_tile_marker = item;
+}
+
+void LevelScene::onTileSelected(uint8_t id) {
+    std::cout << (int) active_tile->getId() << std::endl;
+    std::cout << (int) id << std::endl;
+    if (active_tile != nullptr) {
+        std::cout << "setting tile" << std::endl;
+        active_tile->setId(id);
+        if (active_tile->getChild() != nullptr) {
+            std::cout << active_tile->getChild()->zValue() << std::endl;
+            this->removeItem(active_tile->getChild());
+            std::cout << "removed child" << std::endl;
+        }
+        if (id == 0) {
+            std::cout << "setting to 0" << std::endl;
+            active_tile->setChild(nullptr);
+        }
+        else {
+            std::cout << "setting to " << (int) id << std::endl;
+            std::cout << active_tile->zValue() << std::endl;
+            QPixmap new_pixmap = SpriteProvider::get_sprite(id);
+            QGraphicsPixmapItem* new_item = this->addPixmap(new_pixmap);
+            new_item->setPos(active_tile->x(), active_tile->y());
+            std::cout << active_tile->x() << " " << active_tile->y() << std::endl;
+            new_item->setZValue(1);
+            active_tile->setChild(new_item);
+            if (id >= 50) {
+                std::cout << "setting to 50" << std::endl;
+                new_item->setPos(active_tile->x(), active_tile->y() - 16);
+                new_item->setZValue(2 + width*(active_tile->y()/16) + active_tile->x()/16);
+            }
+        }
+    }
 }

@@ -3,7 +3,9 @@
 
 class TileButton : public QPushButton, public EventBroker {
 public:
-    TileButton(QWidget *parent = nullptr, const uint8_t id);
+    TileButton(const uint8_t id, QWidget *parent = nullptr);
 protected:
     void mousePressEvent(QMouseEvent* event) override;
+private:
+    uint8_t id;
 };

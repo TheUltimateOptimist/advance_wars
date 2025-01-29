@@ -48,13 +48,13 @@ QLabel *TileSelector::createNewLabel(QWidget* parent, const char *text){
 
 template<typename T>
 void TileSelector::sectionLayout(QGridLayout*& layout, int usedIdCounter, QWidget* parent, T id){
-    TileButton* button = new TileButton(parent, id);
+    TileButton* button = new TileButton(id, parent);
     layout -> addWidget(button,usedIdCounter/3, usedIdCounter%3);
 }
     
 template<typename T, typename... Rest>
 void TileSelector::sectionLayout(QGridLayout*& layout, int usedIdCounter, QWidget* parent, T id, Rest...ids){
-    TileButton* button = new TileButton(parent, id);
+    TileButton* button = new TileButton(id, parent);
     layout -> addWidget(button,usedIdCounter/3, usedIdCounter%3);
     usedIdCounter++;
     sectionLayout(layout,usedIdCounter,parent,ids...);

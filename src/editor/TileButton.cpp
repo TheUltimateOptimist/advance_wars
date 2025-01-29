@@ -1,6 +1,7 @@
+#include "SpriteProvider.hpp"
 #include "TileButton.hpp"
 
-TileButton::TileButton(QWidget *parent, const uint8_t id) : QPushButton(parent){
+TileButton::TileButton(const uint8_t id, QWidget *parent) : QPushButton(parent), id(id){
     QPixmap pixmap = SpriteProvider::get_sprite(id);
     QPixmap scaledpixmap = pixmap.scaled(72,72, Qt::KeepAspectRatio, Qt::FastTransformation);
     this -> setIcon(QIcon(scaledpixmap));

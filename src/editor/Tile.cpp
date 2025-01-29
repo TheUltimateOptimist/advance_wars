@@ -9,7 +9,7 @@ Tile::Tile(uint8_t id) : QGraphicsPixmapItem(SpriteProvider::get_sprite(0)), id(
         child = new QGraphicsPixmapItem(pixmap);
         child->setZValue(1);
         if (id >= 50) {
-            this->setZValue(2);
+            child->setZValue(2);
         }
     }
 }
@@ -19,14 +19,23 @@ uint8_t Tile::getId()
     return id;
 }
 
+uint8_t Tile::setId(uint8_t id)
+{
+    this->id = id;
+}
+
 QGraphicsPixmapItem *Tile::getChild()
 {
     return child;
 }
 
+QGraphicsPixmapItem *Tile::setChild(QGraphicsPixmapItem *child)
+{
+    this->child = child;
+}
+
 void Tile::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
-    std::cout << "entered" << std::endl;
     sendTileEntered(this);
 }
 
