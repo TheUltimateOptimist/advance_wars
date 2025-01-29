@@ -19,7 +19,7 @@ private:
   SDL_Texture *backgroundTexture;
 
 public:
-  PauseMenu(int selectedOption, SDL_Texture *backgroundTextureS);
+  PauseMenu(int selectedOption, SDL_Texture *backgroundTexture);
 
   void render(Engine *engine) override;
 
