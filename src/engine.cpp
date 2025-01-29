@@ -44,14 +44,13 @@ void Engine::push_scene(std::shared_ptr<Scene> scene) {
 }
 
 std::optional<std::shared_ptr<Scene>> Engine::pop_scene() {
-  if (!this->scenes.empty()) {
+  if (this->scenes.empty()) {
     return std::nullopt;
-  } else {
-    std::shared_ptr<Scene> tmp = scenes.at(scenes.size() - 1);
+  }
+    std::shared_ptr<Scene> tmp = scenes.back();
     this->scenes.pop_back();
 
-    return std::optional<std::shared_ptr<Scene>>(tmp);
-  }
+    return tmp;
 }
 
 void Engine::set_spritesheet(Spritesheet spritesheet) {
@@ -80,10 +79,17 @@ void Engine::render() {
   }
 
   if (scenes.empty()) {
+    SDL_RenderPresent(this->sdl_renderer);
     return;
   }
 
-  this->scenes.at(scenes.size() - 1)->render(this);
+  std::shared_ptr<Scene> currentScene = scenes.back();
+  if (!currentScene) {
+    SDL_RenderPresent(this->sdl_renderer);
+    return;
+  }
+
+  currentScene->render(this);
 
   SDL_RenderPresent(this->sdl_renderer);
 }
