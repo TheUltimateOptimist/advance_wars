@@ -9,5 +9,5 @@ public:
     
 private:
     QLabel *createNewLabel(QWidget* parent, const char *text);
-    QPushButton *createButton(QWidget* parent, SpriteProvider &tileprovider, uint8_t id);
+    QPushButton *createButton(QWidget* parent, uint8_t id);
 };

@@ -21,10 +21,8 @@ TileSelector::TileSelector(QWidget * parent) : QScrollArea(parent){
     QLabel *labelBlue = createNewLabel(this, "Blaue Gebäude");
     QLabel *labelPurple = createNewLabel(this, "Violette Gebäude");
 
-    SpriteProvider tileprovider = SpriteProvider::from_spritesheet("../res/spritesheet.h5");
-    
-    QPushButton *button0 = createButton(this, tileprovider, 0);
-    QPushButton *button2 = createButton(this, tileprovider, 2);
+    QPushButton *button0 = createButton(this, 0);
+    QPushButton *button2 = createButton(this, 2);
     //ISSUE: only the first button is created for some reason
 
 
@@ -66,8 +64,8 @@ QLabel *TileSelector::createNewLabel(QWidget* parent, const char *text){
     return label;
 }
 
-QPushButton *TileSelector::createButton(QWidget* parent, SpriteProvider &tileprovider, uint8_t id){
-    QPixmap pixmap = tileprovider.get_sprite(id);
+QPushButton *TileSelector::createButton(QWidget* parent, uint8_t id){
+    QPixmap pixmap = SpriteProvider::get_sprite(id);
     QPixmap scaledpixmap = pixmap.scaled(80,80, Qt::KeepAspectRatio, Qt::SmoothTransformation);
     QPushButton *button =new QPushButton(parent);
     button -> setIcon(QIcon(scaledpixmap));
