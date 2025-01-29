@@ -4,14 +4,13 @@
 #include "MainWindow.hpp"
 #include "TopBar.hpp"
 #include "TileSelector.hpp"
-#include "LevelScene.hpp"
 #include <iostream>
 
-MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
+MainWindow::MainWindow(LevelScene* level, QWidget *parent) : QMainWindow(parent) {
     //CREATE MAIN WINDOW ------------------------------------------
     QWidget *mainWidget = new QWidget(this);
     setWindowTitle("Level Editor");
-    addToolBar(new TopBar("Geiles Level", 20, 20, this));
+    addToolBar(new TopBar(level->getName(), level->getWidth(), level->getHeight(), this));
 
 
     //CREATE TOOLBOX-----------------------------------------------
@@ -19,9 +18,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
     //CREATE LEVELMAP
     QGraphicsView* mapWidget = new QGraphicsView(this);
-    std::cout << "Creating level scene" << std::endl;
-    LevelScene* scene = LevelScene::empty("Geiles Level", 20, 20, this);
-    mapWidget->setScene(scene);
+    level->setParent(mapWidget);
+    mapWidget->setScene(level);
     mapWidget->setAlignment(Qt::AlignCenter);
     mapWidget->scale(2, 2);
 

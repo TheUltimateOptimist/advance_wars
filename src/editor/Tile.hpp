@@ -1,13 +1,19 @@
-#include <QApplication>
+#pragma once
 #include <QGraphicsPixmapItem>
-#include <QGraphicsSceneMouseEvent>
+#include "EventBroker.hpp"
 
-class Tile : public QGraphicsPixmapItem {
+class Tile : public QGraphicsPixmapItem, public EventBroker {
 public:
-    explicit Tile(const QPixmap& pixmap, uint8_t id);
+    Tile(uint8_t id);
+    uint8_t getId();
+    QGraphicsPixmapItem* getChild();
 
 protected:
-    // Override mousePressEvent to handle mouse clicks
-    void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
-    
+    void hoverEnterEvent(QGraphicsSceneHoverEvent *event) override;
+    void hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;
+    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
+
+private:
+    uint8_t id;
+    QGraphicsPixmapItem* child;
 };
