@@ -27,3 +27,33 @@ void EventBroker::sendLevelWriteRequested() {
     }
 }
 void EventBroker::onLevelWriteRequested() {}
+
+void EventBroker::sendTileEntered(Tile *tile)
+{
+    for (auto instance : instances) {
+        instance->onTileEntered(tile);
+    }
+}
+void EventBroker::onTileEntered(Tile *tile)
+{
+}
+
+void EventBroker::sendTileExited(Tile *tile)
+{
+    for (auto instance : instances) {
+        instance->onTileExited(tile);
+    }
+}
+void EventBroker::onTileExited(Tile *tile)
+{
+}
+
+void EventBroker::sendTileClicked(Tile *tile)
+{
+    for (auto instance : instances) {
+        instance->onTileClicked(tile);
+    }
+}
+void EventBroker::onTileClicked(Tile *tile)
+{
+}
