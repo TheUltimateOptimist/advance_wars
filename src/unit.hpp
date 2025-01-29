@@ -55,8 +55,7 @@ enum class MovementType {
   LANDER = 5,
 };
 
-//Fill the MatchupTabel
-using MatchupTabel = std::unordered_map<u_int8_t, std::unordered_map<u_int8_t, int>>;
+using MatchupTable = std::unordered_map<u_int8_t, std::unordered_map<u_int8_t, int>>;
 
 class Unit {
 public:
@@ -104,13 +103,12 @@ public:
   */
   void calculate_movement();
 
- /*
- Load the XML and iterate over the entire datastructure
- For every Unit, get Unit_Id and create a map for Unit_Id -> {Unit_Id -> damageType}
- */
-void loadXML(const char* filename);
 
-
+  /*
+  This function fills the MatchupTable
+  It would be better if this table would be placed in the level
+  */
+ void fill_matchupTable();
 
 /*
 This function will be called by an external event-handler, eventually.
