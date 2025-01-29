@@ -1,4 +1,3 @@
-#include "box2d/box2d.h"
 #include "engine.hpp"
 #include "level.hpp"
 #include "spritesheet.hpp"
@@ -9,12 +8,6 @@
 using namespace advanced_wars;
 
 int main() {
-  b2WorldDef worldDef = b2DefaultWorldDef();
-
-  worldDef.gravity = (b2Vec2){0.0f, -10.0f};
-
-  b2WorldId worldId = b2CreateWorld(&worldDef);
-
   Window window("Advanced Wars", 960, 960);
 
   Engine engine(window);
