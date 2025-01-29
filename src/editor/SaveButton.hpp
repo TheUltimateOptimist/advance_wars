@@ -1,7 +1,6 @@
 #include <QPushButton>
-#include "EventBroker.hpp"
 
-class SaveButton : public QPushButton, public EventBroker {
+class SaveButton : public QPushButton {
 public:
     SaveButton(const std::string& title, QWidget *parent = nullptr);
 protected:

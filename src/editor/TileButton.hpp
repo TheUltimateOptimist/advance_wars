@@ -1,7 +1,6 @@
 #include <QPushButton>
-#include "EventBroker.hpp"
 
-class TileButton : public QPushButton, public EventBroker {
+class TileButton : public QPushButton {
 public:
     TileButton(const uint8_t id, QWidget *parent = nullptr);
 protected:

@@ -1,5 +1,6 @@
 #include "LevelNameEdit.hpp"
 #include <QKeyEvent>
+#include "EventBroker.hpp"
 
 LevelNameEdit::LevelNameEdit(const std::string &level_name, QWidget *parent) : QLineEdit(parent){
     this->setFixedWidth(150);
@@ -8,5 +9,6 @@ LevelNameEdit::LevelNameEdit(const std::string &level_name, QWidget *parent) : Q
 
 void LevelNameEdit::keyPressEvent(QKeyEvent *event){
     QLineEdit::keyPressEvent(event);
-    sendLevelNameUpdated(this->text().toStdString());
+    std::string new_name = this->text().toStdString();
+    EventBroker::send([new_name](EventBroker* e){e->onLevelNameUpdated(new_name);});
 }

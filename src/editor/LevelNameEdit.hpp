@@ -1,7 +1,6 @@
 #include <QLineEdit>
-#include "EventBroker.hpp"
 
-class LevelNameEdit : public QLineEdit, public EventBroker {
+class LevelNameEdit : public QLineEdit {
 public:
     LevelNameEdit(const std::string& level_name, QWidget* parent = nullptr);
 protected:

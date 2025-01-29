@@ -1,8 +1,7 @@
 #pragma once
 #include <QGraphicsPixmapItem>
-#include "EventBroker.hpp"
 
-class Tile : public QGraphicsPixmapItem, public EventBroker {
+class Tile : public QGraphicsPixmapItem {
 public:
     Tile(uint8_t id);
     uint8_t getId();

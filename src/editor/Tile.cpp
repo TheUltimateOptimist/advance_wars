@@ -1,7 +1,8 @@
 #include "Tile.hpp"
 #include "SpriteProvider.hpp"
+#include "EventBroker.hpp"
 
-Tile::Tile(uint8_t id) : QGraphicsPixmapItem(SpriteProvider::get_sprite(0)), id(id) {
+Tile::Tile(uint8_t id) : QGraphicsPixmapItem(SpriteProvider::get_sprite(0)), id(id), child(nullptr) {
     this->setAcceptHoverEvents(true);
     this->setZValue(0);
     if (id > 0) {
@@ -36,15 +37,15 @@ QGraphicsPixmapItem *Tile::setChild(QGraphicsPixmapItem *child)
 
 void Tile::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
-    sendTileEntered(this);
+    EventBroker::send([this](EventBroker* e){e->onTileEntered(this);}); 
 }
 
 void Tile::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 {
-    sendTileExited(this);
+    EventBroker::send([this](EventBroker* e){e->onTileExited(this);}); 
 }
 
 void Tile::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    sendTileClicked(this);
+    EventBroker::send([this](EventBroker* e){e->onTileClicked(this);});
 }

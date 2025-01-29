@@ -15,12 +15,8 @@ LevelScene::LevelScene(const std::string& name, int width, int height, std::vect
         this->addItem(tile);
         tile->setPos(x, y);
         if (tile->getId() > 0) {
-            std::cout << tile->getId() << std::endl;
             this->addItem(tile->getChild());
             tile->getChild()->setPos(x, y);
-            if (tile->getId() <= 29) {
-                std::cout << tile->getChild()->zValue() << std::endl;
-            }
         }
         if (tile->getId() >= 50) {
             tile->getChild()->setPos(x, y - 16);
@@ -139,31 +135,21 @@ void LevelScene::onTileClicked(Tile *tile)
 }
 
 void LevelScene::onTileSelected(uint8_t id) {
-    std::cout << (int) active_tile->getId() << std::endl;
-    std::cout << (int) id << std::endl;
     if (active_tile != nullptr) {
-        std::cout << "setting tile" << std::endl;
         active_tile->setId(id);
         if (active_tile->getChild() != nullptr) {
-            std::cout << active_tile->getChild()->zValue() << std::endl;
             this->removeItem(active_tile->getChild());
-            std::cout << "removed child" << std::endl;
         }
         if (id == 0) {
-            std::cout << "setting to 0" << std::endl;
             active_tile->setChild(nullptr);
         }
         else {
-            std::cout << "setting to " << (int) id << std::endl;
-            std::cout << active_tile->zValue() << std::endl;
             QPixmap new_pixmap = SpriteProvider::get_sprite(id);
             QGraphicsPixmapItem* new_item = this->addPixmap(new_pixmap);
             new_item->setPos(active_tile->x(), active_tile->y());
-            std::cout << active_tile->x() << " " << active_tile->y() << std::endl;
             new_item->setZValue(1);
             active_tile->setChild(new_item);
             if (id >= 50) {
-                std::cout << "setting to 50" << std::endl;
                 new_item->setPos(active_tile->x(), active_tile->y() - 16);
                 new_item->setZValue(2 + width*(active_tile->y()/16) + active_tile->x()/16);
             }
