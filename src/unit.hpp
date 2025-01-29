@@ -55,7 +55,7 @@ enum class MovementType {
   LANDER = 5,
 };
 
-using MatchupTable = std::unordered_map<u_int8_t, std::unordered_map<u_int8_t, int>>;
+using MatchupTable = std::unordered_map<UnitId, std::unordered_map<UnitId, int>>;
 
 class Unit {
 public:
@@ -108,7 +108,7 @@ public:
   This function fills the MatchupTable
   It would be better if this table would be placed in the level
   */
- void fill_matchupTable();
+ MatchupTable fill_matchupTable(int);
 
 /*
 This function will be called by an external event-handler, eventually.
@@ -131,13 +131,11 @@ private:
   bool has_attacked;
   bool is_selected;
   bool is_targeted;
+  MatchupTable secondary_weapon;
+  MatchupTable primary_weapon;
 
-  // Primary weapon ammo
   int ammo;
-  /*
-  std::optional<Weapon> primary;
-  std::optional<Weapon> secondary;
-  */
+ 
 };
 
 } // namespace advanced_wars
