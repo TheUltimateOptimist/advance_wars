@@ -6,7 +6,7 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/xml_parser.hpp>
 
-LevelScene::LevelScene(const std::string& name, int width, int height, std::vector<Tile*> tiles, const std::string& file_path, QWidget *parent) : QGraphicsScene(parent), name(name), width(width), height(height), tiles(tiles), file_path(file_path), active_tile_marker(nullptr), hovered_tile_marker(nullptr) {
+LevelScene::LevelScene(const std::string& name, int width, int height, std::vector<Tile*> tiles, const std::string& file_path, QWidget *parent) : QGraphicsScene(parent), name(name), width(width), height(height), tiles(tiles), file_path(file_path), active_tile(nullptr), active_tile_marker(nullptr), hovered_tile_marker(nullptr) {
     this->setSceneRect(0, 0, width*16, height*16);
     for (int index = 0; index < width*height; index++) {
         int x = (index % width) * 16;
@@ -142,4 +142,27 @@ void LevelScene::onLevelWriteRequested()
 
     file.createDataSet<std::string>("metadata", HighFive::DataSpace::From(xmlStream)).write(xml_data);
     file.createDataSet<uint8_t>("tilesarray", HighFive::DataSpace::From(tiles_array)).write(tiles_array);
+}
+
+void LevelScene::onTileEntered(Tile *tile)
+{
+    std::cout << "Tile entered" << std::endl;
+    //initialize active tile/active_tile_marker
+    if (active_tile_marker != nullptr) {
+        this->removeItem(active_tile_marker);
+    }
+    active_tile = tile;
+    QColor active_tile_color(0, 0, 0, 128);
+    QGraphicsRectItem* item = this->addRect(0, 0, 16, 16, QPen(Qt::transparent), QBrush(active_tile_color));
+    item->setZValue(width*height + 10);
+    item->setPos(tile->x(), tile->y());
+    active_tile_marker = item;
+}
+
+void LevelScene::onTileExited(Tile *tile)
+{
+}
+
+void LevelScene::onTileClicked(Tile *tile)
+{
 }

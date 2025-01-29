@@ -17,12 +17,14 @@ public:
     std::string getName();
     int getWidth();
     int getHeight();
-
-protected:
-    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
 private:
+    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
     void onLevelNameUpdated(std::string new_name) override;
     void onLevelWriteRequested() override;
+    void onTileEntered(Tile* tile) override;  
+    void onTileExited(Tile* tile) override;
+    void onTileClicked(Tile* tile) override;
+    Tile* active_tile;
     QGraphicsRectItem* active_tile_marker;
     QGraphicsRectItem* hovered_tile_marker;
     std::string name;

@@ -73,8 +73,3 @@ QPushButton *TileSelector::createButton(QWidget* parent, uint8_t id){
     button -> setFixedSize(80,80);
     return button;
 }
-
-
-    
-
-    

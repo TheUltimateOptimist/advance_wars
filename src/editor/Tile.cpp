@@ -2,6 +2,7 @@
 #include "SpriteProvider.hpp"
 
 Tile::Tile(uint8_t id) : QGraphicsPixmapItem(SpriteProvider::get_sprite(0)), id(id) {
+    this->setAcceptHoverEvents(true);
     this->setZValue(0);
     if (id > 0) {
         QPixmap pixmap = SpriteProvider::get_sprite(id);
@@ -25,6 +26,7 @@ QGraphicsPixmapItem *Tile::getChild()
 
 void Tile::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
+    std::cout << "entered" << std::endl;
     sendTileEntered(this);
 }
 
