@@ -75,8 +75,8 @@ namespace advanced_wars
     }
 
     MatchupTabel damageMatrix;
-    std::vector<Unit*> units;
-    
+    std::vector<Unit *> units;
+    /*
     void Unit::attack(Unit& enemy) {
 
         int offDamage = 50;
@@ -88,6 +88,47 @@ namespace advanced_wars
             this->health = this->health - defDamage;
             std::cout << "Health ally:" << this->health << std::endl;
         }
+    }*/
+
+    void Unit::attack(Unit &enemy)
+    {
+
+        
+        // Zuerst die Tabel für die primäre Waffe der angreifenden Einheit holen
+        auto &attackerSecondaryWeaponTable = secWeapon[id];
+
+        // Schadenswert für die angreifende Einheit gegen die verteidigende Einheit berechnen
+        if (attackerSecondaryWeaponTable.find(enemy.id) != attackerSecondaryWeaponTable.end())
+        {
+            int attackerDamageValue = attackerSecondaryWeaponTable[enemy.id];
+            // Berechne den Schaden in Abhängigkeit der Gesundheit der angreifenden Einheit
+            int offDamage = attackerDamageValue * (static_cast<float>(health) / max_health);
+
+            // Schaden auf den Gegner anwenden
+            enemy.health -= offDamage;
+            std::cout << "Enemy health after attack: " << enemy.health << std::endl;
+
+            // Prüfen, ob der Gegner noch am Leben ist um zurückzuschlagen
+            if (enemy.health > 0)
+            {
+                // Tabelle für die primäre Waffe der verteidigenden Einheit holen
+                auto &defenderSecondaryWeaponTable = secWeapon[enemy.id];
+                if (defenderSecondaryWeaponTable.find(this->id) != defenderSecondaryWeaponTable.end())
+                {
+                    int defenderDamageValue = defenderSecondaryWeaponTable[this->id];
+                    int defDamage = defenderDamageValue * (static_cast<float>(enemy.health) / enemy.max_health);
+
+                    // Schaden auf die angreifende Einheit anwenden
+                    this->health -= defDamage;
+                    std::cout << "Ally health after retaliation: " << this->health << std::endl;
+                }
+            }
+        }
+        else
+        {
+            std::cerr << "No damage value found for attack from unit " << static_cast<int>(id)
+                      << " against unit " << static_cast<int>(enemy.id) << std::endl;
+        }
     }
 
     void Unit::update_position(int posX, int posY)
@@ -96,19 +137,19 @@ namespace advanced_wars
         this->y = posY;
     }
 
-/*
-Features:
-//select unit 
-    - show context menu
-    - show move range
-    - MAYBE show valid targets
+    /*
+    Features:
+    //select unit
+        - show context menu
+        - show move range
+        - MAYBE show valid targets
 
-//deselect unit
+    //deselect unit
 
-//attack unit
-    - show context menu
+    //attack unit
+        - show context menu
 
-*/
+    */
     void Unit::onClick(SDL_Event event, std::vector<Unit> &unitVector)
     {
 
@@ -133,7 +174,7 @@ Features:
             }
             */
 
-           //make move range calc
+            // make move range calc
             break;
         case SDL_BUTTON_RIGHT:
 
@@ -160,7 +201,7 @@ Features:
 
             if (attacker != nullptr && defender != nullptr)
             {
-                //attack(attacker, defender);
+                // attack(attacker, defender);
                 std::cout << "We are fighting!!" << std::endl;
                 break;
             }
