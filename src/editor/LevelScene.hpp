@@ -5,14 +5,13 @@
 #include <QMouseEvent>
 #include <QWidget>
 #include <QGraphicsSceneMouseEvent>
-#include <tuple>
 #include "EventBroker.hpp"
 
 class LevelScene : public QGraphicsScene, public EventBroker {
 public:
-    LevelScene(const std::string& name, int width, int height, uint8_t* tiles, QWidget *parent = nullptr);
-    ~LevelScene();
+    LevelScene(const std::string& name, int width, int height, std::vector<uint8_t> tiles, const std::string& file_path, QWidget *parent = nullptr);
     static LevelScene* empty(const std::string& name, int width, int height, QWidget *parent = nullptr);
+    static LevelScene* fromFile(const std::string& file_path, QWidget *parent = nullptr);
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
@@ -22,7 +21,8 @@ private:
     std::string name;
     int width;
     int height;
-    uint8_t* tiles;
+    std::vector<uint8_t> tiles;
+    std::string file_path;
 };
 
 #endif // LEVELSCENE_HPP
