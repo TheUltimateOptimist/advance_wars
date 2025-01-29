@@ -19,8 +19,8 @@ int main()
   Window window("Advanced Wars", 960, 960);
 
   Engine engine(window);
-  
-  Unit::readXML();
+
+  Config config("../xml/config.xml");
 
   // Construct a level
   std::vector<Tile> tiles;
