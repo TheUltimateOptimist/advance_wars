@@ -8,25 +8,33 @@
 #include "window.hpp"
 #include <cstddef>
 #include <vector>
+#include "config.hpp"
+#include <iostream>
 
 using namespace advanced_wars;
 
-int main() {
+int main()
+{
 
   Window window("Advanced Wars", 960, 960);
 
   Engine engine(window);
+  
+  Unit::readXML();
 
   // Construct a level
   std::vector<Tile> tiles;
-  for (int y = 0; y < 20; y++) {
-    for (int x = 0; x < 20; x++) {
+  for (int y = 0; y < 20; y++)
+  {
+    for (int x = 0; x < 20; x++)
+    {
       tiles.push_back(Tile(TileId::PLAIN, x, y));
     }
   }
 
   // Fill the edges with water
-  for (size_t n = 0; n < 20; n++) {
+  for (size_t n = 0; n < 20; n++)
+  {
     // Vertical
     tiles.at(n * 20) = Tile(TileId::WATER, 0, n);
     tiles.at(n * 20 + 19) = Tile(TileId::WATER, 19, n);
@@ -36,7 +44,8 @@ int main() {
   }
 
   // Make the edges cliffs
-  for (size_t n = 1; n < 19; n++) {
+  for (size_t n = 1; n < 19; n++)
+  {
     // Vertical
     tiles.at(n * 20 + 1) = Tile(TileId::CLIFF_RIGHT, 1, n);
     tiles.at(n * 20 + 18) = Tile(TileId::CLIFF_LEFT, 18, n);
@@ -55,8 +64,10 @@ int main() {
   // Buildings
   std::vector<Building> buildings;
 
-  for (int y = 0; y < 6; y++) {
-    for (int x = 0; x < 5; x++) {
+  for (int y = 0; y < 6; y++)
+  {
+    for (int x = 0; x < 5; x++)
+    {
       BuildingId id = static_cast<BuildingId>(x);
       BuildingFaction faction = static_cast<BuildingFaction>(y);
 
@@ -67,8 +78,10 @@ int main() {
   // Units
   std::vector<Unit> units;
 
-  for (int y = 0; y < 19; y++) {
-    for (int x = 0; x < 6; x++) {
+  for (int y = 0; y < 19; y++)
+  {
+    for (int x = 0; x < 6; x++)
+    {
       units.push_back(Unit(x + 9, y + 2, UnitFaction::URED,
                            static_cast<UnitId>(y), static_cast<UnitState>(x)));
     }
@@ -87,7 +100,8 @@ int main() {
 
   engine.set_spritesheet(spritesheet);
 
-  while (!engine.exited()) {
+  while (!engine.exited())
+  {
     engine.pump();
     engine.render();
   }

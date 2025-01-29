@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Units>
+    <Unit key="infantry">
+        <Cost>1000</Cost>
+        <MovementPoints>3</MovementPoints>
+        <MovementType>Foot</MovementType>
+        <minRange>1</minRange>
+        <maxRange>1</maxRange>
+        <Ammo>0</Ammo>
+        <Weapons>
+            <SecondaryWeapon name="Machine-Gun">
+                <DamageTable>
+                    <Damage unitId="infantry" value="55"/>
+                    <Damage unitId="Mech" value="45"/>
+                </DamageTable>
+            </SecondaryWeapon>
+        </Weapons>
+    </Unit>
+    <Unit key="Mech">
+        <Cost>3000</Cost> 
+        <MovementPoints>2</MovementPoints>       
+        <MovementType>Foot</MovementType>
+        <Ammo>9</Ammo>
+        <minRange>1</minRange>
+        <maxRange>1</maxRange>
+        <Weapons>
+            <PrimaryWeapon name="Rockets">
+                <DamageTable>
+                    <Damage unitId="infantry" value="65"/>
+                    <Damage unitId="Mech" value="55"/>
+                </DamageTable>
+            </PrimaryWeapon>
+            <SecondaryWeapon name="Machine-Gun">
+                <DamageTable>
+                    <Damage unitId="infantry" value="65"/>
+                    <Damage unitId="Mech" value="55"/>
+                </DamageTable>
+            </SecondaryWeapon>
+        </Weapons>
+    </Unit>
+</Units>

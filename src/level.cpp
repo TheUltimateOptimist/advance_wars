@@ -124,6 +124,8 @@ void Level::render(Engine &engine, std::vector<SDL_Event> &events) {
     events.erase(events.begin());
   }
 
+  
+
   // Tiles
   for (Tile &tile : tiles) {
     tile.render(engine, RENDERING_SCALE);
