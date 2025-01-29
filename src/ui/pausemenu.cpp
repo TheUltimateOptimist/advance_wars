@@ -11,16 +11,28 @@ PauseMenu::PauseMenu(int selectedOption, SDL_Texture *backgroundTexture)
   if (TTF_Init() == -1) {
     std::cerr << "Failed to initialize SDL_ttf: " << TTF_GetError() << std::endl;
   }
+
+  if (!backgroundTexture) {
+    this->backgroundTexture = nullptr;
+  }
 }
 
 PauseMenu::~PauseMenu() {
   if (backgroundTexture) {
     SDL_DestroyTexture(backgroundTexture);
+    backgroundTexture = nullptr;
   }
   TTF_Quit();
 }
 
 void PauseMenu::render(Engine *engine) {
+
+  while (!engine->events().empty()) {
+    SDL_Event event = engine->events().at(0);
+    engine->events().pop_front();
+    handleEvent(engine, event);
+  }
+
   SDL_Renderer *renderer = engine->renderer();
 
   // Render the existing level
@@ -67,6 +79,27 @@ void PauseMenu::render(Engine *engine) {
 }
 
 void PauseMenu::handleEvent(Engine *engine, SDL_Event &event) {
+  if (event.type == SDL_KEYDOWN) {
+    if (event.key.keysym.sym == SDLK_DOWN) {
+      selectedOption = (selectedOption + 1) % options.size();
+    } else if (event.key.keysym.sym == SDLK_UP) {
+      selectedOption = (selectedOption - 1 + options.size()) % options.size();
+    } else if (event.key.keysym.sym == SDLK_ESCAPE) {
+      std::cout << "Resuming game..." << std::endl;
+      engine->pop_scene();
+    } else if (event.key.keysym.sym == SDLK_RETURN) {
+      if (options[selectedOption] == "Exit") {
+        // exit into main menu
+        std::cout << "Exiting game..." << std::endl;
+        engine->return_to_menu();
+      } else if (options[selectedOption] == "Resume") {
+        // resume game
+        std::cout << "Resuming game..." << std::endl;
+        engine->pop_scene();
+      }
+    }
+
+  }
   // Handle events for the pause menu
 }
 

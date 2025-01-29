@@ -35,6 +35,8 @@ public:
 
   std::optional<std::shared_ptr<Scene>> pop_scene();
 
+  void return_to_menu();
+
   std::deque<SDL_Event> &events();
 
   void set_spritesheet(Spritesheet spritesheet);

@@ -43,6 +43,15 @@ void Engine::push_scene(std::shared_ptr<Scene> scene) {
   this->scenes.push_back(scene);
 }
 
+void Engine::return_to_menu() {
+  // TODO: discuss if we outsource this to a separate function
+  // clear everything except the first scene
+  while (this->scenes.size() > 1) {
+    this->scenes.pop_back();
+  }
+}
+
+
 std::optional<std::shared_ptr<Scene>> Engine::pop_scene() {
   if (this->scenes.empty()) {
     return std::nullopt;
