@@ -25,7 +25,7 @@ int main() {
   std::string fullPath = basePath + relativePath;
   menu->loadBackground(engine.renderer(), fullPath.c_str());
 
-  engine.push_scene(context_menu);
+  engine.push_scene(menu);
   /* Level level("Osnabrück", 20, 20, std::vector<Tile>(),
   std::vector<Building>(), std::vector<Unit>());
 

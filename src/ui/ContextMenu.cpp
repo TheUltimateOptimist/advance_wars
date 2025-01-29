@@ -15,7 +15,6 @@ namespace advanced_wars {
     }
 
     void ContextMenu::render(Engine* engine) {
-
         if (!options.empty()) {
             if (TTF_Init() == -1) {
                 std::cerr << "Failed to initialize TTF: " << TTF_GetError() << std::endl;
@@ -32,18 +31,17 @@ namespace advanced_wars {
             }
 
             SDL_Color white = {255, 255, 255, 255};
-            SDL_Color yellow = {255, 255, 0, 255};
+            SDL_Color yellow = {192, 255, 0, 255};
 
-            int startY = 100; // Startposition für das Menü
             int spacing = 20; // Abstand zwischen den Optionen
 
             //box around options
-            SDL_SetRenderDrawColor(engine->renderer(), 0, 0, 255, 128);
-            SDL_Rect box = {190, startY - 3, 50, static_cast<int>(options.size() * spacing)};
+            SDL_SetRenderDrawColor(engine->renderer(), 0, 0, 255, 255);
+            SDL_Rect box = {x, y - 3, 50, static_cast<int>(options.size() * spacing)};
             SDL_RenderFillRect(engine->renderer(), &box);
 
             SDL_SetRenderDrawColor(engine->renderer(), 0, 0, 0, 255);
-
+            
             for (size_t i = 0; i < options.size(); ++i) {
                 SDL_Surface* textSurface = TTF_RenderText_Solid(font, options[i].c_str(), (i == selectedOption) ? yellow : white);
                 if (!textSurface) {
@@ -51,7 +49,7 @@ namespace advanced_wars {
                 }
 
                 SDL_Texture* textTexture = SDL_CreateTextureFromSurface(engine->renderer(), textSurface);
-                SDL_Rect textRect = {200, startY + static_cast<int>(i * spacing), textSurface->w, textSurface->h};
+                SDL_Rect textRect = {x+10, y + static_cast<int>(i * spacing), textSurface->w, textSurface->h};
                 SDL_RenderCopy(engine->renderer(), textTexture, nullptr, &textRect);
 
                 SDL_DestroyTexture(textTexture);
@@ -69,10 +67,17 @@ namespace advanced_wars {
                 selectedOption = (selectedOption + 1) % options.size();
             } else if (event.key.keysym.sym == SDLK_UP) {
                 selectedOption = (selectedOption - 1 + options.size()) % options.size();
-            } else if (event.key.keysym.sym == SDLK_RETURN) {
-                std::cout << "Selected option: " << options[selectedOption] << std::endl;
             }
         }
+    }
+
+    std::string ContextMenu::getSelectedOption() {
+        return options[selectedOption];
+    }
+
+    void ContextMenu::update(int x, int y) {
+        this->x = x;
+        this->y = y;
     }
 
 }

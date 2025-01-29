@@ -7,6 +7,7 @@
 #include <SDL.h>
 #include <string>
 #include <vector>
+#include "ui/ContextMenu.hpp"
 
 namespace advanced_wars {
 
@@ -27,6 +28,8 @@ private:
   int height;
   std::vector<Building> buildings;
   std::vector<Unit> units;
+  ContextMenu context_menu;
+  bool context_menu_active;
 };
 
 } // namespace advanced_wars

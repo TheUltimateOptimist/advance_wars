@@ -13,6 +13,8 @@ class ContextMenu : public Scene {
 private:
     size_t selectedOption;
     std::vector<std::string> options;
+    int x;
+    int y;
 
 public:
     ContextMenu();    
@@ -22,6 +24,10 @@ public:
     void render(Engine* engine) override;
 
     void handleEvent(SDL_Event& event);
+
+    void update(int x, int y);
+
+    std::string getSelectedOption();
 
     ~ContextMenu();
 };
