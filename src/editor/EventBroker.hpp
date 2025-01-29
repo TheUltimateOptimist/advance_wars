@@ -25,6 +25,9 @@ public:
     void sendTileClicked(Tile* tile);
     virtual void onTileClicked(Tile* tile);
 
+    void sendTileSelected(uint8_t id);
+    virtual void onTileSelected(uint8_t id);
+
 private:
     static std::vector<EventBroker*> instances ;
 };
