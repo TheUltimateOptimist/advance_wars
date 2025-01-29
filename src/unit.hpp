@@ -5,6 +5,7 @@
 #include "weapon.hpp"
 #include <optional>
 
+
 namespace advanced_wars {
 
 enum class UnitFaction {
@@ -14,7 +15,7 @@ enum class UnitFaction {
   UYELLOW = 3,
   UPURPLE = 4,
 };
-/*
+
 enum class UnitId {
   INFANTERY = 0,
   MECHANIZED_INFANTERY = 1,
@@ -36,8 +37,8 @@ enum class UnitId {
   LANDER = 17,
   SUBMARINE = 18,
 };
-*/
 
+/*
 enum class UnitId {
   INFANTERY,
   MECH,
@@ -58,7 +59,7 @@ enum class UnitId {
   CRUISER,
   LANDER,
   SUBMARINE,
-};
+};*/
 
 enum class UnitState {
   IDLE = 0,
@@ -80,6 +81,9 @@ enum class MovementType {
 
 //Fill the MatchupTabel
 using MatchupTabel = std::unordered_map<u_int8_t, std::unordered_map<u_int8_t, int>>;
+
+using MatchupTabel_secondaryweapon = std::unordered_map<UnitId, std::unordered_map<UnitId, int>>;
+using MatchupTabel_primaryweapon = std::unordered_map<UnitId, std::unordered_map<UnitId, int>>;
 
 class Unit {
 public:
@@ -126,6 +130,8 @@ public:
  For every Unit, get Unit_Id and create a map for Unit_Id -> {Unit_Id -> damageType}
  */
 void loadXML(const char* filename);
+
+static void readXML();
 
 
 /*

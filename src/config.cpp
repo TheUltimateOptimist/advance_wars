@@ -5,35 +5,17 @@
 #include <iostream>
 #include <stdexcept> // Für die Ausnahmebehandlung
 #include "unit.hpp"  // Include für UnitId
-
+#include "config.hpp"
 namespace pt = boost::property_tree;
 
 namespace advanced_wars
 {
 
-    class Config
+    Config::Config(MatchupTabel_secondaryweapon& secWeapon, MatchupTabel_primaryweapon& primWeapon)
+        : secondary_weapon_damage(secWeapon), primary_weapon_damage(primWeapon)
     {
-    public:
-        void loadFromXML(const char *filename);
-
-        int get_unit_cost(UnitId id) const;
-        int get_unit_movementPoints(UnitId id) const;
-        int get_unit_ammo(UnitId id) const;
-        int get_unit_minRange(UnitId id) const;
-        int get_unit_maxRange(UnitId id) const;
-        std::string get_unit_secondaryweapon(UnitId id) const;
-        std::string get_unit_primaryweapon(UnitId id) const;
-
-    private:
-        std::unordered_map<UnitId, int> unit_costs;
-        std::unordered_map<UnitId, int> unit_movementPoints;
-        std::unordered_map<UnitId, int> unit_ammo;
-        std::unordered_map<UnitId, int> unit_minRange;
-        std::unordered_map<UnitId, int> unit_maxRange;
-        std::unordered_map<UnitId, std::string> unit_secondaryweapon;
-        std::unordered_map<UnitId, std::string> unit_primaryweapon;
-    };
-
+        // Initialisierung hier wenn nötig
+    }
     void Config::loadFromXML(const char *filename)
     {
         pt::ptree tree;
@@ -52,7 +34,7 @@ namespace advanced_wars
                 }
                 else if (unitKey == "Mech")
                 {
-                    unitId = UnitId::MECH;
+                    unitId = UnitId::MECHANIZED_INFANTERY;
                 }
                 else
                 {
@@ -82,6 +64,68 @@ namespace advanced_wars
                     {
                         std::string weaponName = weapon.second.get<std::string>("<xmlattr>.name");
                         unit_secondaryweapon[unitId] = weaponName;
+                    }
+                }
+
+                for (const auto &weapon : unit.second.get_child("Weapons"))
+                {
+                    if (weapon.first == "PrimaryWeapon")
+                    {
+                        std::string weaponName = weapon.second.get<std::string>("<xmlattr>.name");
+                        unit_primaryweapon[unitId] = weaponName;
+                        for (const auto &damage_entry : weapon.second.get_child("DamageTable"))
+                        {
+                            if (damage_entry.first == "Damage")
+                            {
+                                std::string targetUnitId = damage_entry.second.get<std::string>("<xmlattr>.unitId");
+                                int damageValue = damage_entry.second.get<int>("<xmlattr>.value");
+
+                                UnitId targetId;
+                                if (targetUnitId == "infantry")
+                                {
+                                    targetId = UnitId::INFANTERY;
+                                }
+                                else if (targetUnitId == "Mech")
+                                {
+                                    targetId = UnitId::MECHANIZED_INFANTERY;
+                                }
+                                else
+                                {
+                                    continue; // Überspringt nicht unterstützte Ziele
+                                }
+
+                                primary_weapon_damage[unitId][targetId] = damageValue;
+                            }
+                        }
+                    }
+                    else if (weapon.first == "SecondaryWeapon")
+                    {
+                        for (const auto &damage_entry : weapon.second.get_child("DamageTable"))
+                        {
+                            std::string weaponName = weapon.second.get<std::string>("<xmlattr>.name");
+                            unit_secondaryweapon[unitId] = weaponName;
+                            if (damage_entry.first == "Damage")
+                            {
+                                std::string targetUnitId = damage_entry.second.get<std::string>("<xmlattr>.unitId");
+                                int damageValue = damage_entry.second.get<int>("<xmlattr>.value");
+
+                                UnitId targetId;
+                                if (targetUnitId == "infantry")
+                                {
+                                    targetId = UnitId::INFANTERY;
+                                }
+                                else if (targetUnitId == "Mech")
+                                {
+                                    targetId = UnitId::MECHANIZED_INFANTERY;
+                                }
+                                else
+                                {
+                                    continue; // Überspringt nicht unterstützte Ziele
+                                }
+
+                                secondary_weapon_damage[unitId][targetId] = damageValue;
+                            }
+                        }
                     }
                 }
             }
