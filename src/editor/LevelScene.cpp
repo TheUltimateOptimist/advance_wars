@@ -165,4 +165,13 @@ void LevelScene::onTileExited(Tile *tile)
 
 void LevelScene::onTileClicked(Tile *tile)
 {
+    if (active_tile_marker != nullptr) {
+        this->removeItem(active_tile_marker);
+    }
+    active_tile = tile;
+    QColor active_tile_color(0, 0, 0, 128);
+    QGraphicsRectItem* item = this->addRect(0, 0, 16, 16, QPen(Qt::transparent), QBrush(active_tile_color));
+    item->setZValue(width*height + 10);
+    item->setPos(tile->x(), tile->y());
+    active_tile_marker = item;
 }
