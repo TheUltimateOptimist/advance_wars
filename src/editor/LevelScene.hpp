@@ -6,15 +6,20 @@
 #include <QWidget>
 #include <QGraphicsSceneMouseEvent>
 #include <tuple>
+#include "EventBroker.hpp"
 
-class LevelScene : public QGraphicsScene {
+class LevelScene : public QGraphicsScene, public EventBroker {
 public:
-    LevelScene(int width, int height, uint8_t* tiles, QWidget *parent = nullptr);
+    LevelScene(const std::string& name, int width, int height, uint8_t* tiles, QWidget *parent = nullptr);
     ~LevelScene();
-    static LevelScene* empty(int width, int height, QWidget *parent = nullptr);
+    static LevelScene* empty(const std::string& name, int width, int height, QWidget *parent = nullptr);
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
+private:
+    void onLevelNameUpdated(std::string new_name) override;
+    void onLevelWriteRequested() override;
+    std::string name;
     int width;
     int height;
     uint8_t* tiles;

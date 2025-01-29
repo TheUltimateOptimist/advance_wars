@@ -3,7 +3,7 @@
 #include <QGraphicsPixmapItem>
 #include <iostream>
 
-LevelScene::LevelScene(int width, int height, uint8_t* tiles, QWidget *parent) : QGraphicsScene(parent), width(width), height(height), tiles(tiles) {
+LevelScene::LevelScene(const std::string& name, int width, int height, uint8_t* tiles, QWidget *parent) : QGraphicsScene(parent), name(name), width(width), height(height), tiles(tiles) {
     this->setSceneRect(0, 0, width*16, height*16 + 32);
     QPixmap plein = SpriteProvider::get_sprite(0);
     for (int index = 0; index < width*height; index++) {
@@ -37,12 +37,12 @@ LevelScene::~LevelScene() {
     delete tiles;
 }
 
-LevelScene *LevelScene::empty(int width, int height, QWidget *parent) {
+LevelScene *LevelScene::empty(const std::string& name, int width, int height, QWidget *parent) {
     uint8_t* tiles = new uint8_t[width*height];
     for (int i = 0; i < width*height; i++) {
         tiles[i] = 0;
     }
-    return new LevelScene(width, height, tiles, parent);
+    return new LevelScene(name, width, height, tiles, parent);
 }
 
 void LevelScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
@@ -58,9 +58,20 @@ void LevelScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
         QGraphicsPixmapItem* item = (QGraphicsPixmapItem*) this->itemAt(clickPosition, QTransform());
         this->removeItem(item);
     }
-    QPixmap new_pixmap = SpriteProvider::get_sprite(2);
+    QPixmap new_pixmap = SpriteProvider::get_sprite(50);
     QGraphicsPixmapItem* new_item = this->addPixmap(new_pixmap);
-    new_item->setPos(x*16, y*16 + 16);
-    tiles[tile_index] = 2;
+    new_item->setPos(x*16, y*16);
+    tiles[tile_index] = 50;
     QGraphicsScene::mousePressEvent(event);
+}
+
+void LevelScene::onLevelNameUpdated(std::string new_name)
+{
+    std::cout << "Name Updated " << new_name << std::endl;
+    this->name = new_name;
+}
+
+void LevelScene::onLevelWriteRequested()
+{
+    std::cout << "Write Requested" << std::endl;
 }
