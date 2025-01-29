@@ -4,6 +4,7 @@
 #include <QVBoxLayout>
 #include <QGridLayout>
 #include "SpriteProvider.hpp"
+#include "TileButton.hpp"
 
 TileSelector::TileSelector(QWidget * parent) : QScrollArea(parent){
     this->setFixedWidth(300);
@@ -45,25 +46,15 @@ QLabel *TileSelector::createNewLabel(QWidget* parent, const char *text){
     return label;
 }
 
-QPushButton *TileSelector::createButton(QWidget* parent, uint8_t id){
-    QPixmap pixmap = SpriteProvider::get_sprite(id);
-    QPixmap scaledpixmap = pixmap.scaled(72,72, Qt::KeepAspectRatio, Qt::FastTransformation);
-    QPushButton *button =new QPushButton(parent);
-    button -> setIcon(QIcon(scaledpixmap));
-    button -> setIconSize(QSize(72,72));
-    button -> setFixedSize(80,80);
-    return button;
-}
-
 template<typename T>
 void TileSelector::sectionLayout(QGridLayout*& layout, int usedIdCounter, QWidget* parent, T id){
-    QPushButton* button = createButton(parent, id);
+    TileButton* button = new TileButton(parent, id);
     layout -> addWidget(button,usedIdCounter/3, usedIdCounter%3);
 }
     
 template<typename T, typename... Rest>
 void TileSelector::sectionLayout(QGridLayout*& layout, int usedIdCounter, QWidget* parent, T id, Rest...ids){
-    QPushButton* button = createButton(parent, id);
+    TileButton* button = new TileButton(parent, id);
     layout -> addWidget(button,usedIdCounter/3, usedIdCounter%3);
     usedIdCounter++;
     sectionLayout(layout,usedIdCounter,parent,ids...);

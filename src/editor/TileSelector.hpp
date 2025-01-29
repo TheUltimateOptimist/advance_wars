@@ -10,7 +10,6 @@ public:
     
 private:
     QLabel *createNewLabel(QWidget* parent, const char *text);
-    QPushButton *createButton(QWidget* parent, uint8_t id);
 
     template<typename T>
     void sectionLayout(QGridLayout*& layout, int usedIdCounter, QWidget* parent, T id);
