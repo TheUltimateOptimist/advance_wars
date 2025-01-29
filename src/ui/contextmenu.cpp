@@ -1,4 +1,4 @@
-#include "ContextMenu.hpp"
+#include "contextmenu.hpp"
 #include <iostream>
 #include <SDL_ttf.h>
 

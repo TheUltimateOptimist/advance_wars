@@ -7,7 +7,7 @@
 #include <SDL.h>
 #include <string>
 #include <vector>
-#include "ui/ContextMenu.hpp"
+#include "ui/contextmenu.hpp"
 
 namespace advanced_wars {
 

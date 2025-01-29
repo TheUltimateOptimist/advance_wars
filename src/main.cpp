@@ -1,7 +1,7 @@
 #include "engine.hpp"
 #include "spritesheet.hpp"
-#include "ui/Menu.hpp"
-#include "ui/ContextMenu.hpp"
+#include "ui/menu.hpp"
+#include "ui/contextmenu.hpp"
 #include "window.hpp"
 #include <memory>
 
