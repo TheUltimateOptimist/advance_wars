@@ -1,3 +1,6 @@
+#ifndef PAUSE_MENU_HPP
+#define PAUSE_MENU_HPP
+
 #include "../scene.hpp"
 #include <SDL.h>
 #include <array>
@@ -28,3 +31,5 @@ public:
 };
 
 } // namespace advanced_wars
+
+#endif // PAUSE_MENU_HPP
