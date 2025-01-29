@@ -93,41 +93,73 @@ namespace advanced_wars
     void Unit::attack(Unit &enemy)
     {
 
-        
-        // Zuerst die Tabel für die primäre Waffe der angreifenden Einheit holen
+        // Zuerst die Tabel für die Waffen der angreifenden Einheit holen
         auto &attackerSecondaryWeaponTable = secWeapon[id];
+        auto &attackerPrimaryWeaponTable = primWeapon[id];
 
         // Schadenswert für die angreifende Einheit gegen die verteidigende Einheit berechnen
+        // Es wird die Waffe genommen die mehr Schaden macht
+
+        int attackerDamageValue = 0;
+
         if (attackerSecondaryWeaponTable.find(enemy.id) != attackerSecondaryWeaponTable.end())
         {
-            int attackerDamageValue = attackerSecondaryWeaponTable[enemy.id];
-            // Berechne den Schaden in Abhängigkeit der Gesundheit der angreifenden Einheit
-            int offDamage = attackerDamageValue * (static_cast<float>(health) / max_health);
+            attackerDamageValue = attackerSecondaryWeaponTable[enemy.id];
+        }
+        if (attackerPrimaryWeaponTable.find(enemy.id) != attackerPrimaryWeaponTable.end())
+        {
+            if (attackerDamageValue < attackerPrimaryWeaponTable[enemy.id])
+            {
+                // Here ammo deduction should happen if applicable
+                attackerDamageValue = attackerPrimaryWeaponTable[enemy.id];
+            }
+        }
 
-            // Schaden auf den Gegner anwenden
+        if (attackerDamageValue == 0)
+        {
+            std::cout << "No damage value found for attack from unit " << static_cast<int>(id)
+                      << " against unit " << static_cast<int>(enemy.id) << std::endl;
+        }
+        else
+        {
+
+            int offDamage = attackerDamageValue * (static_cast<float>(health) / max_health);
             enemy.health -= offDamage;
+            enemy.health = std::max(0, enemy.health); // Ensuring health is not negative
             std::cout << "Enemy health after attack: " << enemy.health << std::endl;
 
             // Prüfen, ob der Gegner noch am Leben ist um zurückzuschlagen
             if (enemy.health > 0)
             {
-                // Tabelle für die primäre Waffe der verteidigenden Einheit holen
+                // Weapon tables for the defender
                 auto &defenderSecondaryWeaponTable = secWeapon[enemy.id];
-                if (defenderSecondaryWeaponTable.find(this->id) != defenderSecondaryWeaponTable.end())
-                {
-                    int defenderDamageValue = defenderSecondaryWeaponTable[this->id];
-                    int defDamage = defenderDamageValue * (static_cast<float>(enemy.health) / enemy.max_health);
+                auto &defenderPrimaryWeaponTable = primWeapon[enemy.id];
 
-                    // Schaden auf die angreifende Einheit anwenden
+                int defenderDamageValue = 0; // Declare outside for later use
+
+                // Determine the damage value for the defender
+                if (defenderSecondaryWeaponTable.find(id) != defenderSecondaryWeaponTable.end())
+                {
+                    defenderDamageValue = defenderSecondaryWeaponTable[id];
+                }
+                if (defenderPrimaryWeaponTable.find(id) != defenderPrimaryWeaponTable.end())
+                {
+                    if (defenderDamageValue < defenderPrimaryWeaponTable[id])
+                    {
+                        // Deduct ammo for primary weapon, if applicable
+                        defenderDamageValue = defenderPrimaryWeaponTable[id];
+                    }
+                }
+
+                // If a valid damage value was determined for retaliation
+                if (defenderDamageValue > 0)
+                {
+                    int defDamage = static_cast<int>(defenderDamageValue * static_cast<float>(enemy.health) / enemy.max_health);
                     this->health -= defDamage;
+                    this->health = std::max(0, this->health); // Safeguard against negative health
                     std::cout << "Ally health after retaliation: " << this->health << std::endl;
                 }
             }
-        }
-        else
-        {
-            std::cerr << "No damage value found for attack from unit " << static_cast<int>(id)
-                      << " against unit " << static_cast<int>(enemy.id) << std::endl;
         }
     }
 
