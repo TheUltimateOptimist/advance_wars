@@ -18,6 +18,8 @@ public:
 
   void render(Engine &engine, int scale);
 
+  bool is_finished(Engine &engine);
+
   int x;
   int y;
   EffectId id;

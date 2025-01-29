@@ -18,27 +18,31 @@ void Effect::render(Engine &engine, int scale) {
   int step = engine.get_stage() %
              spritesheet->get_effect_textures().at(static_cast<int>(id)).second;
 
-  if (engine.get_stage() - start <=
-          spritesheet->get_effect_textures().at(static_cast<int>(id)).second ||
-      repeat) {
-    SDL_Rect src;
-    src.x = step * spritesheet->get_effect_width() +
-            step * spritesheet->get_effect_height();
-    src.y = 0;
-    src.w = spritesheet->get_effect_width();
-    src.h = spritesheet->get_effect_height();
+  SDL_Rect src;
+  src.x = step * spritesheet->get_effect_width() +
+          step * spritesheet->get_effect_height();
+  src.y = 0;
+  src.w = spritesheet->get_effect_width();
+  src.h = spritesheet->get_effect_height();
 
-    SDL_Rect dest;
-    dest.x = (x * spritesheet->get_tile_width() * scale) - 8;
-    dest.y = (y * spritesheet->get_tile_height() * scale) - 8;
-    dest.w = spritesheet->get_effect_width() * scale;
-    dest.h = spritesheet->get_effect_height() * scale;
+  SDL_Rect dest;
+  dest.x = (x * spritesheet->get_tile_width() * scale) - 8;
+  dest.y = (y * spritesheet->get_tile_height() * scale) - 8;
+  dest.w = spritesheet->get_effect_width() * scale;
+  dest.h = spritesheet->get_effect_height() * scale;
 
-    SDL_RenderCopyEx(
-        engine.renderer(),
-        spritesheet->get_effect_textures().at(static_cast<int>(id)).first, &src,
-        &dest, 0, NULL, SDL_FLIP_NONE);
-  }
+  SDL_RenderCopyEx(
+      engine.renderer(),
+      spritesheet->get_effect_textures().at(static_cast<int>(id)).first, &src,
+      &dest, 0, NULL, SDL_FLIP_NONE);
+}
+
+bool Effect::is_finished(Engine &engine) {
+  return !(engine.get_stage() - start <= engine.get_spritesheet()
+                                             ->get_effect_textures()
+                                             .at(static_cast<int>(id))
+                                             .second ||
+           repeat);
 }
 
 } // namespace advanced_wars
