@@ -11,42 +11,44 @@
 #include <unordered_map>
 #include <vector>
 
-namespace advanced_wars {
+namespace advanced_wars
+{
 
 /**
  * @brief The main window of the game
  */
-class Level : public Scene {
-public:
-  Level(std::string name, int width, int height, std::vector<Tile> tiles,
-        std::vector<Building> buildings, std::vector<Unit> units,
-        std::vector<Effect>);
+class Level : public Scene
+{
+    public:
+        Level(
+            std::string name, int width, int height, std::vector<Tile> tiles,
+            std::vector<Building> buildings, std::vector<Unit> units, std::vector<Effect>);
 
-  void render(Engine &engine, std::vector<SDL_Event> &events);
+        void render(Engine& engine, std::vector<SDL_Event>& events);
 
-  int add_building(Building building);
+        int add_building(Building building);
 
-  Building remove_building(int id);
+        Building remove_building(int id);
 
-  int add_unit(Unit unit);
+        int add_unit(Unit unit);
 
-  Unit remove_unit(int id);
+        Unit remove_unit(int id);
 
-  int add_effect(Effect effect);
+        int add_effect(Effect effect);
 
-  Effect remove_effect(int id);
+        Effect remove_effect(int id);
 
-private:
-  std::string name;
-  int width;
-  int height;
+    private:
+        std::string name;
+        int         width;
+        int         height;
 
-  std::vector<Tile> tiles;
-  std::unordered_map<int, Building> buildings;
-  std::unordered_map<int, Unit> units;
-  std::unordered_map<int, Effect> effects;
+        std::vector<Tile>                 tiles;
+        std::unordered_map<int, Building> buildings;
+        std::unordered_map<int, Unit>     units;
+        std::unordered_map<int, Effect>   effects;
 
-  int id;
+        int id;
 };
 
 } // namespace advanced_wars
