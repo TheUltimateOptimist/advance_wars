@@ -57,3 +57,12 @@ void EventBroker::sendTileClicked(Tile *tile)
 void EventBroker::onTileClicked(Tile *tile)
 {
 }
+
+void EventBroker::sendTileSelected(uint8_t id)
+{
+    for (auto instance : instances) {
+        instance->onTileSelected(id);
+    }
+}
+
+void EventBroker::onTileSelected(uint8_t id){}
