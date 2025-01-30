@@ -62,7 +62,7 @@ void TileSelector::sectionLayout(QGridLayout*& layout, int usedIdCounter, QWidge
 
 template<typename... T>
 QGridLayout* TileSelector::creatSectionLayout(QWidget* parent, T... ids){
-    QGridLayout *layout = new QGridLayout(parent);
+    QGridLayout *layout = new QGridLayout();
     int usedIdCounter = 0;
     sectionLayout(layout,usedIdCounter,parent,ids...);
     return layout;
