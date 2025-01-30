@@ -48,10 +48,10 @@ QPixmap SpriteProvider::load_pixmap(std::vector<std::vector<std::vector<uint32_t
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
             uint32_t color = pixels[index][height - 1 - y][x];
-            uint32_t r = (color >> 24) & 0xFF; // Most significant byte     //uint8_t sollte reichen
-            uint32_t g = (color >> 16) & 0xFF; // Second byte               //uint8_t sollte reichen
-            uint32_t b = (color >> 8)  & 0xFF; // Third byte                //uint8_t sollte reichen
-            uint32_t a = color & 0xFF;         // Least significant byte    //uint8_t sollte reichen
+            uint8_t r = (color >> 24) & 0xFF; // Most significant byte     //uint8_t sollte reichen
+            uint8_t g = (color >> 16) & 0xFF; // Second byte               //uint8_t sollte reichen
+            uint8_t b = (color >> 8)  & 0xFF; // Third byte                //uint8_t sollte reichen
+            uint8_t a = color & 0xFF;         // Least significant byte    //uint8_t sollte reichen
             image.setPixel(x, y, qRgba(r, g, b, a));
         }
     } 
