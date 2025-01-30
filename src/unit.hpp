@@ -131,8 +131,8 @@ private:
   bool has_attacked;
   bool is_selected;
   bool is_targeted;
-  MatchupTable secondary_weapon;
-  MatchupTable primary_weapon;
+  Weapon secondary_weapon;
+  Weapon primary_weapon;
 
   int ammo;
  
