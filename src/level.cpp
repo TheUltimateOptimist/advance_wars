@@ -25,30 +25,63 @@ Level::Level(std::string name, int width, int height, std::vector<Tile> tiles,
 
 const int RENDERING_SCALE = 3;
 
-bool Level::clickCheck(int mouseX, int mouseY) {
+bool Level::click_check_left(int mouseX, int mouseY) {
   
   int tileX = mouseX/(16*RENDERING_SCALE);
   int tileY = mouseY/(16*RENDERING_SCALE);
 
-  if(selectUnit(tileX, tileY)) return true;
-  if(selectBuilding(tileX, tileY)) return true;
+  if(selectUnit(tileX, tileY)) {
+    return true;
+  }
 
-  std::cout << "Neither building nor unit clicked" << std::endl;
+  if(selectBuilding(tileX, tileY)) {
+    return true; 
+  } 
+    
+  return false;
+}
+
+bool Level::click_check_right(int mouseX, int mouseY) {
   
+  int tileX = mouseX/(16*RENDERING_SCALE);
+  int tileY = mouseY/(16*RENDERING_SCALE);
+
+  if(target_unit(tileX, tileY)) {
+    return true;
+  }
+   
   return false;
 }
 
 bool Level::selectUnit (int tileX, int tileY) {
 
+  //std::cout << "tileX:" << tileX << "tileX:" << tileY << std::endl;
   for (auto& unit : units) {
 
     if(unit.x == tileX && unit.y == tileY) {
-      //std::cout << "X:" << unit.x << "Y:" << unit.y << std::endl;
+      //std::cout << "unitX:" << unit.x << "unitY:" << unit.y << std::endl;
+      
       selectedUnit = &unit;
       return true;
     }
   }
-  selectedUnit = nullptr;
+  
+  return false;
+}
+
+bool Level::target_unit (int tileX, int tileY) {
+
+  //std::cout << "tileX:" << tileX << "tileX:" << tileY << std::endl;
+  for (auto& unit : units) {
+
+    if(unit.x == tileX && unit.y == tileY) {
+      //std::cout << "unitX:" << unit.x << "unitY:" << unit.y << std::endl;
+      
+      targetedUnit = &unit;
+      return true;
+    }
+  }
+  
   return false;
 }
 
@@ -62,7 +95,6 @@ bool Level::selectBuilding (int tileX, int tileY) {
       return true;
     }
   }
-  selectedBuilding = nullptr;
   return false;
 }
 
@@ -75,44 +107,58 @@ void Level::handleEvent(Engine &engine, SDL_Event &event) {
   switch (event.type)
   {
   case SDL_MOUSEBUTTONDOWN:
-      if (event.button.button == SDL_BUTTON_LEFT) {
-        if(clickCheck(event.button.x, event.button.y)) {
-        
-        if(selectedUnit) {
-          selectedUnit->onClick(event, units);
-        }
 
-        if(selectedBuilding) {
-          //building stuff
-        }
+      if (event.button.button == SDL_BUTTON_LEFT) {
+
+        if(click_check_left(event.button.x, event.button.y)) {
+        
+          if(selectedUnit) {
+            selectedUnit->onClick(event, units);
+          }
+
+          if(selectedBuilding) {
+            //building stuff
+          }
+
+      } else {
+
+        std::cout << "Neither building nor unit clicked!" << std::endl;
+        selectedUnit = nullptr;
+        selectedBuilding = nullptr;
+
       }
+
       } else if (event.button.button == SDL_BUTTON_RIGHT) {
 
         if(selectedUnit) {
-          int tileX = event.button.x/(16*RENDERING_SCALE);
-          int tileY = event.button.y/(16*RENDERING_SCALE);
-          for (auto& unit : units) {
 
-            if(unit.x == tileX && unit.y == tileY) {
-            //std::cout << "X:" << unit.x << "Y:" << unit.y << std::endl;
-            
-            selectedUnit->attack(unit);
+          int tileX = event.button.x;
+          int tileY = event.button.y;
+
+          if(click_check_right(tileX, tileY)) {
+
+            selectedUnit->attack(targetedUnit);
 
             units.erase(
             std::remove_if(units.begin(), units.end(),
                        [](const Unit& unit) { return unit.health < 0; }),
             units.end());
+
+          } else {
+            
+            
+
+            selectedUnit->update_position(tileX, tileY);
+
           }
-  }
+        } else {
+
+          std::cout << "No unit selected! " << std::endl;
+
+        }
         }
       }
-      
-    break;
-  
-  default:
-    break;
   }
-}
 
 void Level::render(Engine &engine, std::vector<SDL_Event> &events) {
   

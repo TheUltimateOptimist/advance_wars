@@ -69,7 +69,7 @@ namespace advanced_wars
         }
     }
     
-    void Unit::attack(Unit &enemy)
+    void Unit::attack(Unit *enemy)
     {   
         secondary_weapon = fill_matchupTable(0);
         primary_weapon = fill_matchupTable(1);
@@ -83,38 +83,38 @@ namespace advanced_wars
 
         int attackerDamageValue = 0;
 
-        if (attackerSecondaryWeaponTable.find(enemy.id) != attackerSecondaryWeaponTable.end())
+        if (attackerSecondaryWeaponTable.find(enemy->id) != attackerSecondaryWeaponTable.end())
         {
-            attackerDamageValue = attackerSecondaryWeaponTable[enemy.id];
+            attackerDamageValue = attackerSecondaryWeaponTable[enemy->id];
         }
-        if (attackerPrimaryWeaponTable.find(enemy.id) != attackerPrimaryWeaponTable.end())
+        if (attackerPrimaryWeaponTable.find(enemy->id) != attackerPrimaryWeaponTable.end())
         {
-            if (attackerDamageValue < attackerPrimaryWeaponTable[enemy.id])
+            if (attackerDamageValue < attackerPrimaryWeaponTable[enemy->id])
             {
                 // Here ammo deduction should happen if applicable
-                attackerDamageValue = attackerPrimaryWeaponTable[enemy.id];
+                attackerDamageValue = attackerPrimaryWeaponTable[enemy->id];
             }
         }
 
         if (attackerDamageValue == 0)
         {
             std::cout << "No damage value found for attack from unit " << static_cast<int>(id)
-                      << " against unit " << static_cast<int>(enemy.id) << std::endl;
+                      << " against unit " << static_cast<int>(enemy->id) << std::endl;
         }
         else
         {
 
             int offDamage = attackerDamageValue * (static_cast<float>(health) / max_health);
-            enemy.health -= offDamage;
-            enemy.health = std::max(0, enemy.health); // Ensuring health is not negative
-            std::cout << "Enemy health after attack: " << enemy.health << std::endl;
+            enemy->health -= offDamage;
+            enemy->health = std::max(0, enemy->health); // Ensuring health is not negative
+            std::cout << "Enemy health after attack: " << enemy->health << std::endl;
 
             // Prüfen, ob der Gegner noch am Leben ist um zurückzuschlagen
-            if (enemy.health > 0)
+            if (enemy->health > 0)
             {
                 // Weapon tables for the defender
-                auto &defenderSecondaryWeaponTable = secondary_weapon[enemy.id];
-                auto &defenderPrimaryWeaponTable = primary_weapon[enemy.id];
+                auto &defenderSecondaryWeaponTable = secondary_weapon[enemy->id];
+                auto &defenderPrimaryWeaponTable = primary_weapon[enemy->id];
 
                 int defenderDamageValue = 0; // Declare outside for later use
 
@@ -135,7 +135,7 @@ namespace advanced_wars
                 // If a valid damage value was determined for retaliation
                 if (defenderDamageValue > 0)
                 {
-                    int defDamage = static_cast<int>(defenderDamageValue * static_cast<float>(enemy.health) / enemy.max_health);
+                    int defDamage = static_cast<int>(defenderDamageValue * static_cast<float>(enemy->health) / enemy->max_health);
                     this->health -= defDamage;
                     this->health = std::max(0, this->health); // Safeguard against negative health
                     std::cout << "Ally health after retaliation: " << this->health << std::endl;
@@ -188,6 +188,7 @@ Features:
             // we have to re-initialize the unit.state (probably to idle)
             this->is_selected = true;
             std::cout << "I am selected!!" << std::endl;
+            std::cout << "And my position is:" << this->x << " " << this->y << std::endl;
 
            //make move range calc
 
@@ -196,6 +197,7 @@ Features:
 
             this->is_targeted = true;
             std::cout << "I am targeted!!" << std::endl;
+            std::cout << "And my position is:" << this->x << " " << this->y << std::endl;
 
             for (Unit unit : unitVector)
             {

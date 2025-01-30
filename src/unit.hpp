@@ -87,7 +87,7 @@ public:
   Attacker deals damage to the defender first
   */
 
-  void attack(Unit& enemy);
+  void attack(Unit *enemy);
 
 
   /*

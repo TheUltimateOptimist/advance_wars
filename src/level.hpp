@@ -34,11 +34,14 @@ private:
   std::vector<Unit> units;
   std::vector<Effect> effects;
   Unit* selectedUnit;
+  Unit* targetedUnit;
   Building* selectedBuilding;
   bool selectUnit (int tileX, int tileY);
+  bool target_unit (int tileX, int tileY);
   bool selectBuilding(int tileX, int tileY);
 
-  bool clickCheck(int mouseX, int mouseY);
+  bool click_check_left(int mouseX, int mouseY);
+  bool click_check_right(int mouseX, int mouseY);
 };
 
 } // namespace advanced_wars
