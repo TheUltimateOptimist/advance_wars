@@ -93,10 +93,10 @@ QGraphicsRectItem *LevelScene::createMarkerOn(Tile *tile)
     QColor marker_color(0, 0, 0, 128);
     QPen marker_pen(Qt::transparent);;
     QBrush marker_brush(marker_color);
-    QGraphicsRectItem* focus_rect_item = this->addRect(0, 0, 16, 16, marker_pen, marker_brush);
-    focus_rect_item->setZValue(std::numeric_limits<qreal>::max());
-    focus_rect_item->setPos(tile->x(), tile->y());
-    return focus_rect_item;
+    QGraphicsRectItem* marker_item = this->addRect(0, 0, 16, 16, marker_pen, marker_brush);
+    marker_item->setZValue(std::numeric_limits<qreal>::max());
+    marker_item->setPos(tile->x(), tile->y());
+    return marker_item;
 }
 
 void LevelScene::onLevelNameUpdated(std::string new_name)
