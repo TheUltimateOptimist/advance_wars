@@ -19,7 +19,23 @@ set(HIGHFIVE_UNIT_TESTS OFF)
 
 FetchContent_MakeAvailable(highfive)
 
+FetchContent_Declare(
+    box2d
+    GIT_REPOSITORY https://github.com/erincatto/box2d.git
+    GIT_TAG v3.0.0
+)
 
+# Box2D Build-Optionen konfigurieren
+set(BOX2D_BUILD_TESTBED OFF CACHE BOOL "" FORCE)
+set(BOX2D_BUILD_UNIT_TESTS OFF CACHE BOOL "" FORCE)
+set(BOX2D_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+
+FetchContent_MakeAvailable(box2d)
+
+set(Boost_USE_STATIC_LIBS OFF)
+set(Boost_USE_MULTITHREADED ON)
+set(Boost_USE_STATIC_RUNTIME OFF)
+find_package(Boost 1.71.0 REQUIRED COMPONENTS graph)
 
 # Quellen sammeln
 file(GLOB_RECURSE ADVANCED_WARS_SOURCES
@@ -31,6 +47,12 @@ file(GLOB_RECURSE ADVANCED_WARS_SOURCES
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_BUILD_TYPE Debug)
+
+set(CMAKE_CXX_FLAGS_DEBUG "-g -O0 -Wall -Wextra -Wpedantic")
+set(CMAKE_C_FLAGS_DEBUG "-g -O0 -Wall -Wextra -Wpedantic")
+
+add_definitions(-DDEBUG)
 
 # Compiler-Warnungen aktivieren
 if(MSVC)
@@ -43,7 +65,8 @@ endif()
 set(ASSETS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/assets)
 set(OUTPUT_ASSETS_DIR ${CMAKE_CURRENT_BINARY_DIR}/assets)
 file(MAKE_DIRECTORY ${OUTPUT_ASSETS_DIR})
-file(GLOB FONT_FILES ${ASSETS_DIR}/*.ttf)
+file(GLOB FONT_FILES ${ASSETS_DIR}/*.TTF)
+file(GLOB IMAGE_FILES ${ASSETS_DIR}/*.png)
 
 # Executable erstellen
 add_executable(advanced_wars ${ADVANCED_WARS_SOURCES})
@@ -51,6 +74,7 @@ add_executable(advanced_wars ${ADVANCED_WARS_SOURCES})
 target_include_directories(advanced_wars
     PRIVATE 
         ${highfive_SOURCE_DIR}/include
+        ${Boost_INCLUDE_DIRS}
 )
 
 foreach(FONT ${FONT_FILES})
@@ -58,6 +82,14 @@ foreach(FONT ${FONT_FILES})
             TARGET advanced_wars PRE_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy ${FONT} ${OUTPUT_ASSETS_DIR}
             COMMENT "Kopiere Font: ${FONT} nach ${OUTPUT_ASSETS_DIR}"
+    )
+endforeach()
+
+foreach(IMAGE ${IMAGE_FILES})
+    add_custom_command(
+            TARGET advanced_wars PRE_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy ${IMAGE} ${OUTPUT_ASSETS_DIR}
+            COMMENT "Kopiere Image: ${IMAGE} nach ${OUTPUT_ASSETS_DIR}"
     )
 endforeach()
 
@@ -80,12 +112,14 @@ if(APPLE)
             ${SDL2_PATH}/SDL2.framework/SDL2
             ${SDL2_PATH}/SDL2_image.framework/SDL2_image
             ${SDL2_PATH}/SDL2_ttf.framework/SDL2_ttf
+            Boost::graph  
+            box2d
     )
 
-    # Debug-Ausgaben
     message(STATUS "Include Dir (SDL2): ${SDL2_PATH}/SDL2.framework/Headers")
     message(STATUS "Include Dir (SDL2_image): ${SDL2_PATH}/SDL2_image.framework/Headers")
     message(STATUS "Include Dir (SDL2_ttf): ${SDL2_PATH}/SDL2_ttf.framework/Headers")
+    message(STATUS "Boost Include Dirs: ${Boost_INCLUDE_DIRS}")
 else()
     find_package(SDL2 REQUIRED)
     find_package(SDL2_IMAGE REQUIRED)
@@ -104,9 +138,8 @@ else()
         -lSDL2
         -lSDL2_image
         -lSDL2_ttf
+        Boost::graph
+        box2d
         m
     )
-
-
 endif()
-
