@@ -5,10 +5,7 @@
 namespace advanced_wars
 {
 
-Tile::Tile(TileId id, int x, int y)
-    : id(id), x(x), y(y) {
-
-      };
+Tile::Tile(TileId id, int x, int y) : id(id), x(x), y(y) {}
 
 void Tile::render(Engine* engine, int scale)
 {

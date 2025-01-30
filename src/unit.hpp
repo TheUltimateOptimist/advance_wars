@@ -1,6 +1,9 @@
 #pragma once
 
 #include "engine.hpp"
+#include "weapon.hpp"
+#include <optional>
+#include <unordered_map>
 
 namespace advanced_wars
 {
@@ -57,19 +60,80 @@ enum class MovementType
     LANDER = 5,
 };
 
+using MatchupTable = std::unordered_map<UnitId, std::unordered_map<UnitId, int>>;
+
 class Unit
 {
     public:
+        int x;
+        int y;
+        int health; // health equals max_health at construction
+
         Unit(int x, int y, UnitFaction faction, UnitId id, UnitState state);
+        ~Unit()
+        {
+            // Assuming that the destruktion of a unit triggers events
+        }
 
         void render(Engine* engine, int scale);
 
+        /*
+        Check if attacker is in Range to initiate combat
+        TODO: This should probably tie back into rendering the units differently
+        If a unit is selected, it should call inRange on all other enemy units on the field
+        */
+
+        bool inRange(Unit* enemy);
+
+        /*
+        The attacker will move towards the defender and thus initiate combat
+        @params Takes a reference to the defender
+
+        Will Update the health for both units
+        Attacker deals damage to the defender first
+        */
+
+        void attack(Unit* enemy);
+
+        /*
+        @params Takes the desired position of the unit and updates its values
+        This will teleport the unit, there is no smooth transition between tiles
+        */
+        void update_position(int posX, int posY);
+
+        /*
+        This function needs to be able to determine the possible movement-paths the unit can take
+        MUST take into consideration that different units behave differently on certain terrain
+        MUST show all movements possible
+        */
+        void calculate_movement();
+
+        void calc_state(int posX, int posY);
+
+        /*
+        This function will be called by an external event-handler, eventually.
+        It should start displaying standard unit information, such as UI and move_range
+        */
+        void on_left_click(SDL_Event event);
+
     private:
-        int         x;
-        int         y;
         UnitFaction faction;
         UnitId      id;
         UnitState   state;
+
+        int max_health; // max_health required for damage_scaling
+        int range;
+        int fuel;
+        int max_fuel;
+
+        bool   has_moved;
+        bool   has_attacked;
+        bool   is_selected;
+        bool   is_targeted;
+        Weapon secondary_weapon;
+        Weapon primary_weapon;
+
+        int ammo;
 };
 
 } // namespace advanced_wars

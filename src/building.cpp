@@ -5,7 +5,7 @@ namespace advanced_wars
 {
 
 Building::Building(int x, int y, BuildingId id, BuildingFaction faction)
-    : x(x), y(y), id(id), faction(faction) {};
+    : x(x), y(y), id(id), faction(faction){};
 
 void Building::render(Engine* engine, int scale)
 {

@@ -6,9 +6,9 @@ namespace advanced_wars
 {
 
 Effect::Effect(int x, int y, EffectId id, bool repeat)
-    : x(x), y(y), id(id), repeat(repeat), start(0) {
+    : x(x), y(y), id(id), repeat(repeat), start(0){
 
-      };
+                                          };
 
 void Effect::render(Engine* engine, int scale)
 {

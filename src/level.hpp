@@ -41,6 +41,8 @@ class Level : public Scene
 
         Effect remove_effect(int id);
 
+        void handleEvent(Engine& engine, SDL_Event& event);
+
     private:
         std::string name;
         int         width;
@@ -50,6 +52,15 @@ class Level : public Scene
         std::unordered_map<int, Building> buildings;
         std::unordered_map<int, Unit>     units;
         std::unordered_map<int, Effect>   effects;
+        int                               selectedUnit;
+        int                               targetedUnit;
+        int                               selectedBuilding;
+        bool                              selectUnit(int tileX, int tileY);
+        bool                              target_unit(int tileX, int tileY);
+        bool                              selectBuilding(int tileX, int tileY);
+
+        bool click_check_left(int mouseX, int mouseY);
+        bool click_check_right(int mouseX, int mouseY);
 
         ContextMenu context_menu;
         bool        context_menu_active;
