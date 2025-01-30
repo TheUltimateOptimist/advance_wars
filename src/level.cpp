@@ -25,11 +25,8 @@ Level::Level(std::string name, int width, int height, std::vector<Tile> tiles,
 
 const int RENDERING_SCALE = 3;
 
-bool Level::click_check_left(int mouseX, int mouseY) {
+bool Level::click_check_left(int tileX, int tileY) {
   
-  int tileX = mouseX/(16*RENDERING_SCALE);
-  int tileY = mouseY/(16*RENDERING_SCALE);
-
   if(selectUnit(tileX, tileY)) {
     return true;
   }
@@ -41,10 +38,7 @@ bool Level::click_check_left(int mouseX, int mouseY) {
   return false;
 }
 
-bool Level::click_check_right(int mouseX, int mouseY) {
-  
-  int tileX = mouseX/(16*RENDERING_SCALE);
-  int tileY = mouseY/(16*RENDERING_SCALE);
+bool Level::click_check_right(int tileX, int tileY) {
 
   if(target_unit(tileX, tileY)) {
     return true;
@@ -106,7 +100,10 @@ void Level::handleEvent(Engine &engine, SDL_Event &event) {
 
       if (event.button.button == SDL_BUTTON_LEFT) {
 
-        if(click_check_left(event.button.x, event.button.y)) {
+        int tileX = event.button.x/(16*RENDERING_SCALE);
+        int tileY = event.button.y/(16*RENDERING_SCALE);
+
+        if(click_check_left(tileX,tileY)) {
         
           if(selectedUnit) {
             selectedUnit->on_left_click(event, units);
@@ -137,7 +134,7 @@ void Level::handleEvent(Engine &engine, SDL_Event &event) {
 
             units.erase(
             std::remove_if(units.begin(), units.end(),
-                       [](const Unit& unit) { return unit.health < 0; }),
+                       [](const Unit& unit) { return unit.health <= 0; }),
             units.end());
 
           } else {
