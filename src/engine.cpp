@@ -97,18 +97,7 @@ void Engine::render()
         throw std::runtime_error("Could not clear renderer: " + std::string(SDL_GetError()));
     }
 
-    if (scenes.empty())
-    {
-        SDL_RenderPresent(this->sdl_renderer);
-        return;
-    }
-
     std::shared_ptr<Scene> currentScene = scenes.back();
-    if (!currentScene)
-    {
-        SDL_RenderPresent(this->sdl_renderer);
-        return;
-    }
 
     currentScene->render(this);
 
