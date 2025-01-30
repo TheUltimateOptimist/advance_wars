@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <SDL_render.h>
 #include <SDL.h>
 #include <SDL_render.h>
 #include <string>

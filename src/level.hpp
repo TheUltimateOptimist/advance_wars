@@ -10,6 +10,7 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include "ui/contextmenu.hpp"
 
 namespace advanced_wars
 {
@@ -25,6 +26,8 @@ class Level : public Scene
             std::vector<Building> buildings, std::vector<Unit> units, std::vector<Effect>);
 
         void render(Engine& engine, std::vector<SDL_Event>& events);
+
+        void handleEvent(Engine *engine, SDL_Event &event);
 
         int add_building(Building building);
 
@@ -47,6 +50,9 @@ class Level : public Scene
         std::unordered_map<int, Building> buildings;
         std::unordered_map<int, Unit>     units;
         std::unordered_map<int, Effect>   effects;
+
+        ContextMenu context_menu;
+        bool context_menu_active;
 
         int id;
 };

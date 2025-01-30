@@ -1,15 +1,20 @@
 #pragma once
 
+#include "SDL_events.h"
 #include "scene.hpp"
 #include "spritesheet.hpp"
 #include "window.hpp"
 #include <SDL.h>
 #include <SDL_render.h>
+#include <deque>
+#include <memory>
 #include <optional>
-#include <vector>
 
 namespace advanced_wars
 {
+
+// Forward declaration
+class Scene;
 
 /**
  * @brief The main window of the game
@@ -24,9 +29,17 @@ class Engine
 
         bool exited();
 
-        void pump();
+  void exit();
 
-        void set_scene(Scene& scene);
+  void pump();
+
+  void push_scene(std::shared_ptr<Scene> scene);
+
+  std::optional<std::shared_ptr<Scene>> pop_scene();
+
+  void return_to_menu();
+
+  std::deque<SDL_Event> &events();
 
         void set_spritesheet(Spritesheet& spritesheet);
 

@@ -49,6 +49,31 @@
 4. Visual Studio erkennt automatisch das CMake-Projekt
 5. Build über "Build All" ausführen
 
+#### Falls Syntax errors
+
+1. Erstelle .vscode/c_cpp_properties.json Datei
+2. Füge die folgende JSON so oder so ähnlich ein:
+
+```json
+{
+    "configurations": [
+        {
+            "name": "Fedora",
+            "includePath": [
+                "/usr/include",
+                "/usr/include/SDL2"
+            ],
+            "defines": [],
+            "intelliSenseMode": "linux-gcc-x64",
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "c17",
+            "cppStandard": "c++17"
+        }
+    ],
+    "version": 4
+}
+```
+
 ## Build-Optionen
 
 CMake kann mit verschiedenen Optionen konfiguriert werden:

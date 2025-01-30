@@ -7,7 +7,8 @@
  */
 
 #include "spritesheet.hpp"
-#include "SDL_pixels.h"
+#include <SDL_render.h>
+#include "SDL_surface.h"
 #include "engine.hpp"
 #include "highfive/H5File.hpp"
 #include <SDL_image.h>

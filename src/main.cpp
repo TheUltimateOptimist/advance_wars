@@ -1,8 +1,10 @@
 #include "building.hpp"
 #include "effect.hpp"
 #include "engine.hpp"
-#include "level.hpp"
 #include "spritesheet.hpp"
+#include "ui/menu.hpp"
+#include "ui/contextmenu.hpp"
+#include <memory>
 #include "tile.hpp"
 #include "unit.hpp"
 #include "window.hpp"
@@ -32,6 +34,19 @@ int main()
     Window window("Advanced Wars", 960, 960);
 
     Engine engine(window);
+  // render main menu
+
+  std::shared_ptr<Menu> menu = std::make_shared<Menu>(0);
+  std::shared_ptr<ContextMenu> context_menu = std::make_shared<ContextMenu>();
+  context_menu->setOptions({"Move", "Info", "Wait"});
+
+
+  std::string basePath = SDL_GetBasePath();
+  std::string relativePath = "assets/main_background.png";
+  std::string fullPath = basePath + relativePath;
+  menu->loadBackground(engine.renderer(), fullPath.c_str());
+
+  engine.push_scene(menu);
 
     // Construct a level
     std::vector<Tile> tiles;
@@ -42,6 +57,8 @@ int main()
             tiles.push_back(Tile(TileId::PLAIN, x, y));
         }
     }
+    
+  engine.set_spritesheet(spritesheet);
 
     // Fill the edges with water
     for (size_t n = 0; n < 20; n++)
