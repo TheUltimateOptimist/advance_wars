@@ -145,19 +145,6 @@ namespace advanced_wars
         }
     }
 
-    MatchupTable Unit::fill_matchupTable(int type)
-    {
-        switch (type)
-        {
-        case 0:
-
-            break;
-
-        default:
-            break;
-        }
-    }
-
     void Unit::update_position(int posX, int posY)
     {
         calc_state(posX, posY);
