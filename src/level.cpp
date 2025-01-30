@@ -113,7 +113,7 @@ void Level::handleEvent(Engine &engine, SDL_Event &event) {
         if(click_check_left(event.button.x, event.button.y)) {
         
           if(selectedUnit) {
-            selectedUnit->onClick(event, units);
+            selectedUnit->on_left_click(event, units);
           }
 
           if(selectedBuilding) {
@@ -146,8 +146,6 @@ void Level::handleEvent(Engine &engine, SDL_Event &event) {
 
           } else {
             
-            
-
             selectedUnit->update_position(tileX, tileY);
 
           }
@@ -156,8 +154,8 @@ void Level::handleEvent(Engine &engine, SDL_Event &event) {
           std::cout << "No unit selected! " << std::endl;
 
         }
-        }
       }
+    }
   }
 
 void Level::render(Engine &engine, std::vector<SDL_Event> &events) {

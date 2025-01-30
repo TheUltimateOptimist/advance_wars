@@ -112,9 +112,9 @@ public:
 
 /*
 This function will be called by an external event-handler, eventually.
-Currently, it should be called if a Unit is interacted with and the resulting SDL_EVENT is passed through, and then decided upon
+It should start displaying standard unit information, such as UI and move_range
 */
-void onClick(SDL_Event event, std::vector<Unit> &unitVector);
+void on_left_click(SDL_Event event, std::vector<Unit> &unitVector);
 
 private:
   UnitFaction faction;

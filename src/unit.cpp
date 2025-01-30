@@ -175,60 +175,11 @@ Features:
     - show context menu
 
 */
-    void Unit::onClick(SDL_Event event, std::vector<Unit> &unitVector)
+    void Unit::on_left_click(SDL_Event event, std::vector<Unit> &unitVector)
     {
 
-        Unit *defender = nullptr;
-        Unit *attacker = nullptr;
-
-        switch (event.button.button)
-        {
-        case SDL_BUTTON_LEFT:
-
-            // we have to re-initialize the unit.state (probably to idle)
-            this->is_selected = true;
-            std::cout << "I am selected!!" << std::endl;
-            std::cout << "And my position is:" << this->x << " " << this->y << std::endl;
-
-           //make move range calc
-
-            break;
-        case SDL_BUTTON_RIGHT:
-
-            this->is_targeted = true;
-            std::cout << "I am targeted!!" << std::endl;
-            std::cout << "And my position is:" << this->x << " " << this->y << std::endl;
-
-            for (Unit unit : unitVector)
-            {
-                if (unit.state == advanced_wars::UnitState::UNAVAILABLE)
-                {
-                    continue;
-                }
-
-                if (unit.is_selected)
-                {
-                    attacker = &unit;
-                }
-
-                if (unit.is_targeted)
-                {
-                    defender = &unit;
-                }
-            }
-
-            if (attacker != nullptr && defender != nullptr)
-            {
-                //attack(attacker, defender);
-                std::cout << "We are fighting!!" << std::endl;
-                break;
-            }
-            else
-            {
-                std::cerr << "Angriff konnte nicht gestartet werden!" << std::endl;
-                break;
-            }
-        }
+        std::cout << "Left-button pressed on unit: " << this->health << std::endl;
+        
     }
 
     bool Unit::inRange(Unit *enemy)
