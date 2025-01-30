@@ -1,3 +1,11 @@
+/**
+ * Spritesheet.hpp
+ *
+ * @date 30.1.2025
+ * @author Frederik Keens
+ * @author David Maul
+ */
+
 #include "spritesheet.hpp"
 #include "SDL_pixels.h"
 #include "engine.hpp"
@@ -51,6 +59,7 @@ Spritesheet::Spritesheet(std::string path, Engine& engine)
          "cliff_inverse_corner_bottom_left",
          "cliff_inverse_corner_bottom_right"});
 
+    // every sub data set of tiles
     for (size_t tile_idx = 0; tile_idx < tiles.size(); tile_idx++)
     {
         HighFive::DataSet units_ds = file.getDataSet("tiles/" + tiles[tile_idx]);
@@ -60,6 +69,7 @@ Spritesheet::Spritesheet(std::string path, Engine& engine)
 
         std::vector<uint32_t> tile_buffer(16 * 16 * tile_frames.size(), 0);
 
+        // every animation frame
         for (size_t n = 0; n < tile_frames.size(); n++)
         {
             for (size_t y = 0; y < 16; y++)
@@ -102,6 +112,7 @@ Spritesheet::Spritesheet(std::string path, Engine& engine)
     std::vector<std::string> building_factions(
         {"red", "blue", "yellow", "green", "purple", "neutral"});
 
+    // every sub data set of buildings
     for (std::string faction : building_factions)
     {
         HighFive::DataSet buildings_ds = file.getDataSet("buildings/" + faction);
@@ -112,6 +123,7 @@ Spritesheet::Spritesheet(std::string path, Engine& engine)
 
         std::vector<uint32_t> building_buffer(32 * 16 * buildings_frames.size(), 0);
 
+        // every type of building
         for (size_t n = 0; n < buildings_frames.size(); n++)
         {
             for (size_t y = 0; y < 32; y++)
@@ -164,12 +176,14 @@ Spritesheet::Spritesheet(std::string path, Engine& engine)
     std::vector<std::string> unit_states({"idle", "unavailable"});
     std::vector<std::string> unit_movement_states({"left", "right", "down", "up"});
 
+    // every factions sub data set
     for (size_t faction_idx = 0; faction_idx < unit_factions.size(); faction_idx++)
     {
         std::string faction = unit_factions.at(faction_idx);
         // Create entry for units for in a faction
         unit_textures.push_back(std::vector<std::vector<std::pair<SDL_Texture*, int>>>());
 
+        // every unit sub data set
         for (size_t unit_idx = 0; unit_idx < units.size(); unit_idx++)
         {
             std::string unit = units.at(unit_idx);
@@ -177,6 +191,7 @@ Spritesheet::Spritesheet(std::string path, Engine& engine)
             // Create entry for states for a unit
             unit_textures.at(faction_idx).push_back(std::vector<std::pair<SDL_Texture*, int>>());
 
+            // every state sub data set
             for (size_t state_idx = 0; state_idx < unit_states.size(); state_idx++)
             {
                 std::string unit_state = unit_states.at(state_idx);
@@ -229,6 +244,7 @@ Spritesheet::Spritesheet(std::string path, Engine& engine)
                     .push_back(std::pair<SDL_Texture*, int>(tmp, unit_frames.size()));
             }
 
+            // every movement state sub data set
             for (size_t movement_state_idx = 0; movement_state_idx < unit_movement_states.size();
                  movement_state_idx++)
             {
@@ -294,6 +310,7 @@ Spritesheet::Spritesheet(std::string path, Engine& engine)
         {"land_explosion", "air_explosion", "naval_explosion", "submarine_hide",
          "submarine_appear"});
 
+    // Every effect sub data set
     for (size_t effect_idx = 0; effect_idx < effects.size(); effect_idx++)
     {
         HighFive::DataSet effect_ds = file.getDataSet("effects/" + effects[effect_idx]);
@@ -303,6 +320,7 @@ Spritesheet::Spritesheet(std::string path, Engine& engine)
 
         std::vector<uint32_t> effect_buffer(32 * 32 * effect_frames.size(), 0);
 
+        // every animation frame
         for (size_t n = 0; n < effect_frames.size(); n++)
         {
             for (size_t y = 0; y < 32; y++)
