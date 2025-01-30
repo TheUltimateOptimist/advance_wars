@@ -40,7 +40,6 @@ enum class UnitId {
   LANDER = 17,
   //Diese Einheit kann tauchen, und ist somit für einige Einheiten nicht sichtbar und kann zum Teil auch im Tauchen nicht angegriffen werden
   SUBMARINE = 18,
-  UNKNOWN = 19
 };
 
 /*
@@ -82,7 +81,6 @@ enum class MovementType {
   AIR = 3,
   SEA = 4,
   LANDER = 5,
-  UNKNOWN = 6
 };
 
 //Fill the MatchupTabel
