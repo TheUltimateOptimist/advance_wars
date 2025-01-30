@@ -163,10 +163,10 @@ namespace advanced_wars
 
         if (deltaY == 0) {
             if (deltaX > 0) {
-                this->state = advanced_wars::UnitState::MOVEMENTLEFT;
+                this->state = UnitState::MOVEMENTLEFT;
                 return;
             } else {
-                this->state = advanced_wars::UnitState::MOVEMENTRIGHT;
+                this->state = UnitState::MOVEMENTRIGHT;
                 return;
             }
         }
@@ -175,22 +175,13 @@ namespace advanced_wars
 
         if(bresen == 0) {
             if(deltaY < 0) {
-                this->state = advanced_wars::UnitState::MOVEMENTDOWN;
+                this->state = UnitState::MOVEMENTDOWN;
                 return;
             } else {
-                this->state = advanced_wars::UnitState::MOVEMENTUP;
+                this->state = UnitState::MOVEMENTUP;
                 return;
             }
         }
-
-        if(0 < bresen && bresen < 1) {
-            this->state = advanced_wars::UnitState::MOVEMENTDOWN;
-            return;
-        } else if (-1 < bresen && bresen < 0) {
-            this->state = advanced_wars::UnitState::MOVEMENTUP;
-            return;
-        }
-
     }
 
     void Unit::on_left_click(SDL_Event event, std::vector<Unit> &unitVector)
