@@ -3,6 +3,7 @@
 #include <vector>
 #include "highfive/H5File.hpp"
 
+//private?
 const std::vector<std::string> tile_names({"plain",
                                   "water",
                                   "forest",
@@ -34,16 +35,21 @@ const std::vector<std::string> tile_names({"plain",
                                   "cliff_inverse_corner_bottom_left",
                                   "cliff_inverse_corner_bottom_right"});
 
+//private?
 const std::vector<std::string> faction_names(
       {"red", "blue", "yellow", "green", "purple", "neutral"});
 
 class SpriteProvider {
-public: 
+public:
+    //Explizit kein Konstruktor
     SpriteProvider() = delete;
+    //Funktionen
     static QPixmap get_sprite(uint8_t id);
     static void initialize(const std::string& path);
 
 private:
+    //Funktion
     static QPixmap load_pixmap(std::vector<std::vector<std::vector<uint32_t>>> pixels, int index);
+    //Variablen
     static std::vector<QPixmap> sprites;
 };
