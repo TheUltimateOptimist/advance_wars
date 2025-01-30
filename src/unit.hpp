@@ -20,21 +20,25 @@ enum class UnitId {
   INFANTERY = 0,
   MECHANIZED_INFANTERY = 1,
   RECON = 2,
-  TANK = 3,
-  MD_TANK = 4,
+  MEDIUM_TANK = 3,
+  HEAVY_TANK = 4,
   NEO_TANK = 5,
+  //Diese Einheti kann im Spiel infantery bewegen
   APC = 6,
-  ANTI_AIR = 7,
+  ANTI_AIR_TANK = 7,
   ARTILLERY = 8,
   ROCKET_ARTILLERY = 9,
-  MISSILE = 10,
+  ANTI_AIR_MISSILE_LAUNCHER = 10,
   FIGHTER = 11,
   BOMBER = 12,
   BATTLE_HELICOPTER = 13,
+  //Diese Einheti kann im Spiel infantery bewegen
   TRANSPORT_HELICOPTER = 14,
   BATTLESHIP = 15,
   CRUISER = 16,
+  //Diese Einheit kann im Spiel alle Bodeneinheiten bewegen
   LANDER = 17,
+  //Diese Einheit kann tauchen, und ist somit für einige Einheiten nicht sichtbar und kann zum Teil auch im Tauchen nicht angegriffen werden
   SUBMARINE = 18,
   UNKNOWN = 19
 };

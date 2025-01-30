@@ -1,44 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Units>
-    <Unit key="infantry">
-        <Cost>1000</Cost>
-        <MovementPoints>3</MovementPoints>
-        <MovementType>Foot</MovementType>
-        <minRange>1</minRange>
-        <maxRange>1</maxRange>
-        <Ammo>0</Ammo>
-        <Weapons>
-            <SecondaryWeapon name="Machine-Gun">
-                <DamageTable>
-                    <Damage unitId="infantry" value="55"/>
-                    <Damage unitId="mechanized_infantery" value="45"/>
-                </DamageTable>
-            </SecondaryWeapon>
-        </Weapons>
-    </Unit>
-    <Unit key="mechanized_infantery">
-        <Cost>3000</Cost> 
-        <MovementPoints>2</MovementPoints>       
-        <MovementType>Foot</MovementType>
-        <Ammo>9</Ammo>
-        <minRange>1</minRange>
-        <maxRange>1</maxRange>
-        <Weapons>
-            <PrimaryWeapon name="Bazooka">
-                <DamageTable>
-                    <Damage unitId="infantry" value="65"/>
-                    <Damage unitId="Mech" value="55"/>
-                </DamageTable>
-            </PrimaryWeapon>
-            <SecondaryWeapon name="Machine-Gun">
-                <DamageTable>
-                    <Damage unitId="infantry" value="65"/>
-                    <Damage unitId="Mech" value="55"/>
-                </DamageTable>
-            </SecondaryWeapon>
-        </Weapons>
-    </Unit>
-      <!-- Infantry Unit -->
+    <!-- Infantry Unit -->
     <Unit key="infantry">
         <Cost>1000</Cost>
         <MovementPoints>3</MovementPoints>
@@ -53,18 +15,15 @@
                     <Damage unitId="mechanized_infantry" value="45"/>
                     <Damage unitId="recon" value="12"/>
                     <Damage unitId="apc" value="14"/>
-                    <Damage unitId="anti_air" value="5"/>
-                    <Damage unitId="tank" value="5"/>
-                    <Damage unitId="md_tank" value="1"/>
+                    <Damage unitId="anti_air_tank" value="5"/>
+                    <Damage unitId="medium_tank" value="5"/>
+                    <Damage unitId="heavy_tank" value="1"/>
                     <Damage unitId="neotank" value="1"/>
-                    <Damage unitId="megatank" value="1"/>
                     <Damage unitId="artillery" value="15"/>
-                    <Damage unitId="rocket" value="25"/>
-                    <Damage unitId="missile" value="25"/>
-                    <Damage unitId="piperunner" value="5"/>
-                    <Damage unitId="oozium_238" value="20"/>
-                    <Damage unitId="t_copter" value="30"/>
-                    <Damage unitId="b_copter" value="7"/>
+                    <Damage unitId="rocket_artillery" value="25"/>
+                    <Damage unitId="anti_air_missile_launcher" value="25"/>
+                    <Damage unitId="transport_helicopter" value="30"/>
+                    <Damage unitId="battle_helicopter" value="7"/>
                 </DamageTable>
             </SecondaryWeapon>
         </Weapons>
@@ -81,22 +40,17 @@
         <Weapons>
             <PrimaryWeapon name="Bazooka">
                 <DamageTable>
-                    <Damage unitId="infantry" value="65"/>
-                    <Damage unitId="mechanized_infantry" value="55"/>
+                    
                     <Damage unitId="recon" value="85"/>
                     <Damage unitId="apc" value="75"/>
-                    <Damage unitId="anti_air" value="65"/>
-                    <Damage unitId="tank" value="55"/>
-                    <Damage unitId="md_tank" value="15"/>
+                    <Damage unitId="anti_air_tank" value="65"/>
+                    <Damage unitId="medium_tank" value="55"/>
+                    <Damage unitId="heavy_tank" value="15"/>
                     <Damage unitId="neotank" value="15"/>
-                    <Damage unitId="megatank" value="5"/>
                     <Damage unitId="artillery" value="70"/>
-                    <Damage unitId="rocket" value="85"/>
-                    <Damage unitId="missile" value="85"/>
-                    <Damage unitId="piperunner" value="55"/>
-                    <Damage unitId="oozium_238" value="30"/>
-                    <Damage unitId="t_copter" value="35"/>
-                    <Damage unitId="b_copter" value="9"/>
+                    <Damage unitId="rocket_artillery" value="85"/>
+                    <Damage unitId="anti_air_missile_launcher" value="85"/>
+                    
                 </DamageTable>
             </PrimaryWeapon>
             <SecondaryWeapon name="Machine-Gun">
@@ -105,18 +59,15 @@
                     <Damage unitId="mechanized_infantry" value="55"/>
                     <Damage unitId="recon" value="18"/>
                     <Damage unitId="apc" value="20"/>
-                    <Damage unitId="anti_air" value="6"/>
-                    <Damage unitId="tank" value="6"/>
-                    <Damage unitId="md_tank" value="1"/>
+                    <Damage unitId="anti_air_tank" value="6"/>
+                    <Damage unitId="medium_tank" value="6"/>
+                    <Damage unitId="heavy_tank" value="1"/>
                     <Damage unitId="neotank" value="1"/>
-                    <Damage unitId="megatank" value="1"/>
                     <Damage unitId="artillery" value="32"/>
-                    <Damage unitId="rocket" value="35"/>
-                    <Damage unitId="missile" value="32"/>
-                    <Damage unitId="piperunner" value="6"/>
-                    <Damage unitId="oozium_238" value="20"/>
-                    <Damage unitId="t_copter" value="35"/>
-                    <Damage unitId="b_copter" value="9"/>
+                    <Damage unitId="rocket_artillery" value="35"/>
+                    <Damage unitId="anti_air_missile_launcher" value="32"/>
+                    <Damage unitId="transport_helicopter" value="35"/>
+                    <Damage unitId="battle_helicopter" value="9"/>
                 </DamageTable>
             </SecondaryWeapon>
         </Weapons>
@@ -137,18 +88,15 @@
                     <Damage unitId="mechanized_infantry" value="65"/>
                     <Damage unitId="recon" value="35"/>
                     <Damage unitId="apc" value="45"/>
-                    <Damage unitId="anti_air" value="4"/>
-                    <Damage unitId="tank" value="6"/>
-                    <Damage unitId="md_tank" value="1"/>
+                    <Damage unitId="anti_air_tank" value="4"/>
+                    <Damage unitId="medium_tank" value="6"/>
+                    <Damage unitId="heavy_tank" value="1"/>
                     <Damage unitId="neotank" value="1"/>
-                    <Damage unitId="megatank" value="1"/>
                     <Damage unitId="artillery" value="45"/>
-                    <Damage unitId="rocket" value="55"/>
-                    <Damage unitId="missile" value="28"/>
-                    <Damage unitId="piperunner" value="6"/>
-                    <Damage unitId="oozium_238" value="20"/>
-                    <Damage unitId="t_copter" value="35"/>
-                    <Damage unitId="b_copter" value="10"/>
+                    <Damage unitId="rocket_artillery" value="55"/>
+                    <Damage unitId="anti_air_missile_launcher" value="28"/>
+                    <Damage unitId="transport_helicopter" value="35"/>
+                    <Damage unitId="battle_helicopter" value="10"/>
                 </DamageTable>
             </SecondaryWeapon>
         </Weapons>
@@ -167,8 +115,8 @@
         </Weapons>
     </Unit>
 
-    <!-- Anti-Air Unit -->
-    <Unit key="anti_air">
+    <!-- Anti-Air Tank Unit -->
+    <Unit key="anti_air_tank">
         <Cost>8000</Cost>
         <MovementPoints>6</MovementPoints>
         <MovementType>Tread</MovementType>
@@ -182,18 +130,15 @@
                     <Damage unitId="mechanized_infantry" value="105"/>
                     <Damage unitId="recon" value="60"/>
                     <Damage unitId="apc" value="50"/>
-                    <Damage unitId="anti_air" value="45"/>
-                    <Damage unitId="tank" value="25"/>
-                    <Damage unitId="md_tank" value="10"/>
+                    <Damage unitId="anti_air_tank" value="45"/>
+                    <Damage unitId="medium_tank" value="25"/>
+                    <Damage unitId="heavy_tank" value="10"/>
                     <Damage unitId="neotank" value="5"/>
-                    <Damage unitId="megatank" value="1"/>
                     <Damage unitId="artillery" value="50"/>
-                    <Damage unitId="rocket" value="55"/>
-                    <Damage unitId="missile" value="55"/>
-                    <Damage unitId="piperunner" value="25"/>
-                    <Damage unitId="oozium_238" value="30"/>
-                    <Damage unitId="t_copter" value="105"/>
-                    <Damage unitId="b_copter" value="105"/>
+                    <Damage unitId="rocket_artillery" value="55"/>
+                    <Damage unitId="anti_air_missile_launcher" value="55"/>
+                    <Damage unitId="transport_helicopter" value="105"/>
+                    <Damage unitId="battle_helicopter" value="105"/>
                     <Damage unitId="stealth" value="75"/>
                     <Damage unitId="fighter" value="65"/>
                     <Damage unitId="bomber" value="75"/>
@@ -202,8 +147,8 @@
         </Weapons>
     </Unit>
 
-    <!-- Tank Unit -->
-    <Unit key="tank">
+    <!-- Medium Tank Unit -->
+    <Unit key="medium_tank">
         <Cost>7000</Cost>
         <MovementPoints>6</MovementPoints>
         <MovementType>Tread</MovementType>
@@ -213,38 +158,39 @@
         <Weapons>
             <PrimaryWeapon name="Cannon">
                 <DamageTable>
-                    <Damage unitId="infantry" value="75"/>
-                    <Damage unitId="mechanized_infantry" value="70"/>
                     <Damage unitId="recon" value="85"/>
                     <Damage unitId="apc" value="75"/>
-                    <Damage unitId="anti_air" value="65"/>
-                    <Damage unitId="tank" value="55"/>
-                    <Damage unitId="md_tank" value="15"/>
+                    <Damage unitId="anti_air_tank" value="65"/>
+                    <Damage unitId="medium_tank" value="55"/>
+                    <Damage unitId="heavy_tank" value="15"/>
                     <Damage unitId="neotank" value="15"/>
-                    <Damage unitId="megatank" value="10"/>
                     <Damage unitId="artillery" value="70"/>
-                    <Damage unitId="rocket" value="80"/>
-                    <Damage unitId="missile" value="80"/>
-                    <Damage unitId="piperunner" value="55"/>
-                    <Damage unitId="oozium_238" value="20"/>
-                    <Damage unitId="t_copter" value="40"/>
-                    <Damage unitId="b_copter" value="10"/>
+                    <Damage unitId="rocket_artillery" value="80"/>
+                    <Damage unitId="anti_air_missile_launcher" value="80"/>
                 </DamageTable>
             </PrimaryWeapon>
             <SecondaryWeapon name="Machine-Gun">
                 <DamageTable>
-                    <Damage unitId="infantry" value="55"/>
-                    <Damage unitId="mechanized_infantry" value="6"/>
+                    <Damage unitId="infantry" value="75"/>
+                    <Damage unitId="mechanized_infantry" value="70"/>
                     <Damage unitId="recon" value="40"/>
                     <Damage unitId="apc" value="45"/>
-                    <Damage unitId="anti_air" value="6"/>
+                    <Damage unitId="anti_air_tank" value="6"/>
+                    <Damage unitId="medium_tank" value="6"/>
+                    <Damage unitId="heavy_tank" value="1"/>
+                    <Damage unitId="neotank" value="1"/>
+                    <Damage unitId="artillery" value="45"/>
+                    <Damage unitId="rocket_artillery" value="55"/>
+                    <Damage unitId="anti_air_missile_launcher" value="30"/>
+                    <Damage unitId="transport_helicopter" value="40"/>
+                    <Damage unitId="battle_helicopter" value="10"/>
                 </DamageTable>
             </SecondaryWeapon>
         </Weapons>
     </Unit>
 
-    <!-- Md Tank Unit -->
-    <Unit key="md_tank">
+    <!-- Heavy Tank Unit -->
+    <Unit key="heavy_tank">
         <Cost>16000</Cost>
         <MovementPoints>5</MovementPoints>
         <MovementType>Tread</MovementType>
@@ -255,31 +201,32 @@
         <Weapons>
             <PrimaryWeapon name="Cannon">
                 <DamageTable>
-                    <Damage unitId="infantry" value="105"/>
-                    <Damage unitId="mechanized_infantry" value="95"/>
                     <Damage unitId="recon" value="105"/>
                     <Damage unitId="apc" value="105"/>
-                    <Damage unitId="anti_air" value="105"/>
-                    <Damage unitId="tank" value="85"/>
-                    <Damage unitId="md_tank" value="55"/>
+                    <Damage unitId="anti_air_tank" value="105"/>
+                    <Damage unitId="medium_tank" value="85"/>
+                    <Damage unitId="heavy_tank" value="55"/>
                     <Damage unitId="neotank" value="45"/>
-                    <Damage unitId="megatank" value="25"/>
                     <Damage unitId="artillery" value="105"/>
-                    <Damage unitId="rocket" value="105"/>
-                    <Damage unitId="missile" value="105"/>
-                    <Damage unitId="piperunner" value="85"/>
-                    <Damage unitId="oozium_238" value="30"/>
-                    <Damage unitId="t_copter" value="45"/>
-                    <Damage unitId="b_copter" value="12"/>
+                    <Damage unitId="rocket_artillery" value="105"/>
+                    <Damage unitId="anti_air_missile_launcher" value="105"/>
                 </DamageTable>
             </PrimaryWeapon>
             <SecondaryWeapon name="Machine-Gun">
                 <DamageTable>
-                    <Damage unitId="infantry" value="45"/>
-                    <Damage unitId="mechanized_infantry" value="1"/>
+                    <Damage unitId="infantry" value="105"/>
+                    <Damage unitId="mechanized_infantry" value="95"/>
                     <Damage unitId="recon" value="45"/>
                     <Damage unitId="apc" value="45"/>
-                    <Damage unitId="anti_air" value="10"/>
+                    <Damage unitId="anti_air_tank" value="10"/>
+                    <Damage unitId="medium_tank" value="8"/>
+                    <Damage unitId="heavy_tank" value="1"/>
+                    <Damage unitId="neotank" value="1"/>
+                    <Damage unitId="artillery" value="45"/>
+                    <Damage unitId="rocket_artillery" value="55"/>
+                    <Damage unitId="anti_air_missile_launcher" value="35"/>
+                    <Damage unitId="transport_helicopter" value="45"/>
+                    <Damage unitId="battle_helicopter" value="12"/>
                 </DamageTable>
             </SecondaryWeapon>
         </Weapons>
@@ -297,67 +244,34 @@
         <Weapons>
             <PrimaryWeapon name="New Cannon">
                 <DamageTable>
-                    <Damage unitId="infantry" value="125"/>
-                    <Damage unitId="mechanized_infantry" value="115"/>
+                    
                     <Damage unitId="recon" value="125"/>
                     <Damage unitId="apc" value="125"/>
-                    <Damage unitId="anti_air" value="115"/>
-                    <Damage unitId="tank" value="105"/>
-                    <Damage unitId="md_tank" value="75"/>
+                    <Damage unitId="anti_air_tank" value="115"/>
+                    <Damage unitId="medium_tank" value="105"/>
+                    <Damage unitId="heavy_tank" value="75"/>
                     <Damage unitId="neotank" value="55"/>
-                    <Damage unitId="megatank" value="35"/>
                     <Damage unitId="artillery" value="115"/>
-                    <Damage unitId="rocket" value="125"/>
-                    <Damage unitId="missile" value="125"/>
-                    <Damage unitId="piperunner" value="105"/>
-                    <Damage unitId="oozium_238" value="35"/>
-                    <Damage unitId="t_copter" value="55"/>
-                    <Damage unitId="b_copter" value="22"/>
+                    <Damage unitId="rocket_artillery" value="125"/>
+                    <Damage unitId="anti_air_missile_launcher" value="125"/>
+                    
                 </DamageTable>
             </PrimaryWeapon>
             <SecondaryWeapon name="Machine-Gun">
                 <DamageTable>
-                    <Damage unitId="infantry" value="10"/>
-                    <Damage unitId="mechanized_infantry" value="10"/>
-                </DamageTable>
-            </SecondaryWeapon>
-        </Weapons>
-    </Unit>
-
-    <!-- Megatank Unit -->
-    <Unit key="megatank">
-        <Cost>28000</Cost>
-        <MovementPoints>4</MovementPoints>
-        <MovementType>Tread</MovementType>
-        <VisionPoints>1</VisionPoints>
-        <Ammo>3</Ammo>
-        <minRange>1</minRange>
-        <maxRange>1</maxRange>
-        <Weapons>
-            <PrimaryWeapon name="MegaCannon">
-                <DamageTable>
-                    <Damage unitId="infantry" value="135"/>
-                    <Damage unitId="mechanized_infantry" value="125"/>
-                    <Damage unitId="recon" value="195"/>
-                    <Damage unitId="apc" value="195"/>
-                    <Damage unitId="anti_air" value="195"/>
-                    <Damage unitId="tank" value="180"/>
-                    <Damage unitId="md_tank" value="125"/>
-                    <Damage unitId="neotank" value="115"/>
-                    <Damage unitId="megatank" value="65"/>
-                    <Damage unitId="artillery" value="195"/>
-                    <Damage unitId="rocket" value="195"/>
-                    <Damage unitId="missile" value="195"/>
-                    <Damage unitId="piperunner" value="180"/>
-                    <Damage unitId="oozium_238" value="45"/>
-                    <Damage unitId="t_copter" value="55"/>
-                    <Damage unitId="b_copter" value="22"/>
-                </DamageTable>
-            </PrimaryWeapon>
-            <SecondaryWeapon name="Machine-Gun">
-                <DamageTable>
-                    <Damage unitId="infantry" value="10"/>
-                    <Damage unitId="mechanized_infantry" value="10"/>
+                    <Damage unitId="infantry" value="125"/>
+                    <Damage unitId="mechanized_infantry" value="115"/>
+                    <Damage unitId="recon" value="65"/>
+                    <Damage unitId="apc" value="45"/>
+                    <Damage unitId="anti_air_tank" value="17"/>
+                    <Damage unitId="medium_tank" value="10"/>
+                    <Damage unitId="heavy_tank" value="1"/>
+                    <Damage unitId="neotank" value="1"/>
+                    <Damage unitId="artillery" value="65"/>
+                    <Damage unitId="rocket_artillery" value="75"/>
+                    <Damage unitId="anti_air_missile_launcher" value="55"/>
+                    <Damage unitId="transport_helicopter" value="55"/>
+                    <Damage unitId="battle_helicopter" value="22"/>
                 </DamageTable>
             </SecondaryWeapon>
         </Weapons>
@@ -379,29 +293,25 @@
                     <Damage unitId="mechanized_infantry" value="85"/>
                     <Damage unitId="recon" value="80"/>
                     <Damage unitId="apc" value="70"/>
-                    <Damage unitId="anti_air" value="75"/>
-                    <Damage unitId="tank" value="70"/>
-                    <Damage unitId="md_tank" value="45"/>
+                    <Damage unitId="anti_air_tank" value="75"/>
+                    <Damage unitId="medium_tank" value="70"/>
+                    <Damage unitId="heavy_tank" value="45"/>
                     <Damage unitId="neotank" value="40"/>
-                    <Damage unitId="megatank" value="15"/>
                     <Damage unitId="artillery" value="50"/>
-                    <Damage unitId="rocket" value="80"/>
-                    <Damage unitId="missile" value="80"/>
-                    <Damage unitId="piperunner" value="70"/>
-                    <Damage unitId="oozium_238" value="5"/>
+                    <Damage unitId="rocket_artillery" value="80"/>
+                    <Damage unitId="anti_air_missile_launcher" value="80"/>
                     <Damage unitId="lander" value="55"/>
                     <Damage unitId="black_boat" value="55"/>
                     <Damage unitId="cruiser" value="50"/>
                     <Damage unitId="submarine" value="60"/>
-                    <Damage unitId="carrier" value="45"/>
                     <Damage unitId="battleship" value="40"/>
                 </DamageTable>
             </PrimaryWeapon>
         </Weapons>
     </Unit>
 
-    <!-- Rocket Unit -->
-    <Unit key="rocket">
+    <!-- Rocket Artillery Unit -->
+    <Unit key="rocket_artillery">
         <Cost>15000</Cost>
         <MovementPoints>5</MovementPoints>
         <MovementType>Wheeled</MovementType>
@@ -416,29 +326,25 @@
                     <Damage unitId="mechanized_infantry" value="90"/>
                     <Damage unitId="recon" value="90"/>
                     <Damage unitId="apc" value="80"/>
-                    <Damage unitId="anti_air" value="85"/>
-                    <Damage unitId="tank" value="80"/>
-                    <Damage unitId="md_tank" value="55"/>
+                    <Damage unitId="anti_air_tank" value="85"/>
+                    <Damage unitId="medium_tank" value="80"/>
+                    <Damage unitId="heavy_tank" value="55"/>
                     <Damage unitId="neotank" value="50"/>
-                    <Damage unitId="megatank" value="25"/>
                     <Damage unitId="artillery" value="80"/>
-                    <Damage unitId="rocket" value="85"/>
-                    <Damage unitId="missile" value="90"/>
-                    <Damage unitId="piperunner" value="80"/>
-                    <Damage unitId="oozium_238" value="15"/>
+                    <Damage unitId="rocket_artillery" value="85"/>
+                    <Damage unitId="anti_air_missile_launcher" value="90"/>
                     <Damage unitId="lander" value="60"/>
                     <Damage unitId="black_boat" value="60"/>
                     <Damage unitId="cruiser" value="60"/>
                     <Damage unitId="submarine" value="85"/>
-                    <Damage unitId="carrier" value="60"/>
                     <Damage unitId="battleship" value="55"/>
                 </DamageTable>
             </PrimaryWeapon>
         </Weapons>
     </Unit>
 
-    <!-- Missile Unit -->
-    <Unit key="missile">
+    <!-- Anti-Air Missile Launcher Unit -->
+    <Unit key="anti_air_missile_launcher">
         <Cost>12000</Cost>
         <MovementPoints>4</MovementPoints>
         <MovementType>Tread</MovementType>
@@ -449,52 +355,10 @@
         <Weapons>
             <PrimaryWeapon name="Missiles">
                 <DamageTable>
-                    <Damage unitId="t_copter" value="115"/>
-                    <Damage unitId="b_copter" value="115"/>
-                    <Damage unitId="stealth" value="100"/>
+                    <Damage unitId="transport_helicopter" value="115"/>
+                    <Damage unitId="battle_helicopter" value="115"/>
                     <Damage unitId="fighter" value="100"/>
                     <Damage unitId="bomber" value="100"/>
-                </DamageTable>
-            </PrimaryWeapon>
-        </Weapons>
-    </Unit>
-    
-    <!-- Piperunner Unit -->
-    <Unit key="piperunner">
-        <Cost>20000</Cost>
-        <MovementPoints>9</MovementPoints>
-        <MovementType>Pipe</MovementType>
-        <VisionPoints>4</VisionPoints>
-        <Ammo>9</Ammo>
-        <minRange>2</minRange>
-        <maxRange>5</maxRange>
-        <Weapons>
-            <PrimaryWeapon name="Pipe Cannon">
-                <DamageTable>
-                    <Damage unitId="infantry" value="95"/>
-                    <Damage unitId="mechanized_infantry" value="90"/>
-                    <Damage unitId="recon" value="90"/>
-                    <Damage unitId="apc" value="80"/>
-                    <Damage unitId="anti_air" value="85"/>
-                    <Damage unitId="tank" value="80"/>
-                    <Damage unitId="md_tank" value="55"/>
-                    <Damage unitId="neotank" value="50"/>
-                    <Damage unitId="megatank" value="25"/>
-                    <Damage unitId="artillery" value="80"/>
-                    <Damage unitId="rocket" value="85"/>
-                    <Damage unitId="missile" value="90"/>
-                    <Damage unitId="piperunner" value="80"/>
-                    <Damage unitId="lander" value="60"/>
-                    <Damage unitId="black_boat" value="60"/>
-                    <Damage unitId="cruiser" value="60"/>
-                    <Damage unitId="submarine" value="85"/>
-                    <Damage unitId="carrier" value="60"/>
-                    <Damage unitId="battleship" value="55"/>
-                    <Damage unitId="t_copter" value="105"/>
-                    <Damage unitId="b_copter" value="105"/>
-                    <Damage unitId="stealth" value="75"/>
-                    <Damage unitId="fighter" value="65"/>
-                    <Damage unitId="bomber" value="75"/>
                 </DamageTable>
             </PrimaryWeapon>
         </Weapons>
@@ -514,19 +378,7 @@
         </Weapons>
     </Unit>
 
-    <!-- Black Boat Unit -->
-    <Unit key="black_boat">
-        <Cost>7500</Cost>
-        <MovementPoints>7</MovementPoints>
-        <MovementType>Sea</MovementType>
-        <VisionPoints>1</VisionPoints>
-        <Ammo>0</Ammo>
-        <minRange>0</minRange>
-        <maxRange>0</maxRange>
-        <Weapons>
-            <!-- Keine Waffen, da Black Boat als Reparatur- und Transportfahrzeug funktioniert -->
-        </Weapons>
-    </Unit>
+    
 
     <!-- Cruiser Unit -->
     <Unit key="cruiser">
@@ -541,23 +393,24 @@
             <PrimaryWeapon name="Missiles">
                 <DamageTable>
                     <Damage unitId="submarine" value="90"/>
-                    <Damage unitId="t_copter" value="105"/>
-                    <Damage unitId="b_copter" value="105"/>
-                    <Damage unitId="stealth" value="100"/>
+                    <Damage unitId="transport_helicopter" value="105"/>
+                    <Damage unitId="battle_helicopter" value="105"/>
                     <Damage unitId="fighter" value="85"/>
                     <Damage unitId="bomber" value="100"/>
+                    <Damage unitId="Cruiser" value="25" />
+                    <Damage unitId="Battleship" value="5" />
                 </DamageTable>
             </PrimaryWeapon>
             <SecondaryWeapon name="Anti-Air Gun">
                 <DamageTable>
-                    <Damage unitId="t_copter" value="105"/>
-                    <Damage unitId="b_copter" value="105"/>
+                    <Damage unitId="transport_helicopter" value="105"/>
+                    <Damage unitId="battle_helicopter" value="105"/>
                 </DamageTable>
             </SecondaryWeapon>
         </Weapons>
     </Unit>
 
-        <!-- Submarine Unit -->
+    <!-- Submarine Unit -->
     <Unit key="submarine">
         <Cost>20000</Cost>
         <MovementPoints>6</MovementPoints>
@@ -573,36 +426,13 @@
                     <Damage unitId="black_boat" value="95"/>
                     <Damage unitId="cruiser" value="25"/>
                     <Damage unitId="submarine" value="55"/>
-                    <Damage unitId="carrier" value="75"/>
                     <Damage unitId="battleship" value="55"/>
                 </DamageTable>
             </PrimaryWeapon>
         </Weapons>
     </Unit>
 
-    <!-- Carrier Unit -->
-    <Unit key="carrier">
-        <Cost>30000</Cost>
-        <MovementPoints>5</MovementPoints>
-        <MovementType>Sea</MovementType>
-        <VisionPoints>4</VisionPoints>
-        <Ammo>9</Ammo>
-        <minRange>3</minRange>
-        <maxRange>8</maxRange>
-        <Weapons>
-            <PrimaryWeapon name="Missile">
-                <DamageTable>
-                    <Damage unitId="t_copter" value="115"/>
-                    <Damage unitId="b_copter" value="115"/>
-                    <Damage unitId="stealth" value="100"/>
-                    <Damage unitId="fighter" value="100"/>
-                    <Damage unitId="bomber" value="100"/>
-                </DamageTable>
-            </PrimaryWeapon>
-        </Weapons>
-    </Unit>
-
-      <!-- Battleship Unit -->
+    <!-- Battleship Unit -->
     <Unit key="battleship">
         <Cost>28000</Cost>
         <MovementPoints>6</MovementPoints>
@@ -618,28 +448,25 @@
                     <Damage unitId="mechanized_infantry" value="90"/>
                     <Damage unitId="recon" value="90"/>
                     <Damage unitId="apc" value="80"/>
-                    <Damage unitId="anti_air" value="85"/>
-                    <Damage unitId="tank" value="80"/>
-                    <Damage unitId="md_tank" value="55"/>
+                    <Damage unitId="anti_air_tank" value="85"/>
+                    <Damage unitId="medium_tank" value="80"/>
+                    <Damage unitId="heavy_tank" value="55"/>
                     <Damage unitId="neotank" value="50"/>
-                    <Damage unitId="megatank" value="25"/>
                     <Damage unitId="artillery" value="80"/>
-                    <Damage unitId="rocket" value="85"/>
-                    <Damage unitId="missile" value="90"/>
-                    <Damage unitId="piperunner" value="80"/>
+                    <Damage unitId="rocket_artillery" value="85"/>
+                    <Damage unitId="anti_air_missile_launcher" value="90"/>
                     <Damage unitId="lander" value="95"/>
                     <Damage unitId="black_boat" value="95"/>
                     <Damage unitId="cruiser" value="95"/>
                     <Damage unitId="submarine" value="95"/>
-                    <Damage unitId="carrier" value="60"/>
                     <Damage unitId="battleship" value="50"/>
                 </DamageTable>
             </PrimaryWeapon>
         </Weapons>
     </Unit>
 
-    <!-- T Copter Unit -->
-    <Unit key="t_copter">
+    <!-- Transport Helicopter Unit -->
+    <Unit key="transport_helicopter">
         <Cost>5000</Cost>
         <MovementPoints>6</MovementPoints>
         <MovementType>Air</MovementType>
@@ -652,8 +479,8 @@
         </Weapons>
     </Unit>
 
-    <!-- B Copter Unit -->
-    <Unit key="b_copter">
+    <!-- Battle Helicopter Unit -->
+    <Unit key="battle_helicopter">
         <Cost>9000</Cost>
         <MovementPoints>6</MovementPoints>
         <MovementType>Air</MovementType>
@@ -664,58 +491,24 @@
         <Weapons>
             <PrimaryWeapon name="Missiles">
                 <DamageTable>
-                    <Damage unitId="tank" value="55"/>
-                    <Damage unitId="md_tank" value="25"/>
+                    <Damage unitId="medium_tank" value="55"/>
+                    <Damage unitId="heavy_tank" value="25"/>
                     <Damage unitId="neotank" value="20"/>
-                    <Damage unitId="megatank" value="10"/>
                     <Damage unitId="artillery" value="65"/>
-                    <Damage unitId="rocket" value="65"/>
-                    <Damage unitId="missile" value="65"/>
-                    <Damage unitId="t_copter" value="95"/>
-                    <Damage unitId="b_copter" value="65"/>
+                    <Damage unitId="rocket_artillery" value="65"/>
+                    <Damage unitId="anti_air_missile_launcher" value="65"/>
+                    <Damage unitId="transport_helicopter" value="95"/>
+                    <Damage unitId="battle_helicopter" value="65"/>
                 </DamageTable>
             </PrimaryWeapon>
             <SecondaryWeapon name="Machine-Gun">
                 <DamageTable>
                     <Damage unitId="infantry" value="75"/>
                     <Damage unitId="mechanized_infantry" value="75"/>
+                    
+
                 </DamageTable>
             </SecondaryWeapon>
-        </Weapons>
-    </Unit>
-
-    <!-- Stealth Unit -->
-    <Unit key="stealth">
-        <Cost>24000</Cost>
-        <MovementPoints>6</MovementPoints>
-        <MovementType>Air</MovementType>
-        <VisionPoints>4</VisionPoints>
-        <Ammo>6</Ammo>
-        <minRange>1</minRange>
-        <maxRange>1</maxRange>
-        <Weapons>
-            <PrimaryWeapon name="OmniMissile">
-                <DamageTable>
-                    <Damage unitId="infantry" value="90"/>
-                    <Damage unitId="mechanized_infantry" value="90"/>
-                    <Damage unitId="recon" value="85"/>
-                    <Damage unitId="apc" value="85"/>
-                    <Damage unitId="anti_air" value="50"/>
-                    <Damage unitId="tank" value="75"/>
-                    <Damage unitId="md_tank" value="70"/>
-                    <Damage unitId="neotank" value="60"/>
-                    <Damage unitId="megatank" value="15"/>
-                    <Damage unitId="artillery" value="75"/>
-                    <Damage unitId="rocket" value="85"/>
-                    <Damage unitId="missile" value="85"/>
-                    <Damage unitId="lander" value="65"/>
-                    <Damage unitId="black_boat" value="65"/>
-                    <Damage unitId="cruiser" value="35"/>
-                    <Damage unitId="submarine" value="55"/>
-                    <Damage unitId="carrier" value="45"/>
-                    <Damage unitId="battleship" value="45"/>
-                </DamageTable>
-            </PrimaryWeapon>
         </Weapons>
     </Unit>
 
@@ -731,9 +524,9 @@
         <Weapons>
             <PrimaryWeapon name="Missiles">
                 <DamageTable>
-                    <Damage unitId="t_copter" value="100"/>
-                    <Damage unitId="b_copter" value="100"/>
-                    <Damage unitId="stealth" value="85"/>
+                    <Damage unitId="transport_helicopter" value="100"/>
+                    <Damage unitId="battle_helicopter" value="100"/>
+                    
                     <Damage unitId="fighter" value="55"/>
                     <Damage unitId="bomber" value="100"/>
                 </DamageTable>
@@ -757,41 +550,20 @@
                     <Damage unitId="mechanized_infantry" value="110"/>
                     <Damage unitId="recon" value="105"/>
                     <Damage unitId="apc" value="105"/>
-                    <Damage unitId="anti_air" value="95"/>
-                    <Damage unitId="tank" value="105"/>
-                    <Damage unitId="md_tank" value="95"/>
+                    <Damage unitId="anti_air_tank" value="95"/>
+                    <Damage unitId="medium_tank" value="105"/>
+                    <Damage unitId="heavy_tank" value="95"/>
                     <Damage unitId="neotank" value="90"/>
-                    <Damage unitId="megatank" value="35"/>
                     <Damage unitId="artillery" value="105"/>
-                    <Damage unitId="rocket" value="105"/>
-                    <Damage unitId="missile" value="105"/>
+                    <Damage unitId="rocket_artillery" value="105"/>
+                    <Damage unitId="anti_air_missile_launcher" value="105"/>
                     <Damage unitId="lander" value="95"/>
                     <Damage unitId="black_boat" value="95"/>
                     <Damage unitId="cruiser" value="85"/>
                     <Damage unitId="submarine" value="95"/>
-                    <Damage unitId="carrier" value="75"/>
                     <Damage unitId="battleship" value="75"/>
                 </DamageTable>
             </PrimaryWeapon>
         </Weapons>
     </Unit>
-
-    <!-- Black Bomb Unit -->
-    <Unit key="black_bomb">
-        <Cost>25000</Cost>
-        <MovementPoints>9</MovementPoints>
-        <MovementType>Air</MovementType>
-        <VisionPoints>1</VisionPoints>
-        <Ammo>0</Ammo>
-        <minRange>0</minRange>
-        <maxRange>0</maxRange>
-        <Weapons>
-            <!-- Die Black Bomb kann keine direkten Angriffe durchführen, sondern explodiert und richtet an allen umliegenden Einheiten Schaden an -->
-        </Weapons>
-    </Unit>
-    
-
-
-
-    
 </Units>

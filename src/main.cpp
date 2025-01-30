@@ -21,8 +21,8 @@ int main()
   Engine engine(window);
 
   Config config("../xml/config.xml");
+   
 
- 
   // Construct a level
   std::vector<Tile> tiles;
   for (int y = 0; y < 20; y++)
