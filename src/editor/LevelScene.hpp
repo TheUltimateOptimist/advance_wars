@@ -18,7 +18,8 @@ public:
     int getWidth();
     int getHeight();
 private:
-    //void positionPixmapItem(QGraphicsPixmapItem* item, int x, int y);
+    void position(Tile* tile, int index);
+    void createChildOn(Tile* tile);
     QGraphicsRectItem* createMarkerOn(Tile* tile);
     void onLevelNameUpdated(std::string new_name) override;
     void onLevelWriteRequested() override;
