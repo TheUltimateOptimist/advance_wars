@@ -11,14 +11,14 @@
 #include <optional>
 #include <stdexcept>
 
-namespace advanced_wars {
+namespace advanced_wars
+{
 
-Engine::Engine(Window &window) : window(window), quit(false) {
+Engine::Engine(Window& window) : window(window), quit(false)
+{
 
-  if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-    throw std::runtime_error("SDL could not initialize: " +
-                             std::string(SDL_GetError()));
-  }
+    this->sdl_renderer = SDL_CreateRenderer(
+        this->window.sdl_window(), -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
   int imgFlags = IMG_INIT_PNG;
   if (!(IMG_Init(imgFlags) & imgFlags)) {
@@ -74,7 +74,6 @@ void Engine::pump() {
     } else {
       this->_events.push_back(e);
     }
-  }
 }
 
 void Engine::exit() { this->quit = true; }
@@ -103,12 +102,71 @@ void Engine::render() {
   SDL_RenderPresent(this->sdl_renderer);
 }
 
-SDL_Renderer *Engine::renderer() { return this->sdl_renderer; }
+void Engine::set_spritesheet(Spritesheet& spritesheet)
+{
+    this->spritesheet = &spritesheet;
+}
 
-Engine::~Engine() {
-  SDL_DestroyRenderer(sdl_renderer);
-  IMG_Quit();
-  SDL_Quit();
+Spritesheet* Engine::get_spritesheet()
+{
+    return spritesheet.value();
+}
+
+void Engine::pump()
+{
+    SDL_Event e;
+    while (SDL_PollEvent(&e))
+    {
+        if (e.type == SDL_QUIT)
+        {
+            this->quit = true;
+        }
+        else
+        {
+            this->events.push_back(e);
+        }
+    }
+}
+
+bool Engine::exited()
+{
+    return this->quit;
+}
+
+int Engine::get_stage()
+{
+    return this->stage;
+}
+
+void Engine::render()
+{
+    if (SDL_RenderClear(this->sdl_renderer) != 0)
+    {
+        throw std::runtime_error("Could not clear renderer: " + std::string(SDL_GetError()));
+    }
+
+    if (!scene.has_value())
+    {
+        return;
+    }
+
+    stage = SDL_GetTicks() / 300;
+
+    this->scene.value()->render(*this, this->events);
+
+    SDL_RenderPresent(this->sdl_renderer);
+}
+
+SDL_Renderer* Engine::renderer()
+{
+    return this->sdl_renderer;
+}
+
+Engine::~Engine()
+{
+    SDL_DestroyRenderer(sdl_renderer);
+    IMG_Quit();
+    SDL_Quit();
 }
 
 } // namespace advanced_wars

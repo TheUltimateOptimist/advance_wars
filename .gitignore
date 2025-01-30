@@ -54,6 +54,8 @@ Thumbs.db
 *.gcov
 coverage/
 
+*.png
+
 docs/generated/
 
 bin/

@@ -10,7 +10,8 @@
 #include <memory>
 #include <optional>
 
-namespace advanced_wars {
+namespace advanced_wars
+{
 
 // Forward declaration
 class Scene;
@@ -18,14 +19,15 @@ class Scene;
 /**
  * @brief The main window of the game
  */
-class Engine {
-public:
-  Engine(Window &window);
+class Engine
+{
+    public:
+        Engine(Window& window);
 
-  Engine(const Engine &) = delete;
-  Engine &operator=(const Engine &) = delete;
+        Engine(const Engine&) = delete;
+        Engine& operator=(const Engine&) = delete;
 
-  bool exited();
+        bool exited();
 
   void exit();
 
@@ -39,21 +41,26 @@ public:
 
   std::deque<SDL_Event> &events();
 
-  void set_spritesheet(Spritesheet spritesheet);
+        void set_spritesheet(Spritesheet& spritesheet);
 
-  void render();
+        Spritesheet* get_spritesheet();
 
-  SDL_Renderer *renderer();
+        int get_stage();
 
-  ~Engine();
+        void render();
 
-private:
-  Window &window;
-  SDL_Renderer *sdl_renderer;
-  std::vector<std::shared_ptr<Scene>> scenes;
-  std::optional<Spritesheet> spritesheet;
-  std::deque<SDL_Event> _events;
-  bool quit;
+        SDL_Renderer* renderer();
+
+        ~Engine();
+
+    private:
+        Window&                     window;
+        SDL_Renderer*               sdl_renderer;
+        std::optional<Scene*>       scene;
+        std::optional<Spritesheet*> spritesheet;
+        std::vector<SDL_Event>      events;
+        bool                        quit;
+        int                         stage;
 };
 
 } // namespace advanced_wars
