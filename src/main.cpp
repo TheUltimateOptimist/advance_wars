@@ -33,7 +33,7 @@ int main() {
 
   Engine engine(window);
 
-  Level level = Level::loadLevel("spritesheet.h5");
+  Level level = Level::loadLevel("../res/level.h5");
 
   engine.set_scene(level);
 

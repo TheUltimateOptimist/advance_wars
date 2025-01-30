@@ -31,11 +31,11 @@ Level::Level(std::string name, int width, int height, std::vector<Tile> tiles,
 
   // read level metadata
   std::string level_metadata;
-  file.getDataSet("level/metadata").read(level_metadata);
+  file.getDataSet("metadata").read(level_metadata);
 
   // read tilesarray
   std::vector<uint8_t> level_tilesarray;
-  file.getDataSet("level/tilesarray").read(level_tilesarray);
+  file.getDataSet("tilesarray").read(level_tilesarray);
 
   // extract metadata from xml
   std::istringstream xmlStream(level_metadata);
