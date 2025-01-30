@@ -162,19 +162,6 @@ namespace advanced_wars
         this->y = posY;
     }
 
-/*
-Features:
-//select unit 
-    - show context menu
-    - show move range
-    - MAYBE show valid targets
-
-//deselect unit
-
-//attack unit
-    - show context menu
-
-*/
     void Unit::on_left_click(SDL_Event event, std::vector<Unit> &unitVector)
     {
 

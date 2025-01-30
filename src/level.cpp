@@ -100,10 +100,6 @@ bool Level::selectBuilding (int tileX, int tileY) {
 
 void Level::handleEvent(Engine &engine, SDL_Event &event) {
 
-  //handle following events:
-  //clicks/mouseDown
-  //escape (esc)
-
   switch (event.type)
   {
   case SDL_MOUSEBUTTONDOWN:
@@ -120,11 +116,11 @@ void Level::handleEvent(Engine &engine, SDL_Event &event) {
             //building stuff
           }
 
-      } else {
+        } else {
 
-        std::cout << "Neither building nor unit clicked!" << std::endl;
-        selectedUnit = nullptr;
-        selectedBuilding = nullptr;
+          std::cout << "Neither building nor unit clicked!" << std::endl;
+          selectedUnit = nullptr;
+          selectedBuilding = nullptr;
 
       }
 
