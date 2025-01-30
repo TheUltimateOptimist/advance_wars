@@ -103,13 +103,8 @@ public:
   */
   void calculate_movement();
 
+  
   void calc_state(int posX, int posY);
-
-  /*
-  This function fills the MatchupTable
-  It would be better if this table would be placed in the level
-  */
- MatchupTable fill_matchupTable(int);
 
 /*
 This function will be called by an external event-handler, eventually.
