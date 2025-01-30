@@ -69,97 +69,66 @@ namespace advanced_wars
         }
     }
     
-    void Unit::attack(Unit *enemy)
-    {   
-        secondary_weapon = fill_matchupTable(0);
-        primary_weapon = fill_matchupTable(1);
+    void Unit::attack(Unit* enemy) {
 
-        // Zuerst die Tabel für die Waffen der angreifenden Einheit holen
-        auto &attackerSecondaryWeaponTable = secondary_weapon[this->id];
-        auto &attackerPrimaryWeaponTable = primary_weapon[this->id];
+        int offDamage = 50;
+        int defDamage = 50;
 
-        // Schadenswert für die angreifende Einheit gegen die verteidigende Einheit berechnen
-        // Es wird die Waffe genommen die mehr Schaden macht
-
-        int attackerDamageValue = 0;
-
-        if (attackerSecondaryWeaponTable.find(enemy->id) != attackerSecondaryWeaponTable.end())
-        {
-            attackerDamageValue = attackerSecondaryWeaponTable[enemy->id];
-        }
-        if (attackerPrimaryWeaponTable.find(enemy->id) != attackerPrimaryWeaponTable.end())
-        {
-            if (attackerDamageValue < attackerPrimaryWeaponTable[enemy->id])
-            {
-                // Here ammo deduction should happen if applicable
-                attackerDamageValue = attackerPrimaryWeaponTable[enemy->id];
-            }
-        }
-
-        if (attackerDamageValue == 0)
-        {
-            std::cout << "No damage value found for attack from unit " << static_cast<int>(id)
-                      << " against unit " << static_cast<int>(enemy->id) << std::endl;
-        }
-        else
-        {
-
-            int offDamage = attackerDamageValue * (static_cast<float>(health) / max_health);
-            enemy->health -= offDamage;
-            enemy->health = std::max(0, enemy->health); // Ensuring health is not negative
-            std::cout << "Enemy health after attack: " << enemy->health << std::endl;
-
-            // Prüfen, ob der Gegner noch am Leben ist um zurückzuschlagen
-            if (enemy->health > 0)
-            {
-                // Weapon tables for the defender
-                auto &defenderSecondaryWeaponTable = secondary_weapon[enemy->id];
-                auto &defenderPrimaryWeaponTable = primary_weapon[enemy->id];
-
-                int defenderDamageValue = 0; // Declare outside for later use
-
-                // Determine the damage value for the defender
-                if (defenderSecondaryWeaponTable.find(id) != defenderSecondaryWeaponTable.end())
-                {
-                    defenderDamageValue = defenderSecondaryWeaponTable[id];
-                }
-                if (defenderPrimaryWeaponTable.find(id) != defenderPrimaryWeaponTable.end())
-                {
-                    if (defenderDamageValue < defenderPrimaryWeaponTable[id])
-                    {
-                        // Deduct ammo for primary weapon, if applicable
-                        defenderDamageValue = defenderPrimaryWeaponTable[id];
-                    }
-                }
-
-                // If a valid damage value was determined for retaliation
-                if (defenderDamageValue > 0)
-                {
-                    int defDamage = static_cast<int>(defenderDamageValue * static_cast<float>(enemy->health) / enemy->max_health);
-                    this->health -= defDamage;
-                    this->health = std::max(0, this->health); // Safeguard against negative health
-                    std::cout << "Ally health after retaliation: " << this->health << std::endl;
-                }
-            }
+        enemy->health = enemy->health - offDamage;
+        std::cout << "Enemy health:" << enemy->health << std::endl;
+        if (enemy->health > 0) {
+            this->health = this->health - defDamage;
+            std::cout << "Health ally:" << this->health << std::endl;
         }
     }
 
-    MatchupTable Unit::fill_matchupTable(int type) {
-        switch (type)
-        {
-        case 0:
-            
-            break;
-        
-        default:
-            break;
-        }
-    }
 
     void Unit::update_position(int posX, int posY)
     {
+        calc_state(posX, posY);
+
         this->x = posX;
         this->y = posY;
+    }
+
+    void Unit::calc_state(int posX, int posY) {
+
+        int currentX = this->x;
+        int currentY = this->y;
+
+        int deltaX = currentX - posX;
+        int deltaY = currentY - posY;
+
+        if (deltaY == 0) {
+            if (deltaX > 0) {
+                this->state = advanced_wars::UnitState::MOVEMENTLEFT;
+                return;
+            } else {
+                this->state = advanced_wars::UnitState::MOVEMENTRIGHT;
+                return;
+            }
+        }
+
+        double bresen = deltaX/deltaY;
+
+        if(bresen == 0) {
+            if(deltaY < 0) {
+                this->state = advanced_wars::UnitState::MOVEMENTDOWN;
+                return;
+            } else {
+                this->state = advanced_wars::UnitState::MOVEMENTUP;
+                return;
+            }
+        }
+
+        if(0 < bresen && bresen < 1) {
+            this->state = advanced_wars::UnitState::MOVEMENTDOWN;
+            return;
+        } else if (-1 < bresen && bresen < 0) {
+            this->state = advanced_wars::UnitState::MOVEMENTUP;
+            return;
+        }
+
     }
 
     void Unit::on_left_click(SDL_Event event, std::vector<Unit> &unitVector)

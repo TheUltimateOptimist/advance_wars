@@ -87,7 +87,7 @@ public:
   Attacker deals damage to the defender first
   */
 
-  void attack(Unit *enemy);
+  void attack(Unit* enemy) ;
 
 
   /*
@@ -103,6 +103,7 @@ public:
   */
   void calculate_movement();
 
+  void calc_state(int posX, int posY);
 
   /*
   This function fills the MatchupTable

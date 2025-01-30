@@ -128,8 +128,8 @@ void Level::handleEvent(Engine &engine, SDL_Event &event) {
 
         if(selectedUnit) {
 
-          int tileX = event.button.x;
-          int tileY = event.button.y;
+          int tileX = event.button.x / (16*RENDERING_SCALE);
+          int tileY = event.button.y / (16*RENDERING_SCALE);
 
           if(click_check_right(tileX, tileY)) {
 
