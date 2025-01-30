@@ -20,6 +20,7 @@ int main(int argc, char *argv[]) {
         return 1;
     }
     MainWindow window(level);
+    window.resize(1300, 800);
     window.show();
     return app.exec();
 }
