@@ -74,9 +74,13 @@ namespace advanced_wars
         secondary_weapon = fill_matchupTable(0);
         primary_weapon = fill_matchupTable(1);
 
+        
+
         // Zuerst die Tabel für die Waffen der angreifenden Einheit holen
         auto &attackerSecondaryWeaponTable = secondary_weapon[this->id];
         auto &attackerPrimaryWeaponTable = primary_weapon[this->id];
+
+        
 
         // Schadenswert für die angreifende Einheit gegen die verteidigende Einheit berechnen
         // Es wird die Waffe genommen die mehr Schaden macht
@@ -87,6 +91,7 @@ namespace advanced_wars
         {
             attackerDamageValue = attackerSecondaryWeaponTable[enemy->id];
         }
+        
         if (attackerPrimaryWeaponTable.find(enemy->id) != attackerPrimaryWeaponTable.end())
         {
             if (attackerDamageValue < attackerPrimaryWeaponTable[enemy->id])
@@ -95,6 +100,8 @@ namespace advanced_wars
                 attackerDamageValue = attackerPrimaryWeaponTable[enemy->id];
             }
         }
+
+        
 
         if (attackerDamageValue == 0)
         {
@@ -159,8 +166,9 @@ namespace advanced_wars
     void Unit::update_position(int posX, int posY)
     {
         this->x = posX;
-        this->y = posY;
-    }
+        this->y = posY;       
+    }      
+    
 
 /*
 Features:
