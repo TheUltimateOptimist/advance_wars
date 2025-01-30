@@ -62,7 +62,7 @@ class Unit
     public:
         Unit(int x, int y, UnitFaction faction, UnitId id, UnitState state);
 
-        void render(Engine& engine, int scale);
+        void render(Engine* engine, int scale);
 
     private:
         int         x;

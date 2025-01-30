@@ -5,12 +5,12 @@
 #include "engine.hpp"
 #include "scene.hpp"
 #include "tile.hpp"
+#include "ui/contextmenu.hpp"
 #include "unit.hpp"
 #include <SDL.h>
 #include <string>
 #include <unordered_map>
 #include <vector>
-#include "ui/contextmenu.hpp"
 
 namespace advanced_wars
 {
@@ -25,9 +25,9 @@ class Level : public Scene
             std::string name, int width, int height, std::vector<Tile> tiles,
             std::vector<Building> buildings, std::vector<Unit> units, std::vector<Effect>);
 
-        void render(Engine& engine, std::vector<SDL_Event>& events);
+        void render(Engine* engine);
 
-        void handleEvent(Engine *engine, SDL_Event &event);
+        void handleEvent(Engine* engine, SDL_Event& event);
 
         int add_building(Building building);
 
@@ -52,7 +52,7 @@ class Level : public Scene
         std::unordered_map<int, Effect>   effects;
 
         ContextMenu context_menu;
-        bool context_menu_active;
+        bool        context_menu_active;
 
         int id;
 };

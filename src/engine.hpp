@@ -29,17 +29,17 @@ class Engine
 
         bool exited();
 
-  void exit();
+        void exit();
 
-  void pump();
+        void pump();
 
-  void push_scene(std::shared_ptr<Scene> scene);
+        void push_scene(std::shared_ptr<Scene> scene);
 
-  std::optional<std::shared_ptr<Scene>> pop_scene();
+        std::optional<std::shared_ptr<Scene>> pop_scene();
 
-  void return_to_menu();
+        void return_to_menu();
 
-  std::deque<SDL_Event> &events();
+        std::deque<SDL_Event>& events();
 
         void set_spritesheet(Spritesheet& spritesheet);
 
@@ -54,13 +54,13 @@ class Engine
         ~Engine();
 
     private:
-        Window&                     window;
-        SDL_Renderer*               sdl_renderer;
-        std::optional<Scene*>       scene;
-        std::optional<Spritesheet*> spritesheet;
-        std::vector<SDL_Event>      events;
-        bool                        quit;
-        int                         stage;
+        Window&                             window;
+        SDL_Renderer*                       sdl_renderer;
+        std::vector<std::shared_ptr<Scene>> scenes;
+        std::optional<Spritesheet*>         spritesheet;
+        std::deque<SDL_Event>               _events;
+        bool                                quit;
+        int                                 stage;
 };
 
 } // namespace advanced_wars

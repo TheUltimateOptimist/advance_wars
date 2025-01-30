@@ -1,168 +1,249 @@
 #include "menu.hpp"
+#include "../building.hpp"
+#include "../level.hpp"
+#include "../spritesheet.hpp"
+#include "../tile.hpp"
+#include "../unit.hpp"
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 #include <iostream>
 #include <string>
-#include "../level.hpp"
-#include "../building.hpp"
-#include "../unit.hpp"
-#include "../tile.hpp"
-#include "../spritesheet.hpp"
 
-namespace advanced_wars {
+namespace advanced_wars
+{
 
 Menu::Menu(int selectedOption)
-    : selectedOption(selectedOption),
-      options({"Start Game", "Options", "Exit"}), backgroundTexture(nullptr) {
-  if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)) {
-    std::cerr << "Failed to initialize SDL_image: " << IMG_GetError()
-              << std::endl;
-  }
+    : selectedOption(selectedOption), options({"Start Game", "Options", "Exit"}),
+      backgroundTexture(nullptr)
+{
+    if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG))
+    {
+        std::cerr << "Failed to initialize SDL_image: " << IMG_GetError() << std::endl;
+    }
 }
 
-Menu::~Menu() {
-  if (backgroundTexture) {
-    SDL_DestroyTexture(backgroundTexture);
-  }
-  IMG_Quit();
+Menu::~Menu()
+{
+    if (backgroundTexture)
+    {
+        SDL_DestroyTexture(backgroundTexture);
+    }
+    IMG_Quit();
 };
 
-void Menu::render(Engine *engine) {
+void Menu::render(Engine* engine)
+{
 
-  // Iterate over all events
-  while (!engine->events().empty()) {
-    SDL_Event event = engine->events().at(0);
-    engine->events().pop_front();
-    handleEvent(engine, event);
-  }
+    // Iterate over all events
+    while (!engine->events().empty())
+    {
+        SDL_Event event = engine->events().at(0);
+        engine->events().pop_front();
+        handleEvent(engine, event);
+    }
 
-  if (backgroundTexture) {
-    SDL_RenderCopy(engine->renderer(), backgroundTexture, nullptr, nullptr);
-  } else {
-    SDL_SetRenderDrawColor(engine->renderer(), 0, 0, 0, 255);
-    SDL_RenderClear(engine->renderer());
-  }
+    if (backgroundTexture)
+    {
+        SDL_RenderCopy(engine->renderer(), backgroundTexture, nullptr, nullptr);
+    }
+    else
+    {
+        SDL_SetRenderDrawColor(engine->renderer(), 0, 0, 0, 255);
+        SDL_RenderClear(engine->renderer());
+    }
 
-  if (TTF_Init() == -1) {
-    std::cerr << "Failed to initialize TTF: " << TTF_GetError() << std::endl;
-    return;
-  }
+    if (TTF_Init() == -1)
+    {
+        std::cerr << "Failed to initialize TTF: " << TTF_GetError() << std::endl;
+        return;
+    }
 
-  std::string basePath = SDL_GetBasePath();
-  std::string relativePath = "assets/ARCADECLASSIC.TTF";
-  std::string fullPath = basePath + relativePath;
-  TTF_Font *titleFont = TTF_OpenFont(fullPath.c_str(), 48);
-  if (!titleFont) {
-    std::cerr << "Failed to load title font: " << fullPath << TTF_GetError()
-              << std::endl;
-    return;
-  }
+    std::string basePath = SDL_GetBasePath();
+    std::string relativePath = "assets/ARCADECLASSIC.TTF";
+    std::string fullPath = basePath + relativePath;
+    TTF_Font*   titleFont = TTF_OpenFont(fullPath.c_str(), 48);
+    if (!titleFont)
+    {
+        std::cerr << "Failed to load title font: " << fullPath << TTF_GetError() << std::endl;
+        return;
+    }
 
-  TTF_Font *menuFont = TTF_OpenFont(fullPath.c_str(), 24);
-  if (!menuFont) {
+    TTF_Font* menuFont = TTF_OpenFont(fullPath.c_str(), 24);
+    if (!menuFont)
+    {
+        TTF_CloseFont(titleFont);
+        std::cerr << "Failed to load menu font: " << fullPath << TTF_GetError() << std::endl;
+        return;
+    }
+
+    SDL_Color white = {255, 255, 255, 255};
+    SDL_Color yellow = {255, 255, 0, 255};
+
+    SDL_Surface* titleSurface = TTF_RenderText_Solid(titleFont, "Advanced Wars", white);
+    if (titleSurface)
+    {
+        SDL_Texture* titleTexture = SDL_CreateTextureFromSurface(engine->renderer(), titleSurface);
+        SDL_Rect     titleRect = {
+            static_cast<int>((800 - titleSurface->w) / 2), 50, titleSurface->w, titleSurface->h};
+        SDL_RenderCopy(engine->renderer(), titleTexture, nullptr, &titleRect);
+        SDL_DestroyTexture(titleTexture);
+        SDL_FreeSurface(titleSurface);
+    }
+
+    for (size_t i = 0; i < options.size(); ++i)
+    {
+        SDL_Surface* textSurface = TTF_RenderText_Solid(
+            menuFont, options[i].c_str(), (i == selectedOption) ? yellow : white);
+        if (!textSurface)
+        {
+            continue;
+        }
+
+        SDL_Texture* textTexture = SDL_CreateTextureFromSurface(engine->renderer(), textSurface);
+        SDL_Rect     textRect = {
+            static_cast<int>((800 - textSurface->w) / 2), static_cast<int>(150 + i * 50),
+            textSurface->w, textSurface->h};
+        SDL_RenderCopy(engine->renderer(), textTexture, nullptr, &textRect);
+
+        SDL_DestroyTexture(textTexture);
+        SDL_FreeSurface(textSurface);
+    }
+
     TTF_CloseFont(titleFont);
-    std::cerr << "Failed to load menu font: " << fullPath << TTF_GetError()
-              << std::endl;
-    return;
-  }
+    TTF_CloseFont(menuFont);
+    TTF_Quit();
 
-  SDL_Color white = {255, 255, 255, 255};
-  SDL_Color yellow = {255, 255, 0, 255};
-
-  SDL_Surface *titleSurface =
-      TTF_RenderText_Solid(titleFont, "Advanced Wars", white);
-  if (titleSurface) {
-    SDL_Texture *titleTexture =
-        SDL_CreateTextureFromSurface(engine->renderer(), titleSurface);
-    SDL_Rect titleRect = {static_cast<int>((800 - titleSurface->w) / 2), 50,
-                          titleSurface->w, titleSurface->h};
-    SDL_RenderCopy(engine->renderer(), titleTexture, nullptr, &titleRect);
-    SDL_DestroyTexture(titleTexture);
-    SDL_FreeSurface(titleSurface);
-  }
-
-  for (size_t i = 0; i < options.size(); ++i) {
-    SDL_Surface *textSurface = TTF_RenderText_Solid(
-        menuFont, options[i].c_str(), (i == selectedOption) ? yellow : white);
-    if (!textSurface) {
-      continue;
-    }
-
-    SDL_Texture *textTexture =
-        SDL_CreateTextureFromSurface(engine->renderer(), textSurface);
-    SDL_Rect textRect = {static_cast<int>((800 - textSurface->w) / 2),
-                         static_cast<int>(150 + i * 50), textSurface->w,
-                         textSurface->h};
-    SDL_RenderCopy(engine->renderer(), textTexture, nullptr, &textRect);
-
-    SDL_DestroyTexture(textTexture);
-    SDL_FreeSurface(textSurface);
-  }
-
-  TTF_CloseFont(titleFont);
-  TTF_CloseFont(menuFont);
-  TTF_Quit();
-
-  SDL_RenderPresent(engine->renderer());
+    SDL_RenderPresent(engine->renderer());
 }
 
-void Menu::handleEvent(Engine *engine, SDL_Event &event) {
-  if (event.type == SDL_KEYDOWN) {
-    if (event.key.keysym.sym == SDLK_DOWN) {
-      selectedOption = (selectedOption + 1) % options.size();
-    } else if (event.key.keysym.sym == SDLK_UP) {
-      selectedOption = (selectedOption - 1 + options.size()) % options.size();
-    } else if (event.key.keysym.sym == SDLK_RETURN) {
-      if (options[selectedOption] == "Exit") {
-        std::cout << "Exiting game..." << std::endl;
-        engine->exit();
-      } else if (options[selectedOption] == "Start Game") {
-        std::cout << "Starting game..." << std::endl;
+void Menu::handleEvent(Engine* engine, SDL_Event& event)
+{
+    if (event.type == SDL_KEYDOWN)
+    {
+        if (event.key.keysym.sym == SDLK_DOWN)
+        {
+            selectedOption = (selectedOption + 1) % options.size();
+        }
+        else if (event.key.keysym.sym == SDLK_UP)
+        {
+            selectedOption = (selectedOption - 1 + options.size()) % options.size();
+        }
+        else if (event.key.keysym.sym == SDLK_RETURN)
+        {
+            if (options[selectedOption] == "Exit")
+            {
+                std::cout << "Exiting game..." << std::endl;
+                engine->exit();
+            }
+            else if (options[selectedOption] == "Start Game")
+            {
+                std::cout << "Starting game..." << std::endl;
 
-        /* TODO REMOVE THIS BOILERPLATE CODE BEFORE MERGE */
+                // Construct a level
+                std::vector<Tile> tiles;
+                for (int y = 0; y < 20; y++)
+                {
+                    for (int x = 0; x < 20; x++)
+                    {
+                        tiles.push_back(Tile(TileId::PLAIN, x, y));
+                    }
+                }
 
-        Level level("Osnabrück", 20, 20, std::vector<Tile>(),
-        std::vector<Building>(), std::vector<Unit>());
+                // Fill the edges with water
+                for (size_t n = 0; n < 20; n++)
+                {
+                    // Vertical
+                    tiles.at(n * 20) = Tile(TileId::WATER, 0, n);
+                    tiles.at(n * 20 + 19) = Tile(TileId::WATER, 19, n);
+                    // Horizontal
+                    tiles.at(n) = Tile(TileId::WATER, n, 0);
+                    tiles.at(19 * 20 + n) = Tile(TileId::WATER, n, 19);
+                }
 
-        engine->push_scene(std::make_shared<advanced_wars::Level>(level));
+                // Make the edges cliffs
+                for (size_t n = 1; n < 19; n++)
+                {
+                    // Vertical
+                    tiles.at(n * 20 + 1) = Tile(TileId::CLIFF_RIGHT, 1, n);
+                    tiles.at(n * 20 + 18) = Tile(TileId::CLIFF_LEFT, 18, n);
 
-        std::string basePath = SDL_GetBasePath();
-        std::string relativePath = "assets/main_background.png";
-        std::string fullPath = basePath + relativePath;
-        Spritesheet spritesheet(fullPath, *engine);
+                    // Horizontal
+                    tiles.at(20 + n) = Tile(TileId::CLIFF_BOTTOM, n, 1);
+                    tiles.at(18 * 20 + n) = Tile(TileId::CLIFF_TOP, n, 18);
+                }
 
-        engine->set_spritesheet(spritesheet);
+                // Fix the corners
+                tiles.at(20 + 1) = Tile(TileId::CLIFF_CORNER_TOP_LEFT, 1, 1);
+                tiles.at(20 + 18) = Tile(TileId::CLIFF_CORNER_TOP_RIGHT, 18, 1);
+                tiles.at(18 * 20 + 1) = Tile(TileId::CLIFF_CORNER_BOTTOM_LEFT, 1, 18);
+                tiles.at(18 * 20 + 18) = Tile(TileId::CLIFF_CORNER_BOTTOM_RIGHT, 18, 18);
 
-        /* END OF BOILERPLATE CODE */
+                // Buildings
+                std::vector<Building> buildings;
 
-      } else if (options[selectedOption] == "Options") {
-        std::cout << "Opening options..." << std::endl;
-      }
+                for (int y = 0; y < 6; y++)
+                {
+                    for (int x = 0; x < 5; x++)
+                    {
+                        BuildingId      id = static_cast<BuildingId>(x);
+                        BuildingFaction faction = static_cast<BuildingFaction>(y);
+
+                        buildings.push_back(Building(3 + x, 3 + 2 * y, id, faction));
+                    }
+                }
+
+                // Units
+                std::vector<Unit> units;
+
+                for (int y = 0; y < 19; y++)
+                {
+                    for (int x = 0; x < 6; x++)
+                    {
+                        units.push_back(Unit(
+                            x + 9, y + 2, UnitFaction::URED, static_cast<UnitId>(y),
+                            static_cast<UnitState>(x)));
+                    }
+                }
+
+                std::vector<Effect> effects(
+                    {Effect(3, 15, EffectId::LAND_EXPLOSION, false),
+                     Effect(5, 15, EffectId::AIR_EXPLOSION, true),
+                     Effect(5, 18, EffectId::NAVAL_EXPLOSION, true)});
+
+                std::shared_ptr<Level> level =
+                    std::make_shared<Level>("Osnabrück", 20, 20, tiles, buildings, units, effects);
+
+                engine->push_scene(level);
+            }
+            else if (options[selectedOption] == "Options")
+            {
+                std::cout << "Opening options..." << std::endl;
+            }
+        }
     }
-  }
 }
 
-void Menu::loadBackground(SDL_Renderer *renderer,
-                          const std::string &imagePath) {
-  // Lade das Hintergrundbild
-  SDL_Surface *backgroundSurface = IMG_Load(imagePath.c_str());
-  if (!backgroundSurface) {
-    std::cerr << "Failed to load background image: " << IMG_GetError()
-              << std::endl;
-    return;
-  }
+void Menu::loadBackground(SDL_Renderer* renderer, const std::string& imagePath)
+{
+    // Lade das Hintergrundbild
+    SDL_Surface* backgroundSurface = IMG_Load(imagePath.c_str());
+    if (!backgroundSurface)
+    {
+        std::cerr << "Failed to load background image: " << IMG_GetError() << std::endl;
+        return;
+    }
 
-  // Erstelle eine Textur aus der Oberfläche und speichere sie als
-  // Klassenmitglied
-  backgroundTexture = SDL_CreateTextureFromSurface(renderer, backgroundSurface);
-  SDL_FreeSurface(backgroundSurface); // Oberfläche freigeben, da sie nicht mehr
-                                      // benötigt wird
+    // Erstelle eine Textur aus der Oberfläche und speichere sie als
+    // Klassenmitglied
+    backgroundTexture = SDL_CreateTextureFromSurface(renderer, backgroundSurface);
+    SDL_FreeSurface(backgroundSurface); // Oberfläche freigeben, da sie nicht mehr
+                                        // benötigt wird
 
-  if (!backgroundTexture) {
-    std::cerr << "Failed to create background texture: " << SDL_GetError()
-              << std::endl;
-  }
+    if (!backgroundTexture)
+    {
+        std::cerr << "Failed to create background texture: " << SDL_GetError() << std::endl;
+    }
 }
 
 } // namespace advanced_wars
