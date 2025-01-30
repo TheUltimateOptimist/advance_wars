@@ -3,27 +3,43 @@
 #include <QHBoxLayout>
 #include <QSize>
 #include "SaveButton.hpp"
+#include "LevelTitle.hpp"
 #include "LevelNameEdit.hpp"
 
 TopBar::TopBar(const std::string& level_name, int level_width, int level_height, QWidget *parent) : QToolBar(parent) {
     QWidget *container = new QWidget(this);
-    QHBoxLayout *layout = new QHBoxLayout(container);
+    QHBoxLayout *main_layout = new QHBoxLayout(container);
+    QWidget *left_container = new QWidget(container);
+    QWidget *middle_container = new QWidget(container);
+    QWidget *right_container = new QWidget(container);
+    QWidget *full_right_container = new QWidget(container);
+    QHBoxLayout* left_layout = new QHBoxLayout(left_container);
+    QHBoxLayout* middle_layout = new QHBoxLayout(middle_container);
+    QHBoxLayout* right_layout = new QHBoxLayout(right_container);
+    QHBoxLayout* full_right_layout = new QHBoxLayout(full_right_container);
 
-    QLabel *field_label = new QLabel("Name: ", this);
-    LevelNameEdit *text_field = new LevelNameEdit(level_name, this);
-    QLabel *dimensions = new QLabel((std::to_string(level_width) + " X " + std::to_string(level_height)).c_str(), this);
-    QPushButton *save_button = new SaveButton("Speichern", this);
+    QLabel *field_label = new QLabel("Name: ", left_container);
+    LevelNameEdit *text_field = new LevelNameEdit(level_name, left_container);
+    left_layout->addWidget(field_label);
+    left_layout->addWidget(text_field);
+    left_layout->addStretch();
 
-    layout->addWidget(field_label);
-    layout->addWidget(text_field);
-    layout->addSpacing(15);
-    layout->addWidget(dimensions);
-    layout->addSpacing(15);
-    layout->addWidget(save_button);
-    layout->addStretch();
+    LevelTitle* title = new LevelTitle(level_width, level_height, level_name, middle_container);
+    middle_layout->addStretch();
+    middle_layout->addWidget(title);
+    middle_layout->addStretch();
     
+    QPushButton *save_button = new SaveButton("Speichern", right_container);
+    full_right_layout->addStretch();
+    full_right_layout->addWidget(save_button); 
+
+    full_right_container->setFixedWidth(300);
+    main_layout->addWidget(left_container, 1);
+    main_layout->addWidget(middle_container, 1);
+    main_layout->addWidget(right_container, 1);
+    main_layout->addWidget(full_right_container);
+
     this->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);  // Allow resizing
-    container->setLayout(layout);
     this->addWidget(container);
 }
 
