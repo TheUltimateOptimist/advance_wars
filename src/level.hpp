@@ -31,8 +31,6 @@ class Level : public Scene
 
         void handleEvent(Engine& engine, SDL_Event& event);
 
-        void handleEvent2(Engine& engine, SDL_Event& event);
-
         int addBuilding(Building building);
 
         Building removeBuilding(int id);

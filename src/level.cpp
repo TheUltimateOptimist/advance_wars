@@ -183,6 +183,9 @@ void Level::handleEvent(Engine& engine, SDL_Event& event)
     {
     case SDL_MOUSEBUTTONDOWN:
 
+        m_contextMenu.update(event.button.x, event.button.y);
+        m_contextMenuActive = true;
+
         if (event.button.button == SDL_BUTTON_LEFT)
         {
 
@@ -241,6 +244,38 @@ void Level::handleEvent(Engine& engine, SDL_Event& event)
                 std::cout << "No unit selected! " << std::endl;
             }
         }
+        break;
+    case SDL_KEYDOWN:
+
+        if (event.key.keysym.sym == SDLK_ESCAPE)
+        {
+            // Pause the game
+            std::cout << "Pausing game..." << std::endl;
+            SDL_Texture* currentTexture = SDL_CreateTexture(
+                engine.renderer(), SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, 800, 600);
+
+            PauseMenu pauseMenu(0, currentTexture);
+            engine.pushScene(std::make_shared<PauseMenu>(pauseMenu));
+        }
+        if (m_contextMenuActive)
+        {
+            if (event.key.keysym.sym == SDLK_DOWN)
+            {
+                m_contextMenu.handleEvent(event);
+            }
+            if (event.key.keysym.sym == SDLK_UP)
+            {
+                m_contextMenu.handleEvent(event);
+            }
+            if (event.key.keysym.sym == SDLK_RETURN)
+            {
+                if (m_contextMenu.getSelectedOption() == "Wait")
+                {
+                    m_contextMenuActive = false;
+                }
+            }
+        }
+        break;
     }
 }
 
@@ -251,7 +286,6 @@ void Level::render(Engine& engine)
     while (!engine.events().empty())
     {
         handleEvent(engine, engine.events().at(0));
-        handleEvent2(engine, engine.events().at(0));
 
         engine.events().pop_front();
     }
@@ -297,47 +331,6 @@ void Level::render(Engine& engine)
     if (m_contextMenuActive)
     {
         m_contextMenu.render(engine);
-    }
-}
-
-void Level::handleEvent2(Engine& engine, SDL_Event& event)
-{
-    // Handle events for the level
-    if (event.type == SDL_KEYDOWN)
-    {
-        if (event.key.keysym.sym == SDLK_ESCAPE)
-        {
-            // Pause the game
-            std::cout << "Pausing game..." << std::endl;
-            SDL_Texture* currentTexture = SDL_CreateTexture(
-                engine.renderer(), SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, 800, 600);
-
-            PauseMenu pauseMenu(0, currentTexture);
-            engine.pushScene(std::make_shared<PauseMenu>(pauseMenu));
-        }
-        if (m_contextMenuActive)
-        {
-            if (event.key.keysym.sym == SDLK_DOWN)
-            {
-                m_contextMenu.handleEvent(event);
-            }
-            if (event.key.keysym.sym == SDLK_UP)
-            {
-                m_contextMenu.handleEvent(event);
-            }
-            if (event.key.keysym.sym == SDLK_RETURN)
-            {
-                if (m_contextMenu.getSelectedOption() == "Wait")
-                {
-                    m_contextMenuActive = false;
-                }
-            }
-        }
-    }
-    if (event.type == SDL_MOUSEBUTTONDOWN)
-    {
-        m_contextMenu.update(event.button.x, event.button.y);
-        m_contextMenuActive = true;
     }
 }
 
