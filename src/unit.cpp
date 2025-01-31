@@ -5,17 +5,17 @@ namespace advanced_wars
 {
 
 Unit::Unit(int x, int y, UnitFaction faction, UnitId id, UnitState state)
-    : m_x(x), m_y(y), m_faction(faction), m_id(id), m_state(state), m_max_health(100)
+    : m_x(x), m_y(y), m_faction(faction), m_id(id), m_state(state), m_maxHealth(100)
 {
     // das ist nur für Testzwecke
     if (m_id == UnitId::INFANTERY)
     {
-        m_secondary_weapon = Weapon(
+        m_secondaryWeapon = Weapon(
             "Machine-Gun", {
                                {UnitId::INFANTERY, 55}
         });
     }
-    m_health = m_max_health;
+    m_health = m_maxHealth;
 }
 
 void Unit::render(Engine* engine, int scale)
@@ -83,18 +83,18 @@ void Unit::attack(Unit* enemy)
 {
     // Angenommen, primary_weapon und secondary_weapon wurden bereits korrekt
     // initialisiert
-    auto primary_weapon_damage_it = m_primary_weapon.m_damage.find(enemy->m_id);
-    auto secondary_weapon_damage_it = m_secondary_weapon.m_damage.find(enemy->m_id);
+    auto primary_weapon_damage_it = m_primaryWeapon.m_damage.find(enemy->m_id);
+    auto secondary_weapon_damage_it = m_secondaryWeapon.m_damage.find(enemy->m_id);
 
     int attacker_damage_value = 0;
 
     // Die Waffe mit dem höchsten Schaden wählen
-    if (secondary_weapon_damage_it != m_secondary_weapon.m_damage.end())
+    if (secondary_weapon_damage_it != m_secondaryWeapon.m_damage.end())
     {
         attacker_damage_value = secondary_weapon_damage_it->second;
     }
 
-    if (primary_weapon_damage_it != m_primary_weapon.m_damage.end())
+    if (primary_weapon_damage_it != m_primaryWeapon.m_damage.end())
     {
         if (primary_weapon_damage_it->second > attacker_damage_value)
         {
@@ -110,7 +110,7 @@ void Unit::attack(Unit* enemy)
     }
     else
     {
-        int off_damage = attacker_damage_value * (static_cast<float>(m_health) / m_max_health);
+        int off_damage = attacker_damage_value * (static_cast<float>(m_health) / m_maxHealth);
         enemy->m_health -= off_damage;
         enemy->m_health = std::max(
             0,
@@ -121,19 +121,18 @@ void Unit::attack(Unit* enemy)
         if (enemy->m_health > 0)
         {
             // Weapon tables for the defender
-            auto defender_primary_weapon_damage_it = enemy->m_primary_weapon.m_damage.find(m_id);
-            auto defender_secondary_weapon_damage_it =
-                enemy->m_secondary_weapon.m_damage.find(m_id);
+            auto defender_primary_weapon_damage_it = enemy->m_primaryWeapon.m_damage.find(m_id);
+            auto defender_secondary_weapon_damage_it = enemy->m_secondaryWeapon.m_damage.find(m_id);
 
             int defender_damage_value = 0; // Declare outside for later use
 
             // Determine the damage value for the defender
-            if (defender_secondary_weapon_damage_it != enemy->m_secondary_weapon.m_damage.end())
+            if (defender_secondary_weapon_damage_it != enemy->m_secondaryWeapon.m_damage.end())
             {
                 defender_damage_value = defender_secondary_weapon_damage_it->second;
             }
 
-            if (defender_primary_weapon_damage_it != enemy->m_primary_weapon.m_damage.end())
+            if (defender_primary_weapon_damage_it != enemy->m_primaryWeapon.m_damage.end())
             {
                 if (defender_primary_weapon_damage_it->second > defender_damage_value)
                 {
@@ -147,7 +146,7 @@ void Unit::attack(Unit* enemy)
             {
                 int def_damage = static_cast<int>(
                     defender_damage_value * static_cast<float>(enemy->m_health) /
-                    enemy->m_max_health);
+                    enemy->m_maxHealth);
                 this->m_health -= def_damage;
                 this->m_health = std::max(0, this->m_health); // Safeguard against negative health
                 std::cout << "Ally health after retaliation: " << this->m_health << std::endl;

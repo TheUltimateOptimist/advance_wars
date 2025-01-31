@@ -121,17 +121,17 @@ class Unit
         UnitId      m_id;
         UnitState   m_state;
 
-        int m_max_health; // max_health required for damage_scaling
+        int m_maxHealth; // max_health required for damage_scaling
         int m_range;
         int m_fuel;
-        int m_max_fuel;
+        int m_maxFuel;
 
-        bool   m_has_moved;
-        bool   m_has_attacked;
-        bool   m_is_selected;
-        bool   m_is_targeted;
-        Weapon m_secondary_weapon;
-        Weapon m_primary_weapon;
+        bool   m_hasMoved;
+        bool   m_hasAttacked;
+        bool   m_isSelected;
+        bool   m_isTargeted;
+        Weapon m_secondaryWeapon;
+        Weapon m_primaryWeapon;
 
         int m_ammo;
 };
