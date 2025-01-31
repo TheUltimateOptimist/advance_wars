@@ -14,8 +14,8 @@ namespace advanced_wars
 {
 
 Menu::Menu(int selectedOption)
-    : selectedOption(selectedOption), options({"Start Game", "Options", "Exit"}),
-      backgroundTexture(nullptr)
+    : m_selectedOption(selectedOption), m_options({"Start Game", "Options", "Exit"}),
+      m_backgroundTexture(nullptr)
 {
     if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG))
     {
@@ -25,9 +25,9 @@ Menu::Menu(int selectedOption)
 
 Menu::~Menu()
 {
-    if (backgroundTexture)
+    if (m_backgroundTexture)
     {
-        SDL_DestroyTexture(backgroundTexture);
+        SDL_DestroyTexture(m_backgroundTexture);
     }
     IMG_Quit();
 };
@@ -43,9 +43,9 @@ void Menu::render(Engine* engine)
         handleEvent(engine, event);
     }
 
-    if (backgroundTexture)
+    if (m_backgroundTexture)
     {
-        SDL_RenderCopy(engine->renderer(), backgroundTexture, nullptr, nullptr);
+        SDL_RenderCopy(engine->renderer(), m_backgroundTexture, nullptr, nullptr);
     }
     else
     {
@@ -91,10 +91,10 @@ void Menu::render(Engine* engine)
         SDL_FreeSurface(titleSurface);
     }
 
-    for (size_t i = 0; i < options.size(); ++i)
+    for (size_t i = 0; i < m_options.size(); ++i)
     {
         SDL_Surface* textSurface = TTF_RenderText_Solid(
-            menuFont, options[i].c_str(), (i == selectedOption) ? yellow : white);
+            menuFont, m_options[i].c_str(), (i == m_selectedOption) ? yellow : white);
         if (!textSurface)
         {
             continue;
@@ -123,20 +123,20 @@ void Menu::handleEvent(Engine* engine, SDL_Event& event)
     {
         if (event.key.keysym.sym == SDLK_DOWN)
         {
-            selectedOption = (selectedOption + 1) % options.size();
+            m_selectedOption = (m_selectedOption + 1) % m_options.size();
         }
         else if (event.key.keysym.sym == SDLK_UP)
         {
-            selectedOption = (selectedOption - 1 + options.size()) % options.size();
+            m_selectedOption = (m_selectedOption - 1 + m_options.size()) % m_options.size();
         }
         else if (event.key.keysym.sym == SDLK_RETURN)
         {
-            if (options[selectedOption] == "Exit")
+            if (m_options[m_selectedOption] == "Exit")
             {
                 std::cout << "Exiting game..." << std::endl;
                 engine->exit();
             }
-            else if (options[selectedOption] == "Start Game")
+            else if (m_options[m_selectedOption] == "Start Game")
             {
                 std::cout << "Starting game..." << std::endl;
 
@@ -216,7 +216,7 @@ void Menu::handleEvent(Engine* engine, SDL_Event& event)
 
                 engine->push_scene(level);
             }
-            else if (options[selectedOption] == "Options")
+            else if (m_options[m_selectedOption] == "Options")
             {
                 std::cout << "Opening options..." << std::endl;
             }
@@ -236,11 +236,11 @@ void Menu::loadBackground(SDL_Renderer* renderer, const std::string& imagePath)
 
     // Erstelle eine Textur aus der Oberfläche und speichere sie als
     // Klassenmitglied
-    backgroundTexture = SDL_CreateTextureFromSurface(renderer, backgroundSurface);
+    m_backgroundTexture = SDL_CreateTextureFromSurface(renderer, backgroundSurface);
     SDL_FreeSurface(backgroundSurface); // Oberfläche freigeben, da sie nicht mehr
                                         // benötigt wird
 
-    if (!backgroundTexture)
+    if (!m_backgroundTexture)
     {
         std::cerr << "Failed to create background texture: " << SDL_GetError() << std::endl;
     }
