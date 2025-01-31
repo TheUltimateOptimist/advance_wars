@@ -12,14 +12,14 @@ Effect::Effect(int x, int y, EffectId id, bool repeat)
 
 void Effect::render(Engine* engine, int scale)
 {
-    Spritesheet* spritesheet = engine->get_spritesheet();
+    Spritesheet* spritesheet = engine->getSpritesheet();
     if (m_start == 0)
     {
-        m_start = engine->get_stage();
+        m_start = engine->getStage();
     }
 
     int step =
-        engine->get_stage() % spritesheet->getEffectTextures().at(static_cast<int>(m_id)).second;
+        engine->getStage() % spritesheet->getEffectTextures().at(static_cast<int>(m_id)).second;
 
     SDL_Rect src;
     src.x = step * spritesheet->getEffectWidth() + step * spritesheet->getEffectHeight();
@@ -41,8 +41,8 @@ void Effect::render(Engine* engine, int scale)
 bool Effect::is_finished(Engine* engine)
 {
     return !(
-        engine->get_stage() - m_start <=
-            engine->get_spritesheet()->getEffectTextures().at(static_cast<int>(m_id)).second ||
+        engine->getStage() - m_start <=
+            engine->getSpritesheet()->getEffectTextures().at(static_cast<int>(m_id)).second ||
         m_repeat);
 }
 

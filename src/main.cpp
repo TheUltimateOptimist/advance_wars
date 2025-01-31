@@ -32,7 +32,7 @@ int main()
 
     Spritesheet spritesheet("./spritesheet.h5", engine);
 
-    engine.set_spritesheet(spritesheet);
+    engine.setSpritesheet(spritesheet);
 
     std::shared_ptr<Menu>        menu = std::make_shared<Menu>(0);
     std::shared_ptr<ContextMenu> context_menu = std::make_shared<ContextMenu>();
@@ -43,7 +43,7 @@ int main()
     std::string fullPath = basePath + relativePath;
     menu->loadBackground(engine.renderer(), fullPath.c_str());
 
-    engine.push_scene(menu);
+    engine.pushScene(menu);
 
     while (!engine.exited())
     {

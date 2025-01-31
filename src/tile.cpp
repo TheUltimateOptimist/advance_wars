@@ -9,10 +9,10 @@ Tile::Tile(TileId id, int x, int y) : m_id(id), m_x(x), m_y(y) {}
 
 void Tile::render(Engine* engine, int scale)
 {
-    Spritesheet* spritesheet = engine->get_spritesheet();
+    Spritesheet* spritesheet = engine->getSpritesheet();
 
     int step =
-        engine->get_stage() % spritesheet->getTileTextures().at(static_cast<int>(m_id)).second;
+        engine->getStage() % spritesheet->getTileTextures().at(static_cast<int>(m_id)).second;
 
     SDL_Rect src;
     src.x = step * spritesheet->getTileWidth();

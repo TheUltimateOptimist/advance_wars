@@ -9,7 +9,7 @@ Building::Building(int x, int y, BuildingId id, BuildingFaction faction)
 
 void Building::render(Engine* engine, int scale)
 {
-    Spritesheet* spritesheet = engine->get_spritesheet();
+    Spritesheet* spritesheet = engine->getSpritesheet();
 
     SDL_Rect src;
     src.x = static_cast<int>(m_id) * spritesheet->getBuildingWidth();

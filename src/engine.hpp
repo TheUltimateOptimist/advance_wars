@@ -33,19 +33,19 @@ class Engine
 
         void pump();
 
-        void push_scene(std::shared_ptr<Scene> scene);
+        void pushScene(std::shared_ptr<Scene> scene);
 
-        std::optional<std::shared_ptr<Scene>> pop_scene();
+        std::optional<std::shared_ptr<Scene>> popScene();
 
-        void return_to_menu();
+        void returnToMenu();
 
         std::deque<SDL_Event>& events();
 
-        void set_spritesheet(Spritesheet& spritesheet);
+        void setSpritesheet(Spritesheet& spritesheet);
 
-        Spritesheet* get_spritesheet();
+        Spritesheet* getSpritesheet();
 
-        int get_stage();
+        int getStage();
 
         void render();
 
@@ -55,7 +55,7 @@ class Engine
 
     private:
         Window&                             m_window;
-        SDL_Renderer*                       m_sdl_renderer;
+        SDL_Renderer*                       m_SDLRenderer;
         std::vector<std::shared_ptr<Scene>> m_scenes;
         std::optional<Spritesheet*>         m_spritesheet;
         std::deque<SDL_Event>               m_events;

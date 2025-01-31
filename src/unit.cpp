@@ -20,13 +20,13 @@ Unit::Unit(int x, int y, UnitFaction faction, UnitId id, UnitState state)
 
 void Unit::render(Engine* engine, int scale)
 {
-    Spritesheet* spritesheet = engine->get_spritesheet();
+    Spritesheet* spritesheet = engine->getSpritesheet();
 
-    int step = engine->get_stage() % spritesheet->getUnitTextures()
-                                         .at(static_cast<int>(m_faction))
-                                         .at(static_cast<int>(m_id))
-                                         .at(static_cast<int>(m_state))
-                                         .second;
+    int step = engine->getStage() % spritesheet->getUnitTextures()
+                                        .at(static_cast<int>(m_faction))
+                                        .at(static_cast<int>(m_id))
+                                        .at(static_cast<int>(m_state))
+                                        .second;
 
     if (m_state == UnitState::IDLE || m_state == UnitState::UNAVAILABLE)
     {

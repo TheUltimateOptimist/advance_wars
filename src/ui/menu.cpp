@@ -214,7 +214,7 @@ void Menu::handleEvent(Engine* engine, SDL_Event& event)
                 std::shared_ptr<Level> level =
                     std::make_shared<Level>("Osnabrück", 20, 20, tiles, buildings, units, effects);
 
-                engine->push_scene(level);
+                engine->pushScene(level);
             }
             else if (m_options[m_selected_option] == "Options")
             {

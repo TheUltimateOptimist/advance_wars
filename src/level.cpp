@@ -313,7 +313,7 @@ void Level::handleEvent2(Engine* engine, SDL_Event& event)
                 engine->renderer(), SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, 800, 600);
 
             PauseMenu pauseMenu(0, currentTexture);
-            engine->push_scene(std::make_shared<PauseMenu>(pauseMenu));
+            engine->pushScene(std::make_shared<PauseMenu>(pauseMenu));
         }
         if (m_contextMenuActive)
         {

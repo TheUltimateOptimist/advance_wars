@@ -104,7 +104,7 @@ void PauseMenu::handleEvent(Engine* engine, SDL_Event& event)
         else if (event.key.keysym.sym == SDLK_ESCAPE)
         {
             std::cout << "Resuming game..." << std::endl;
-            engine->pop_scene();
+            engine->popScene();
         }
         else if (event.key.keysym.sym == SDLK_RETURN)
         {
@@ -112,13 +112,13 @@ void PauseMenu::handleEvent(Engine* engine, SDL_Event& event)
             {
                 // exit into main menu
                 std::cout << "Exiting game..." << std::endl;
-                engine->return_to_menu();
+                engine->returnToMenu();
             }
             else if (m_options[m_selected_option] == "Resume")
             {
                 // resume game
                 std::cout << "Resuming game..." << std::endl;
-                engine->pop_scene();
+                engine->popScene();
             }
         }
     }

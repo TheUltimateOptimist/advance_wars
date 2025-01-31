@@ -18,10 +18,10 @@ namespace advanced_wars
 Engine::Engine(Window& window) : m_window(window), m_quit(false)
 {
 
-    this->m_sdl_renderer = SDL_CreateRenderer(
+    this->m_SDLRenderer = SDL_CreateRenderer(
         this->m_window.sdl_window(), -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
-    if (m_sdl_renderer == nullptr)
+    if (m_SDLRenderer == nullptr)
     {
         throw std::runtime_error("SDL could not generate renderer: " + std::string(SDL_GetError()));
     }
@@ -32,12 +32,12 @@ std::deque<SDL_Event>& Engine::events()
     return this->m_events;
 }
 
-void Engine::push_scene(std::shared_ptr<Scene> scene)
+void Engine::pushScene(std::shared_ptr<Scene> scene)
 {
     this->m_scenes.push_back(scene);
 }
 
-void Engine::return_to_menu()
+void Engine::returnToMenu()
 {
     // TODO: discuss if we outsource this to a separate function
     // clear everything except the first scene
@@ -47,7 +47,7 @@ void Engine::return_to_menu()
     }
 }
 
-std::optional<std::shared_ptr<Scene>> Engine::pop_scene()
+std::optional<std::shared_ptr<Scene>> Engine::popScene()
 {
     if (this->m_scenes.empty())
     {
@@ -59,7 +59,7 @@ std::optional<std::shared_ptr<Scene>> Engine::pop_scene()
     return tmp;
 }
 
-void Engine::set_spritesheet(Spritesheet& spritesheet)
+void Engine::setSpritesheet(Spritesheet& spritesheet)
 {
     this->m_spritesheet = &spritesheet;
 }
@@ -92,7 +92,7 @@ bool Engine::exited()
 
 void Engine::render()
 {
-    if (SDL_RenderClear(this->m_sdl_renderer) != 0)
+    if (SDL_RenderClear(this->m_SDLRenderer) != 0)
     {
         throw std::runtime_error("Could not clear renderer: " + std::string(SDL_GetError()));
     }
@@ -101,27 +101,27 @@ void Engine::render()
 
     currentScene->render(this);
 
-    SDL_RenderPresent(this->m_sdl_renderer);
+    SDL_RenderPresent(this->m_SDLRenderer);
 }
 
-int Engine::get_stage()
+int Engine::getStage()
 {
     return SDL_GetTicks() / 300;
 }
 
-Spritesheet* Engine::get_spritesheet()
+Spritesheet* Engine::getSpritesheet()
 {
     return m_spritesheet.value();
 }
 
 SDL_Renderer* Engine::renderer()
 {
-    return this->m_sdl_renderer;
+    return this->m_SDLRenderer;
 }
 
 Engine::~Engine()
 {
-    SDL_DestroyRenderer(m_sdl_renderer);
+    SDL_DestroyRenderer(m_SDLRenderer);
     IMG_Quit();
     SDL_Quit();
 }
