@@ -99,7 +99,7 @@ void Engine::render()
 
     std::shared_ptr<Scene> currentScene = m_scenes.back();
 
-    currentScene->render(this);
+    currentScene->render(*this);
 
     SDL_RenderPresent(this->m_SDLRenderer);
 }

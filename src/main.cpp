@@ -41,7 +41,7 @@ int main()
     std::string basePath = SDL_GetBasePath();
     std::string relativePath = "assets/main_background.png";
     std::string fullPath = basePath + relativePath;
-    menu->loadBackground(engine.renderer(), fullPath.c_str());
+    menu->loadBackground(engine, fullPath.c_str());
 
     engine.pushScene(menu);
 

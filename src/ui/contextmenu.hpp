@@ -22,7 +22,7 @@ class ContextMenu : public Scene
 
         void setOptions(const std::vector<std::string>& newOptions);
 
-        void render(Engine* engine) override;
+        void render(Engine& engine) override;
 
         void handleEvent(SDL_Event& event);
 

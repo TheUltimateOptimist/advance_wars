@@ -27,11 +27,11 @@ class Level : public Scene
 
         static Level loadLevel(std::string path);
 
-        void render(Engine* engine);
+        void render(Engine& engine);
 
-        void handleEvent(Engine* engine, SDL_Event& event);
+        void handleEvent(Engine& engine, SDL_Event& event);
 
-        void handleEvent2(Engine* engine, SDL_Event& event);
+        void handleEvent2(Engine& engine, SDL_Event& event);
 
         int addBuilding(Building building);
 
@@ -44,8 +44,6 @@ class Level : public Scene
         int addEffect(Effect effect);
 
         Effect removeEffect(int id);
-
-        void handleEvent(Engine& engine, SDL_Event& event);
 
     private:
         std::string                       m_name;

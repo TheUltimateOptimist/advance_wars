@@ -15,7 +15,7 @@ void ContextMenu::setOptions(const std::vector<std::string>& newOptions)
     m_selectedOption = 0; // Reset auf die erste Option
 }
 
-void ContextMenu::render(Engine* engine)
+void ContextMenu::render(Engine& engine)
 {
     if (!m_options.empty())
     {
@@ -41,11 +41,11 @@ void ContextMenu::render(Engine* engine)
         int spacing = 20; // Abstand zwischen den Optionen
 
         // box around options
-        SDL_SetRenderDrawColor(engine->renderer(), 0, 0, 255, 255);
+        SDL_SetRenderDrawColor(engine.renderer(), 0, 0, 255, 255);
         SDL_Rect box = {m_x, m_y - 3, 50, static_cast<int>(m_options.size() * spacing)};
-        SDL_RenderFillRect(engine->renderer(), &box);
+        SDL_RenderFillRect(engine.renderer(), &box);
 
-        SDL_SetRenderDrawColor(engine->renderer(), 0, 0, 0, 255);
+        SDL_SetRenderDrawColor(engine.renderer(), 0, 0, 0, 255);
 
         for (size_t i = 0; i < m_options.size(); ++i)
         {
@@ -56,11 +56,10 @@ void ContextMenu::render(Engine* engine)
                 continue;
             }
 
-            SDL_Texture* textTexture =
-                SDL_CreateTextureFromSurface(engine->renderer(), textSurface);
-            SDL_Rect textRect = {
+            SDL_Texture* textTexture = SDL_CreateTextureFromSurface(engine.renderer(), textSurface);
+            SDL_Rect     textRect = {
                 m_x + 10, m_y + static_cast<int>(i * spacing), textSurface->w, textSurface->h};
-            SDL_RenderCopy(engine->renderer(), textTexture, nullptr, &textRect);
+            SDL_RenderCopy(engine.renderer(), textTexture, nullptr, &textRect);
 
             SDL_DestroyTexture(textTexture);
             SDL_FreeSurface(textSurface);

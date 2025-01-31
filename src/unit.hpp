@@ -75,7 +75,7 @@ class Unit
             // Assuming that the destruktion of a unit triggers events
         }
 
-        void render(Engine* engine, int scale);
+        void render(Engine& engine, int scale);
 
         /*
         Check if attacker is in Range to initiate combat

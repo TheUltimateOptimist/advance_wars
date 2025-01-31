@@ -10,16 +10,16 @@ Effect::Effect(int x, int y, EffectId id, bool repeat)
 
       };
 
-void Effect::render(Engine* engine, int scale)
+void Effect::render(Engine& engine, int scale)
 {
-    Spritesheet* spritesheet = engine->getSpritesheet();
+    Spritesheet* spritesheet = engine.getSpritesheet();
     if (m_start == 0)
     {
-        m_start = engine->getStage();
+        m_start = engine.getStage();
     }
 
     int step =
-        engine->getStage() % spritesheet->getEffectTextures().at(static_cast<int>(m_id)).second;
+        engine.getStage() % spritesheet->getEffectTextures().at(static_cast<int>(m_id)).second;
 
     SDL_Rect src;
     src.x = step * spritesheet->getEffectWidth() + step * spritesheet->getEffectHeight();
@@ -34,15 +34,15 @@ void Effect::render(Engine* engine, int scale)
     dest.h = spritesheet->getEffectHeight() * scale;
 
     SDL_RenderCopyEx(
-        engine->renderer(), spritesheet->getEffectTextures().at(static_cast<int>(m_id)).first, &src,
+        engine.renderer(), spritesheet->getEffectTextures().at(static_cast<int>(m_id)).first, &src,
         &dest, 0, NULL, SDL_FLIP_NONE);
 }
 
-bool Effect::is_finished(Engine* engine)
+bool Effect::is_finished(Engine& engine)
 {
     return !(
-        engine->getStage() - m_start <=
-            engine->getSpritesheet()->getEffectTextures().at(static_cast<int>(m_id)).second ||
+        engine.getStage() - m_start <=
+            engine.getSpritesheet()->getEffectTextures().at(static_cast<int>(m_id)).second ||
         m_repeat);
 }
 

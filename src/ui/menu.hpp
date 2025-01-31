@@ -24,7 +24,7 @@ class Menu : public Scene
     private:
         size_t m_selectedOption;              ///< Index of the currently selected menu option.
         std::array<std::string, 3> m_options; ///< The available menu options.
-        SDL_Texture* m_backgroundTexture;    ///< Pointer to the background texture (if any).
+        SDL_Texture* m_backgroundTexture;     ///< Pointer to the background texture (if any).
 
     public:
         /**
@@ -46,7 +46,7 @@ class Menu : public Scene
          *
          * @param engine Pointer to the game engine, used for rendering.
          */
-        void render(Engine* engine) override;
+        void render(Engine& engine) override;
 
         /**
          * @brief Handles user input events for menu navigation.
@@ -62,7 +62,7 @@ class Menu : public Scene
          * @param engine Pointer to the game engine, used to manage scenes.
          * @param event The SDL event containing user input data.
          */
-        void handleEvent(Engine* engine, SDL_Event& event);
+        void handleEvent(Engine& engine, SDL_Event& event);
 
         /**
          * @brief Loads a background image as a texture.
@@ -74,7 +74,7 @@ class Menu : public Scene
          * @param renderer The SDL renderer used to create the texture.
          * @param imagePath The file path to the background image.
          */
-        void loadBackground(SDL_Renderer* renderer, const std::string& imagePath);
+        void loadBackground(Engine& engine, const std::string& imagePath);
 
         /**
          * @brief Destroys the menu and releases resources.

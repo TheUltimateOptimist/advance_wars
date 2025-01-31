@@ -52,7 +52,7 @@ class PauseMenu : public Scene
          *
          * @param engine Pointer to the game engine, used for rendering.
          */
-        void render(Engine* engine) override;
+        void render(Engine& engine) override;
 
         /**
          * @brief Handles user input events for menu navigation.
@@ -68,7 +68,7 @@ class PauseMenu : public Scene
          * @param engine Pointer to the game engine, used to manage scenes.
          * @param event The SDL event containing user input data.
          */
-        void handleEvent(Engine* engine, SDL_Event& event);
+        void handleEvent(Engine& engine, SDL_Event& event);
 
         /**
          * @brief Loads a background image as a texture.
@@ -77,10 +77,10 @@ class PauseMenu : public Scene
          * as the menu’s background. If the loading fails, an error is logged, and the menu
          * will display a plain black background instead.
          *
-         * @param renderer The SDL renderer used to create the texture.
+         * @param engine An engine with a valid SDL_Renderer context.
          * @param imagePath The file path to the background image.
          */
-        void loadBackground(SDL_Renderer* renderer, const std::string& imagePath);
+        void loadBackground(Engine& engine, const std::string& imagePath);
 
         /**
          * @brief Destroys the pause menu and releases resources.

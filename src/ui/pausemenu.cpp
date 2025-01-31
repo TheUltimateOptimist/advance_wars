@@ -31,17 +31,17 @@ PauseMenu::~PauseMenu()
     TTF_Quit();
 }
 
-void PauseMenu::render(Engine* engine)
+void PauseMenu::render(Engine& engine)
 {
 
-    while (!engine->events().empty())
+    while (!engine.events().empty())
     {
-        SDL_Event event = engine->events().at(0);
-        engine->events().pop_front();
+        SDL_Event event = engine.events().at(0);
+        engine.events().pop_front();
         handleEvent(engine, event);
     }
 
-    SDL_Renderer* renderer = engine->renderer();
+    SDL_Renderer* renderer = engine.renderer();
 
     // Render the existing level
     // engine->render();
@@ -89,7 +89,7 @@ void PauseMenu::render(Engine* engine)
     SDL_RenderPresent(renderer);
 }
 
-void PauseMenu::handleEvent(Engine* engine, SDL_Event& event)
+void PauseMenu::handleEvent(Engine& engine, SDL_Event& event)
 {
     if (event.type == SDL_KEYDOWN)
     {
@@ -104,7 +104,7 @@ void PauseMenu::handleEvent(Engine* engine, SDL_Event& event)
         else if (event.key.keysym.sym == SDLK_ESCAPE)
         {
             std::cout << "Resuming game..." << std::endl;
-            engine->popScene();
+            engine.popScene();
         }
         else if (event.key.keysym.sym == SDLK_RETURN)
         {
@@ -112,20 +112,20 @@ void PauseMenu::handleEvent(Engine* engine, SDL_Event& event)
             {
                 // exit into main menu
                 std::cout << "Exiting game..." << std::endl;
-                engine->returnToMenu();
+                engine.returnToMenu();
             }
             else if (m_options[m_selectedOption] == "Resume")
             {
                 // resume game
                 std::cout << "Resuming game..." << std::endl;
-                engine->popScene();
+                engine.popScene();
             }
         }
     }
     // Handle events for the pause menu
 }
 
-void PauseMenu::loadBackground(SDL_Renderer* renderer, const std::string& imagePath)
+void PauseMenu::loadBackground(Engine& engine, const std::string& imagePath)
 {
     SDL_Surface* surface = IMG_Load(imagePath.c_str());
     if (!surface)
@@ -133,7 +133,7 @@ void PauseMenu::loadBackground(SDL_Renderer* renderer, const std::string& imageP
         std::cerr << "Failed to load image: " << IMG_GetError() << std::endl;
         return;
     }
-    m_backgroundTexture = SDL_CreateTextureFromSurface(renderer, surface);
+    m_backgroundTexture = SDL_CreateTextureFromSurface(engine.renderer(), surface);
     SDL_FreeSurface(surface);
 }
 

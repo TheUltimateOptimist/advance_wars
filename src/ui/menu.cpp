@@ -32,25 +32,25 @@ Menu::~Menu()
     IMG_Quit();
 };
 
-void Menu::render(Engine* engine)
+void Menu::render(Engine& engine)
 {
 
     // Iterate over all events
-    while (!engine->events().empty())
+    while (!engine.events().empty())
     {
-        SDL_Event event = engine->events().at(0);
-        engine->events().pop_front();
+        SDL_Event event = engine.events().at(0);
+        engine.events().pop_front();
         handleEvent(engine, event);
     }
 
     if (m_backgroundTexture)
     {
-        SDL_RenderCopy(engine->renderer(), m_backgroundTexture, nullptr, nullptr);
+        SDL_RenderCopy(engine.renderer(), m_backgroundTexture, nullptr, nullptr);
     }
     else
     {
-        SDL_SetRenderDrawColor(engine->renderer(), 0, 0, 0, 255);
-        SDL_RenderClear(engine->renderer());
+        SDL_SetRenderDrawColor(engine.renderer(), 0, 0, 0, 255);
+        SDL_RenderClear(engine.renderer());
     }
 
     if (TTF_Init() == -1)
@@ -83,10 +83,10 @@ void Menu::render(Engine* engine)
     SDL_Surface* titleSurface = TTF_RenderText_Solid(titleFont, "Advanced Wars", white);
     if (titleSurface)
     {
-        SDL_Texture* titleTexture = SDL_CreateTextureFromSurface(engine->renderer(), titleSurface);
+        SDL_Texture* titleTexture = SDL_CreateTextureFromSurface(engine.renderer(), titleSurface);
         SDL_Rect     titleRect = {
             static_cast<int>((800 - titleSurface->w) / 2), 50, titleSurface->w, titleSurface->h};
-        SDL_RenderCopy(engine->renderer(), titleTexture, nullptr, &titleRect);
+        SDL_RenderCopy(engine.renderer(), titleTexture, nullptr, &titleRect);
         SDL_DestroyTexture(titleTexture);
         SDL_FreeSurface(titleSurface);
     }
@@ -100,11 +100,11 @@ void Menu::render(Engine* engine)
             continue;
         }
 
-        SDL_Texture* textTexture = SDL_CreateTextureFromSurface(engine->renderer(), textSurface);
+        SDL_Texture* textTexture = SDL_CreateTextureFromSurface(engine.renderer(), textSurface);
         SDL_Rect     textRect = {
             static_cast<int>((800 - textSurface->w) / 2), static_cast<int>(150 + i * 50),
             textSurface->w, textSurface->h};
-        SDL_RenderCopy(engine->renderer(), textTexture, nullptr, &textRect);
+        SDL_RenderCopy(engine.renderer(), textTexture, nullptr, &textRect);
 
         SDL_DestroyTexture(textTexture);
         SDL_FreeSurface(textSurface);
@@ -114,10 +114,10 @@ void Menu::render(Engine* engine)
     TTF_CloseFont(menuFont);
     TTF_Quit();
 
-    SDL_RenderPresent(engine->renderer());
+    SDL_RenderPresent(engine.renderer());
 }
 
-void Menu::handleEvent(Engine* engine, SDL_Event& event)
+void Menu::handleEvent(Engine& engine, SDL_Event& event)
 {
     if (event.type == SDL_KEYDOWN)
     {
@@ -134,7 +134,7 @@ void Menu::handleEvent(Engine* engine, SDL_Event& event)
             if (m_options[m_selectedOption] == "Exit")
             {
                 std::cout << "Exiting game..." << std::endl;
-                engine->exit();
+                engine.exit();
             }
             else if (m_options[m_selectedOption] == "Start Game")
             {
@@ -214,7 +214,7 @@ void Menu::handleEvent(Engine* engine, SDL_Event& event)
                 std::shared_ptr<Level> level =
                     std::make_shared<Level>("Osnabrück", 20, 20, tiles, buildings, units, effects);
 
-                engine->pushScene(level);
+                engine.pushScene(level);
             }
             else if (m_options[m_selectedOption] == "Options")
             {
@@ -224,7 +224,7 @@ void Menu::handleEvent(Engine* engine, SDL_Event& event)
     }
 }
 
-void Menu::loadBackground(SDL_Renderer* renderer, const std::string& imagePath)
+void Menu::loadBackground(Engine& engine, const std::string& imagePath)
 {
     // Lade das Hintergrundbild
     SDL_Surface* backgroundSurface = IMG_Load(imagePath.c_str());
@@ -236,7 +236,7 @@ void Menu::loadBackground(SDL_Renderer* renderer, const std::string& imagePath)
 
     // Erstelle eine Textur aus der Oberfläche und speichere sie als
     // Klassenmitglied
-    m_backgroundTexture = SDL_CreateTextureFromSurface(renderer, backgroundSurface);
+    m_backgroundTexture = SDL_CreateTextureFromSurface(engine.renderer(), backgroundSurface);
     SDL_FreeSurface(backgroundSurface); // Oberfläche freigeben, da sie nicht mehr
                                         // benötigt wird
 

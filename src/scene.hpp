@@ -12,7 +12,7 @@ class Engine;
 class Scene
 {
     public:
-        virtual void render(Engine* engine) = 0;
+        virtual void render(Engine& engine) = 0;
 };
 
 } // namespace advanced_wars

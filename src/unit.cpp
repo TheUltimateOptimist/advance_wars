@@ -18,15 +18,15 @@ Unit::Unit(int x, int y, UnitFaction faction, UnitId id, UnitState state)
     m_health = m_maxHealth;
 }
 
-void Unit::render(Engine* engine, int scale)
+void Unit::render(Engine& engine, int scale)
 {
-    Spritesheet* spritesheet = engine->getSpritesheet();
+    Spritesheet* spritesheet = engine.getSpritesheet();
 
-    int step = engine->getStage() % spritesheet->getUnitTextures()
-                                        .at(static_cast<int>(m_faction))
-                                        .at(static_cast<int>(m_id))
-                                        .at(static_cast<int>(m_state))
-                                        .second;
+    int step = engine.getStage() % spritesheet->getUnitTextures()
+                                       .at(static_cast<int>(m_faction))
+                                       .at(static_cast<int>(m_id))
+                                       .at(static_cast<int>(m_state))
+                                       .second;
 
     if (m_state == UnitState::IDLE || m_state == UnitState::UNAVAILABLE)
     {
@@ -44,7 +44,7 @@ void Unit::render(Engine* engine, int scale)
         dst.h = spritesheet->getUnitHeight() * scale;
 
         SDL_RenderCopyEx(
-            engine->renderer(),
+            engine.renderer(),
             spritesheet->getUnitTextures()
                 .at(static_cast<int>(m_faction))
                 .at(static_cast<int>(m_id))
@@ -69,7 +69,7 @@ void Unit::render(Engine* engine, int scale)
         dst.h = spritesheet->getUnitMovingHeight() * scale;
 
         SDL_RenderCopyEx(
-            engine->renderer(),
+            engine.renderer(),
             spritesheet->getUnitTextures()
                 .at(static_cast<int>(m_faction))
                 .at(static_cast<int>(m_id))

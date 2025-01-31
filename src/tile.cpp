@@ -7,12 +7,11 @@ namespace advanced_wars
 
 Tile::Tile(TileId id, int x, int y) : m_id(id), m_x(x), m_y(y) {}
 
-void Tile::render(Engine* engine, int scale)
+void Tile::render(Engine& engine, int scale)
 {
-    Spritesheet* spritesheet = engine->getSpritesheet();
+    Spritesheet* spritesheet = engine.getSpritesheet();
 
-    int step =
-        engine->getStage() % spritesheet->getTileTextures().at(static_cast<int>(m_id)).second;
+    int step = engine.getStage() % spritesheet->getTileTextures().at(static_cast<int>(m_id)).second;
 
     SDL_Rect src;
     src.x = step * spritesheet->getTileWidth();
@@ -27,7 +26,7 @@ void Tile::render(Engine* engine, int scale)
     dest.h = spritesheet->getTileHeight() * scale;
 
     SDL_RenderCopyEx(
-        engine->renderer(), spritesheet->getTileTextures().at(static_cast<int>(m_id)).first, &src,
+        engine.renderer(), spritesheet->getTileTextures().at(static_cast<int>(m_id)).first, &src,
         &dest, 0, NULL, SDL_FLIP_NONE);
 }
 

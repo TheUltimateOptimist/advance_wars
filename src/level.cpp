@@ -244,16 +244,16 @@ void Level::handleEvent(Engine& engine, SDL_Event& event)
     }
 }
 
-void Level::render(Engine* engine)
+void Level::render(Engine& engine)
 {
 
     // Iterate over all events
-    while (!engine->events().empty())
+    while (!engine.events().empty())
     {
-        handleEvent(*engine, engine->events().at(0));
-        handleEvent2(engine, engine->events().at(0));
+        handleEvent(engine, engine.events().at(0));
+        handleEvent2(engine, engine.events().at(0));
 
-        engine->events().pop_front();
+        engine.events().pop_front();
     }
 
     // Tiles
@@ -300,7 +300,7 @@ void Level::render(Engine* engine)
     }
 }
 
-void Level::handleEvent2(Engine* engine, SDL_Event& event)
+void Level::handleEvent2(Engine& engine, SDL_Event& event)
 {
     // Handle events for the level
     if (event.type == SDL_KEYDOWN)
@@ -310,10 +310,10 @@ void Level::handleEvent2(Engine* engine, SDL_Event& event)
             // Pause the game
             std::cout << "Pausing game..." << std::endl;
             SDL_Texture* currentTexture = SDL_CreateTexture(
-                engine->renderer(), SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, 800, 600);
+                engine.renderer(), SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, 800, 600);
 
             PauseMenu pauseMenu(0, currentTexture);
-            engine->pushScene(std::make_shared<PauseMenu>(pauseMenu));
+            engine.pushScene(std::make_shared<PauseMenu>(pauseMenu));
         }
         if (m_contextMenuActive)
         {

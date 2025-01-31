@@ -7,9 +7,9 @@ namespace advanced_wars
 Building::Building(int x, int y, BuildingId id, BuildingFaction faction)
     : m_x(x), m_y(y), m_id(id), m_faction(faction) {};
 
-void Building::render(Engine* engine, int scale)
+void Building::render(Engine& engine, int scale)
 {
-    Spritesheet* spritesheet = engine->getSpritesheet();
+    Spritesheet* spritesheet = engine.getSpritesheet();
 
     SDL_Rect src;
     src.x = static_cast<int>(m_id) * spritesheet->getBuildingWidth();
@@ -24,7 +24,7 @@ void Building::render(Engine* engine, int scale)
     dst.h = spritesheet->getBuildingHeight() * scale;
 
     SDL_RenderCopyEx(
-        engine->renderer(), spritesheet->getBuildingTextures()[static_cast<int>(m_faction)], &src,
+        engine.renderer(), spritesheet->getBuildingTextures()[static_cast<int>(m_faction)], &src,
         &dst, 0, NULL, SDL_FLIP_NONE);
 }
 
