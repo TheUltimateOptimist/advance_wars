@@ -1,50 +1,55 @@
-#include "building.hpp"
-#include "effect.hpp"
 #include "engine.hpp"
-#include "level.hpp"
 #include "spritesheet.hpp"
-#include "tile.hpp"
-#include "unit.hpp"
+#include "ui/contextmenu.hpp"
+#include "ui/menu.hpp"
 #include "window.hpp"
-#include <cstddef>
-#include <vector>
 #include <SDL2/SDL.h>
 #include <SDL_image.h>
+#include <memory>
 #include <stdexcept>
-
+#include <vector>
 
 using namespace advanced_wars;
 
-int main() {
+int main()
+{
 
-  if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-    throw std::runtime_error("SDL could not initialize: " +
-                             std::string(SDL_GetError()));
-  }
+    if (SDL_Init(SDL_INIT_VIDEO) < 0)
+    {
+        throw std::runtime_error("SDL could not initialize: " + std::string(SDL_GetError()));
+    }
 
-  int imgFlags = IMG_INIT_PNG;
-  if (!(IMG_Init(imgFlags) & imgFlags)) {
-    throw std::runtime_error(
-        "SDL_image could not initialize! SDL_image Error: " +
-        std::string(IMG_GetError()));
-  }
+    int imgFlags = IMG_INIT_PNG;
+    if (!(IMG_Init(imgFlags) & imgFlags))
+    {
+        throw std::runtime_error(
+            "SDL_image could not initialize! SDL_image Error: " + std::string(IMG_GetError()));
+    }
 
-  Window window("Advanced Wars", 960, 960);
+    Window window("Advanced Wars", 960, 960);
 
-  Engine engine(window);
+    Engine engine(window);
 
-  Level level = Level::loadLevel("../res/level.h5");
+    Spritesheet spritesheet("./spritesheet.h5", engine);
 
-  engine.set_scene(level);
+    engine.set_spritesheet(spritesheet);
 
-  Spritesheet spritesheet("spritesheet.h5", engine);
+    std::shared_ptr<Menu>        menu = std::make_shared<Menu>(0);
+    std::shared_ptr<ContextMenu> context_menu = std::make_shared<ContextMenu>();
+    context_menu->setOptions({"Move", "Info", "Wait"});
 
-  engine.set_spritesheet(spritesheet);
+    std::string basePath = SDL_GetBasePath();
+    std::string relativePath = "assets/main_background.png";
+    std::string fullPath = basePath + relativePath;
+    menu->loadBackground(engine.renderer(), fullPath.c_str());
 
-  while (!engine.exited()) {
-    engine.pump();
-    engine.render();
-  }
+    engine.push_scene(menu);
 
-  return 0;
+    while (!engine.exited())
+    {
+        engine.pump();
+        engine.render();
+    }
+
+    return 0;
 }
