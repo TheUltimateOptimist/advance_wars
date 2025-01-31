@@ -101,11 +101,11 @@ Spritesheet::Spritesheet(std::string path, Engine& engine)
                 "Fehler beim updaten der Textur für die Units: " + std::string(SDL_GetError()));
         }
 
-        tile_textures.push_back(std::pair<SDL_Texture*, int>(tmp, tile_frames.size()));
+        m_tile_textures.push_back(std::pair<SDL_Texture*, int>(tmp, tile_frames.size()));
     }
 
-    this->tile_width = 16;
-    this->tile_height = 16;
+    this->m_tile_width = 16;
+    this->m_tile_height = 16;
 
     // Buildings
     std::vector<std::string> building_factions(
@@ -157,11 +157,11 @@ Spritesheet::Spritesheet(std::string path, Engine& engine)
                 "Fehler beim updaten der Textur für die Buildings: " + std::string(SDL_GetError()));
         }
 
-        this->building_textures.push_back(tmp);
+        this->m_building_textures.push_back(tmp);
     }
 
-    this->building_width = 16;
-    this->building_height = 32;
+    this->m_building_width = 16;
+    this->m_building_height = 32;
 
     // Units
     std::vector<std::string> unit_factions({"red", "blue", "green", "yellow", "purple"});
@@ -180,7 +180,7 @@ Spritesheet::Spritesheet(std::string path, Engine& engine)
     {
         std::string faction = unit_factions.at(faction_idx);
         // Create entry for units for in a faction
-        unit_textures.push_back(std::vector<std::vector<std::pair<SDL_Texture*, int>>>());
+        m_unit_textures.push_back(std::vector<std::vector<std::pair<SDL_Texture*, int>>>());
 
         // every unit sub data set
         for (size_t unit_idx = 0; unit_idx < units.size(); unit_idx++)
@@ -188,7 +188,7 @@ Spritesheet::Spritesheet(std::string path, Engine& engine)
             std::string unit = units.at(unit_idx);
 
             // Create entry for states for a unit
-            unit_textures.at(faction_idx).push_back(std::vector<std::pair<SDL_Texture*, int>>());
+            m_unit_textures.at(faction_idx).push_back(std::vector<std::pair<SDL_Texture*, int>>());
 
             // every state sub data set
             for (size_t state_idx = 0; state_idx < unit_states.size(); state_idx++)
@@ -238,7 +238,7 @@ Spritesheet::Spritesheet(std::string path, Engine& engine)
                         std::string(SDL_GetError()));
                 }
 
-                unit_textures.at(faction_idx)
+                m_unit_textures.at(faction_idx)
                     .at(unit_idx)
                     .push_back(std::pair<SDL_Texture*, int>(tmp, unit_frames.size()));
             }
@@ -292,17 +292,17 @@ Spritesheet::Spritesheet(std::string path, Engine& engine)
                         std::string(SDL_GetError()));
                 }
 
-                unit_textures.at(faction_idx)
+                m_unit_textures.at(faction_idx)
                     .at(unit_idx)
                     .push_back(std::pair<SDL_Texture*, int>(tmp, unit_frames.size()));
             }
         }
     }
 
-    this->unit_width = 16;
-    this->unit_height = 16;
-    this->unit_moving_width = 24;
-    this->unit_moving_height = 24;
+    this->m_unit_width = 16;
+    this->m_unit_height = 16;
+    this->m_unit_moving_width = 24;
+    this->m_unit_moving_height = 24;
 
     // Effects
     std::vector<std::string> effects(
@@ -352,102 +352,102 @@ Spritesheet::Spritesheet(std::string path, Engine& engine)
                 "Fehler beim updaten der Textur für die Tiles: " + std::string(SDL_GetError()));
         }
 
-        effect_textures.push_back(std::pair<SDL_Texture*, int>(tmp, effect_frames.size()));
+        m_effect_textures.push_back(std::pair<SDL_Texture*, int>(tmp, effect_frames.size()));
     }
 
-    this->effect_width = 32;
-    this->effect_height = 32;
+    this->m_effect_width = 32;
+    this->m_effect_height = 32;
 }
 
 // Tiles
 
 int Spritesheet::get_tile_width()
 {
-    return tile_width;
+    return m_tile_width;
 }
 
 int Spritesheet::get_tile_height()
 {
-    return tile_height;
+    return m_tile_height;
 }
 
 std::vector<std::pair<SDL_Texture*, int>>& Spritesheet::get_tile_textures()
 {
-    return tile_textures;
+    return m_tile_textures;
 }
 
 // Buildings
 int Spritesheet::get_building_width()
 {
-    return this->building_width;
+    return this->m_building_width;
 }
 
 int Spritesheet::get_building_height()
 {
-    return this->building_height;
+    return this->m_building_height;
 }
 
 std::vector<SDL_Texture*>& Spritesheet::get_building_textures()
 {
-    return building_textures;
+    return m_building_textures;
 }
 
 // Units
 int Spritesheet::get_unit_width()
 {
-    return this->unit_width;
+    return this->m_unit_width;
 }
 
 int Spritesheet::get_unit_height()
 {
-    return this->unit_height;
+    return this->m_unit_height;
 }
 
 int Spritesheet::get_unit_moving_width()
 {
-    return this->unit_moving_width;
+    return this->m_unit_moving_width;
 }
 
 int Spritesheet::get_unit_moving_height()
 {
-    return this->unit_moving_height;
+    return this->m_unit_moving_height;
 }
 
 std::vector<std::vector<std::vector<std::pair<SDL_Texture*, int>>>>&
 Spritesheet::get_unit_textures()
 {
-    return this->unit_textures;
+    return this->m_unit_textures;
 }
 
 // Effects
 int Spritesheet::get_effect_width()
 {
-    return this->effect_width;
+    return this->m_effect_width;
 }
 
 int Spritesheet::get_effect_height()
 {
-    return this->effect_height;
+    return this->m_effect_height;
 }
 
 std::vector<std::pair<SDL_Texture*, int>>& Spritesheet::get_effect_textures()
 {
-    return this->effect_textures;
+    return this->m_effect_textures;
 }
 
 Spritesheet::~Spritesheet()
 {
-    for (std::pair<SDL_Texture*, int> tile_texture : tile_textures)
+    for (std::pair<SDL_Texture*, int> tile_texture : m_tile_textures)
     {
         SDL_DestroyTexture(tile_texture.first);
     }
 
-    for (SDL_Texture* building_texture : building_textures)
+    for (SDL_Texture* building_texture : m_building_textures)
     {
         SDL_DestroyTexture(building_texture);
     }
 
-    for (std::vector<std::vector<std::pair<SDL_Texture*, int>>> faction : unit_textures)
+    for (std::vector<std::vector<std::pair<SDL_Texture*, int>>> faction : m_unit_textures)
     {
         for (std::vector<std::pair<SDL_Texture*, int>> unit : faction)
         {

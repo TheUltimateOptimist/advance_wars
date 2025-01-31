@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include <SDL_render.h>
 #include <SDL.h>
 #include <SDL_render.h>
 #include <string>
@@ -156,25 +155,25 @@ class Spritesheet
 
     private:
         // Tiles
-        int                                       tile_width;
-        int                                       tile_height;
-        std::vector<std::pair<SDL_Texture*, int>> tile_textures;
+        int                                       m_tile_width;
+        int                                       m_tile_height;
+        std::vector<std::pair<SDL_Texture*, int>> m_tile_textures;
 
         // Buildings
-        std::vector<SDL_Texture*> building_textures;
-        int                       building_width;
-        int                       building_height;
+        std::vector<SDL_Texture*> m_building_textures;
+        int                       m_building_width;
+        int                       m_building_height;
 
         // Units
-        std::vector<std::vector<std::vector<std::pair<SDL_Texture*, int>>>> unit_textures;
-        int                                                                 unit_width;
-        int                                                                 unit_height;
-        int                                                                 unit_moving_width;
-        int                                                                 unit_moving_height;
+        std::vector<std::vector<std::vector<std::pair<SDL_Texture*, int>>>> m_unit_textures;
+        int                                                                 m_unit_width;
+        int                                                                 m_unit_height;
+        int                                                                 m_unit_moving_width;
+        int                                                                 m_unit_moving_height;
 
         // Effects
-        std::vector<std::pair<SDL_Texture*, int>> effect_textures;
-        int                                       effect_width;
-        int                                       effect_height;
+        std::vector<std::pair<SDL_Texture*, int>> m_effect_textures;
+        int                                       m_effect_width;
+        int                                       m_effect_height;
 };
 } // namespace advanced_wars
