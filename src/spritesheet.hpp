@@ -47,12 +47,12 @@ class Spritesheet
         /**
          * @return The width of a floor tile in pixels
          */
-        int get_tile_width();
+        int getTileWidth();
 
         /**
          * @return The height of a floor tile in pixels
          */
-        int get_tile_height();
+        int getTileHeight();
 
         /**
          * Gets vector containing the pairs of an SDL Texture
@@ -65,19 +65,19 @@ class Spritesheet
          *
          * @return A vector of all floor tile textures and their animations
          */
-        std::vector<std::pair<SDL_Texture*, int>>& get_tile_textures();
+        std::vector<std::pair<SDL_Texture*, int>>& getTileTextures();
 
         // Buildings
 
         /**
          * @return The width of a building in pixels
          */
-        int get_building_width();
+        int getBuildingWidth();
 
         /**
          * @return The height of a building in pixels
          */
-        int get_building_height();
+        int getBuildingHeight();
 
         /**
          * Every element represents the texture for all buildings from a faction linearised.
@@ -89,29 +89,29 @@ class Spritesheet
          *
          * @return Vector of all Building textures
          */
-        std::vector<SDL_Texture*>& get_building_textures();
+        std::vector<SDL_Texture*>& getBuildingTextures();
 
         // Units
 
         /**
          * @return The width of a unit while standing still in pixels
          */
-        int get_unit_width();
+        int getUnitWidth();
 
         /**
          * @return The height of a unit while standing still in pixels
          */
-        int get_unit_height();
+        int getUnitHeight();
 
         /**
          * @return The width of a unit while moving in pixels
          */
-        int get_unit_moving_width();
+        int getUnitMovingWidth();
 
         /**
          * @return The height of a unit while moving in pixels
          */
-        int get_unit_moving_height();
+        int getUnitMovingHeight();
 
         /**
          * Gets the hierarchical vector of all unit textures.
@@ -127,19 +127,19 @@ class Spritesheet
          * @return A 3-dimensional vector of pairs consisting of a texture and
          * the number of animation steps
          */
-        std::vector<std::vector<std::vector<std::pair<SDL_Texture*, int>>>>& get_unit_textures();
+        std::vector<std::vector<std::vector<std::pair<SDL_Texture*, int>>>>& getUnitTextures();
 
         // Effects
 
         /**
          * @return The width of an effect in pixels
          */
-        int get_effect_width();
+        int getEffectWidth();
 
         /**
          * @return The height of an effect in pixels
          */
-        int get_effect_height();
+        int getEffectHeight();
 
         /**
          * Vector that contains pairs of effect textures and the number of animation steps it has.
@@ -151,29 +151,29 @@ class Spritesheet
          *
          * @return A vector of all effects and its animations
          */
-        std::vector<std::pair<SDL_Texture*, int>>& get_effect_textures();
+        std::vector<std::pair<SDL_Texture*, int>>& getEffectTextures();
 
     private:
         // Tiles
-        int                                       m_tile_width;
-        int                                       m_tile_height;
-        std::vector<std::pair<SDL_Texture*, int>> m_tile_textures;
+        int                                       m_tileWidth;
+        int                                       m_tileHeight;
+        std::vector<std::pair<SDL_Texture*, int>> m_tileTextures;
 
         // Buildings
-        std::vector<SDL_Texture*> m_building_textures;
-        int                       m_building_width;
-        int                       m_building_height;
+        std::vector<SDL_Texture*> m_buildingTextures;
+        int                       m_buildingWidth;
+        int                       m_buildingHeight;
 
         // Units
-        std::vector<std::vector<std::vector<std::pair<SDL_Texture*, int>>>> m_unit_textures;
-        int                                                                 m_unit_width;
-        int                                                                 m_unit_height;
-        int                                                                 m_unit_moving_width;
-        int                                                                 m_unit_moving_height;
+        std::vector<std::vector<std::vector<std::pair<SDL_Texture*, int>>>> m_unitTextures;
+        int                                                                 m_unitWidth;
+        int                                                                 m_unitHeight;
+        int                                                                 m_unitMovingWidth;
+        int                                                                 m_unitMovingHeight;
 
         // Effects
-        std::vector<std::pair<SDL_Texture*, int>> m_effect_textures;
-        int                                       m_effect_width;
-        int                                       m_effect_height;
+        std::vector<std::pair<SDL_Texture*, int>> m_effectTextures;
+        int                                       m_effectWidth;
+        int                                       m_effectHeight;
 };
 } // namespace advanced_wars

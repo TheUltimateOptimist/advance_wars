@@ -22,7 +22,7 @@ void Unit::render(Engine* engine, int scale)
 {
     Spritesheet* spritesheet = engine->get_spritesheet();
 
-    int step = engine->get_stage() % spritesheet->get_unit_textures()
+    int step = engine->get_stage() % spritesheet->getUnitTextures()
                                          .at(static_cast<int>(m_faction))
                                          .at(static_cast<int>(m_id))
                                          .at(static_cast<int>(m_state))
@@ -32,20 +32,20 @@ void Unit::render(Engine* engine, int scale)
     {
 
         SDL_Rect src;
-        src.x = step * spritesheet->get_unit_width();
+        src.x = step * spritesheet->getUnitWidth();
         src.y = 0;
-        src.w = spritesheet->get_unit_width();
-        src.h = spritesheet->get_unit_height();
+        src.w = spritesheet->getUnitWidth();
+        src.h = spritesheet->getUnitHeight();
 
         SDL_Rect dst;
-        dst.x = m_x * spritesheet->get_unit_width() * scale;
-        dst.y = m_y * spritesheet->get_unit_height() * scale;
-        dst.w = spritesheet->get_unit_width() * scale;
-        dst.h = spritesheet->get_unit_height() * scale;
+        dst.x = m_x * spritesheet->getUnitWidth() * scale;
+        dst.y = m_y * spritesheet->getUnitHeight() * scale;
+        dst.w = spritesheet->getUnitWidth() * scale;
+        dst.h = spritesheet->getUnitHeight() * scale;
 
         SDL_RenderCopyEx(
             engine->renderer(),
-            spritesheet->get_unit_textures()
+            spritesheet->getUnitTextures()
                 .at(static_cast<int>(m_faction))
                 .at(static_cast<int>(m_id))
                 .at(static_cast<int>(m_state))
@@ -57,20 +57,20 @@ void Unit::render(Engine* engine, int scale)
         // The moving states have a resolution of 24x24 instead of 16x16 and need to
         // be handled separately
         SDL_Rect src;
-        src.x = step * spritesheet->get_unit_moving_width();
+        src.x = step * spritesheet->getUnitMovingWidth();
         src.y = 0;
-        src.w = spritesheet->get_unit_moving_width();
-        src.h = spritesheet->get_unit_moving_height();
+        src.w = spritesheet->getUnitMovingWidth();
+        src.h = spritesheet->getUnitMovingHeight();
 
         SDL_Rect dst;
-        dst.x = ((m_x * spritesheet->get_unit_width()) - 4) * scale;
-        dst.y = ((m_y * spritesheet->get_unit_height()) - 4) * scale;
-        dst.w = spritesheet->get_unit_moving_width() * scale;
-        dst.h = spritesheet->get_unit_moving_height() * scale;
+        dst.x = ((m_x * spritesheet->getUnitWidth()) - 4) * scale;
+        dst.y = ((m_y * spritesheet->getUnitHeight()) - 4) * scale;
+        dst.w = spritesheet->getUnitMovingWidth() * scale;
+        dst.h = spritesheet->getUnitMovingHeight() * scale;
 
         SDL_RenderCopyEx(
             engine->renderer(),
-            spritesheet->get_unit_textures()
+            spritesheet->getUnitTextures()
                 .at(static_cast<int>(m_faction))
                 .at(static_cast<int>(m_id))
                 .at(static_cast<int>(m_state))

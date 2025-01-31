@@ -12,22 +12,22 @@ void Tile::render(Engine* engine, int scale)
     Spritesheet* spritesheet = engine->get_spritesheet();
 
     int step =
-        engine->get_stage() % spritesheet->get_tile_textures().at(static_cast<int>(m_id)).second;
+        engine->get_stage() % spritesheet->getTileTextures().at(static_cast<int>(m_id)).second;
 
     SDL_Rect src;
-    src.x = step * spritesheet->get_tile_width();
+    src.x = step * spritesheet->getTileWidth();
     src.y = 0;
-    src.w = spritesheet->get_tile_width();
-    src.h = spritesheet->get_tile_height();
+    src.w = spritesheet->getTileWidth();
+    src.h = spritesheet->getTileHeight();
 
     SDL_Rect dest;
-    dest.x = m_x * spritesheet->get_tile_width() * scale;
-    dest.y = m_y * spritesheet->get_tile_height() * scale;
-    dest.w = spritesheet->get_tile_width() * scale;
-    dest.h = spritesheet->get_tile_height() * scale;
+    dest.x = m_x * spritesheet->getTileWidth() * scale;
+    dest.y = m_y * spritesheet->getTileHeight() * scale;
+    dest.w = spritesheet->getTileWidth() * scale;
+    dest.h = spritesheet->getTileHeight() * scale;
 
     SDL_RenderCopyEx(
-        engine->renderer(), spritesheet->get_tile_textures().at(static_cast<int>(m_id)).first, &src,
+        engine->renderer(), spritesheet->getTileTextures().at(static_cast<int>(m_id)).first, &src,
         &dest, 0, NULL, SDL_FLIP_NONE);
 }
 
