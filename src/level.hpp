@@ -48,28 +48,26 @@ class Level : public Scene
         void handleEvent(Engine& engine, SDL_Event& event);
 
     private:
-        std::string name;
-        int         width;
-        int         height;
+        std::string                       m_name;
+        int                               m_width;
+        int                               m_height;
+        std::vector<Tile>                 m_tiles;
+        std::unordered_map<int, Building> m_buildings;
+        std::unordered_map<int, Unit>     m_units;
+        std::unordered_map<int, Effect>   m_effects;
+        int                               m_selectedUnit;
+        int                               m_targetedUnit;
+        int                               m_selectedBuilding;
+        ContextMenu                       m_context_menu;
+        bool                              m_context_menu_active;
+        int                               m_id;
 
-        std::vector<Tile>                 tiles;
-        std::unordered_map<int, Building> buildings;
-        std::unordered_map<int, Unit>     units;
-        std::unordered_map<int, Effect>   effects;
-        int                               selectedUnit;
-        int                               targetedUnit;
-        int                               selectedBuilding;
-        bool                              selectUnit(int tileX, int tileY);
-        bool                              target_unit(int tileX, int tileY);
-        bool                              selectBuilding(int tileX, int tileY);
+        bool selectUnit(int tileX, int tileY);
+        bool target_unit(int tileX, int tileY);
+        bool selectBuilding(int tileX, int tileY);
 
         bool click_check_left(int mouseX, int mouseY);
         bool click_check_right(int mouseX, int mouseY);
-
-        ContextMenu context_menu;
-        bool        context_menu_active;
-
-        int id;
 };
 
 } // namespace advanced_wars
