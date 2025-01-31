@@ -222,7 +222,7 @@ void Level::handleEvent(Engine& engine, SDL_Event& event)
                 if (clickCheckRight(tileX, tileY))
                 {
 
-                    m_units.at(m_selectedUnit).attack(&(m_units.at(m_targetedUnit)));
+                    m_units.at(m_selectedUnit).attack((m_units.at(m_targetedUnit)));
 
                     if (m_units.at(m_selectedUnit).m_health <= 0)
                     {

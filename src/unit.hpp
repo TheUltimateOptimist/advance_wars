@@ -83,7 +83,7 @@ class Unit
         If a unit is selected, it should call inRange on all other enemy units on the field
         */
 
-        bool inRange(Unit* enemy);
+        bool inRange(Unit& enemy);
 
         /*
         The attacker will move towards the defender and thus initiate combat
@@ -93,22 +93,22 @@ class Unit
         Attacker deals damage to the defender first
         */
 
-        void attack(Unit* enemy);
+        void attack(Unit& enemy);
 
         /*
         @params Takes the desired position of the unit and updates its values
         This will teleport the unit, there is no smooth transition between tiles
         */
-        void update_position(int posX, int posY);
+        void updatePosition(int posX, int posY);
 
         /*
         This function needs to be able to determine the possible movement-paths the unit can take
         MUST take into consideration that different units behave differently on certain terrain
         MUST show all movements possible
         */
-        void calculate_movement();
+        void calculateMovement();
 
-        void calc_state(int posX, int posY);
+        void calcState(int posX, int posY);
 
         /*
         This function will be called by an external event-handler, eventually.
