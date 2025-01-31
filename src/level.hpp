@@ -46,19 +46,23 @@ class Level : public Scene
         Effect removeEffect(int id);
 
     private:
-        std::string                       m_name;
-        int                               m_width;
-        int                               m_height;
+        std::string m_name;
+        int         m_width;
+        int         m_height;
+
         std::vector<Tile>                 m_tiles;
         std::unordered_map<int, Building> m_buildings;
         std::unordered_map<int, Unit>     m_units;
         std::unordered_map<int, Effect>   m_effects;
-        int                               m_selectedUnit;
-        int                               m_targetedUnit;
-        int                               m_selectedBuilding;
-        ContextMenu                       m_contextMenu;
-        bool                              m_contextMenuActive;
-        int                               m_id;
+
+        int m_selectedUnit;
+        int m_targetedUnit;
+        int m_selectedBuilding;
+
+        ContextMenu m_contextMenu;
+        bool        m_contextMenuActive;
+
+        int m_id;
 
         bool selectUnit(int tileX, int tileY);
         bool targetUnit(int tileX, int tileY);

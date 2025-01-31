@@ -26,8 +26,9 @@ class Effect
         int      m_x;
         int      m_y;
         EffectId m_id;
-        bool     m_repeat;
-        int      m_start;
+
+        bool m_repeat;
+        int  m_start;
 };
 
 } // namespace advanced_wars

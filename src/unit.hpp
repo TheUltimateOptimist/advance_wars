@@ -126,10 +126,11 @@ class Unit
         int m_fuel;
         int m_maxFuel;
 
-        bool   m_hasMoved;
-        bool   m_hasAttacked;
-        bool   m_isSelected;
-        bool   m_isTargeted;
+        bool m_hasMoved;
+        bool m_hasAttacked;
+        bool m_isSelected;
+        bool m_isTargeted;
+
         Weapon m_secondaryWeapon;
         Weapon m_primaryWeapon;
 

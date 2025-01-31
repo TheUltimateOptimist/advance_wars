@@ -59,8 +59,9 @@ class Engine
         std::vector<std::shared_ptr<Scene>> m_scenes;
         std::optional<Spritesheet*>         m_spritesheet;
         std::deque<SDL_Event>               m_events;
-        bool                                m_quit;
-        int                                 m_stage;
+
+        bool m_quit;
+        int  m_stage;
 };
 
 } // namespace advanced_wars

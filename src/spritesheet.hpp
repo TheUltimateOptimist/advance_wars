@@ -155,25 +155,29 @@ class Spritesheet
 
     private:
         // Tiles
-        int                                       m_tileWidth;
-        int                                       m_tileHeight;
         std::vector<std::pair<SDL_Texture*, int>> m_tileTextures;
+
+        int m_tileWidth;
+        int m_tileHeight;
 
         // Buildings
         std::vector<SDL_Texture*> m_buildingTextures;
-        int                       m_buildingWidth;
-        int                       m_buildingHeight;
+
+        int m_buildingWidth;
+        int m_buildingHeight;
 
         // Units
         std::vector<std::vector<std::vector<std::pair<SDL_Texture*, int>>>> m_unitTextures;
-        int                                                                 m_unitWidth;
-        int                                                                 m_unitHeight;
-        int                                                                 m_unitMovingWidth;
-        int                                                                 m_unitMovingHeight;
+
+        int m_unitWidth;
+        int m_unitHeight;
+        int m_unitMovingWidth;
+        int m_unitMovingHeight;
 
         // Effects
         std::vector<std::pair<SDL_Texture*, int>> m_effectTextures;
-        int                                       m_effectWidth;
-        int                                       m_effectHeight;
+
+        int m_effectWidth;
+        int m_effectHeight;
 };
 } // namespace advanced_wars

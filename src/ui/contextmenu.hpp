@@ -12,10 +12,11 @@ namespace advanced_wars
 class ContextMenu : public Scene
 {
     private:
-        size_t                   m_selectedOption;
         std::vector<std::string> m_options;
-        int                      m_x;
-        int                      m_y;
+        size_t                   m_selectedOption;
+
+        int m_x;
+        int m_y;
 
     public:
         ContextMenu();
