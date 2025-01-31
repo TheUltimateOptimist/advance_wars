@@ -25,6 +25,8 @@ class Level : public Scene
             std::string name, int width, int height, std::vector<Tile> tiles,
             std::vector<Building> buildings, std::vector<Unit> units, std::vector<Effect>);
 
+        static Level loadLevel(std::string path);
+
         void render(Engine* engine);
 
         void handleEvent(Engine* engine, SDL_Event& event);

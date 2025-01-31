@@ -2,6 +2,9 @@
 #include "building.hpp"
 #include "effect.hpp"
 #include "engine.hpp"
+#include "highfive/H5File.hpp"
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/xml_parser.hpp>
 #include "spritesheet.hpp"
 #include "ui/contextmenu.hpp"
 #include "ui/pausemenu.hpp"
@@ -44,7 +47,51 @@ Level::Level(
     }
 };
 
-const int RENDERING_SCALE = 3;
+  Level Level::loadLevel(std::string path)
+{
+  HighFive::File file(path, HighFive::File::ReadOnly);
+
+  // read level metadata
+  std::string level_metadata;
+  file.getDataSet("metadata").read(level_metadata);
+
+  // read tilesarray
+  std::vector<uint8_t> level_tilesarray;
+  file.getDataSet("tilesarray").read(level_tilesarray);
+
+  // extract metadata from xml
+  std::istringstream xmlStream(level_metadata);
+  boost::property_tree::ptree pt;
+  boost::property_tree::read_xml(xmlStream, pt);
+  int width = pt.get<int>("level.width");
+  int height = pt.get<int>("level.height");
+  std::string name = pt.get<std::string>("level.name");
+
+  // create tiles and buildings vector from tiles array
+  std::vector<Tile> tiles;
+  std::vector<Building> buildings;
+  tiles.reserve(width*height);
+  for (int i = 0; i < level_tilesarray.size(); i++) 
+  {
+    int x = i % width;
+    int y = i / width;
+    if (level_tilesarray[i] >= 50) {
+      tiles.push_back(Tile(TileId(TileId::PLAIN), x, y));
+      BuildingId building_id = static_cast<BuildingId>((level_tilesarray[i] - 50) % 5);
+      BuildingFaction faction_id = static_cast<BuildingFaction>((level_tilesarray[i] - 50) / 5);
+      buildings.push_back(Building(x, y, building_id, faction_id));
+    }
+    else {
+      TileId tile_id = static_cast<TileId>(level_tilesarray[i]);
+      tiles.push_back(Tile(tile_id, x, y));
+    }
+  }
+
+  return Level(name, width, height, tiles, buildings, {}, {});
+};
+
+void Level::render(Engine &engine, std::vector<SDL_Event> &events) {
+  const int RENDERING_SCALE = 3;
 
 bool Level::click_check_left(int tileX, int tileY)
 {
