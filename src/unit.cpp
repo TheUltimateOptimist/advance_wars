@@ -155,15 +155,15 @@ void Unit::attack(Unit* enemy)
     }
 }
 
-void Unit::update_position(int posX, int posY)
+void Unit::updatePosition(int posX, int posY)
 {
-    calc_state(posX, posY);
+    calcState(posX, posY);
 
     this->m_x = posX;
     this->m_y = posY;
 }
 
-void Unit::calc_state(int posX, int posY)
+void Unit::calcState(int posX, int posY)
 {
     int deltaX = this->m_x - posX;
     int deltaY = this->m_y - posY;

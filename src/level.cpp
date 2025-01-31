@@ -232,7 +232,7 @@ void Level::handleEvent(Engine& engine, SDL_Event& event)
                 else
                 {
 
-                    m_units.at(m_selectedUnit).update_position(tileX, tileY);
+                    m_units.at(m_selectedUnit).updatePosition(tileX, tileY);
                 }
             }
             else
