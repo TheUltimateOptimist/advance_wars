@@ -201,8 +201,9 @@ void Level::render(Engine* engine)
     // Iterate over all events
     while (!engine->events().empty())
     {
-        // handleEvent(engine, engine->events().at(0));
         handleEvent(*engine, engine->events().at(0));
+        handleEvent2(engine, engine->events().at(0));
+
         engine->events().pop_front();
     }
 
@@ -250,7 +251,7 @@ void Level::render(Engine* engine)
     }
 }
 
-void Level::handleEvent(Engine* engine, SDL_Event& event)
+void Level::handleEvent2(Engine* engine, SDL_Event& event)
 {
     // Handle events for the level
     if (event.type == SDL_KEYDOWN)

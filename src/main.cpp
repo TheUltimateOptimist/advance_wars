@@ -30,7 +30,7 @@ int main()
 
     Engine engine(window);
 
-    Spritesheet spritesheet("/media/data/rust/sprite-extractor/spritesheet.h5", engine);
+    Spritesheet spritesheet("./spritesheet.h5", engine);
 
     engine.set_spritesheet(spritesheet);
 

@@ -29,6 +29,8 @@ class Level : public Scene
 
         void handleEvent(Engine* engine, SDL_Event& event);
 
+        void handleEvent2(Engine* engine, SDL_Event& event);
+
         int add_building(Building building);
 
         Building remove_building(int id);
