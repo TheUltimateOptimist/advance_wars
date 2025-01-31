@@ -5,17 +5,17 @@ namespace advanced_wars
 {
 
 Unit::Unit(int x, int y, UnitFaction faction, UnitId id, UnitState state)
-    : x(x), y(y), faction(faction), id(id), state(state), max_health(100)
+    : m_x(x), m_y(y), m_faction(faction), m_id(id), m_state(state), m_max_health(100)
 {
     // das ist nur für Testzwecke
-    if (id == UnitId::INFANTERY)
+    if (m_id == UnitId::INFANTERY)
     {
-        secondary_weapon = Weapon(
+        m_secondary_weapon = Weapon(
             "Machine-Gun", {
                                {UnitId::INFANTERY, 55}
         });
     }
-    health = max_health;
+    m_health = m_max_health;
 }
 
 void Unit::render(Engine* engine, int scale)
@@ -23,12 +23,12 @@ void Unit::render(Engine* engine, int scale)
     Spritesheet* spritesheet = engine->get_spritesheet();
 
     int step = engine->get_stage() % spritesheet->get_unit_textures()
-                                         .at(static_cast<int>(faction))
-                                         .at(static_cast<int>(id))
-                                         .at(static_cast<int>(state))
+                                         .at(static_cast<int>(m_faction))
+                                         .at(static_cast<int>(m_id))
+                                         .at(static_cast<int>(m_state))
                                          .second;
 
-    if (state == UnitState::IDLE || state == UnitState::UNAVAILABLE)
+    if (m_state == UnitState::IDLE || m_state == UnitState::UNAVAILABLE)
     {
 
         SDL_Rect src;
@@ -38,17 +38,17 @@ void Unit::render(Engine* engine, int scale)
         src.h = spritesheet->get_unit_height();
 
         SDL_Rect dst;
-        dst.x = x * spritesheet->get_unit_width() * scale;
-        dst.y = y * spritesheet->get_unit_height() * scale;
+        dst.x = m_x * spritesheet->get_unit_width() * scale;
+        dst.y = m_y * spritesheet->get_unit_height() * scale;
         dst.w = spritesheet->get_unit_width() * scale;
         dst.h = spritesheet->get_unit_height() * scale;
 
         SDL_RenderCopyEx(
             engine->renderer(),
             spritesheet->get_unit_textures()
-                .at(static_cast<int>(faction))
-                .at(static_cast<int>(id))
-                .at(static_cast<int>(state))
+                .at(static_cast<int>(m_faction))
+                .at(static_cast<int>(m_id))
+                .at(static_cast<int>(m_state))
                 .first,
             &src, &dst, 0, NULL, SDL_FLIP_NONE);
     }
@@ -63,17 +63,17 @@ void Unit::render(Engine* engine, int scale)
         src.h = spritesheet->get_unit_moving_height();
 
         SDL_Rect dst;
-        dst.x = ((x * spritesheet->get_unit_width()) - 4) * scale;
-        dst.y = ((y * spritesheet->get_unit_height()) - 4) * scale;
+        dst.x = ((m_x * spritesheet->get_unit_width()) - 4) * scale;
+        dst.y = ((m_y * spritesheet->get_unit_height()) - 4) * scale;
         dst.w = spritesheet->get_unit_moving_width() * scale;
         dst.h = spritesheet->get_unit_moving_height() * scale;
 
         SDL_RenderCopyEx(
             engine->renderer(),
             spritesheet->get_unit_textures()
-                .at(static_cast<int>(faction))
-                .at(static_cast<int>(id))
-                .at(static_cast<int>(state))
+                .at(static_cast<int>(m_faction))
+                .at(static_cast<int>(m_id))
+                .at(static_cast<int>(m_state))
                 .first,
             &src, &dst, 0, NULL, SDL_FLIP_NONE);
     }
@@ -83,8 +83,8 @@ void Unit::attack(Unit* enemy)
 {
     // Angenommen, primary_weapon und secondary_weapon wurden bereits korrekt
     // initialisiert
-    auto primary_weapon_damage_it = primary_weapon.damage.find(enemy->id);
-    auto secondary_weapon_damage_it = secondary_weapon.damage.find(enemy->id);
+    auto primary_weapon_damage_it = primary_weapon.damage.find(enemy->m_id);
+    auto secondary_weapon_damage_it = secondary_weapon.damage.find(enemy->m_id);
 
     int attacker_damage_value = 0;
 
@@ -105,24 +105,24 @@ void Unit::attack(Unit* enemy)
 
     if (attacker_damage_value == 0)
     {
-        std::cout << "No damage value found for attack from unit " << static_cast<int>(id)
-                  << " against unit " << static_cast<int>(enemy->id) << std::endl;
+        std::cout << "No damage value found for attack from unit " << static_cast<int>(m_id)
+                  << " against unit " << static_cast<int>(enemy->m_id) << std::endl;
     }
     else
     {
-        int off_damage = attacker_damage_value * (static_cast<float>(health) / max_health);
-        enemy->health -= off_damage;
-        enemy->health = std::max(
+        int off_damage = attacker_damage_value * (static_cast<float>(m_health) / m_max_health);
+        enemy->m_health -= off_damage;
+        enemy->m_health = std::max(
             0,
-            enemy->health); // Sicherstellen, dass die Gesundheit nicht negativ wird
-        std::cout << "Enemy health after attack: " << enemy->health << std::endl;
+            enemy->m_health); // Sicherstellen, dass die Gesundheit nicht negativ wird
+        std::cout << "Enemy health after attack: " << enemy->m_health << std::endl;
 
         // Prüfen, ob der Gegner noch am Leben ist um zurückzuschlagen
-        if (enemy->health > 0)
+        if (enemy->m_health > 0)
         {
             // Weapon tables for the defender
-            auto defender_primary_weapon_damage_it = enemy->primary_weapon.damage.find(id);
-            auto defender_secondary_weapon_damage_it = enemy->secondary_weapon.damage.find(id);
+            auto defender_primary_weapon_damage_it = enemy->primary_weapon.damage.find(m_id);
+            auto defender_secondary_weapon_damage_it = enemy->secondary_weapon.damage.find(m_id);
 
             int defender_damage_value = 0; // Declare outside for later use
 
@@ -145,10 +145,11 @@ void Unit::attack(Unit* enemy)
             if (defender_damage_value > 0)
             {
                 int def_damage = static_cast<int>(
-                    defender_damage_value * static_cast<float>(enemy->health) / enemy->max_health);
-                this->health -= def_damage;
-                this->health = std::max(0, this->health); // Safeguard against negative health
-                std::cout << "Ally health after retaliation: " << this->health << std::endl;
+                    defender_damage_value * static_cast<float>(enemy->m_health) /
+                    enemy->m_max_health);
+                this->m_health -= def_damage;
+                this->m_health = std::max(0, this->m_health); // Safeguard against negative health
+                std::cout << "Ally health after retaliation: " << this->m_health << std::endl;
             }
         }
     }
@@ -158,14 +159,14 @@ void Unit::update_position(int posX, int posY)
 {
     calc_state(posX, posY);
 
-    this->x = posX;
-    this->y = posY;
+    this->m_x = posX;
+    this->m_y = posY;
 }
 
 void Unit::calc_state(int posX, int posY)
 {
-    int deltaX = this->x - posX;
-    int deltaY = this->y - posY;
+    int deltaX = this->m_x - posX;
+    int deltaY = this->m_y - posY;
 
     if (deltaX == 0 && deltaY == 0)
     {
@@ -177,22 +178,22 @@ void Unit::calc_state(int posX, int posY)
     {
         if (deltaX > 0)
         {
-            this->state = advanced_wars::UnitState::MOVEMENTLEFT;
+            this->m_state = advanced_wars::UnitState::MOVEMENTLEFT;
         }
         else
         {
-            this->state = advanced_wars::UnitState::MOVEMENTRIGHT;
+            this->m_state = advanced_wars::UnitState::MOVEMENTRIGHT;
         }
     }
     else
     {
         if (deltaY > 0)
         {
-            this->state = advanced_wars::UnitState::MOVEMENTUP;
+            this->m_state = advanced_wars::UnitState::MOVEMENTUP;
         }
         else
         {
-            this->state = advanced_wars::UnitState::MOVEMENTDOWN;
+            this->m_state = advanced_wars::UnitState::MOVEMENTDOWN;
         }
     }
 }
@@ -200,18 +201,18 @@ void Unit::calc_state(int posX, int posY)
 void Unit::on_left_click(SDL_Event event)
 {
 
-    std::cout << "Left-button pressed on unit: " << this->health << std::endl;
+    std::cout << "Left-button pressed on unit: " << this->m_health << std::endl;
 }
 
 bool Unit::inRange(Unit* enemy)
 {
-    if (this->x == enemy->x)
+    if (this->m_x == enemy->m_x)
     {
-        return abs(this->y - enemy->y) <= this->range;
+        return abs(this->m_y - enemy->m_y) <= this->m_range;
     }
-    else if (this->y == enemy->y)
+    else if (this->m_y == enemy->m_y)
     {
-        return abs(this->x - enemy->x) <= this->range;
+        return abs(this->m_x - enemy->m_x) <= this->m_range;
     }
     return false;
 }

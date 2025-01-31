@@ -65,9 +65,9 @@ using MatchupTable = std::unordered_map<UnitId, std::unordered_map<UnitId, int>>
 class Unit
 {
     public:
-        int x;
-        int y;
-        int health; // health equals max_health at construction
+        int m_x;
+        int m_y;
+        int m_health; // health equals max_health at construction
 
         Unit(int x, int y, UnitFaction faction, UnitId id, UnitState state);
         ~Unit()
@@ -117,23 +117,23 @@ class Unit
         void on_left_click(SDL_Event event);
 
     private:
-        UnitFaction faction;
-        UnitId      id;
-        UnitState   state;
+        UnitFaction m_faction;
+        UnitId      m_id;
+        UnitState   m_state;
 
-        int max_health; // max_health required for damage_scaling
-        int range;
-        int fuel;
-        int max_fuel;
+        int m_max_health; // max_health required for damage_scaling
+        int m_range;
+        int m_fuel;
+        int m_max_fuel;
 
-        bool   has_moved;
-        bool   has_attacked;
-        bool   is_selected;
-        bool   is_targeted;
-        Weapon secondary_weapon;
-        Weapon primary_weapon;
+        bool   m_has_moved;
+        bool   m_has_attacked;
+        bool   m_is_selected;
+        bool   m_is_targeted;
+        Weapon m_secondary_weapon;
+        Weapon m_primary_weapon;
 
-        int ammo;
+        int m_ammo;
 };
 
 } // namespace advanced_wars

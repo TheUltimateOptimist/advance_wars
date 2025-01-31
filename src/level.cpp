@@ -129,7 +129,7 @@ bool Level::selectUnit(int tileX, int tileY)
     for (auto& [id, unit] : m_units)
     {
 
-        if (unit.x == tileX && unit.y == tileY)
+        if (unit.m_x == tileX && unit.m_y == tileY)
         {
             // std::cout << "unitX:" << unit.x << "unitY:" << unit.y << std::endl;
 
@@ -148,7 +148,7 @@ bool Level::target_unit(int tileX, int tileY)
     for (auto& [id, unit] : m_units)
     {
 
-        if (unit.x == tileX && unit.y == tileY)
+        if (unit.m_x == tileX && unit.m_y == tileY)
         {
             // std::cout << "unitX:" << unit.x << "unitY:" << unit.y << std::endl;
 
@@ -224,7 +224,7 @@ void Level::handleEvent(Engine& engine, SDL_Event& event)
 
                     m_units.at(m_selectedUnit).attack(&(m_units.at(m_targetedUnit)));
 
-                    if (m_units.at(m_selectedUnit).health <= 0)
+                    if (m_units.at(m_selectedUnit).m_health <= 0)
                     {
                         remove_unit(m_selectedUnit);
                     }
