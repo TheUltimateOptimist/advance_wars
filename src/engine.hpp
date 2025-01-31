@@ -54,13 +54,13 @@ class Engine
         ~Engine();
 
     private:
-        Window&                             window;
-        SDL_Renderer*                       sdl_renderer;
-        std::vector<std::shared_ptr<Scene>> scenes;
-        std::optional<Spritesheet*>         spritesheet;
-        std::deque<SDL_Event>               _events;
-        bool                                quit;
-        int                                 stage;
+        Window&                             m_window;
+        SDL_Renderer*                       m_sdl_renderer;
+        std::vector<std::shared_ptr<Scene>> m_scenes;
+        std::optional<Spritesheet*>         m_spritesheet;
+        std::deque<SDL_Event>               m_events;
+        bool                                m_quit;
+        int                                 m_stage;
 };
 
 } // namespace advanced_wars

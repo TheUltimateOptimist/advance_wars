@@ -15,13 +15,13 @@
 namespace advanced_wars
 {
 
-Engine::Engine(Window& window) : window(window), quit(false)
+Engine::Engine(Window& window) : m_window(window), m_quit(false)
 {
 
-    this->sdl_renderer = SDL_CreateRenderer(
-        this->window.sdl_window(), -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    this->m_sdl_renderer = SDL_CreateRenderer(
+        this->m_window.sdl_window(), -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
-    if (sdl_renderer == nullptr)
+    if (m_sdl_renderer == nullptr)
     {
         throw std::runtime_error("SDL could not generate renderer: " + std::string(SDL_GetError()));
     }
@@ -29,39 +29,39 @@ Engine::Engine(Window& window) : window(window), quit(false)
 
 std::deque<SDL_Event>& Engine::events()
 {
-    return this->_events;
+    return this->m_events;
 }
 
 void Engine::push_scene(std::shared_ptr<Scene> scene)
 {
-    this->scenes.push_back(scene);
+    this->m_scenes.push_back(scene);
 }
 
 void Engine::return_to_menu()
 {
     // TODO: discuss if we outsource this to a separate function
     // clear everything except the first scene
-    while (this->scenes.size() > 1)
+    while (this->m_scenes.size() > 1)
     {
-        this->scenes.pop_back();
+        this->m_scenes.pop_back();
     }
 }
 
 std::optional<std::shared_ptr<Scene>> Engine::pop_scene()
 {
-    if (this->scenes.empty())
+    if (this->m_scenes.empty())
     {
         return std::nullopt;
     }
-    std::shared_ptr<Scene> tmp = scenes.back();
-    this->scenes.pop_back();
+    std::shared_ptr<Scene> tmp = m_scenes.back();
+    this->m_scenes.pop_back();
 
     return tmp;
 }
 
 void Engine::set_spritesheet(Spritesheet& spritesheet)
 {
-    this->spritesheet = &spritesheet;
+    this->m_spritesheet = &spritesheet;
 }
 
 void Engine::pump()
@@ -71,37 +71,37 @@ void Engine::pump()
     {
         if (e.type == SDL_QUIT)
         {
-            this->quit = true;
+            this->m_quit = true;
         }
         else
         {
-            this->_events.push_back(e);
+            this->m_events.push_back(e);
         }
     }
 }
 
 void Engine::exit()
 {
-    this->quit = true;
+    this->m_quit = true;
 }
 
 bool Engine::exited()
 {
-    return this->quit;
+    return this->m_quit;
 }
 
 void Engine::render()
 {
-    if (SDL_RenderClear(this->sdl_renderer) != 0)
+    if (SDL_RenderClear(this->m_sdl_renderer) != 0)
     {
         throw std::runtime_error("Could not clear renderer: " + std::string(SDL_GetError()));
     }
 
-    std::shared_ptr<Scene> currentScene = scenes.back();
+    std::shared_ptr<Scene> currentScene = m_scenes.back();
 
     currentScene->render(this);
 
-    SDL_RenderPresent(this->sdl_renderer);
+    SDL_RenderPresent(this->m_sdl_renderer);
 }
 
 int Engine::get_stage()
@@ -111,17 +111,17 @@ int Engine::get_stage()
 
 Spritesheet* Engine::get_spritesheet()
 {
-    return spritesheet.value();
+    return m_spritesheet.value();
 }
 
 SDL_Renderer* Engine::renderer()
 {
-    return this->sdl_renderer;
+    return this->m_sdl_renderer;
 }
 
 Engine::~Engine()
 {
-    SDL_DestroyRenderer(sdl_renderer);
+    SDL_DestroyRenderer(m_sdl_renderer);
     IMG_Quit();
     SDL_Quit();
 }
