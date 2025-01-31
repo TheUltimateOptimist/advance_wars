@@ -42,13 +42,13 @@ class Window
 
     private:
         /// SDL main window struct
-        SDL_Window* window;
+        SDL_Window* m_window;
 
         /// Window width
-        int width;
+        int m_width;
 
         /// Window height
-        int height;
+        int m_height;
 };
 
 } // namespace advanced_wars

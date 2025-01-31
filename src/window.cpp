@@ -7,15 +7,15 @@ namespace advanced_wars
 Window::Window(std::string title, int w, int h)
 {
     /// Init width and height
-    width = w;
-    height = h;
+    m_width = w;
+    m_height = h;
 
     // Generate SDL main window
-    window = SDL_CreateWindow(
-        title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height,
+    m_window = SDL_CreateWindow(
+        title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, m_width, m_height,
         SDL_WINDOW_SHOWN);
 
-    if (window == nullptr)
+    if (m_window == nullptr)
     {
         throw std::runtime_error(
             "SDL window could not be generated: " + std::string(SDL_GetError()));
@@ -24,25 +24,25 @@ Window::Window(std::string title, int w, int h)
 
 int Window::w()
 {
-    return width;
+    return m_width;
 }
 
 int Window::h()
 {
-    return height;
+    return m_height;
 }
 
 SDL_Window* Window::sdl_window()
 {
-    return window;
+    return m_window;
 }
 
 Window::~Window()
 {
-    if (window)
+    if (m_window)
     {
-        SDL_DestroyWindow(window);
-        window = nullptr;
+        SDL_DestroyWindow(m_window);
+        m_window = nullptr;
     }
 }
 
