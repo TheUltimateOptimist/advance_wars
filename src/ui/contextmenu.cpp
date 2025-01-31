@@ -5,14 +5,14 @@
 namespace advanced_wars
 {
 
-ContextMenu::ContextMenu() : m_selected_option(0) {}
+ContextMenu::ContextMenu() : m_selectedOption(0) {}
 
 ContextMenu::~ContextMenu() {}
 
 void ContextMenu::setOptions(const std::vector<std::string>& newOptions)
 {
     m_options = newOptions;
-    m_selected_option = 0; // Reset auf die erste Option
+    m_selectedOption = 0; // Reset auf die erste Option
 }
 
 void ContextMenu::render(Engine* engine)
@@ -50,7 +50,7 @@ void ContextMenu::render(Engine* engine)
         for (size_t i = 0; i < m_options.size(); ++i)
         {
             SDL_Surface* textSurface = TTF_RenderText_Solid(
-                font, m_options[i].c_str(), (i == m_selected_option) ? yellow : white);
+                font, m_options[i].c_str(), (i == m_selectedOption) ? yellow : white);
             if (!textSurface)
             {
                 continue;
@@ -77,18 +77,18 @@ void ContextMenu::handleEvent(SDL_Event& event)
     {
         if (event.key.keysym.sym == SDLK_DOWN)
         {
-            m_selected_option = (m_selected_option + 1) % m_options.size();
+            m_selectedOption = (m_selectedOption + 1) % m_options.size();
         }
         else if (event.key.keysym.sym == SDLK_UP)
         {
-            m_selected_option = (m_selected_option - 1 + m_options.size()) % m_options.size();
+            m_selectedOption = (m_selectedOption - 1 + m_options.size()) % m_options.size();
         }
     }
 }
 
 std::string ContextMenu::getSelectedOption()
 {
-    return m_options[m_selected_option];
+    return m_options[m_selectedOption];
 }
 
 void ContextMenu::update(int x, int y)

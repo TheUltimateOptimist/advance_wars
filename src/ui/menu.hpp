@@ -22,9 +22,9 @@ namespace advanced_wars
 class Menu : public Scene
 {
     private:
-        size_t m_selected_option;             ///< Index of the currently selected menu option.
+        size_t m_selectedOption;              ///< Index of the currently selected menu option.
         std::array<std::string, 3> m_options; ///< The available menu options.
-        SDL_Texture* m_background_texture;    ///< Pointer to the background texture (if any).
+        SDL_Texture* m_backgroundTexture;    ///< Pointer to the background texture (if any).
 
     public:
         /**
