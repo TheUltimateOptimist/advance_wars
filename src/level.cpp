@@ -17,6 +17,8 @@
 namespace advanced_wars
 {
 
+const int RENDERING_SCALE = 3;
+
 Level::Level(
     std::string name, int width, int height, std::vector<Tile> tiles,
     std::vector<Building> buildings, std::vector<Unit> units, std::vector<Effect> effects)
@@ -89,9 +91,6 @@ Level::Level(
 
   return Level(name, width, height, tiles, buildings, {}, {});
 };
-
-void Level::render(Engine &engine, std::vector<SDL_Event> &events) {
-  const int RENDERING_SCALE = 3;
 
 bool Level::click_check_left(int tileX, int tileY)
 {
