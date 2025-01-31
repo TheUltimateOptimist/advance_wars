@@ -163,7 +163,7 @@ bool Level::selectBuilding(int tileX, int tileY)
     for (auto& [id, building] : buildings)
     {
 
-        if (building.x == tileX && building.y == tileY)
+        if (building.m_x == tileX && building.m_y == tileY)
         {
             // std::cout << "X:" << unit.x << "Y:" << unit.y << std::endl;
             selectedBuilding = id;
