@@ -13,5 +13,5 @@ TileButton::TileButton(const uint8_t id, QWidget *parent) : QPushButton(parent),
 void TileButton::mousePressEvent(QMouseEvent *event){
     QPushButton::mousePressEvent(event);
     uint8_t tile_id = id;
-    EventBroker::send([tile_id](EventBroker* e){e->onTileSelected(tile_id);});
+    EventBroker::send([tile_id](EventBroker* e){e->onNewTileIdSelected(tile_id);});
 }

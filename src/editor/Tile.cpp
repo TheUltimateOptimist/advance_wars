@@ -2,41 +2,24 @@
 #include "SpriteProvider.hpp"
 #include "EventBroker.hpp"
 
-Tile::Tile(uint8_t id) : QGraphicsPixmapItem(SpriteProvider::get_sprite(0)), id(id), child(nullptr) {
+Tile::Tile(int index) : QGraphicsPixmapItem(SpriteProvider::get_sprite(0)), index(index) {
     this->setAcceptHoverEvents(true);
-}
-
-uint8_t Tile::getId()
-{
-    return id;
-}
-
-uint8_t Tile::setId(uint8_t id)
-{
-    this->id = id;
-}
-
-QGraphicsPixmapItem *Tile::getChild()
-{
-    return child;
-}
-
-QGraphicsPixmapItem *Tile::setChild(QGraphicsPixmapItem *child)
-{
-    this->child = child;
 }
 
 void Tile::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
-    EventBroker::send([this](EventBroker* e){e->onTileEntered(this);}); 
+    int index = this->index;
+    EventBroker::send([index](EventBroker* e){e->onTileEntered(index);}); 
 }
 
 void Tile::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 {
-    EventBroker::send([this](EventBroker* e){e->onTileExited(this);}); 
+    int index = this->index;
+    EventBroker::send([index](EventBroker* e){e->onTileExited(index);}); 
 }
 
 void Tile::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    EventBroker::send([this](EventBroker* e){e->onTileClicked(this);});
+    int index = this->index;
+    EventBroker::send([index](EventBroker* e){e->onTileClicked(index);});
 }

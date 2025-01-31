@@ -17,13 +17,13 @@ public:
 
     virtual void onLevelWriteRequested(){};
 
-    virtual void onTileEntered(Tile* tile){};
+    virtual void onTileEntered(int index){};
 
-    virtual void onTileExited(Tile* tile){};
+    virtual void onTileExited(int index){};
 
-    virtual void onTileClicked(Tile* tile){};
+    virtual void onTileClicked(int index){};
 
-    virtual void onTileSelected(uint8_t id){};
+    virtual void onNewTileIdSelected(uint8_t tile_id){};
 
 private:
     static std::vector<EventBroker*> instances ;

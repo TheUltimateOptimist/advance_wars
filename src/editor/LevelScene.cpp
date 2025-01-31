@@ -1,25 +1,43 @@
 #include "LevelScene.hpp"
 #include "SpriteProvider.hpp"
 #include <QGraphicsPixmapItem>
+#include <QPixmap>
+#include <QPoint>
 
 #include "highfive/H5File.hpp"
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/xml_parser.hpp>
 
-LevelScene::LevelScene(const std::string& name, int width, int height, std::vector<Tile*> tiles, const std::string& file_path, QWidget *parent) : QGraphicsScene(parent), name(name), width(width), height(height), tiles(tiles), file_path(file_path), active_tile(nullptr), active_tile_marker(nullptr), hovered_tile_marker(nullptr) {
+LevelScene::LevelScene(const std::string& name, int width, int height, std::vector<uint8_t> tile_ids, const std::string& file_path, QWidget *parent) : QGraphicsScene(parent), name(name), width(width), height(height), tile_ids(tile_ids), file_path(file_path), selected_tile_id(2) {
     this->setSceneRect(0, 0, width*16, height*16);
+    std::vector<QGraphicsPixmapItem*> tile_occupants;
     for (int index = 0; index < width*height; index++) {
-        position(tiles[index], index);
-        createChildOn(tiles[index]);
+        int x = (index % width) * 16;
+        int y = (index / width) * 16;
+        Tile* tile = new Tile(index);
+        this->addItem(tile);
+        tile->setZValue(0);
+        tile->setPos(x, y);
+        if (tile_ids[index] > 0) {
+            QPixmap tile_occupant = SpriteProvider::get_sprite(tile_ids[index]);
+            QGraphicsPixmapItem* tile_occupant_item = addPixmap(tile_occupant);
+            tile_occupant_item->setZValue(tile_ids[index] < 50 ? 1 : 2 + index);
+            tile_occupant_item->setPos(x, tile_ids[index] < 50 ? y : y - 16);
+            tile_occupants.push_back(tile_occupant_item);
+        }
+        else {
+            tile_occupants.push_back(nullptr);
+        }
     }
+    this->tile_occupants = tile_occupants;
 }
 
 LevelScene *LevelScene::empty(const std::string& name, int width, int height, QWidget *parent) {
-    std::vector<Tile*> tiles(width*height); 
+    std::vector<uint8_t> tile_ids(width*height); 
     for (int i = 0; i < width*height; i++) {
-        tiles[i] = new Tile(0);
+        tile_ids[i] = 0;
     }
-    return new LevelScene(name, width, height, tiles, "../res/level_new.h5", parent);
+    return new LevelScene(name, width, height, tile_ids, "../res/level_new.h5", parent);
 }
 
 LevelScene *LevelScene::fromFile(const std::string &file_path, QWidget *parent)
@@ -42,12 +60,7 @@ LevelScene *LevelScene::fromFile(const std::string &file_path, QWidget *parent)
     int height = pt.get<int>("level.height");
     std::string name = pt.get<std::string>("level.name");
 
-    std::vector<Tile*> tiles;
-    for (int i = 0; i < width*height; i++) {
-        tiles.push_back(new Tile(level_tilesarray[i]));
-    }
-
-    return new LevelScene(name, width, height, tiles, file_path, parent);
+    return new LevelScene(name, width, height, level_tilesarray, file_path, parent);
 }
 
 std::string LevelScene::getName()
@@ -63,40 +76,6 @@ int LevelScene::getWidth()
 int LevelScene::getHeight()
 {
     return height;
-}
-
-void LevelScene::position(Tile *tile, int index)
-{
-    int x = (index % width) * 16;
-    int y = (index / width) * 16;
-    this->addItem(tile);
-    tile->setPos(x, y);
-    tile->setZValue(0);
-}
-
-void LevelScene::createChildOn(Tile *tile)
-{
-    if (tile->getId() == 0) return;
-    QPixmap pixmap = SpriteProvider::get_sprite(tile->getId());
-    QGraphicsPixmapItem* child = this->addPixmap(pixmap);
-    tile->setChild(child);
-    child->setPos(tile->x(), tile->y());
-    child->setZValue(1);
-    if (tile->getId() >= 50) {
-        child->setPos(tile->x(), tile->y() - 16);
-        child->setZValue(2 + tile->y()*width + tile->x());
-    }
-}
-
-QGraphicsRectItem *LevelScene::createMarkerOn(Tile *tile)
-{
-    QColor marker_color(0, 0, 0, 128);
-    QPen marker_pen(Qt::transparent);;
-    QBrush marker_brush(marker_color);
-    QGraphicsRectItem* marker_item = this->addRect(0, 0, 16, 16, marker_pen, marker_brush);
-    marker_item->setZValue(std::numeric_limits<qreal>::max());
-    marker_item->setPos(tile->x(), tile->y());
-    return marker_item;
 }
 
 void LevelScene::onLevelNameUpdated(std::string new_name)
@@ -118,53 +97,55 @@ void LevelScene::onLevelWriteRequested()
     boost::property_tree::write_xml(xmlStream, pt);
     std::string xml_data = xmlStream.str();
 
-
-    // create tiles_array
-    std::vector<uint8_t> tiles_array;
-    for (int i = 0; i < width*height; i++) {
-        tiles_array.push_back(tiles[i]->getId());
-    }
-
     // write level to hdf5
     HighFive::File file(file_path, HighFive::File::Truncate);
     file.createDataSet<std::string>("metadata", HighFive::DataSpace::From(xmlStream)).write(xml_data);
-    file.createDataSet<uint8_t>("tilesarray", HighFive::DataSpace::From(tiles_array)).write(tiles_array);
+    file.createDataSet<uint8_t>("tilesarray", HighFive::DataSpace::From(tile_ids)).write(tile_ids);
 }
 
-void LevelScene::onTileEntered(Tile *tile)
+void LevelScene::onTileEntered(int index)
 {
-    QGraphicsRectItem* marker = createMarkerOn(tile);
-    hovered_tile_marker = marker;
+    std::cout << "lol" << std::endl;
+    if (selected_tile_id == tile_ids[index]) return;
+    std::cout << "lolll" << std::endl;
+    std::cout << tile_occupants.size() << std::endl;
+    std::cout << tile_occupants[index] << std::endl;
+    if (tile_occupants[index] != nullptr) removeItem(tile_occupants[index]);
+    tile_occupants[index] = nullptr;
+    std::cout << "some" << std::endl;
+    if (selected_tile_id > 0) {
+        tile_occupants[index] = occupy_tile(index, selected_tile_id);
+    } 
 }
 
-void LevelScene::onTileExited(Tile *tile)
+void LevelScene::onTileExited(int index)
 {
-    if (hovered_tile_marker != nullptr) {
-        this->removeItem(hovered_tile_marker);
+    if (selected_tile_id == tile_ids[index]) return;
+    if (tile_occupants[index] != nullptr) removeItem(tile_occupants[index]);
+    tile_occupants[index] = nullptr;
+    if (tile_ids[index] > 0) {
+        tile_occupants[index] = occupy_tile(index, tile_ids[index]);
     }
 }
 
-void LevelScene::onTileClicked(Tile *tile)
+void LevelScene::onTileClicked(int index)
 {
-    if (active_tile_marker != nullptr) {
-        this->removeItem(active_tile_marker);
-    }
-    active_tile = tile;
-    QGraphicsRectItem* marker = createMarkerOn(tile);
-    active_tile_marker = marker;
+    tile_ids[index] = selected_tile_id;
 }
 
-void LevelScene::onTileSelected(uint8_t id) {
-    if (active_tile == nullptr) return;
-    active_tile->setId(id);
-    if (active_tile->getChild() != nullptr) {
-        this->removeItem(active_tile->getChild());
-    }
-    if (id > 0) {
-        createChildOn(active_tile);
-    }
-    else {
-        active_tile->setChild(nullptr);
-    }
+void LevelScene::onNewTileIdSelected(uint8_t tile_id)
+{
+    this->selected_tile_id = tile_id;
 }
 
+QGraphicsPixmapItem *LevelScene::occupy_tile(int index, uint8_t tile_id)
+{
+    if (tile_id == 0) return nullptr;
+    int x = (index % width) * 16;
+    int y = (index / width) * 16;
+    QPixmap tile_occupant = SpriteProvider::get_sprite(tile_id);
+    QGraphicsPixmapItem* tile_occupant_item = addPixmap(tile_occupant);
+    tile_occupant_item->setZValue(tile_id < 50 ? 1 : 2 + index);
+    tile_occupant_item->setPos(x, tile_id < 50 ? y : y - 16);    
+    return tile_occupant_item;
+}

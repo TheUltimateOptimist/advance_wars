@@ -11,29 +11,26 @@
 
 class LevelScene : public QGraphicsScene, public EventBroker {
 public:
-    LevelScene(const std::string& name, int width, int height, std::vector<Tile*> tiles, const std::string& file_path, QWidget *parent = nullptr);
+    LevelScene(const std::string& name, int width, int height, std::vector<uint8_t> tile_ids, const std::string& file_path, QWidget *parent = nullptr);
     static LevelScene* empty(const std::string& name, int width, int height, QWidget *parent = nullptr);
     static LevelScene* fromFile(const std::string& file_path, QWidget *parent = nullptr);
     std::string getName();
     int getWidth();
     int getHeight();
 private:
-    void position(Tile* tile, int index);
-    void createChildOn(Tile* tile);
-    QGraphicsRectItem* createMarkerOn(Tile* tile);
     void onLevelNameUpdated(std::string new_name) override;
     void onLevelWriteRequested() override;
-    void onTileEntered(Tile* tile) override;  
-    void onTileExited(Tile* tile) override;
-    void onTileClicked(Tile* tile) override;
-    void onTileSelected(uint8_t id) override;
-    Tile* active_tile;
-    QGraphicsRectItem* active_tile_marker;
-    QGraphicsRectItem* hovered_tile_marker;
+    void onTileEntered(int index) override;  
+    void onTileExited(int index) override;
+    void onTileClicked(int index) override;
+    void onNewTileIdSelected(uint8_t tile_id) override;
+    QGraphicsPixmapItem* occupy_tile(int index, uint8_t tile_id);
+    uint8_t selected_tile_id;
     std::string name;
     int width;
     int height;
-    std::vector<Tile*> tiles;
+    std::vector<uint8_t> tile_ids;
+    std::vector<QGraphicsPixmapItem*> tile_occupants;
     std::string file_path;
 };
 
