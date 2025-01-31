@@ -22,25 +22,25 @@ const int RENDERING_SCALE = 3;
 Level::Level(
     std::string name, int width, int height, std::vector<Tile> tiles,
     std::vector<Building> buildings, std::vector<Unit> units, std::vector<Effect> effects)
-    : m_name(name), m_width(width), m_height(height), m_tiles(tiles), m_context_menu(ContextMenu()),
-      m_context_menu_active(false), m_id(0)
+    : m_name(name), m_width(width), m_height(height), m_tiles(tiles), m_contextMenu(ContextMenu()),
+      m_contextMenuActive(false), m_id(0)
 {
 
-    m_context_menu.setOptions({"Move", "Info", "Wait"});
+    m_contextMenu.setOptions({"Move", "Info", "Wait"});
 
     for (Building building : buildings)
     {
-        this->add_building(building);
+        this->addBuilding(building);
     }
 
     for (Unit unit : units)
     {
-        this->add_unit(unit);
+        this->addUnit(unit);
     }
 
     for (Effect effect : effects)
     {
-        this->add_effect(effect);
+        this->addEffect(effect);
     }
 
     if ((size_t)(m_width * m_height) != tiles.size())
@@ -95,7 +95,7 @@ Level Level::loadLevel(std::string path)
     return Level(name, width, height, tiles, buildings, {}, {});
 };
 
-bool Level::click_check_left(int tileX, int tileY)
+bool Level::clickCheckLeft(int tileX, int tileY)
 {
 
     if (selectUnit(tileX, tileY))
@@ -111,10 +111,10 @@ bool Level::click_check_left(int tileX, int tileY)
     return false;
 }
 
-bool Level::click_check_right(int tileX, int tileY)
+bool Level::clickCheckRight(int tileX, int tileY)
 {
 
-    if (target_unit(tileX, tileY))
+    if (targetUnit(tileX, tileY))
     {
         return true;
     }
@@ -141,7 +141,7 @@ bool Level::selectUnit(int tileX, int tileY)
     return false;
 }
 
-bool Level::target_unit(int tileX, int tileY)
+bool Level::targetUnit(int tileX, int tileY)
 {
 
     // std::cout << "tileX:" << tileX << "tileX:" << tileY << std::endl;
@@ -189,7 +189,7 @@ void Level::handleEvent(Engine& engine, SDL_Event& event)
             int tileX = event.button.x / (16 * RENDERING_SCALE);
             int tileY = event.button.y / (16 * RENDERING_SCALE);
 
-            if (click_check_left(tileX, tileY))
+            if (clickCheckLeft(tileX, tileY))
             {
 
                 if (m_selectedUnit > -1)
@@ -219,14 +219,14 @@ void Level::handleEvent(Engine& engine, SDL_Event& event)
                 int tileX = event.button.x / (16 * RENDERING_SCALE);
                 int tileY = event.button.y / (16 * RENDERING_SCALE);
 
-                if (click_check_right(tileX, tileY))
+                if (clickCheckRight(tileX, tileY))
                 {
 
                     m_units.at(m_selectedUnit).attack(&(m_units.at(m_targetedUnit)));
 
                     if (m_units.at(m_selectedUnit).m_health <= 0)
                     {
-                        remove_unit(m_selectedUnit);
+                        removeUnit(m_selectedUnit);
                     }
                 }
                 else
@@ -291,12 +291,12 @@ void Level::render(Engine* engine)
     // Remove finished effects after iteration
     for (int id : effects_to_remove)
     {
-        this->remove_effect(id);
+        this->removeEffect(id);
     }
 
-    if (m_context_menu_active)
+    if (m_contextMenuActive)
     {
-        m_context_menu.render(engine);
+        m_contextMenu.render(engine);
     }
 }
 
@@ -315,33 +315,33 @@ void Level::handleEvent2(Engine* engine, SDL_Event& event)
             PauseMenu pauseMenu(0, currentTexture);
             engine->push_scene(std::make_shared<PauseMenu>(pauseMenu));
         }
-        if (m_context_menu_active)
+        if (m_contextMenuActive)
         {
             if (event.key.keysym.sym == SDLK_DOWN)
             {
-                m_context_menu.handleEvent(event);
+                m_contextMenu.handleEvent(event);
             }
             if (event.key.keysym.sym == SDLK_UP)
             {
-                m_context_menu.handleEvent(event);
+                m_contextMenu.handleEvent(event);
             }
             if (event.key.keysym.sym == SDLK_RETURN)
             {
-                if (m_context_menu.getSelectedOption() == "Wait")
+                if (m_contextMenu.getSelectedOption() == "Wait")
                 {
-                    m_context_menu_active = false;
+                    m_contextMenuActive = false;
                 }
             }
         }
     }
     if (event.type == SDL_MOUSEBUTTONDOWN)
     {
-        m_context_menu.update(event.button.x, event.button.y);
-        m_context_menu_active = true;
+        m_contextMenu.update(event.button.x, event.button.y);
+        m_contextMenuActive = true;
     }
 }
 
-int Level::add_building(Building building)
+int Level::addBuilding(Building building)
 {
     m_buildings.insert({m_id, building});
     m_id += 1;
@@ -349,7 +349,7 @@ int Level::add_building(Building building)
     return m_id - 1;
 }
 
-Building Level::remove_building(int id)
+Building Level::removeBuilding(int id)
 {
     Building value = m_buildings.at(id);
     m_buildings.erase(id);
@@ -357,7 +357,7 @@ Building Level::remove_building(int id)
     return value;
 }
 
-int Level::add_unit(Unit unit)
+int Level::addUnit(Unit unit)
 {
     m_units.insert({m_id, unit});
     m_id += 1;
@@ -365,7 +365,7 @@ int Level::add_unit(Unit unit)
     return m_id - 1;
 }
 
-Unit Level::remove_unit(int id)
+Unit Level::removeUnit(int id)
 {
     Unit value = m_units.at(id);
     m_units.erase(id);
@@ -373,7 +373,7 @@ Unit Level::remove_unit(int id)
     return value;
 }
 
-int Level::add_effect(Effect effect)
+int Level::addEffect(Effect effect)
 {
     m_effects.insert({m_id, effect});
     m_id += 1;
@@ -381,7 +381,7 @@ int Level::add_effect(Effect effect)
     return m_id - 1;
 }
 
-Effect Level::remove_effect(int id)
+Effect Level::removeEffect(int id)
 {
     Effect value = m_effects.at(id);
     m_effects.erase(id);

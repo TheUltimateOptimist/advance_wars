@@ -33,17 +33,17 @@ class Level : public Scene
 
         void handleEvent2(Engine* engine, SDL_Event& event);
 
-        int add_building(Building building);
+        int addBuilding(Building building);
 
-        Building remove_building(int id);
+        Building removeBuilding(int id);
 
-        int add_unit(Unit unit);
+        int addUnit(Unit unit);
 
-        Unit remove_unit(int id);
+        Unit removeUnit(int id);
 
-        int add_effect(Effect effect);
+        int addEffect(Effect effect);
 
-        Effect remove_effect(int id);
+        Effect removeEffect(int id);
 
         void handleEvent(Engine& engine, SDL_Event& event);
 
@@ -58,16 +58,16 @@ class Level : public Scene
         int                               m_selectedUnit;
         int                               m_targetedUnit;
         int                               m_selectedBuilding;
-        ContextMenu                       m_context_menu;
-        bool                              m_context_menu_active;
+        ContextMenu                       m_contextMenu;
+        bool                              m_contextMenuActive;
         int                               m_id;
 
         bool selectUnit(int tileX, int tileY);
-        bool target_unit(int tileX, int tileY);
+        bool targetUnit(int tileX, int tileY);
         bool selectBuilding(int tileX, int tileY);
 
-        bool click_check_left(int mouseX, int mouseY);
-        bool click_check_right(int mouseX, int mouseY);
+        bool clickCheckLeft(int mouseX, int mouseY);
+        bool clickCheckRight(int mouseX, int mouseY);
 };
 
 } // namespace advanced_wars
