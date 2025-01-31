@@ -53,10 +53,10 @@ enum class UnitState
 enum class MovementType
 {
     FOOT = 0,
-    TIRES = 1,
+    WHEELED = 1,
     TREAD = 2,
     AIR = 3,
-    SHIP = 4,
+    SEA = 4,
     LANDER = 5,
 };
 
