@@ -17,9 +17,10 @@ Menu::Menu(int selectedOption)
     : m_selectedOption(selectedOption), m_options({"Start Game", "Options", "Exit"}),
       m_backgroundTexture(nullptr)
 {
-    if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG))
+    if (TTF_Init() == -1)
     {
-        std::cerr << "Failed to initialize SDL_image: " << IMG_GetError() << std::endl;
+        std::cerr << "Failed to initialize TTF: " << TTF_GetError() << std::endl;
+        return;
     }
 }
 
@@ -29,8 +30,8 @@ Menu::~Menu()
     {
         SDL_DestroyTexture(m_backgroundTexture);
     }
-    IMG_Quit();
-};
+    TTF_Quit();
+}
 
 void Menu::render(Engine& engine)
 {
@@ -51,12 +52,6 @@ void Menu::render(Engine& engine)
     {
         SDL_SetRenderDrawColor(engine.renderer(), 0, 0, 0, 255);
         SDL_RenderClear(engine.renderer());
-    }
-
-    if (TTF_Init() == -1)
-    {
-        std::cerr << "Failed to initialize TTF: " << TTF_GetError() << std::endl;
-        return;
     }
 
     std::string basePath = SDL_GetBasePath();
@@ -112,7 +107,6 @@ void Menu::render(Engine& engine)
 
     TTF_CloseFont(titleFont);
     TTF_CloseFont(menuFont);
-    TTF_Quit();
 
     SDL_RenderPresent(engine.renderer());
 }

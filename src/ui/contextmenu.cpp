@@ -5,9 +5,19 @@
 namespace advanced_wars
 {
 
-ContextMenu::ContextMenu() : m_selectedOption(0) {}
+ContextMenu::ContextMenu() : m_selectedOption(0)
+{
+    if (TTF_Init() == -1)
+    {
+        std::cerr << "Failed to initialize TTF: " << TTF_GetError() << std::endl;
+        return;
+    }
+}
 
-ContextMenu::~ContextMenu() {}
+ContextMenu::~ContextMenu()
+{
+    TTF_Quit();
+}
 
 void ContextMenu::setOptions(const std::vector<std::string>& newOptions)
 {
@@ -19,12 +29,6 @@ void ContextMenu::render(Engine& engine)
 {
     if (!m_options.empty())
     {
-        if (TTF_Init() == -1)
-        {
-            std::cerr << "Failed to initialize TTF: " << TTF_GetError() << std::endl;
-            return;
-        }
-
         std::string basePath = SDL_GetBasePath();
         std::string relativePath = "assets/ARCADECLASSIC.TTF";
         std::string fullPath = basePath + relativePath;
@@ -66,7 +70,6 @@ void ContextMenu::render(Engine& engine)
         }
 
         TTF_CloseFont(font);
-        TTF_Quit();
     }
 }
 

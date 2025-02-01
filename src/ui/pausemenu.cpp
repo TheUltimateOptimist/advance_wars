@@ -52,12 +52,6 @@ void PauseMenu::render(Engine& engine)
         SDL_RenderCopy(renderer, m_backgroundTexture, nullptr, nullptr);
     }
 
-    if (TTF_Init() == -1)
-    {
-        std::cerr << "Failed to initialize TTF: " << TTF_GetError() << std::endl;
-        return;
-    }
-
     // Render the dialog options on top of the background
     std::string basePath = SDL_GetBasePath();
     std::string relativePath = "assets/ARCADECLASSIC.TTF";
