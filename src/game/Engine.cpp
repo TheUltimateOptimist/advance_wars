@@ -1,9 +1,9 @@
-#include "engine.hpp"
+#include "Engine.hpp"
 #include "SDL_events.h"
 #include "SDL_timer.h"
-#include "scene.hpp"
-#include "spritesheet.hpp"
-#include "window.hpp"
+#include "Scene.hpp"
+#include "Spritesheet.hpp"
+#include "Window.hpp"
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_render.h>

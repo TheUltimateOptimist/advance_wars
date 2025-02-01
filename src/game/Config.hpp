@@ -1,6 +1,6 @@
 #pragma once
 
-#include "unit.hpp" // Include for UnitId and MovementType
+#include "Unit.hpp" // Include for UnitId and MovementType
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/xml_parser.hpp>
 #include <stdexcept>

@@ -1,5 +1,5 @@
-#include "effect.hpp"
-#include "spritesheet.hpp"
+#include "Effect.hpp"
+#include "Spritesheet.hpp"
 #include <vector>
 
 namespace advanced_wars

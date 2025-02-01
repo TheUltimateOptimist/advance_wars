@@ -1,5 +1,5 @@
-#include "pausemenu.hpp"
-#include "../engine.hpp"
+#include "Pausemenu.hpp"
+#include "../Engine.hpp"
 #include <SDL_ttf.h>
 
 namespace advanced_wars

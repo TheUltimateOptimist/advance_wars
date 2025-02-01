@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../scene.hpp"
+#include "../Scene.hpp"
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>

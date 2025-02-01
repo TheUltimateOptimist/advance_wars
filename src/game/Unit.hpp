@@ -1,7 +1,7 @@
 #pragma once
 
-#include "engine.hpp"
-#include "weapon.hpp"
+#include "Engine.hpp"
+#include "Weapon.hpp"
 #include <optional>
 #include <unordered_map>
 

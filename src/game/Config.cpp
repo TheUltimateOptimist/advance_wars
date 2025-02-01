@@ -1,5 +1,5 @@
-#include "config.hpp"
-#include "unit.hpp"
+#include "Config.hpp"
+#include "Unit.hpp"
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/xml_parser.hpp>
 #include <iostream>

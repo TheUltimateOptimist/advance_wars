@@ -1,6 +1,6 @@
 #pragma once
 
-#include "engine.hpp"
+#include "Engine.hpp"
 #include <SDL.h>
 
 namespace advanced_wars

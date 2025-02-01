@@ -1,12 +1,12 @@
 #pragma once
 
-#include "building.hpp"
-#include "effect.hpp"
-#include "engine.hpp"
-#include "scene.hpp"
-#include "tile.hpp"
-#include "ui/contextmenu.hpp"
-#include "unit.hpp"
+#include "Building.hpp"
+#include "Effect.hpp"
+#include "Engine.hpp"
+#include "Scene.hpp"
+#include "Tile.hpp"
+#include "Unit.hpp"
+#include "ui/Contextmenu.hpp"
 #include <SDL.h>
 #include <string>
 #include <unordered_map>

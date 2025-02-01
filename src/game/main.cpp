@@ -1,8 +1,8 @@
-#include "engine.hpp"
-#include "spritesheet.hpp"
-#include "ui/contextmenu.hpp"
-#include "ui/menu.hpp"
-#include "window.hpp"
+#include "Engine.hpp"
+#include "Spritesheet.hpp"
+#include "Window.hpp"
+#include "ui/Contextmenu.hpp"
+#include "ui/Menu.hpp"
 #include <SDL2/SDL.h>
 #include <SDL_image.h>
 #include <memory>

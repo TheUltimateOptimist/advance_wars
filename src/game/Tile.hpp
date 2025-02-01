@@ -1,7 +1,7 @@
 #pragma once
 
-#include "engine.hpp"
-#include "scene.hpp"
+#include "Engine.hpp"
+#include "Scene.hpp"
 
 namespace advanced_wars
 {

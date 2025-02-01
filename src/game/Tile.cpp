@@ -1,5 +1,5 @@
-#include "tile.hpp"
-#include "spritesheet.hpp"
+#include "Tile.hpp"
+#include "Spritesheet.hpp"
 #include <vector>
 
 namespace advanced_wars

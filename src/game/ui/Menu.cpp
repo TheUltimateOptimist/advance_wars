@@ -1,9 +1,9 @@
-#include "menu.hpp"
-#include "../building.hpp"
-#include "../level.hpp"
-#include "../spritesheet.hpp"
-#include "../tile.hpp"
-#include "../unit.hpp"
+#include "Menu.hpp"
+#include "../Building.hpp"
+#include "../Level.hpp"
+#include "../Spritesheet.hpp"
+#include "../Tile.hpp"
+#include "../Unit.hpp"
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>

@@ -6,8 +6,8 @@
  * @author David Maul
  */
 
-#include "spritesheet.hpp"
-#include "engine.hpp"
+#include "Spritesheet.hpp"
+#include "Engine.hpp"
 #include "highfive/H5File.hpp"
 #include <SDL_image.h>
 #include <SDL_render.h>
@@ -413,8 +413,7 @@ int Spritesheet::getUnitMovingHeight()
     return this->m_unitMovingHeight;
 }
 
-std::vector<std::vector<std::vector<std::pair<SDL_Texture*, int>>>>&
-Spritesheet::getUnitTextures()
+std::vector<std::vector<std::vector<std::pair<SDL_Texture*, int>>>>& Spritesheet::getUnitTextures()
 {
     return this->m_unitTextures;
 }

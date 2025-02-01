@@ -1,5 +1,5 @@
-#include "building.hpp"
-#include "spritesheet.hpp"
+#include "Building.hpp"
+#include "Spritesheet.hpp"
 
 namespace advanced_wars
 {
