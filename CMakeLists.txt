@@ -62,11 +62,12 @@ else()
 endif()
 
 # Ressourcen kopieren
-set(ASSETS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/assets)
-set(OUTPUT_ASSETS_DIR ${CMAKE_CURRENT_BINARY_DIR}/assets)
-file(MAKE_DIRECTORY ${OUTPUT_ASSETS_DIR})
-file(GLOB FONT_FILES ${ASSETS_DIR}/*.TTF)
-file(GLOB IMAGE_FILES ${ASSETS_DIR}/*.png)
+set(RES_DIR ${CMAKE_CURRENT_SOURCE_DIR}/res)
+set(OUTPUT_RES_DIR ${CMAKE_CURRENT_BINARY_DIR}/res)
+file(MAKE_DIRECTORY ${OUTPUT_RES_DIR})
+file(GLOB FONT_FILES ${RES_DIR}/*.TTF)
+file(GLOB IMAGE_FILES ${RES_DIR}/*.png)
+file(GLOB HDF5_FILES ${RES_DIR}/*.h5)
 
 # Executable erstellen
 add_executable(advanced_wars ${ADVANCED_WARS_SOURCES})
@@ -80,16 +81,24 @@ target_include_directories(advanced_wars
 foreach(FONT ${FONT_FILES})
     add_custom_command(
             TARGET advanced_wars PRE_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy ${FONT} ${OUTPUT_ASSETS_DIR}
-            COMMENT "Kopiere Font: ${FONT} nach ${OUTPUT_ASSETS_DIR}"
+            COMMAND ${CMAKE_COMMAND} -E copy ${FONT} ${OUTPUT_RES_DIR}
+            COMMENT "Kopiere Font: ${FONT} nach ${OUTPUT_RES_DIR}"
     )
 endforeach()
 
 foreach(IMAGE ${IMAGE_FILES})
     add_custom_command(
             TARGET advanced_wars PRE_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy ${IMAGE} ${OUTPUT_ASSETS_DIR}
-            COMMENT "Kopiere Image: ${IMAGE} nach ${OUTPUT_ASSETS_DIR}"
+            COMMAND ${CMAKE_COMMAND} -E copy ${IMAGE} ${OUTPUT_RES_DIR}
+            COMMENT "Kopiere Image: ${IMAGE} nach ${OUTPUT_RES_DIR}"
+    )
+endforeach()
+
+foreach(H5_FILE ${HDF5_FILES})
+    add_custom_command(
+            TARGET advanced_wars PRE_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy ${H5_FILE} ${OUTPUT_RES_DIR}
+            COMMENT "Kopiere HDF5 File: ${H5_File} nach ${OUTPUT_RES_DIR}"
     )
 endforeach()
 

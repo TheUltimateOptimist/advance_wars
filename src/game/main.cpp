@@ -30,7 +30,7 @@ int main()
 
     Engine engine(window);
 
-    Spritesheet spritesheet("./spritesheet.h5", engine);
+    Spritesheet spritesheet("res/spritesheet.h5", engine);
 
     engine.setSpritesheet(spritesheet);
 
@@ -39,7 +39,7 @@ int main()
     context_menu->setOptions({"Move", "Info", "Wait"});
 
     std::string basePath = SDL_GetBasePath();
-    std::string relativePath = "assets/main_background.png";
+    std::string relativePath = "res/main_background.png";
     std::string fullPath = basePath + relativePath;
     menu->loadBackground(engine, fullPath.c_str());
 

@@ -51,7 +51,7 @@ void PauseMenu::render(Engine& engine)
 
     // Render the dialog options on top of the background
     std::string basePath = SDL_GetBasePath();
-    std::string relativePath = "assets/ARCADECLASSIC.TTF";
+    std::string relativePath = "res/ARCADECLASSIC.TTF";
     std::string fullPath = basePath + relativePath;
 
     TTF_Font* font = TTF_OpenFont(fullPath.c_str(), 24);

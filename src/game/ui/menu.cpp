@@ -46,7 +46,7 @@ void Menu::render(Engine& engine)
     }
 
     std::string basePath = SDL_GetBasePath();
-    std::string relativePath = "assets/ARCADECLASSIC.TTF";
+    std::string relativePath = "res/ARCADECLASSIC.TTF";
     std::string fullPath = basePath + relativePath;
     TTF_Font*   titleFont = TTF_OpenFont(fullPath.c_str(), 48);
     if (!titleFont)
