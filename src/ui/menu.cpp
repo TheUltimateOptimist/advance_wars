@@ -17,11 +17,6 @@ Menu::Menu(int selectedOption)
     : m_selectedOption(selectedOption), m_options({"Start Game", "Options", "Exit"}),
       m_backgroundTexture(nullptr)
 {
-    if (TTF_Init() == -1)
-    {
-        std::cerr << "Failed to initialize TTF: " << TTF_GetError() << std::endl;
-        return;
-    }
 }
 
 Menu::~Menu()
@@ -30,18 +25,14 @@ Menu::~Menu()
     {
         SDL_DestroyTexture(m_backgroundTexture);
     }
-    TTF_Quit();
 }
 
 void Menu::render(Engine& engine)
 {
-
-    // Iterate over all events
-    while (!engine.events().empty())
+    if (TTF_Init() == -1)
     {
-        SDL_Event event = engine.events().at(0);
-        engine.events().pop_front();
-        handleEvent(engine, event);
+        std::cerr << "Failed to initialize TTF: " << TTF_GetError() << std::endl;
+        return;
     }
 
     if (m_backgroundTexture)
@@ -109,6 +100,7 @@ void Menu::render(Engine& engine)
     TTF_CloseFont(menuFont);
 
     SDL_RenderPresent(engine.renderer());
+    TTF_Quit();
 }
 
 void Menu::handleEvent(Engine& engine, SDL_Event& event)

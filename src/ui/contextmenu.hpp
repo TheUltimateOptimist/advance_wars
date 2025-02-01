@@ -25,7 +25,7 @@ class ContextMenu : public Scene
 
         void render(Engine& engine) override;
 
-        void handleEvent(SDL_Event& event);
+        void handleEvent(Engine& engine, SDL_Event& event);
 
         void update(int x, int y);
 

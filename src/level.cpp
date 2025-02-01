@@ -186,6 +186,7 @@ void Level::handleEvent(Engine& engine, SDL_Event& event)
         m_contextMenu.update(event.button.x, event.button.y);
         m_contextMenuActive = true;
 
+        // the current unit debug combat should be handled by the contextmenu with its menu options
         if (event.button.button == SDL_BUTTON_LEFT)
         {
 
@@ -245,6 +246,7 @@ void Level::handleEvent(Engine& engine, SDL_Event& event)
             }
         }
         break;
+
     case SDL_KEYDOWN:
 
         if (event.key.keysym.sym == SDLK_ESCAPE)
@@ -259,20 +261,16 @@ void Level::handleEvent(Engine& engine, SDL_Event& event)
         }
         if (m_contextMenuActive)
         {
-            if (event.key.keysym.sym == SDLK_DOWN)
-            {
-                m_contextMenu.handleEvent(event);
-            }
-            if (event.key.keysym.sym == SDLK_UP)
-            {
-                m_contextMenu.handleEvent(event);
-            }
             if (event.key.keysym.sym == SDLK_RETURN)
             {
                 if (m_contextMenu.getSelectedOption() == "Wait")
                 {
                     m_contextMenuActive = false;
                 }
+            }
+            else
+            {
+                m_contextMenu.handleEvent(engine, event);
             }
         }
         break;

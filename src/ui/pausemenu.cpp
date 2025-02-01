@@ -33,12 +33,9 @@ PauseMenu::~PauseMenu()
 
 void PauseMenu::render(Engine& engine)
 {
-
-    while (!engine.events().empty())
+    if (TTF_Init() == -1)
     {
-        SDL_Event event = engine.events().at(0);
-        engine.events().pop_front();
-        handleEvent(engine, event);
+        std::cerr << "Failed to initialize SDL_ttf: " << TTF_GetError() << std::endl;
     }
 
     SDL_Renderer* renderer = engine.renderer();
@@ -80,7 +77,7 @@ void PauseMenu::render(Engine& engine)
         SDL_DestroyTexture(textTexture);
     }
     TTF_CloseFont(font);
-    SDL_RenderPresent(renderer);
+    TTF_Quit();
 }
 
 void PauseMenu::handleEvent(Engine& engine, SDL_Event& event)

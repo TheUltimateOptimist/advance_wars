@@ -78,6 +78,12 @@ void Engine::pump()
             this->m_events.push_back(e);
         }
     }
+    std::shared_ptr<Scene> currentScene = m_scenes.back();
+    while (m_events.size() > 0)
+    {
+        currentScene->handleEvent(*this, m_events.at(0));
+        m_events.pop_front();
+    }
 }
 
 void Engine::exit()
