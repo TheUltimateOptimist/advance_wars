@@ -98,7 +98,7 @@ foreach(H5_FILE ${HDF5_FILES})
     add_custom_command(
             TARGET advanced_wars PRE_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy ${H5_FILE} ${OUTPUT_RES_DIR}
-            COMMENT "Kopiere HDF5 File: ${H5_File} nach ${OUTPUT_RES_DIR}"
+            COMMENT "Kopiere HDF5 File: ${H5_FILE} nach ${OUTPUT_RES_DIR}"
     )
 endforeach()
 
