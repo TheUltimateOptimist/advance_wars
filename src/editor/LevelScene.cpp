@@ -9,11 +9,31 @@
 #include <boost/property_tree/xml_parser.hpp>
 
 LevelScene::LevelScene(const std::string& name, int width, int height, std::vector<uint8_t> tile_ids, const std::string& file_path, QWidget *parent) : QGraphicsScene(parent), name(name), width(width), height(height), tile_ids(tile_ids), file_path(file_path), selected_tile_id(2) {
-    this->setSceneRect(0, 0, width*16, height*16);
+    this->setSceneRect(0, 0, width*16 + 32, height*16 + 32);
     std::vector<QGraphicsPixmapItem*> tile_occupants;
+    QPixmap cliff_left = SpriteProvider::get_sprite(20);
+    QPixmap cliff_right = SpriteProvider::get_sprite(21);
+    QPixmap cliff_top = SpriteProvider::get_sprite(18);
+    QPixmap cliff_bottom = SpriteProvider::get_sprite(19);
+    QPixmap cliff_corner_top_left = SpriteProvider::get_sprite(22);
+    QPixmap cliff_corner_top_right = SpriteProvider::get_sprite(23);
+    QPixmap cliff_corner_bottom_left = SpriteProvider::get_sprite(24);
+    QPixmap cliff_corner_bottom_right = SpriteProvider::get_sprite(25);
+    for (int index = 1; index <= height; index++) {
+        addPixmap(cliff_right)->setPos(0, index*16);
+        addPixmap(cliff_left)->setPos(width*16 + 16, index*16);
+    }
+    for (int index = 1; index <= width; index++) {
+        addPixmap(cliff_bottom)->setPos(index*16, 0);
+        addPixmap(cliff_top)->setPos(index*16, height*16 + 16);
+    }
+    addPixmap(cliff_corner_top_left)->setPos(0, 0);
+    addPixmap(cliff_corner_top_right)->setPos(width*16 + 16, 0);
+    addPixmap(cliff_corner_bottom_left)->setPos(0, height*16 + 16);
+    addPixmap(cliff_corner_bottom_right)->setPos(width*16 + 16, height*16 + 16);
     for (int index = 0; index < width*height; index++) {
-        int x = (index % width) * 16;
-        int y = (index / width) * 16;
+        int x = (index % width) * 16 + 16;
+        int y = (index / width) * 16 + 16;
         Tile* tile = new Tile(index);
         this->addItem(tile);
         tile->setZValue(0);
@@ -105,14 +125,9 @@ void LevelScene::onLevelWriteRequested()
 
 void LevelScene::onTileEntered(int index)
 {
-    std::cout << "lol" << std::endl;
     if (selected_tile_id == tile_ids[index]) return;
-    std::cout << "lolll" << std::endl;
-    std::cout << tile_occupants.size() << std::endl;
-    std::cout << tile_occupants[index] << std::endl;
     if (tile_occupants[index] != nullptr) removeItem(tile_occupants[index]);
     tile_occupants[index] = nullptr;
-    std::cout << "some" << std::endl;
     if (selected_tile_id > 0) {
         tile_occupants[index] = occupy_tile(index, selected_tile_id);
     } 
@@ -141,8 +156,8 @@ void LevelScene::onNewTileIdSelected(uint8_t tile_id)
 QGraphicsPixmapItem *LevelScene::occupy_tile(int index, uint8_t tile_id)
 {
     if (tile_id == 0) return nullptr;
-    int x = (index % width) * 16;
-    int y = (index / width) * 16;
+    int x = (index % width) * 16 + 16;
+    int y = (index / width) * 16 + 16;
     QPixmap tile_occupant = SpriteProvider::get_sprite(tile_id);
     QGraphicsPixmapItem* tile_occupant_item = addPixmap(tile_occupant);
     tile_occupant_item->setZValue(tile_id < 50 ? 1 : 2 + index);
