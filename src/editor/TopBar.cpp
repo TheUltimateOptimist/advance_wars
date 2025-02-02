@@ -5,6 +5,9 @@
 #include "SaveButton.hpp"
 #include "LevelTitle.hpp"
 #include "LevelNameEdit.hpp"
+#include "ZoomInfo.hpp"
+#include "ZoomInButton.hpp"
+#include "ZoomOutButton.hpp"
 
 TopBar::TopBar(const std::string& level_name, int level_width, int level_height, QWidget *parent) : QToolBar(parent) {
     QWidget *container = new QWidget(this);
@@ -30,8 +33,16 @@ TopBar::TopBar(const std::string& level_name, int level_width, int level_height,
     middle_layout->addStretch();
     
     QPushButton *save_button = new SaveButton("Speichern", right_container);
+    QPushButton* zoom_in = new ZoomInButton(right_container);
+    QPushButton* zoom_out = new ZoomOutButton(right_container);
+    QPushButton* zoom_info = new ZoomInfo(right_container);
+    full_right_layout->addStretch();
+    full_right_layout->addWidget(zoom_in);
+    full_right_layout->addWidget(zoom_info);
+    full_right_layout->addWidget(zoom_out);
     full_right_layout->addStretch();
     full_right_layout->addWidget(save_button); 
+    full_right_layout->addStretch();
 
     full_right_container->setFixedWidth(300);
     main_layout->addWidget(left_container, 1);

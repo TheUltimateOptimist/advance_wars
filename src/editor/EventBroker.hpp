@@ -25,6 +25,8 @@ public:
 
     virtual void onNewTileIdSelected(uint8_t tile_id){};
 
+    virtual void onZoomed(double delta){}
+
 private:
     static std::vector<EventBroker*> instances ;
 };
