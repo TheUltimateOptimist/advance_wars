@@ -9,7 +9,7 @@
 #include "ZoomInButton.hpp"
 #include "ZoomOutButton.hpp"
 
-TopBar::TopBar(const std::string& level_name, int level_width, int level_height, QWidget *parent) : QToolBar(parent) {
+TopBar::TopBar(const std::string& level_name, QWidget *parent) : QToolBar(parent) {
     QWidget *container = new QWidget(this);
     QHBoxLayout *main_layout = new QHBoxLayout(container);
     QWidget *left_container = new QWidget(container);
@@ -27,10 +27,10 @@ TopBar::TopBar(const std::string& level_name, int level_width, int level_height,
     left_layout->addWidget(text_field);
     left_layout->addStretch();
 
-    LevelTitle* title = new LevelTitle(level_width, level_height, level_name, middle_container);
-    middle_layout->addStretch();
-    middle_layout->addWidget(title);
-    middle_layout->addStretch();
+    //LevelTitle* title = new LevelTitle(level_width, level_height, level_name, middle_container);
+    //middle_layout->addStretch();
+    //middle_layout->addWidget(title);
+    //middle_layout->addStretch();
     
     QPushButton *save_button = new SaveButton("Speichern", right_container);
     QPushButton* zoom_in = new ZoomInButton(right_container);

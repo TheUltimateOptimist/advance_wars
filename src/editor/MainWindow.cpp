@@ -4,29 +4,34 @@
 #include "MainWindow.hpp"
 #include "TopBar.hpp"
 #include "TileSelector.hpp"
+#include "SpriteProvider.hpp"
 #include <iostream>
+#include "LevelView.hpp"
 
-MainWindow::MainWindow(LevelScene* level, QWidget *parent) : QMainWindow(parent) {
+MainWindow::MainWindow(LevelScene* level, QWidget *parent) : QMainWindow(parent), level_width(level->getWidth()), level_height(level->getHeight()) {
     //CREATE MAIN WINDOW ------------------------------------------
     QWidget *mainWidget = new QWidget(this);
-    setWindowTitle("Level Editor");
-    addToolBar(new TopBar(level->getName(), level->getWidth(), level->getHeight(), this));
+    addToolBar(new TopBar(level->getName(), this));
 
 
     //CREATE TOOLBOX-----------------------------------------------
     TileSelector *tile_selector = new TileSelector(mainWidget);
 
     //CREATE LEVELMAP
-    QGraphicsView* mapWidget = new QGraphicsView(this);
-    level->setParent(mapWidget);
-    mapWidget->setScene(level);
-    mapWidget->setAlignment(Qt::AlignCenter);
-    mapWidget->scale(2, 2);
+    LevelView* level_map = new LevelView(level, this);
+
 
     //LAYOUT-------------------------------------------------------
     QHBoxLayout *layout = new QHBoxLayout(mainWidget);
-    layout -> addWidget(mapWidget);
+    layout -> addWidget(level_map);
     layout-> addWidget(tile_selector);
 
     setCentralWidget(mainWidget);
+    onLevelNameUpdated(level->getName());
+}
+
+void MainWindow::onLevelNameUpdated(std::string new_name)
+{
+    std::string dim_text = "(" + std::to_string(level_width) + " X " + std::to_string(level_height) + ")";
+    setWindowTitle((new_name + " " + dim_text).c_str());
 }

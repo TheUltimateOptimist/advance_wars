@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <iostream>
 #include <functional>
+#include <QString>
 
 class Tile;
 class EventBroker {
@@ -15,7 +16,7 @@ public:
 
     virtual void onLevelNameUpdated(std::string new_name){};
 
-    virtual void onLevelWriteRequested(){};
+    virtual void onLevelWriteRequested(QString file_path){};
 
     virtual void onTileEntered(int index){};
 

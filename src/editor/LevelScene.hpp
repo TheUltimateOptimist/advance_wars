@@ -19,7 +19,7 @@ public:
     int getHeight();
 private:
     void onLevelNameUpdated(std::string new_name) override;
-    void onLevelWriteRequested() override;
+    void onLevelWriteRequested(QString file_path) override;
     void onTileEntered(int index) override;  
     void onTileExited(int index) override;
     void onTileClicked(int index) override;

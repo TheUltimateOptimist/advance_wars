@@ -103,7 +103,7 @@ void LevelScene::onLevelNameUpdated(std::string new_name)
     this->name = new_name;
 }
 
-void LevelScene::onLevelWriteRequested()
+void LevelScene::onLevelWriteRequested(QString file_path)
 {
     boost::property_tree::ptree pt;
 
@@ -118,7 +118,7 @@ void LevelScene::onLevelWriteRequested()
     std::string xml_data = xmlStream.str();
 
     // write level to hdf5
-    HighFive::File file(file_path, HighFive::File::Truncate);
+    HighFive::File file(file_path.toStdString(), HighFive::File::Truncate);
     file.createDataSet<std::string>("metadata", HighFive::DataSpace::From(xmlStream)).write(xml_data);
     file.createDataSet<uint8_t>("tilesarray", HighFive::DataSpace::From(tile_ids)).write(tile_ids);
 }
