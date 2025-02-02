@@ -4,15 +4,14 @@
 namespace editor
 {
 
-ZoomOutButton::ZoomOutButton(QWidget *parent) : QPushButton("-", parent)
+ZoomOutButton::ZoomOutButton(QWidget* parent) : QPushButton("-", parent)
 {
     setFixedWidth(20);
-
 }
 
-void ZoomOutButton::mousePressEvent(QMouseEvent *event)
+void ZoomOutButton::mousePressEvent(QMouseEvent* event)
 {
-    EventBroker::send([](EventBroker* e){e->onZoomed(-0.25);});
+    EventBroker::send([](EventBroker* e) { e->onZoomed(-0.25); });
 }
 
 } // namespace editor
