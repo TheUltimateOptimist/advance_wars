@@ -11,7 +11,7 @@
 namespace editor
 {
 
-LevelScene::LevelScene(const std::string& name, int width, int height, std::vector<uint8_t> tile_ids, const std::string& file_path, QWidget *parent) : QGraphicsScene(parent), name(name), width(width), height(height), tile_ids(tile_ids), file_path(file_path), selected_tile_id(2) {
+LevelScene::LevelScene(const std::string& name, int width, int height, std::vector<uint8_t> tile_ids, const std::string& file_path, QWidget *parent) : QGraphicsScene(parent), m_name(name), m_width(width), m_height(height), m_tile_ids(tile_ids), m_file_path(file_path), m_selected_tile_id(2) {
     this->setSceneRect(0, 0, width*16 + 32, height*16 + 32);
     std::vector<QGraphicsPixmapItem*> tile_occupants;
     QPixmap cliff_left = SpriteProvider::get_sprite(20);
@@ -52,7 +52,7 @@ LevelScene::LevelScene(const std::string& name, int width, int height, std::vect
             tile_occupants.push_back(nullptr);
         }
     }
-    this->tile_occupants = tile_occupants;
+    this->m_tile_occupants = tile_occupants;
 }
 
 LevelScene *LevelScene::empty(const std::string& name, int width, int height, QWidget *parent) {
@@ -88,22 +88,22 @@ LevelScene *LevelScene::fromFile(const std::string &file_path, QWidget *parent)
 
 std::string LevelScene::getName()
 {
-    return name;
+    return m_name;
 }
 
 int LevelScene::getWidth()
 {
-    return width;
+    return m_width;
 }
 
 int LevelScene::getHeight()
 {
-    return height;
+    return m_height;
 }
 
 void LevelScene::onLevelNameUpdated(std::string new_name)
 {
-    this->name = new_name;
+    this->m_name = new_name;
 }
 
 void LevelScene::onLevelWriteRequested(QString file_path)
@@ -111,9 +111,9 @@ void LevelScene::onLevelWriteRequested(QString file_path)
     boost::property_tree::ptree pt;
 
     // Add data to the property tree
-    pt.put("level.width", width);
-    pt.put("level.height", height);
-    pt.put("level.name", name);
+    pt.put("level.width", m_width);
+    pt.put("level.height", m_height);
+    pt.put("level.name", m_name);
 
     // convert property tree to xml string
     std::ostringstream xmlStream;
@@ -123,44 +123,44 @@ void LevelScene::onLevelWriteRequested(QString file_path)
     // write level to hdf5
     HighFive::File file(file_path.toStdString(), HighFive::File::Truncate);
     file.createDataSet<std::string>("metadata", HighFive::DataSpace::From(xmlStream)).write(xml_data);
-    file.createDataSet<uint8_t>("tilesarray", HighFive::DataSpace::From(tile_ids)).write(tile_ids);
+    file.createDataSet<uint8_t>("tilesarray", HighFive::DataSpace::From(m_tile_ids)).write(m_tile_ids);
 }
 
 void LevelScene::onTileEntered(int index)
 {
-    if (selected_tile_id == tile_ids[index]) return;
-    if (tile_occupants[index] != nullptr) removeItem(tile_occupants[index]);
-    tile_occupants[index] = nullptr;
-    if (selected_tile_id > 0) {
-        tile_occupants[index] = occupy_tile(index, selected_tile_id);
+    if (m_selected_tile_id == m_tile_ids[index]) return;
+    if (m_tile_occupants[index] != nullptr) removeItem(m_tile_occupants[index]);
+    m_tile_occupants[index] = nullptr;
+    if (m_selected_tile_id > 0) {
+        m_tile_occupants[index] = occupy_tile(index, m_selected_tile_id);
     } 
 }
 
 void LevelScene::onTileExited(int index)
 {
-    if (selected_tile_id == tile_ids[index]) return;
-    if (tile_occupants[index] != nullptr) removeItem(tile_occupants[index]);
-    tile_occupants[index] = nullptr;
-    if (tile_ids[index] > 0) {
-        tile_occupants[index] = occupy_tile(index, tile_ids[index]);
+    if (m_selected_tile_id == m_tile_ids[index]) return;
+    if (m_tile_occupants[index] != nullptr) removeItem(m_tile_occupants[index]);
+    m_tile_occupants[index] = nullptr;
+    if (m_tile_ids[index] > 0) {
+        m_tile_occupants[index] = occupy_tile(index, m_tile_ids[index]);
     }
 }
 
 void LevelScene::onTileClicked(int index)
 {
-    tile_ids[index] = selected_tile_id;
+    m_tile_ids[index] = m_selected_tile_id;
 }
 
 void LevelScene::onNewTileIdSelected(uint8_t tile_id)
 {
-    this->selected_tile_id = tile_id;
+    this->m_selected_tile_id = tile_id;
 }
 
 QGraphicsPixmapItem *LevelScene::occupy_tile(int index, uint8_t tile_id)
 {
     if (tile_id == 0) return nullptr;
-    int x = (index % width) * 16 + 16;
-    int y = (index / width) * 16 + 16;
+    int x = (index % m_width) * 16 + 16;
+    int y = (index / m_width) * 16 + 16;
     QPixmap tile_occupant = SpriteProvider::get_sprite(tile_id);
     QGraphicsPixmapItem* tile_occupant_item = addPixmap(tile_occupant);
     tile_occupant_item->setZValue(tile_id < 50 ? 1 : 2 + index);

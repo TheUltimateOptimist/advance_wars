@@ -12,7 +12,7 @@ public:
     MainWindow(LevelScene* level, QWidget *parent = nullptr);
 private:
     void onLevelNameUpdated(std::string new_name) override;
-    int level_width;
+    int m_level_width;
     int level_height;
 };
 

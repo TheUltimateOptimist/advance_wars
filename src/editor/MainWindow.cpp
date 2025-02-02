@@ -11,7 +11,7 @@
 namespace editor 
 {
 
-MainWindow::MainWindow(LevelScene* level, QWidget *parent) : QMainWindow(parent), level_width(level->getWidth()), level_height(level->getHeight()) {
+MainWindow::MainWindow(LevelScene* level, QWidget *parent) : QMainWindow(parent), m_level_width(level->getWidth()), level_height(level->getHeight()) {
     //CREATE MAIN WINDOW ------------------------------------------
     QWidget *mainWidget = new QWidget(this);
     addToolBar(new TopBar(level->getName(), this));
@@ -35,7 +35,7 @@ MainWindow::MainWindow(LevelScene* level, QWidget *parent) : QMainWindow(parent)
 
 void MainWindow::onLevelNameUpdated(std::string new_name)
 {
-    std::string dim_text = "(" + std::to_string(level_width) + " X " + std::to_string(level_height) + ")";
+    std::string dim_text = "(" + std::to_string(m_level_width) + " X " + std::to_string(level_height) + ")";
     setWindowTitle((new_name + " " + dim_text).c_str());
 }
 

@@ -27,13 +27,13 @@ private:
     void onTileClicked(int index) override;
     void onNewTileIdSelected(uint8_t tile_id) override;
     QGraphicsPixmapItem* occupy_tile(int index, uint8_t tile_id);
-    uint8_t selected_tile_id;
-    std::string name;
-    int width;
-    int height;
-    std::vector<uint8_t> tile_ids;
-    std::vector<QGraphicsPixmapItem*> tile_occupants;
-    std::string file_path;
+    uint8_t m_selected_tile_id;
+    std::string m_name;
+    int m_width;
+    int m_height;
+    std::vector<uint8_t> m_tile_ids;
+    std::vector<QGraphicsPixmapItem*> m_tile_occupants;
+    std::string m_file_path;
 };
 
 } // namespace editor

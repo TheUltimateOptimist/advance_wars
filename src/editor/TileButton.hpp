@@ -11,7 +11,7 @@ public:
 protected:
     void mousePressEvent(QMouseEvent* event) override;
 private:
-    uint8_t id;
+    uint8_t m_id;
 };
 
 } // namespace editor

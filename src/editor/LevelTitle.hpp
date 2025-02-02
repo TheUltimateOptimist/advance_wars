@@ -12,8 +12,8 @@ public:
     void onLevelNameUpdated(std::string name) override;   
     void setTitle(const std::string& name);
 private:
-    int width;
-    int height;
+    int m_width;
+    int m_height;
 };
 
 } // namespace editor

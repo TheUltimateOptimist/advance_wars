@@ -3,7 +3,7 @@
 namespace editor
 {
 
-LevelTitle::LevelTitle(int width, int height, const std::string &name, QWidget *parent) : QLabel(parent), width(width), height(height) {
+LevelTitle::LevelTitle(int width, int height, const std::string &name, QWidget *parent) : QLabel(parent), m_width(width), m_height(height) {
     this->setTitle(name);
 }
 
@@ -14,7 +14,7 @@ void LevelTitle::onLevelNameUpdated(std::string name)
 
 void LevelTitle::setTitle(const std::string &name)
 {
-    std::string dim_text = "(" + std::to_string(width) + " X " + std::to_string(height) + ")";
+    std::string dim_text = "(" + std::to_string(m_width) + " X " + std::to_string(m_height) + ")";
     this->setText((name + " " + dim_text).c_str());
 }
 
