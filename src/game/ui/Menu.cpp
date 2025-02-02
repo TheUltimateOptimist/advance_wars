@@ -1,9 +1,9 @@
-#include "menu.hpp"
-#include "../building.hpp"
-#include "../level.hpp"
-#include "../spritesheet.hpp"
-#include "../tile.hpp"
-#include "../unit.hpp"
+#include "Menu.hpp"
+#include "../Building.hpp"
+#include "../Level.hpp"
+#include "../Spritesheet.hpp"
+#include "../Tile.hpp"
+#include "../Unit.hpp"
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
@@ -14,53 +14,39 @@ namespace advanced_wars
 {
 
 Menu::Menu(int selectedOption)
-    : selectedOption(selectedOption), options({"Start Game", "Options", "Exit"}),
-      backgroundTexture(nullptr)
+    : m_selectedOption(selectedOption), m_options({"Start Game", "Options", "Exit"}),
+      m_backgroundTexture(nullptr)
 {
-    if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG))
-    {
-        std::cerr << "Failed to initialize SDL_image: " << IMG_GetError() << std::endl;
-    }
 }
 
 Menu::~Menu()
 {
-    if (backgroundTexture)
+    if (m_backgroundTexture)
     {
-        SDL_DestroyTexture(backgroundTexture);
+        SDL_DestroyTexture(m_backgroundTexture);
     }
-    IMG_Quit();
-};
+}
 
-void Menu::render(Engine* engine)
+void Menu::render(Engine& engine)
 {
-
-    // Iterate over all events
-    while (!engine->events().empty())
-    {
-        SDL_Event event = engine->events().at(0);
-        engine->events().pop_front();
-        handleEvent(engine, event);
-    }
-
-    if (backgroundTexture)
-    {
-        SDL_RenderCopy(engine->renderer(), backgroundTexture, nullptr, nullptr);
-    }
-    else
-    {
-        SDL_SetRenderDrawColor(engine->renderer(), 0, 0, 0, 255);
-        SDL_RenderClear(engine->renderer());
-    }
-
     if (TTF_Init() == -1)
     {
         std::cerr << "Failed to initialize TTF: " << TTF_GetError() << std::endl;
         return;
     }
 
+    if (m_backgroundTexture)
+    {
+        SDL_RenderCopy(engine.renderer(), m_backgroundTexture, nullptr, nullptr);
+    }
+    else
+    {
+        SDL_SetRenderDrawColor(engine.renderer(), 0, 0, 0, 255);
+        SDL_RenderClear(engine.renderer());
+    }
+
     std::string basePath = SDL_GetBasePath();
-    std::string relativePath = "assets/ARCADECLASSIC.TTF";
+    std::string relativePath = "res/ARCADECLASSIC.TTF";
     std::string fullPath = basePath + relativePath;
     TTF_Font*   titleFont = TTF_OpenFont(fullPath.c_str(), 48);
     if (!titleFont)
@@ -83,28 +69,28 @@ void Menu::render(Engine* engine)
     SDL_Surface* titleSurface = TTF_RenderText_Solid(titleFont, "Advanced Wars", white);
     if (titleSurface)
     {
-        SDL_Texture* titleTexture = SDL_CreateTextureFromSurface(engine->renderer(), titleSurface);
+        SDL_Texture* titleTexture = SDL_CreateTextureFromSurface(engine.renderer(), titleSurface);
         SDL_Rect     titleRect = {
             static_cast<int>((800 - titleSurface->w) / 2), 50, titleSurface->w, titleSurface->h};
-        SDL_RenderCopy(engine->renderer(), titleTexture, nullptr, &titleRect);
+        SDL_RenderCopy(engine.renderer(), titleTexture, nullptr, &titleRect);
         SDL_DestroyTexture(titleTexture);
         SDL_FreeSurface(titleSurface);
     }
 
-    for (size_t i = 0; i < options.size(); ++i)
+    for (size_t i = 0; i < m_options.size(); ++i)
     {
         SDL_Surface* textSurface = TTF_RenderText_Solid(
-            menuFont, options[i].c_str(), (i == selectedOption) ? yellow : white);
+            menuFont, m_options[i].c_str(), (i == m_selectedOption) ? yellow : white);
         if (!textSurface)
         {
             continue;
         }
 
-        SDL_Texture* textTexture = SDL_CreateTextureFromSurface(engine->renderer(), textSurface);
+        SDL_Texture* textTexture = SDL_CreateTextureFromSurface(engine.renderer(), textSurface);
         SDL_Rect     textRect = {
             static_cast<int>((800 - textSurface->w) / 2), static_cast<int>(150 + i * 50),
             textSurface->w, textSurface->h};
-        SDL_RenderCopy(engine->renderer(), textTexture, nullptr, &textRect);
+        SDL_RenderCopy(engine.renderer(), textTexture, nullptr, &textRect);
 
         SDL_DestroyTexture(textTexture);
         SDL_FreeSurface(textSurface);
@@ -112,31 +98,31 @@ void Menu::render(Engine* engine)
 
     TTF_CloseFont(titleFont);
     TTF_CloseFont(menuFont);
-    TTF_Quit();
 
-    SDL_RenderPresent(engine->renderer());
+    SDL_RenderPresent(engine.renderer());
+    TTF_Quit();
 }
 
-void Menu::handleEvent(Engine* engine, SDL_Event& event)
+void Menu::handleEvent(Engine& engine, SDL_Event& event)
 {
     if (event.type == SDL_KEYDOWN)
     {
         if (event.key.keysym.sym == SDLK_DOWN)
         {
-            selectedOption = (selectedOption + 1) % options.size();
+            m_selectedOption = (m_selectedOption + 1) % m_options.size();
         }
         else if (event.key.keysym.sym == SDLK_UP)
         {
-            selectedOption = (selectedOption - 1 + options.size()) % options.size();
+            m_selectedOption = (m_selectedOption - 1 + m_options.size()) % m_options.size();
         }
         else if (event.key.keysym.sym == SDLK_RETURN)
         {
-            if (options[selectedOption] == "Exit")
+            if (m_options[m_selectedOption] == "Exit")
             {
                 std::cout << "Exiting game..." << std::endl;
-                engine->exit();
+                engine.exit();
             }
-            else if (options[selectedOption] == "Start Game")
+            else if (m_options[m_selectedOption] == "Start Game")
             {
                 std::cout << "Starting game..." << std::endl;
 
@@ -214,9 +200,9 @@ void Menu::handleEvent(Engine* engine, SDL_Event& event)
                 std::shared_ptr<Level> level =
                     std::make_shared<Level>("Osnabrück", 20, 20, tiles, buildings, units, effects);
 
-                engine->push_scene(level);
+                engine.pushScene(level);
             }
-            else if (options[selectedOption] == "Options")
+            else if (m_options[m_selectedOption] == "Options")
             {
                 std::cout << "Opening options..." << std::endl;
             }
@@ -224,7 +210,7 @@ void Menu::handleEvent(Engine* engine, SDL_Event& event)
     }
 }
 
-void Menu::loadBackground(SDL_Renderer* renderer, const std::string& imagePath)
+void Menu::loadBackground(Engine& engine, const std::string& imagePath)
 {
     // Lade das Hintergrundbild
     SDL_Surface* backgroundSurface = IMG_Load(imagePath.c_str());
@@ -236,11 +222,11 @@ void Menu::loadBackground(SDL_Renderer* renderer, const std::string& imagePath)
 
     // Erstelle eine Textur aus der Oberfläche und speichere sie als
     // Klassenmitglied
-    backgroundTexture = SDL_CreateTextureFromSurface(renderer, backgroundSurface);
+    m_backgroundTexture = SDL_CreateTextureFromSurface(engine.renderer(), backgroundSurface);
     SDL_FreeSurface(backgroundSurface); // Oberfläche freigeben, da sie nicht mehr
                                         // benötigt wird
 
-    if (!backgroundTexture)
+    if (!m_backgroundTexture)
     {
         std::cerr << "Failed to create background texture: " << SDL_GetError() << std::endl;
     }

@@ -1,8 +1,8 @@
-#include "engine.hpp"
-#include "spritesheet.hpp"
-#include "ui/contextmenu.hpp"
-#include "ui/menu.hpp"
-#include "window.hpp"
+#include "Engine.hpp"
+#include "Spritesheet.hpp"
+#include "Window.hpp"
+#include "ui/Contextmenu.hpp"
+#include "ui/Menu.hpp"
 #include <SDL2/SDL.h>
 #include <SDL_image.h>
 #include <memory>
@@ -30,20 +30,20 @@ int main()
 
     Engine engine(window);
 
-    Spritesheet spritesheet("./spritesheet.h5", engine);
+    Spritesheet spritesheet("res/spritesheet.h5", engine);
 
-    engine.set_spritesheet(spritesheet);
+    engine.setSpritesheet(spritesheet);
 
     std::shared_ptr<Menu>        menu = std::make_shared<Menu>(0);
     std::shared_ptr<ContextMenu> context_menu = std::make_shared<ContextMenu>();
     context_menu->setOptions({"Move", "Info", "Wait"});
 
     std::string basePath = SDL_GetBasePath();
-    std::string relativePath = "assets/main_background.png";
+    std::string relativePath = "res/main_background.png";
     std::string fullPath = basePath + relativePath;
-    menu->loadBackground(engine.renderer(), fullPath.c_str());
+    menu->loadBackground(engine, fullPath.c_str());
 
-    engine.push_scene(menu);
+    engine.pushScene(menu);
 
     while (!engine.exited())
     {

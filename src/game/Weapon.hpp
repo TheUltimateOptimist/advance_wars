@@ -22,10 +22,10 @@ class Weapon
         int getDamageValue(UnitId unitId) const;
 
         // Name der Waffe
-        std::string name;
+        std::string m_name;
 
         // Schadenstabelle
-        std::unordered_map<UnitId, int> damage;
+        std::unordered_map<UnitId, int> m_damage;
 };
 
 } // namespace advanced_wars
