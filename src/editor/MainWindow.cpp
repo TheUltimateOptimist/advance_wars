@@ -8,6 +8,9 @@
 #include <iostream>
 #include "LevelView.hpp"
 
+namespace editor 
+{
+
 MainWindow::MainWindow(LevelScene* level, QWidget *parent) : QMainWindow(parent), level_width(level->getWidth()), level_height(level->getHeight()) {
     //CREATE MAIN WINDOW ------------------------------------------
     QWidget *mainWidget = new QWidget(this);
@@ -35,3 +38,5 @@ void MainWindow::onLevelNameUpdated(std::string new_name)
     std::string dim_text = "(" + std::to_string(level_width) + " X " + std::to_string(level_height) + ")";
     setWindowTitle((new_name + " " + dim_text).c_str());
 }
+
+} // namespace editor

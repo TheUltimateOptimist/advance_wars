@@ -1,5 +1,8 @@
 #include "ZoomInfo.hpp"
 
+namespace editor
+{
+
 ZoomInfo::ZoomInfo(QWidget *parent) : QPushButton(parent), current_scale(2)
 {
     setDisabled(true);
@@ -13,3 +16,5 @@ void ZoomInfo::onZoomed(double delta)
     current_scale += delta;
     setText((std::to_string((int) std::round(current_scale*100)) + " %").c_str());
 }
+
+} // namespace editor

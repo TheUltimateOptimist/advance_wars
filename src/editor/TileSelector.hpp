@@ -6,6 +6,9 @@
 #include "SpriteProvider.hpp"
 #include <QGridLayout>
 
+namespace editor
+{
+
 class TileSelector : public QScrollArea {
 public:
     TileSelector(QWidget *parent = nullptr);
@@ -20,3 +23,5 @@ private:
     template<typename... T>
     QGridLayout* creatSectionLayout(QWidget* parent, T... ids);
 };
+
+} // namespace editor

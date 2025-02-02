@@ -7,6 +7,9 @@
 #include <functional>
 #include <QString>
 
+namespace editor
+{
+
 class Tile;
 class EventBroker {
 public:
@@ -32,3 +35,5 @@ public:
 private:
     static std::vector<EventBroker*> instances ;
 };
+
+} // namespace editor

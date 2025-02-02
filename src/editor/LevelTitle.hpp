@@ -3,6 +3,9 @@
 #include <QLabel>
 #include "EventBroker.hpp"
 
+namespace editor
+{
+
 class LevelTitle : public QLabel, EventBroker {
 public:
     LevelTitle(int width, int height, const std::string& name, QWidget *parent = nullptr);
@@ -12,3 +15,5 @@ private:
     int width;
     int height;
 };
+
+} // namespace editor

@@ -9,6 +9,9 @@
 #include "ZoomInButton.hpp"
 #include "ZoomOutButton.hpp"
 
+namespace editor
+{
+
 TopBar::TopBar(const std::string& level_name, QWidget *parent) : QToolBar(parent) {
     QWidget *container = new QWidget(this);
     QHBoxLayout *main_layout = new QHBoxLayout(container);
@@ -53,4 +56,6 @@ TopBar::TopBar(const std::string& level_name, QWidget *parent) : QToolBar(parent
     this->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);  // Allow resizing
     this->addWidget(container);
 }
+
+} // namespace editor
 

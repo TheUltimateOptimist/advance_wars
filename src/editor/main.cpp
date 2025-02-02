@@ -3,6 +3,8 @@
 #include "SpriteProvider.hpp"
 #include "LevelScene.hpp"
 
+using namespace editor;
+
 int main(int argc, char *argv[]) {
     //argc 1 ist der Name des Programms
     if (argc < 2) {         //keine Argumente übergeben

@@ -2,6 +2,9 @@
 #include <iostream>
 #include <stdexcept>
 
+namespace editor
+{
+
 std::vector<QPixmap> SpriteProvider::sprites = std::vector<QPixmap>();
 
 QPixmap SpriteProvider::get_sprite(uint8_t id) {
@@ -57,3 +60,5 @@ QPixmap SpriteProvider::load_pixmap(std::vector<std::vector<std::vector<uint32_t
     } 
     return QPixmap::fromImage(image);
 }
+
+} // namespace editor

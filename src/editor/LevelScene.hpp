@@ -8,6 +8,9 @@
 #include "EventBroker.hpp"
 #include "Tile.hpp"
 
+namespace editor
+{
+
 class LevelScene : public QGraphicsScene, public EventBroker {
 public:
     LevelScene(const std::string& name, int width, int height, std::vector<uint8_t> tile_ids, const std::string& file_path, QWidget *parent = nullptr);
@@ -32,3 +35,5 @@ private:
     std::vector<QGraphicsPixmapItem*> tile_occupants;
     std::string file_path;
 };
+
+} // namespace editor

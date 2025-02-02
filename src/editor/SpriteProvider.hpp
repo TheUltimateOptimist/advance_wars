@@ -4,7 +4,9 @@
 #include <vector>
 #include "highfive/H5File.hpp"
 
-//private?
+namespace editor
+{
+
 const std::vector<std::string> tile_names({"plain",
                                   "water",
                                   "forest",
@@ -54,3 +56,5 @@ private:
     //Variablen
     static std::vector<QPixmap> sprites;
 };
+
+} // namespace editor

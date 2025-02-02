@@ -8,6 +8,9 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/xml_parser.hpp>
 
+namespace editor
+{
+
 LevelScene::LevelScene(const std::string& name, int width, int height, std::vector<uint8_t> tile_ids, const std::string& file_path, QWidget *parent) : QGraphicsScene(parent), name(name), width(width), height(height), tile_ids(tile_ids), file_path(file_path), selected_tile_id(2) {
     this->setSceneRect(0, 0, width*16 + 32, height*16 + 32);
     std::vector<QGraphicsPixmapItem*> tile_occupants;
@@ -164,3 +167,5 @@ QGraphicsPixmapItem *LevelScene::occupy_tile(int index, uint8_t tile_id)
     tile_occupant_item->setPos(x, tile_id < 50 ? y : y - 16);    
     return tile_occupant_item;
 }
+
+} // namespace editor

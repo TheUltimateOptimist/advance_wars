@@ -2,6 +2,9 @@
 
 #include <QGraphicsPixmapItem>
 
+namespace editor
+{
+
 class Tile : public QGraphicsPixmapItem {
 public:
     Tile(int index);
@@ -12,3 +15,5 @@ private:
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
     int index;
 };
+
+} // namespace editor

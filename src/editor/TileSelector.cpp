@@ -6,6 +6,9 @@
 #include "SpriteProvider.hpp"
 #include "TileButton.hpp"
 
+namespace editor
+{
+
 TileSelector::TileSelector(QWidget * parent) : QScrollArea(parent){
     this->setFixedWidth(300);
     this->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
@@ -68,3 +71,4 @@ QGridLayout* TileSelector::creatSectionLayout(QWidget* parent, T... ids){
     return layout;
 }
     
+} // namespace editor

@@ -2,6 +2,9 @@
 #include "TileButton.hpp"
 #include "EventBroker.hpp"
 
+namespace editor
+{
+
 TileButton::TileButton(const uint8_t id, QWidget *parent) : QPushButton(parent), id(id){
     QPixmap pixmap = SpriteProvider::get_sprite(id);
     QPixmap scaledpixmap = pixmap.scaled(72,72, Qt::KeepAspectRatio, Qt::FastTransformation);
@@ -15,3 +18,6 @@ void TileButton::mousePressEvent(QMouseEvent *event){
     uint8_t tile_id = id;
     EventBroker::send([tile_id](EventBroker* e){e->onNewTileIdSelected(tile_id);});
 }
+
+
+} // namespace editor

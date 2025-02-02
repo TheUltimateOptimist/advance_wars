@@ -1,5 +1,8 @@
 #include "EventBroker.hpp"
 
+namespace editor
+{
+
 std::vector<EventBroker*> EventBroker::instances = {};
 
 EventBroker::EventBroker() {
@@ -16,3 +19,5 @@ void EventBroker::send(std::function<void(EventBroker *)> callback)
         callback(instance);
     }
 }
+
+} // namespace editor

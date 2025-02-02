@@ -1,6 +1,9 @@
 #include "LevelView.hpp"
 #include "SpriteProvider.hpp"
 
+namespace editor 
+{
+
 LevelView::LevelView(LevelScene *scene, QWidget *parent) : QGraphicsView(parent), scale_val(2)
 {
     scene->setParent(this);
@@ -19,3 +22,5 @@ void LevelView::onZoomed(double delta)
     scale_val += delta;
     scale(scale_by, scale_by);
 }
+
+} // namespace editor
