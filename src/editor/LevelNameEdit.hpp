@@ -1,3 +1,5 @@
+#pragma once
+
 #include <QLineEdit>
 
 class LevelNameEdit : public QLineEdit {

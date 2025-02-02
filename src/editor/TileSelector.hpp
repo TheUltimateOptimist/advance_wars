@@ -1,3 +1,5 @@
+#pragma once
+
 #include <QScrollArea>
 #include <QLabel>
 #include <QPushButton>

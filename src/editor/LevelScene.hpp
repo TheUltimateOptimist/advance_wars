@@ -1,5 +1,4 @@
-#ifndef LEVELSCENE_HPP
-#define LEVELSCENE_HPP
+#pragma once
 
 #include <QGraphicsScene>
 #include <QMouseEvent>
@@ -33,5 +32,3 @@ private:
     std::vector<QGraphicsPixmapItem*> tile_occupants;
     std::string file_path;
 };
-
-#endif // LEVELSCENE_HPP

@@ -1,3 +1,5 @@
+#pragma once
+
 #include <QMainWindow>
 #include "LevelScene.hpp"
 #include "EventBroker.hpp"

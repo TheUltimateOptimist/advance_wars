@@ -1,3 +1,5 @@
+#pragma once
+
 #include <QPushButton>
 
 class SaveButton : public QPushButton {

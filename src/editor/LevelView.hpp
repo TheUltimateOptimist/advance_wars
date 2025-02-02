@@ -1,3 +1,5 @@
+#pragma once
+
 #include <QGraphicsView>
 #include "LevelScene.hpp"
 #include "EventBroker.hpp"

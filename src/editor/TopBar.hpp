@@ -1,3 +1,5 @@
+#pragma once
+
 #include <QToolBar>
 
 class TopBar : public QToolBar {
