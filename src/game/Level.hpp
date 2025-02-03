@@ -15,6 +15,14 @@
 namespace advanced_wars
 {
 
+enum class LevelState
+{
+    SELECTING_STATE,
+    MOVEMENT_STATE,
+    ANIMATING_STATE,
+    MENUACTIVE_STATE
+};
+
 /**
  * @brief The main window of the game
  */
@@ -60,11 +68,15 @@ class Level : public Scene
         ContextMenu m_contextMenu;
         bool        m_contextMenuActive;
 
-        int m_id;
+        int        m_id;
+        LevelState m_state;
 
-        bool selectUnit(int tileX, int tileY);
+        void selectEntity(int x, int y);
+        int  selectUnit(int tileX, int tileY);
         bool targetUnit(int tileX, int tileY);
-        bool selectBuilding(int tileX, int tileY);
+        int  selectBuilding(int tileX, int tileY);
+
+        void handleSelectingEvents(Engine& engine, SDL_Event& event);
 
         bool clickCheckLeft(int mouseX, int mouseY);
         bool clickCheckRight(int mouseX, int mouseY);

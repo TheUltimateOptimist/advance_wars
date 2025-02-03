@@ -23,7 +23,7 @@ Level::Level(
     std::string name, int width, int height, std::vector<Tile> tiles,
     std::vector<Building> buildings, std::vector<Unit> units, std::vector<Effect> effects)
     : m_name(name), m_width(width), m_height(height), m_tiles(tiles), m_contextMenu(ContextMenu()),
-      m_contextMenuActive(false), m_id(0)
+      m_state(LevelState::SELECTING_STATE), m_id(0)
 {
 
     m_contextMenu.setOptions({"Move", "Info", "Wait"});
@@ -95,20 +95,20 @@ Level Level::loadLevel(std::string path)
     return Level(name, width, height, tiles, buildings, {}, {});
 };
 
-bool Level::clickCheckLeft(int tileX, int tileY)
+void Level::selectEntity(int x, int y)
 {
+    int tileSize = (16 * RENDERING_SCALE);
+    int tileX = x / tileSize;
+    int tileY = y / tileSize;
 
-    if (selectUnit(tileX, tileY))
+    if (m_selectedUnit = selectUnit(tileX, tileY))
     {
-        return true;
+        return;
     }
-
-    if (selectBuilding(tileX, tileY))
+    if (m_selectedBuilding = selectBuilding(tileX, tileY))
     {
-        return true;
+        return;
     }
-
-    return false;
 }
 
 bool Level::clickCheckRight(int tileX, int tileY)
@@ -122,23 +122,16 @@ bool Level::clickCheckRight(int tileX, int tileY)
     return false;
 }
 
-bool Level::selectUnit(int tileX, int tileY)
+int Level::selectUnit(int tileX, int tileY)
 {
-
-    // std::cout << "tileX:" << tileX << "tileX:" << tileY << std::endl;
     for (auto& [id, unit] : m_units)
     {
-
         if (unit.m_x == tileX && unit.m_y == tileY)
         {
-            // std::cout << "unitX:" << unit.x << "unitY:" << unit.y << std::endl;
-
-            m_selectedUnit = id;
-            return true;
+            return id;
         }
     }
-
-    return false;
+    return -1;
 }
 
 bool Level::targetUnit(int tileX, int tileY)
@@ -160,31 +153,75 @@ bool Level::targetUnit(int tileX, int tileY)
     return false;
 }
 
-bool Level::selectBuilding(int tileX, int tileY)
+int Level::selectBuilding(int tileX, int tileY)
 {
-
     for (auto& [id, building] : m_buildings)
     {
-
         if (building.m_x == tileX && building.m_y == tileY)
         {
-            // std::cout << "X:" << unit.x << "Y:" << unit.y << std::endl;
-            m_selectedBuilding = id;
-            return true;
+            return id;
         }
     }
-    return false;
+    return -1;
 }
 
 void Level::handleEvent(Engine& engine, SDL_Event& event)
 {
 
-    switch (event.type)
+    /*
+    on event
+        key down
+            escape      ->  deselect/ open pause menu
+            key left    ->  move one tile left
+            key right   ->  move one tile right
+            key up      ->  move one tile up / change context menu selection up
+            key down    ->  move one tile down / change context menu selection down
+            key enter   ->  confirm selection in context menu / confirm selected position (moving)/
+                            select entity on tile
+        mousebutton down
+            button left ->  select field/building/unit / move to position
+            button right->  not neccessarliy needed
+
+        two states: unit/building selected/ nothing selected
+
+    */
+
+    switch (m_state)
+    {
+    case LevelState::MENUACTIVE_STATE:
+
+        /*
+        Escape
+        Key Down
+        Key up
+        Enter
+         */
+        break;
+    case LevelState::SELECTING_STATE:
+        /*
+        Mouse Left
+        Key up down right left
+        escape
+        enter
+        */
+        break;
+    case LevelState::ANIMATING_STATE:
+
+        break;
+    case LevelState::MOVEMENT_STATE:
+        /*
+        key left right up down
+        escape
+        enter
+        */
+        break;
+    default:
+        break;
+    }
+
+    /*switch (event.type)
     {
     case SDL_MOUSEBUTTONDOWN:
-
-        m_contextMenu.update(event.button.x, event.button.y);
-        m_contextMenuActive = true;
 
         // the current unit debug combat should be handled by the contextmenu with its menu options
         if (event.button.button == SDL_BUTTON_LEFT)
@@ -274,20 +311,11 @@ void Level::handleEvent(Engine& engine, SDL_Event& event)
             }
         }
         break;
-    }
+    }*/
 }
 
 void Level::render(Engine& engine)
 {
-
-    // Iterate over all events
-    while (!engine.events().empty())
-    {
-        handleEvent(engine, engine.events().at(0));
-
-        engine.events().pop_front();
-    }
-
     // Tiles
     for (Tile& tile : m_tiles)
     {
@@ -326,7 +354,7 @@ void Level::render(Engine& engine)
         this->removeEffect(id);
     }
 
-    if (m_contextMenuActive)
+    if (m_state == LevelState::MENUACTIVE_STATE)
     {
         m_contextMenu.render(engine);
     }
@@ -378,6 +406,30 @@ Effect Level::removeEffect(int id)
     m_effects.erase(id);
 
     return value;
+}
+
+void Level::handleSelectingEvents(Engine& engine, SDL_Event& event)
+{
+    switch (event.type)
+    {
+    case SDL_KEYDOWN:
+        if (event.key.keysym.sym == SDLK_ESCAPE)
+        {
+            engine.pushScene(std::make_shared<PauseMenu>(0));
+        }
+        break;
+    case SDL_MOUSEBUTTONDOWN:
+        if (event.button.button == SDL_BUTTON_LEFT)
+        {
+            selectEntity(event.button.x, event.button.y);
+            if (m_selectedUnit >= 0 || m_selectedBuilding >= 0)
+            {
+                m_state = LevelState::MENUACTIVE_STATE;
+            }
+        }
+    default:
+        break;
+    }
 }
 
 } // namespace advanced_wars
