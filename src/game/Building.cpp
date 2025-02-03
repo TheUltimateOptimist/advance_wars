@@ -1,5 +1,6 @@
 #include "Building.hpp"
 #include "Spritesheet.hpp"
+#include <iostream>
 
 namespace advanced_wars
 {
@@ -27,5 +28,37 @@ void Building::render(Engine& engine, int scale)
         engine.renderer(), spritesheet->getBuildingTextures()[static_cast<int>(m_faction)], &src,
         &dst, 0, NULL, SDL_FLIP_NONE);
 }
+
+void Building::switch_allegiance(BuildingFaction faction) {
+
+    this->m_faction = faction;
+
+    if(this->m_id == BuildingId::HEADQUARTER) {
+        std::cout << "The game is over!" << std::endl;
+    }
+}
+
+bool Building::check_money(int price) {
+
+    if(50 >= price) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+bool Building::check_spawn() {
+
+    for(auto& [id, unit] : m_units) {
+        if(this->m_x == unit.m_x && this->m_y == unit.m_y) {
+            return false;
+        } 
+    }
+    return true;
+}
+
+void Building::on_click() {
+    std::cout << "A building is selected!" << std::endl;
+};
 
 } // namespace advanced_wars
