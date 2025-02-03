@@ -68,6 +68,7 @@ class Unit
         int m_x;
         int m_y;
         int m_health; // health equals max_health at construction
+        int m_price;
 
         Unit(int x, int y, UnitFaction faction, UnitId id, UnitState state);
         ~Unit()

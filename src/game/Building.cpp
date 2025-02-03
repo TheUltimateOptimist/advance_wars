@@ -38,27 +38,17 @@ void Building::switch_allegiance(BuildingFaction faction) {
     }
 }
 
-bool Building::check_money(int price) {
-
-    if(50 >= price) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
-bool Building::check_spawn() {
-
-    for(auto& [id, unit] : m_units) {
-        if(this->m_x == unit.m_x && this->m_y == unit.m_y) {
-            return false;
-        } 
-    }
-    return true;
-}
-
 void Building::on_click() {
     std::cout << "A building is selected!" << std::endl;
 };
+
+bool Building::check_spawn() {
+    return true;
+}
+
+bool Building::check_money() {
+    return true;
+}
+
 
 } // namespace advanced_wars

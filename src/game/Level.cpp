@@ -47,6 +47,9 @@ Level::Level(
     {
         throw std::runtime_error("level tile mismatch");
     }
+
+    m_selectedBuilding = -1;
+    m_selectedUnit = -1;
 };
 
 Level Level::loadLevel(std::string path)
@@ -100,11 +103,13 @@ bool Level::clickCheckLeft(int tileX, int tileY)
 
     if (selectUnit(tileX, tileY))
     {
+        std::cout << "returning true for unit" << std::endl;
         return true;
     }
 
     if (selectBuilding(tileX, tileY))
     {
+        std::cout << "returning true for building" << std::endl;
         return true;
     }
 
@@ -150,7 +155,7 @@ bool Level::targetUnit(int tileX, int tileY)
 
         if (unit.m_x == tileX && unit.m_y == tileY)
         {
-            // std::cout << "unitX:" << unit.x << "unitY:" << unit.y << std::endl;
+            //std::cout << "unitX:" << unit.m_x << "unitY:" << unit.m_y << std::endl;
 
             m_targetedUnit = id;
             return true;
@@ -168,7 +173,7 @@ bool Level::selectBuilding(int tileX, int tileY)
 
         if (building.m_x == tileX && building.m_y == tileY)
         {
-            // std::cout << "X:" << unit.x << "Y:" << unit.y << std::endl;
+            //std::cout << "Building_X:" << building.m_x << "Building_Y:" << building.m_y << std::endl;
             m_selectedBuilding = id;
             return true;
         }
@@ -189,9 +194,10 @@ void Level::handleEvent(Engine& engine, SDL_Event& event)
         // the current unit debug combat should be handled by the contextmenu with its menu options
         if (event.button.button == SDL_BUTTON_LEFT)
         {
-
+            
             int tileX = event.button.x / (16 * RENDERING_SCALE);
             int tileY = event.button.y / (16 * RENDERING_SCALE);
+            //std::cout << "selected building:"<< m_selectedBuilding << std::endl;
 
             if (clickCheckLeft(tileX, tileY))
             {
@@ -203,7 +209,17 @@ void Level::handleEvent(Engine& engine, SDL_Event& event)
 
                 if (m_selectedBuilding > -1)
                 {
-                    m_buildings.at(m_selectedBuilding).on_click();
+                    //std::cout << "building is > -1" << std::endl;
+                    Building c_building = m_buildings.at(m_selectedBuilding);
+                    c_building.on_click();
+                    
+                    
+                    if(c_building.check_spawn()) {
+                        if(c_building.check_money()){
+                            this->addUnit(Unit(c_building.m_x, c_building.m_y, advanced_wars::UnitFaction::URED, advanced_wars::UnitId::INFANTERY,advanced_wars::UnitState::IDLE ));
+                        }
+                    }
+                    
                 }
             }
             else
