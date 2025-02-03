@@ -105,9 +105,14 @@ class Unit
         This function needs to be able to determine the possible movement-paths the unit can take
         MUST take into consideration that different units behave differently on certain terrain
         MUST show all movements possible
+        Requires dijkstras algorithm and the required graphs
         */
         void calculateMovement();
-
+        
+        /*
+        This function calculates the difference between current position and desired position.
+        It updates the unit_state accordingly, so that the units face the correct direction.
+        */
         void calcState(int posX, int posY);
 
         /*
