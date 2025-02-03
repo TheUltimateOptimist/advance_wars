@@ -14,64 +14,67 @@ namespace editor
 LevelScene::LevelScene(
     const std::string& name, int width, int height, std::vector<uint8_t> tile_ids,
     const std::string& file_path, QWidget* parent)
-    : QGraphicsScene(parent), m_name(name), m_width(width), m_height(height), m_tile_ids(tile_ids),
+    : QGraphicsScene(parent), m_name(name), m_width(width + 2), m_height(height + 2), m_tile_ids(tile_ids),
       m_file_path(file_path), m_selected_tile_id(2)
 {
-    this->setSceneRect(0, 0, width * 16 + 32, height * 16 + 32);
-    std::vector<QGraphicsPixmapItem*> tile_occupants;
-    QPixmap                           cliff_left = SpriteProvider::get_sprite(20);
-    QPixmap                           cliff_right = SpriteProvider::get_sprite(21);
-    QPixmap                           cliff_top = SpriteProvider::get_sprite(18);
-    QPixmap                           cliff_bottom = SpriteProvider::get_sprite(19);
-    QPixmap                           cliff_corner_top_left = SpriteProvider::get_sprite(22);
-    QPixmap                           cliff_corner_top_right = SpriteProvider::get_sprite(23);
-    QPixmap                           cliff_corner_bottom_left = SpriteProvider::get_sprite(24);
-    QPixmap                           cliff_corner_bottom_right = SpriteProvider::get_sprite(25);
-    for (int index = 1; index <= height; index++)
-    {
-        addPixmap(cliff_right)->setPos(0, index * 16);
-        addPixmap(cliff_left)->setPos(width * 16 + 16, index * 16);
+    for (int h = 0; h < m_height; h++) {
+    for (int i = 0; i < m_width; i++) {
+        std::cout << (int) tile_ids[m_width*h + i] << " ";
     }
-    for (int index = 1; index <= width; index++)
-    {
-        addPixmap(cliff_bottom)->setPos(index * 16, 0);
-        addPixmap(cliff_top)->setPos(index * 16, height * 16 + 16);
+    std::cout << std::endl;
     }
-    addPixmap(cliff_corner_top_left)->setPos(0, 0);
-    addPixmap(cliff_corner_top_right)->setPos(width * 16 + 16, 0);
-    addPixmap(cliff_corner_bottom_left)->setPos(0, height * 16 + 16);
-    addPixmap(cliff_corner_bottom_right)->setPos(width * 16 + 16, height * 16 + 16);
-    for (int index = 0; index < width * height; index++)
+
+    setSceneRect(0, 0, m_width * 16, m_height * 16);
+    m_tile_occupants = {};
+    m_tile_occupants.reserve(tile_ids.size());
+    for (int index = 0; index < tile_ids.size(); index++)
     {
-        int   x = (index % width) * 16 + 16;
-        int   y = (index / width) * 16 + 16;
-        Tile* tile = new Tile(index);
-        this->addItem(tile);
+        int   x = (index % m_width) * 16;
+        int   y = (index / m_width) * 16;
+        Tile* tile = new Tile(index, is_border(index) ? tile_ids[index] : 0);
+        addItem(tile);
         tile->setZValue(0);
         tile->setPos(x, y);
-        if (tile_ids[index] > 0)
+        if (!is_border(index) && tile_ids[index] > 0)
         {
-            QPixmap              tile_occupant = SpriteProvider::get_sprite(tile_ids[index]);
-            QGraphicsPixmapItem* tile_occupant_item = addPixmap(tile_occupant);
-            tile_occupant_item->setZValue(tile_ids[index] < 50 ? 1 : 2 + index);
-            tile_occupant_item->setPos(x, tile_ids[index] < 50 ? y : y - 16);
-            tile_occupants.push_back(tile_occupant_item);
+            m_tile_occupants.push_back(occupy_tile(index, tile_ids[index]));
         }
         else
         {
-            tile_occupants.push_back(nullptr);
+            m_tile_occupants.push_back(nullptr);
         }
     }
-    this->m_tile_occupants = tile_occupants;
 }
 
 LevelScene* LevelScene::empty(const std::string& name, int width, int height, QWidget* parent)
 {
-    std::vector<uint8_t> tile_ids(width * height);
-    for (int i = 0; i < width * height; i++)
-    {
-        tile_ids[i] = 0;
+    // + 2 because of surrounding the map with cliffs
+    std::vector<uint8_t> tile_ids;
+    tile_ids.reserve((width + 2)*(height + 2));
+
+    // create top row with cliffs
+    tile_ids.push_back(22); // cliff corner top left 
+    for (int i = 0; i < width; i++) {
+        tile_ids.push_back(19); // cliff bottom
     }
+    tile_ids.push_back(23); // cliff corner top right 
+
+    // create main rows with cliff at start and end
+    for (int i = 0; i < height; i++) {
+        tile_ids.push_back(21); // cliff right
+        for (int j = 0; j < width; j++) {
+            tile_ids.push_back(0); // pleins
+        }
+        tile_ids.push_back(20); // cliff left
+    }
+
+    // create bottom row with cliffs
+    tile_ids.push_back(24); // cliff corner bottom left 
+    for (int i = 0; i < width; i++) {
+        tile_ids.push_back(18); // cliff top
+    }
+    tile_ids.push_back(25); // cliff corner bottom right 
+
     return new LevelScene(name, width, height, tile_ids, "../res/level_new.h5", parent);
 }
 
@@ -105,17 +108,38 @@ std::string LevelScene::getName()
 
 int LevelScene::getWidth()
 {
-    return m_width;
+    return m_width - 2;
 }
 
 int LevelScene::getHeight()
 {
-    return m_height;
+    return m_height - 2;
+}
+
+bool LevelScene::is_border(int index)
+{
+    return (index / m_width) == 0 
+    || (index / m_width) == (m_height -1)
+    || (index % m_width) == 0 
+    || (index % m_width) == (m_width - 1);
+}
+
+bool LevelScene::is_water_tile(uint8_t id)
+{
+    if (id == 1) 
+    {
+        return true;
+    }
+    if (id >= 17 && id <= 29)
+    {
+        return true;
+    }
+    return false;
 }
 
 void LevelScene::onLevelNameUpdated(std::string new_name)
 {
-    this->m_name = new_name;
+    m_name = new_name;
 }
 
 void LevelScene::onLevelWriteRequested(QString file_path)
@@ -123,8 +147,8 @@ void LevelScene::onLevelWriteRequested(QString file_path)
     boost::property_tree::ptree pt;
 
     // Add data to the property tree
-    pt.put("level.width", m_width);
-    pt.put("level.height", m_height);
+    pt.put("level.width", m_width - 2);
+    pt.put("level.height", m_height - 2);
     pt.put("level.name", m_name);
 
     // convert property tree to xml string
@@ -143,11 +167,19 @@ void LevelScene::onLevelWriteRequested(QString file_path)
 void LevelScene::onTileEntered(int index)
 {
     if (m_selected_tile_id == m_tile_ids[index])
+    {
         return;
+    }
+    if (is_border(index) && !is_water_tile(m_selected_tile_id))
+    {
+        return;
+    }
     if (m_tile_occupants[index] != nullptr)
+    {
         removeItem(m_tile_occupants[index]);
-    m_tile_occupants[index] = nullptr;
-    if (m_selected_tile_id > 0)
+        m_tile_occupants[index] = nullptr;
+    }
+    if (!is_border(index) && m_selected_tile_id > 0 || is_border(index))
     {
         m_tile_occupants[index] = occupy_tile(index, m_selected_tile_id);
     }
@@ -156,11 +188,15 @@ void LevelScene::onTileEntered(int index)
 void LevelScene::onTileExited(int index)
 {
     if (m_selected_tile_id == m_tile_ids[index])
+    {
         return;
+    }
     if (m_tile_occupants[index] != nullptr)
+    {
         removeItem(m_tile_occupants[index]);
-    m_tile_occupants[index] = nullptr;
-    if (m_tile_ids[index] > 0)
+        m_tile_occupants[index] = nullptr;
+    }
+    if (!is_border(index) && m_tile_ids[index] > 0 || is_border(index))
     {
         m_tile_occupants[index] = occupy_tile(index, m_tile_ids[index]);
     }
@@ -173,15 +209,13 @@ void LevelScene::onTileClicked(int index)
 
 void LevelScene::onNewTileIdSelected(uint8_t tile_id)
 {
-    this->m_selected_tile_id = tile_id;
+    m_selected_tile_id = tile_id;
 }
 
 QGraphicsPixmapItem* LevelScene::occupy_tile(int index, uint8_t tile_id)
 {
-    if (tile_id == 0)
-        return nullptr;
-    int                  x = (index % m_width) * 16 + 16;
-    int                  y = (index / m_width) * 16 + 16;
+    int                  x = (index % m_width) * 16;
+    int                  y = (index / m_width) * 16;
     QPixmap              tile_occupant = SpriteProvider::get_sprite(tile_id);
     QGraphicsPixmapItem* tile_occupant_item = addPixmap(tile_occupant);
     tile_occupant_item->setZValue(tile_id < 50 ? 1 : 2 + index);

@@ -7,7 +7,7 @@ namespace editor
 
 class Tile : public QGraphicsPixmapItem {
 public:
-    Tile(int index);
+    Tile(int index, uint8_t id);
 
 private:
     void hoverEnterEvent(QGraphicsSceneHoverEvent *event) override;

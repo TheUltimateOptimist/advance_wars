@@ -5,7 +5,7 @@
 namespace editor
 {
 
-Tile::Tile(int index) : QGraphicsPixmapItem(SpriteProvider::get_sprite(0)), m_index(index)
+Tile::Tile(int index, uint8_t id) : QGraphicsPixmapItem(SpriteProvider::get_sprite(id)), m_index(index)
 {
     this->setAcceptHoverEvents(true);
 }

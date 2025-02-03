@@ -20,6 +20,8 @@ public:
     int getWidth();
     int getHeight();
 private:
+    bool is_border(int index);
+    bool is_water_tile(uint8_t id);
     void onLevelNameUpdated(std::string new_name) override;
     void onLevelWriteRequested(QString file_path) override;
     void onTileEntered(int index) override;  
