@@ -357,6 +357,49 @@ Spritesheet::Spritesheet(std::string path, Engine& engine)
 
     this->m_effectWidth = 32;
     this->m_effectHeight = 32;
+
+    // Numbers
+    HighFive::DataSet number_ds = file.getDataSet("/misc/numbers");
+
+    std::vector<std::vector<uint32_t>> number_frames;
+    number_ds.read(number_frames);
+
+    std::vector<uint32_t> number_buffer(8 * 80, 0);
+
+    // every animation frame
+    for (size_t n = 0; n < 10; n++)
+    {
+        for (size_t y = 0; y < 8; y++)
+        {
+            for (size_t x = 0; x < 8; x++)
+            {
+                size_t index = (y * 8) + (n * 8 + x);
+
+                number_buffer.at(index) = number_frames.at(8 - y - 1).at(x);
+            }
+        }
+    }
+
+    SDL_Texture* tmp = SDL_CreateTexture(
+        engine.renderer(), SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STATIC, 80, 8);
+
+    SDL_SetTextureBlendMode(tmp, SDL_BLENDMODE_BLEND);
+
+    if (tmp == nullptr)
+    {
+        throw std::runtime_error(
+            "Fehler beim Erstellen der Textur für die Effects: " + std::string(SDL_GetError()));
+    }
+
+    if (SDL_UpdateTexture(tmp, NULL, number_buffer.data(), 80 * sizeof(int32_t)) != 0)
+    {
+        throw std::runtime_error(
+            "Fehler beim updaten der Textur für die Tiles: " + std::string(SDL_GetError()));
+    }
+
+    this->m_numberTextures = tmp;
+    this->m_numberWidth = 8;
+    this->m_numberHeight = 8;
 }
 
 // Tiles
@@ -432,6 +475,22 @@ int Spritesheet::getEffectHeight()
 std::vector<std::pair<SDL_Texture*, int>>& Spritesheet::getEffectTextures()
 {
     return this->m_effectTextures;
+}
+
+// Numbers
+int Spritesheet::getNumberWidth()
+{
+    return this->m_numberWidth;
+}
+
+int Spritesheet::getNumberHeight()
+{
+    return this->m_numberHeight;
+}
+
+SDL_Texture* Spritesheet::getNumberTexture()
+{
+    return this->m_numberTextures;
 }
 
 Spritesheet::~Spritesheet()
