@@ -38,6 +38,7 @@ void Building::switch_faction(BuildingFaction faction) {
     }
 }
 
+//implement call to UI to show available units
 void Building::on_click() {
     std::cout << "A building is selected!" << std::endl;
 };
@@ -52,10 +53,14 @@ bool Building::check_spawn(std::unordered_map<int, advanced_wars::Unit>& units) 
 
     return true;
 }
+// can be added as soon as the playerobject is available
+bool Building::check_money(int price) {
 
-bool Building::check_money() {
+    if(400 > price) {
+        return false;
+    }
     return true;
-}
 
+}
 
 } // namespace advanced_wars

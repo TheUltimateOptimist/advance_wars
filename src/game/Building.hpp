@@ -54,7 +54,7 @@ class Building
         /*
         checks if the player has enough money for the unit to be recruited
         */
-        bool check_money();
+        bool check_money(int price);
 
         /*
         When the building is selected, the player should have the ability to recruit a selection of units

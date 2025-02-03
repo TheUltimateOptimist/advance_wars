@@ -208,9 +208,13 @@ void Level::handleEvent(Engine& engine, SDL_Event& event)
                     
                     
                     if(c_building.check_spawn(m_units)) {
-                        if(c_building.check_money()){
+                        if(c_building.check_money(500)){
                             this->addUnit(Unit(c_building.m_x, c_building.m_y, advanced_wars::UnitFaction::URED, advanced_wars::UnitId::INFANTERY,advanced_wars::UnitState::IDLE ));
+                        } else {
+                            std::cout << "Not enough money to recruit selected unit!" << std::endl;
                         }
+                    } else {
+                        std::cout << "No free space to spawn the unit!" << std::endl;
                     }
                     
                 }
