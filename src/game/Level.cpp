@@ -203,7 +203,7 @@ void Level::handleEvent(Engine& engine, SDL_Event& event)
 
                 if (m_selectedBuilding > -1)
                 {
-                    // building stuff
+                    m_buildings.at(m_selectedBuilding).on_click();
                 }
             }
             else
