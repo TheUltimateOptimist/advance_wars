@@ -183,22 +183,21 @@ void Level::handleEvent(Engine& engine, SDL_Event& event)
     {
     case SDL_MOUSEBUTTONDOWN:
 
-        m_contextMenu.update(event.button.x, event.button.y);
-        m_contextMenuActive = true;
-
         // the current unit debug combat should be handled by the contextmenu with its menu options
         if (event.button.button == SDL_BUTTON_LEFT)
         {
 
             int tileX = event.button.x / (16 * RENDERING_SCALE);
             int tileY = event.button.y / (16 * RENDERING_SCALE);
-
             if (clickCheckLeft(tileX, tileY))
             {
-
                 if (m_selectedUnit > -1)
                 {
                     m_units.at(m_selectedUnit).on_left_click(event);
+                    int menuPositionX = (tileX * 16 + 12) * RENDERING_SCALE;
+                    int menuPositionY = (tileY * 16 + 12) * RENDERING_SCALE;
+                    m_contextMenu.update(menuPositionX, menuPositionY);
+                    m_contextMenuActive = true;
                 }
 
                 if (m_selectedBuilding > -1)
@@ -212,6 +211,7 @@ void Level::handleEvent(Engine& engine, SDL_Event& event)
                 std::cout << "Neither building nor unit clicked!" << std::endl;
                 m_selectedUnit = -1;
                 m_selectedBuilding = -1;
+                m_contextMenuActive = false;
             }
         }
         else if (event.button.button == SDL_BUTTON_RIGHT)
