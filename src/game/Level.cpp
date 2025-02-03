@@ -214,7 +214,7 @@ void Level::handleEvent(Engine& engine, SDL_Event& event)
                     c_building.on_click();
                     
                     
-                    if(c_building.check_spawn()) {
+                    if(c_building.check_spawn(m_units)) {
                         if(c_building.check_money()){
                             this->addUnit(Unit(c_building.m_x, c_building.m_y, advanced_wars::UnitFaction::URED, advanced_wars::UnitId::INFANTERY,advanced_wars::UnitState::IDLE ));
                         }

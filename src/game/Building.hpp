@@ -1,7 +1,9 @@
 #pragma once
 
+#include <unordered_map>
 #include "Engine.hpp"
 #include "Scene.hpp"
+#include "Unit.hpp"
 
 namespace advanced_wars
 {
@@ -48,7 +50,7 @@ class Building
         /*
         checks if the tile ontop of the building is free
         */
-        bool check_spawn();
+        bool check_spawn(std::unordered_map<int, advanced_wars::Unit>& units);
 
         /*
         checks if the player has enough money for the unit to be recruited
