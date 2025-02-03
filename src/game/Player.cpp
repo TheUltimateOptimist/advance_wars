@@ -26,14 +26,14 @@ void Player::startTurn(
                 unit.setState(UnitState::IDLE);
             }
             break;
-        case PlayerFaction::GREEN:
-            if (unit.getFaction() == UnitFaction::UGREEN)
+        case PlayerFaction::YELLOW:
+            if (unit.getFaction() == UnitFaction::UYELLOW)
             {
                 unit.setState(UnitState::IDLE);
             }
             break;
-        case PlayerFaction::YELLOW:
-            if (unit.getFaction() == UnitFaction::UYELLOW)
+        case PlayerFaction::GREEN:
+            if (unit.getFaction() == UnitFaction::UGREEN)
             {
                 unit.setState(UnitState::IDLE);
             }
@@ -68,14 +68,14 @@ void Player::startTurn(
                 underControl++;
             }
             break;
-        case PlayerFaction::GREEN:
-            if (building.getFaction() == BuildingFaction::GREEN)
+        case PlayerFaction::YELLOW:
+            if (building.getFaction() == BuildingFaction::YELLOW)
             {
                 underControl++;
             }
-            break;
-        case PlayerFaction::YELLOW:
-            if (building.getFaction() == BuildingFaction::YELLOW)
+            break; 
+        case PlayerFaction::GREEN:
+            if (building.getFaction() == BuildingFaction::GREEN)
             {
                 underControl++;
             }
@@ -115,14 +115,14 @@ void Player::endTurn(std::unordered_map<int, Unit> lvUnits)
                 unit.setState(UnitState::UNAVAILABLE);
             }
             break;
-        case PlayerFaction::GREEN:
-            if (unit.getFaction() == UnitFaction::UGREEN)
+        case PlayerFaction::YELLOW:
+            if (unit.getFaction() == UnitFaction::UYELLOW)
             {
                 unit.setState(UnitState::UNAVAILABLE);
             }
             break;
-        case PlayerFaction::YELLOW:
-            if (unit.getFaction() == UnitFaction::UYELLOW)
+        case PlayerFaction::GREEN:
+            if (unit.getFaction() == UnitFaction::UGREEN)
             {
                 unit.setState(UnitState::UNAVAILABLE);
             }

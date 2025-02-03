@@ -11,8 +11,8 @@ enum class PlayerFaction
 {
     RED,
     BLUE,
-    GREEN,
     YELLOW,
+    GREEN,
     PURPLE
 };
 
