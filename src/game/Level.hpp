@@ -25,9 +25,10 @@ class Level : public Scene
     public:
         Level(
             std::string name, int width, int height, std::vector<Tile> tiles,
-            std::vector<Building> buildings, std::vector<Unit> units, std::vector<Effect>);
+            std::vector<Building> buildings, std::vector<Unit> units, 
+            std::vector<Effect> effects, std::queue<Player> turnQ);
 
-        static Level loadLevel(std::string path);
+        static std::shared_ptr<Level> loadLevel(std::string path);
 
         void render(Engine& engine);
 

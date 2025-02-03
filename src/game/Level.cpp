@@ -21,9 +21,10 @@ const int RENDERING_SCALE = 3;
 
 Level::Level(
     std::string name, int width, int height, std::vector<Tile> tiles,
-    std::vector<Building> buildings, std::vector<Unit> units, std::vector<Effect> effects)
-    : m_name(name), m_width(width), m_height(height), m_tiles(tiles), m_contextMenu(ContextMenu()),
-      m_contextMenuActive(false), m_id(0)
+    std::vector<Building> buildings, std::vector<Unit> units, std::vector<Effect> effects,
+    std::queue<Player> turnQ)
+    : m_name(name), m_width(width), m_height(height), m_tiles(tiles), m_turnQ(turnQ),
+      m_contextMenu(ContextMenu()), m_contextMenuActive(false), m_id(0)
 {
 
     m_contextMenu.setOptions({"Move", "Info", "Wait"});
@@ -49,7 +50,7 @@ Level::Level(
     }
 };
 
-Level Level::loadLevel(std::string path)
+std::shared_ptr<Level> Level::loadLevel(std::string path)
 {
     HighFive::File file(path, HighFive::File::ReadOnly);
 
@@ -73,6 +74,7 @@ Level Level::loadLevel(std::string path)
     std::vector<Tile>     tiles;
     std::vector<Building> buildings;
     tiles.reserve(width * height);
+    bool has_factions[] = {false, false, false, false, false};
     for (int i = 0; i < level_tilesarray.size(); i++)
     {
         int x = i % width;
@@ -83,6 +85,10 @@ Level Level::loadLevel(std::string path)
             BuildingId      building_id = static_cast<BuildingId>((level_tilesarray[i] - 50) % 5);
             BuildingFaction faction_id =
                 static_cast<BuildingFaction>((level_tilesarray[i] - 50) / 5);
+            if (building_id == BuildingId::HEADQUARTER)
+            {
+                has_factions[static_cast<int>(faction_id)] = true;
+            }
             buildings.push_back(Building(x, y, building_id, faction_id));
         }
         else
@@ -92,7 +98,18 @@ Level Level::loadLevel(std::string path)
         }
     }
 
-    return Level(name, width, height, tiles, buildings, {}, {});
+    // create turnQ from has_factions array
+    std::queue<Player> turnQ;
+    for (int i = 0; i < 5; i++)
+    {
+        if (has_factions[i])
+        {
+            turnQ.push(Player(2000, static_cast<PlayerFaction>(i)));
+        }
+    }
+
+    return std::make_shared<Level>(
+        name, width, height, tiles, buildings, std::vector<Unit>{}, std::vector<Effect>{}, turnQ);
 };
 
 bool Level::clickCheckLeft(int tileX, int tileY)
@@ -279,7 +296,6 @@ void Level::handleEvent(Engine& engine, SDL_Event& event)
 
 void Level::render(Engine& engine)
 {
-
     // Iterate over all events
     while (!engine.events().empty())
     {

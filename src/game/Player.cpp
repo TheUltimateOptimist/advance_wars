@@ -1,9 +1,10 @@
 #include "Player.hpp"
+#include <iostream>
 
 namespace advanced_wars
 {
 
-Player::Player() {}
+Player::Player(int money, PlayerFaction faction) : m_money(money), m_faction(faction) {}
 
 Player::~Player() {}
 
@@ -73,7 +74,7 @@ void Player::startTurn(
             {
                 underControl++;
             }
-            break; 
+            break;
         case PlayerFaction::GREEN:
             if (building.getFaction() == BuildingFaction::GREEN)
             {

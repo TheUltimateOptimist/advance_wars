@@ -71,7 +71,7 @@ void Menu::render(Engine& engine)
     {
         SDL_Texture* titleTexture = SDL_CreateTextureFromSurface(engine.renderer(), titleSurface);
         SDL_Rect     titleRect = {
-            static_cast<int>((800 - titleSurface->w) / 2), 50, titleSurface->w, titleSurface->h};
+                static_cast<int>((800 - titleSurface->w) / 2), 50, titleSurface->w, titleSurface->h};
         SDL_RenderCopy(engine.renderer(), titleTexture, nullptr, &titleRect);
         SDL_DestroyTexture(titleTexture);
         SDL_FreeSurface(titleSurface);
@@ -88,8 +88,8 @@ void Menu::render(Engine& engine)
 
         SDL_Texture* textTexture = SDL_CreateTextureFromSurface(engine.renderer(), textSurface);
         SDL_Rect     textRect = {
-            static_cast<int>((800 - textSurface->w) / 2), static_cast<int>(150 + i * 50),
-            textSurface->w, textSurface->h};
+                static_cast<int>((800 - textSurface->w) / 2), static_cast<int>(150 + i * 50),
+                textSurface->w, textSurface->h};
         SDL_RenderCopy(engine.renderer(), textTexture, nullptr, &textRect);
 
         SDL_DestroyTexture(textTexture);
@@ -197,10 +197,11 @@ void Menu::handleEvent(Engine& engine, SDL_Event& event)
                      Effect(5, 15, EffectId::AIR_EXPLOSION, true),
                      Effect(5, 18, EffectId::NAVAL_EXPLOSION, true)});
 
-                std::shared_ptr<Level> level =
-                    std::make_shared<Level>("Osnabrück", 20, 20, tiles, buildings, units, effects);
+                // std::shared_ptr<Level> level =
+                //     std::make_shared<Level>("Osnabrück", 20, 20, tiles, buildings, units,
+                //     effects, std::queue<Player>{});
 
-                engine.pushScene(level);
+                engine.pushScene(Level::loadLevel("../res/level.h5"));
             }
             else if (m_options[m_selectedOption] == "Options")
             {

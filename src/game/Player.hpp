@@ -25,7 +25,7 @@ class Player
         PlayerFaction m_faction;
 
     public:
-        Player(/* args */);
+        Player(int money, PlayerFaction faction);
         ~Player();
 
         /**
