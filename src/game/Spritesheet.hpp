@@ -153,6 +153,25 @@ class Spritesheet
          */
         std::vector<std::pair<SDL_Texture*, int>>& getEffectTextures();
 
+        // Bullet
+        /**
+         * @return The width of a bullet in pixels
+         */
+        int getBulletWidth();
+
+        /**
+         * @return The height of an bullet in pixels
+         */
+        int getBulletHeight();
+
+        /**
+         * The texture represents the bullet texture.
+         *
+         * @return Bullet texture
+         */
+
+        SDL_Texture* getBulletTexture();
+
     private:
         // Tiles
         std::vector<std::pair<SDL_Texture*, int>> m_tileTextures;
@@ -179,5 +198,11 @@ class Spritesheet
 
         int m_effectWidth;
         int m_effectHeight;
+
+        // Bullet
+        SDL_Texture* m_bulletTexture;
+
+        int m_bulletWidth;
+        int m_bulletHeight;
 };
 } // namespace advanced_wars
