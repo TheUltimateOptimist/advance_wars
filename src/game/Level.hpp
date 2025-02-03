@@ -3,11 +3,13 @@
 #include "Building.hpp"
 #include "Effect.hpp"
 #include "Engine.hpp"
+#include "Player.hpp"
 #include "Scene.hpp"
 #include "Tile.hpp"
 #include "Unit.hpp"
 #include "ui/Contextmenu.hpp"
 #include <SDL.h>
+#include <queue>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -52,6 +54,7 @@ class Level : public Scene
         std::unordered_map<int, Building> m_buildings;
         std::unordered_map<int, Unit>     m_units;
         std::unordered_map<int, Effect>   m_effects;
+        std::queue<Player>                m_turnQ;
 
         int m_selectedUnit;
         int m_targetedUnit;
@@ -68,6 +71,8 @@ class Level : public Scene
 
         bool clickCheckLeft(int mouseX, int mouseY);
         bool clickCheckRight(int mouseX, int mouseY);
+
+        void changeTurn();
 };
 
 } // namespace advanced_wars

@@ -380,4 +380,16 @@ Effect Level::removeEffect(int id)
     return value;
 }
 
+void Level::changeTurn()
+{
+    Player temp = m_turnQ.front();
+
+    temp.endTurn(m_units);
+
+    // Cycle Player at end of queue
+    m_turnQ.pop();
+    m_turnQ.push(temp);
+
+    m_turnQ.front().startTurn(m_units, m_buildings);
+}
 } // namespace advanced_wars
