@@ -515,6 +515,13 @@ Spritesheet::~Spritesheet()
             }
         }
     }
+
+    for (auto& [texture, i] : m_effectTextures)
+    {
+        SDL_DestroyTexture(texture);
+    }
+
+    SDL_DestroyTexture(m_numberTextures);
 }
 
 } // namespace advanced_wars
