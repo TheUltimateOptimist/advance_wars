@@ -99,7 +99,6 @@ void Menu::render(Engine& engine)
     TTF_CloseFont(titleFont);
     TTF_CloseFont(menuFont);
 
-    SDL_RenderPresent(engine.renderer());
     TTF_Quit();
 }
 

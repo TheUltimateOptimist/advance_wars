@@ -71,12 +71,14 @@ class Level : public Scene
         int        m_id;
         LevelState m_state;
 
-        void selectEntity(int x, int y);
-        int  selectUnit(int tileX, int tileY);
-        bool targetUnit(int tileX, int tileY);
-        int  selectBuilding(int tileX, int tileY);
+        std::pair<int, int> calcTilePos(int mouseX, int mouseY);
+        void                selectEntity(int x, int y);
+        int                 selectUnit(int tileX, int tileY);
+        bool                targetUnit(int tileX, int tileY);
+        int                 selectBuilding(int tileX, int tileY);
 
         void handleSelectingEvents(Engine& engine, SDL_Event& event);
+        void handleMenuActiveEvents(Engine& engine, SDL_Event& event);
 
         bool clickCheckLeft(int mouseX, int mouseY);
         bool clickCheckRight(int mouseX, int mouseY);

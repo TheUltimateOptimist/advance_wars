@@ -22,8 +22,9 @@ const int RENDERING_SCALE = 3;
 Level::Level(
     std::string name, int width, int height, std::vector<Tile> tiles,
     std::vector<Building> buildings, std::vector<Unit> units, std::vector<Effect> effects)
-    : m_name(name), m_width(width), m_height(height), m_tiles(tiles), m_contextMenu(ContextMenu()),
-      m_state(LevelState::SELECTING_STATE), m_id(0)
+    : m_name(name), m_width(width), m_height(height), m_tiles(tiles), m_selectedUnit(-1),
+      m_selectedBuilding(-1), m_contextMenu(ContextMenu()), m_id(0),
+      m_state(LevelState::SELECTING_STATE)
 {
 
     m_contextMenu.setOptions({"Move", "Info", "Wait"});
@@ -95,31 +96,27 @@ Level Level::loadLevel(std::string path)
     return Level(name, width, height, tiles, buildings, {}, {});
 };
 
-void Level::selectEntity(int x, int y)
+std::pair<int, int> Level::calcTilePos(int mouseX, int mouseY)
 {
     int tileSize = (16 * RENDERING_SCALE);
-    int tileX = x / tileSize;
-    int tileY = y / tileSize;
+    int tileX = mouseX / tileSize;
+    int tileY = mouseY / tileSize;
 
-    if (m_selectedUnit = selectUnit(tileX, tileY))
-    {
-        return;
-    }
-    if (m_selectedBuilding = selectBuilding(tileX, tileY))
-    {
-        return;
-    }
+    return {tileX, tileY};
 }
 
-bool Level::clickCheckRight(int tileX, int tileY)
+void Level::selectEntity(int x, int y)
 {
+    std::pair<int, int> tilePos = calcTilePos(x, y);
 
-    if (targetUnit(tileX, tileY))
+    if (!(m_selectedUnit = selectUnit(tilePos.first, tilePos.second)))
     {
-        return true;
+        return;
     }
-
-    return false;
+    if (!(m_selectedBuilding = selectBuilding(tilePos.first, tilePos.second)))
+    {
+        return;
+    }
 }
 
 int Level::selectUnit(int tileX, int tileY)
@@ -132,25 +129,6 @@ int Level::selectUnit(int tileX, int tileY)
         }
     }
     return -1;
-}
-
-bool Level::targetUnit(int tileX, int tileY)
-{
-
-    // std::cout << "tileX:" << tileX << "tileX:" << tileY << std::endl;
-    for (auto& [id, unit] : m_units)
-    {
-
-        if (unit.m_x == tileX && unit.m_y == tileY)
-        {
-            // std::cout << "unitX:" << unit.x << "unitY:" << unit.y << std::endl;
-
-            m_targetedUnit = id;
-            return true;
-        }
-    }
-
-    return false;
 }
 
 int Level::selectBuilding(int tileX, int tileY)
@@ -189,24 +167,19 @@ void Level::handleEvent(Engine& engine, SDL_Event& event)
     switch (m_state)
     {
     case LevelState::MENUACTIVE_STATE:
-
         /*
         Escape
         Key Down
         Key up
         Enter
          */
+        handleMenuActiveEvents(engine, event);
         break;
     case LevelState::SELECTING_STATE:
-        /*
-        Mouse Left
-        Key up down right left
-        escape
-        enter
-        */
+        handleSelectingEvents(engine, event);
         break;
     case LevelState::ANIMATING_STATE:
-
+        // maybe do nothing
         break;
     case LevelState::MOVEMENT_STATE:
         /*
@@ -415,7 +388,7 @@ void Level::handleSelectingEvents(Engine& engine, SDL_Event& event)
     case SDL_KEYDOWN:
         if (event.key.keysym.sym == SDLK_ESCAPE)
         {
-            engine.pushScene(std::make_shared<PauseMenu>(0));
+            engine.pushScene(std::make_shared<PauseMenu>(0, nullptr));
         }
         break;
     case SDL_MOUSEBUTTONDOWN:
@@ -424,8 +397,49 @@ void Level::handleSelectingEvents(Engine& engine, SDL_Event& event)
             selectEntity(event.button.x, event.button.y);
             if (m_selectedUnit >= 0 || m_selectedBuilding >= 0)
             {
+                std::pair<int, int> tilePos = calcTilePos(event.button.x, event.button.y);
+                m_contextMenu.update(
+                    (tilePos.first * 16 + 15) * RENDERING_SCALE,
+                    (tilePos.second * 16 + 15) * RENDERING_SCALE);
                 m_state = LevelState::MENUACTIVE_STATE;
             }
+            else
+            {
+                m_state = LevelState::SELECTING_STATE;
+            }
+        }
+    default:
+        break;
+    }
+}
+
+void Level::handleMenuActiveEvents(Engine& engine, SDL_Event& event)
+{
+    switch (event.type)
+    {
+    case SDL_KEYDOWN:
+        if (event.key.keysym.sym == SDLK_ESCAPE)
+        {
+            m_selectedUnit = -1;
+            m_selectedBuilding = -1;
+            m_state = LevelState::SELECTING_STATE;
+        }
+        if (event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_DOWN)
+        {
+            m_contextMenu.handleEvent(engine, event);
+        }
+        if (event.key.keysym.sym == SDLK_RETURN)
+        {
+            if (m_contextMenu.getSelectedOption() == "Wait")
+            {
+                m_state = LevelState::SELECTING_STATE;
+            }
+        }
+
+        break;
+    case SDL_MOUSEBUTTONDOWN:
+        if (event.button.button == SDL_BUTTON_LEFT)
+        {
         }
     default:
         break;
