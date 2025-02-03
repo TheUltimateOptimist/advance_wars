@@ -123,7 +123,16 @@ bool Level::clickCheckRight(int tileX, int tileY)
     {
         return true;
     }
+// just for checking 
+    for (auto& [id, building] : m_buildings)
+    {
 
+        if (building.m_x == tileX && building.m_y == tileY)
+        {
+            
+            return true;
+        }
+    }
     return false;
 }
 

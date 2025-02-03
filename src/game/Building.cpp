@@ -55,7 +55,7 @@ bool Building::check_spawn(std::unordered_map<int, advanced_wars::Unit>& units) 
 }
 // can be added as soon as the playerobject is available
 bool Building::check_money(int price) {
-
+    //replace 400 with player.money and replace price with chosenUnit.price
     if(400 > price) {
         return false;
     }
