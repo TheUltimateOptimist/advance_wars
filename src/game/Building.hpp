@@ -36,6 +36,8 @@ class Building
         BuildingFaction m_faction;
 
         void render(Engine& engine, int scale);
+
+        BuildingFaction getFaction();
 };
 
 } // namespace advanced_wars

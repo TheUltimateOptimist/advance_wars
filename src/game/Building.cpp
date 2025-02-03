@@ -28,4 +28,9 @@ void Building::render(Engine& engine, int scale)
         &dst, 0, NULL, SDL_FLIP_NONE);
 }
 
+BuildingFaction Building::getFaction()
+{
+    return this->m_faction;
+}
+
 } // namespace advanced_wars

@@ -216,4 +216,14 @@ bool Unit::inRange(Unit& enemy)
     return false;
 }
 
+UnitFaction Unit::getFaction()
+{
+    return this->m_faction;
+}
+
+void Unit::setState(UnitState state)
+{
+    this->m_state = state;
+}
+
 } // namespace advanced_wars

@@ -116,6 +116,10 @@ class Unit
         */
         void on_left_click(SDL_Event event);
 
+        UnitFaction getFaction();
+
+        void setState(UnitState state);
+
     private:
         UnitFaction m_faction;
         UnitId      m_id;
