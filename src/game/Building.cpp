@@ -29,7 +29,7 @@ void Building::render(Engine& engine, int scale)
         &dst, 0, NULL, SDL_FLIP_NONE);
 }
 
-void Building::switch_allegiance(BuildingFaction faction) {
+void Building::switch_faction(BuildingFaction faction) {
 
     this->m_faction = faction;
 

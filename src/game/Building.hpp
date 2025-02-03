@@ -38,13 +38,12 @@ class Building
 
         void render(Engine& engine, int scale);
 
-        /*
-        If a unit moves onto a building, it will have the opportunity to capture the building, using an entire turn
-        Interaction should be triggerd via the UI
-        Checking if the capture is possible should be implemented in the unit.cpp
-        If the Headquarter falls, the game should end in a victory for the corresponding player
+        /**
+        Changes the faction to the specified one
+
+        @param faction The new faction the unit will belong to
         */
-        void switch_allegiance(BuildingFaction faction);
+        void switch_faction(BuildingFaction faction);
 
         
         /*
@@ -63,6 +62,9 @@ class Building
         */
         void recruit_unit();
 
+        /**
+        If the building is clicked, it shows information to the player, here it will be a list of all available units
+         */
         void on_click();
 };
 

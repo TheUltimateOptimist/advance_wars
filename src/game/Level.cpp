@@ -130,13 +130,11 @@ bool Level::clickCheckRight(int tileX, int tileY)
 bool Level::selectUnit(int tileX, int tileY)
 {
 
-    // std::cout << "tileX:" << tileX << "tileX:" << tileY << std::endl;
     for (auto& [id, unit] : m_units)
     {
 
         if (unit.m_x == tileX && unit.m_y == tileY)
         {
-            // std::cout << "unitX:" << unit.x << "unitY:" << unit.y << std::endl;
 
             m_selectedUnit = id;
             return true;
@@ -149,13 +147,11 @@ bool Level::selectUnit(int tileX, int tileY)
 bool Level::targetUnit(int tileX, int tileY)
 {
 
-    // std::cout << "tileX:" << tileX << "tileX:" << tileY << std::endl;
     for (auto& [id, unit] : m_units)
     {
 
         if (unit.m_x == tileX && unit.m_y == tileY)
         {
-            //std::cout << "unitX:" << unit.m_x << "unitY:" << unit.m_y << std::endl;
 
             m_targetedUnit = id;
             return true;
@@ -173,7 +169,6 @@ bool Level::selectBuilding(int tileX, int tileY)
 
         if (building.m_x == tileX && building.m_y == tileY)
         {
-            //std::cout << "Building_X:" << building.m_x << "Building_Y:" << building.m_y << std::endl;
             m_selectedBuilding = id;
             return true;
         }
@@ -197,7 +192,6 @@ void Level::handleEvent(Engine& engine, SDL_Event& event)
             
             int tileX = event.button.x / (16 * RENDERING_SCALE);
             int tileY = event.button.y / (16 * RENDERING_SCALE);
-            //std::cout << "selected building:"<< m_selectedBuilding << std::endl;
 
             if (clickCheckLeft(tileX, tileY))
             {
@@ -209,7 +203,6 @@ void Level::handleEvent(Engine& engine, SDL_Event& event)
 
                 if (m_selectedBuilding > -1)
                 {
-                    //std::cout << "building is > -1" << std::endl;
                     Building c_building = m_buildings.at(m_selectedBuilding);
                     c_building.on_click();
                     
