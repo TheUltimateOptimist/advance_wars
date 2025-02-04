@@ -12,8 +12,8 @@ enum class UnitFaction
 {
     URED = 0,
     UBLUE = 1,
-    UGREEN = 2,
     UYELLOW = 3,
+    UGREEN = 2,
     UPURPLE = 4,
 };
 

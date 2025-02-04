@@ -70,9 +70,10 @@ std::shared_ptr<Level> Level::loadLevel(std::string path)
     int         height = pt.get<int>("level.height");
     std::string name = pt.get<std::string>("level.name");
 
-    // create tiles and buildings vector from tiles array
+    // create tiles, buildings and units vector from tiles array
     std::vector<Tile>     tiles;
     std::vector<Building> buildings;
+    std::vector<Unit>     units;
     tiles.reserve(width * height);
     bool has_factions[] = {false, false, false, false, false};
     for (int i = 0; i < level_tilesarray.size(); i++)
@@ -87,6 +88,13 @@ std::shared_ptr<Level> Level::loadLevel(std::string path)
                 static_cast<BuildingFaction>((level_tilesarray[i] - 50) / 5);
             if (building_id == BuildingId::HEADQUARTER)
             {
+                int index = static_cast<int>(faction_id);
+                if (!has_factions[index])
+                {
+                    units.push_back(Unit(
+                        x, y, static_cast<UnitFaction>(faction_id), UnitId::INFANTERY,
+                        UnitState::IDLE));
+                }
                 has_factions[static_cast<int>(faction_id)] = true;
             }
             buildings.push_back(Building(x, y, building_id, faction_id));
@@ -109,7 +117,7 @@ std::shared_ptr<Level> Level::loadLevel(std::string path)
     }
 
     return std::make_shared<Level>(
-        name, width, height, tiles, buildings, std::vector<Unit>{}, std::vector<Effect>{}, turnQ);
+        name, width, height, tiles, buildings, units, std::vector<Effect>{}, turnQ);
 };
 
 bool Level::clickCheckLeft(int tileX, int tileY)
