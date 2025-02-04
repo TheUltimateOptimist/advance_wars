@@ -366,17 +366,12 @@ Spritesheet::Spritesheet(std::string path, Engine& engine)
 
     std::vector<uint32_t> number_buffer(8 * 80, 0);
 
-    // every animation frame
-    for (size_t n = 0; n < 10; n++)
+    for (int y = 0; y < 8; y++)
     {
-        for (size_t y = 0; y < 8; y++)
+        for (int x = 0; x < 80; x++)
         {
-            for (size_t x = 0; x < 8; x++)
-            {
-                size_t index = (y * 8) + (n * 8 + x);
-
-                number_buffer.at(index) = number_frames.at(8 - y - 1).at(x);
-            }
+            int index = y * 80 + x;
+            number_buffer.at(index) = number_frames.at(8 - y - 1).at(x);
         }
     }
 
