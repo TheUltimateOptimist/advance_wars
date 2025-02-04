@@ -17,8 +17,6 @@
 namespace advanced_wars
 {
 
-const int RENDERING_SCALE = 3;
-
 Level::Level(
     std::string name, int width, int height, std::vector<Tile> tiles,
     std::vector<Building> buildings, std::vector<Unit> units, std::vector<Effect> effects)
@@ -190,8 +188,8 @@ void Level::handleEvent(Engine& engine, SDL_Event& event)
         if (event.button.button == SDL_BUTTON_LEFT)
         {
 
-            int tileX = event.button.x / (16 * RENDERING_SCALE);
-            int tileY = event.button.y / (16 * RENDERING_SCALE);
+            int tileX = event.button.x / (16 * engine.getRenderingScale());
+            int tileY = event.button.y / (16 * engine.getRenderingScale());
 
             if (clickCheckLeft(tileX, tileY))
             {
@@ -220,8 +218,8 @@ void Level::handleEvent(Engine& engine, SDL_Event& event)
             if (m_selectedUnit > -1)
             {
 
-                int tileX = event.button.x / (16 * RENDERING_SCALE);
-                int tileY = event.button.y / (16 * RENDERING_SCALE);
+                int tileX = event.button.x / (16 * engine.getRenderingScale());
+                int tileY = event.button.y / (16 * engine.getRenderingScale());
 
                 if (clickCheckRight(tileX, tileY))
                 {
@@ -291,19 +289,19 @@ void Level::render(Engine& engine)
     // Tiles
     for (Tile& tile : m_tiles)
     {
-        tile.render(engine, RENDERING_SCALE);
+        tile.render(engine, engine.getRenderingScale());
     }
 
     // Buildings
     for (auto& [id, building] : m_buildings)
     {
-        building.render(engine, RENDERING_SCALE);
+        building.render(engine, engine.getRenderingScale());
     }
 
     // Units
     for (auto& [id, unit] : m_units)
     {
-        unit.render(engine, RENDERING_SCALE);
+        unit.render(engine, engine.getRenderingScale());
     }
 
     // Effects
@@ -316,7 +314,7 @@ void Level::render(Engine& engine)
         }
         else
         {
-            effect.render(engine, RENDERING_SCALE);
+            effect.render(engine, engine.getRenderingScale());
         }
     }
 

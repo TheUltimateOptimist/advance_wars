@@ -33,6 +33,10 @@ class Engine
 
         void pump();
 
+        float getDPI();
+
+        int getRenderingScale();
+
         void pushScene(std::shared_ptr<Scene> scene);
 
         std::optional<std::shared_ptr<Scene>> popScene();

@@ -1,12 +1,14 @@
 #include "Engine.hpp"
 #include "SDL_events.h"
 #include "SDL_timer.h"
+#include "SDL_video.h"
 #include "Scene.hpp"
 #include "Spritesheet.hpp"
 #include "Window.hpp"
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_render.h>
+#include <cmath>
 #include <deque>
 #include <memory>
 #include <optional>
@@ -25,6 +27,23 @@ Engine::Engine(Window& window) : m_window(window), m_quit(false)
     {
         throw std::runtime_error("SDL could not generate renderer: " + std::string(SDL_GetError()));
     }
+}
+
+float Engine::getDPI()
+{
+    float ddpi;
+    if (SDL_GetDisplayDPI(
+            SDL_GetWindowDisplayIndex(this->m_window.sdl_window()), &ddpi, nullptr, nullptr) != 0)
+    {
+        throw std::runtime_error("SDL could not get DPI: " + std::string(SDL_GetError()));
+    }
+
+    return ddpi;
+}
+
+int Engine::getRenderingScale()
+{
+    return (int)std::round(this->getDPI() / 32.0);
 }
 
 std::deque<SDL_Event>& Engine::events()
