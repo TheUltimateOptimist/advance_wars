@@ -53,11 +53,11 @@ class Config
 
         /** @brief Retrieves the damage value of a unit's primary weapon against a target unit type.
          */
-        int getUnitPrimaryWeaponDamage(UnitId attackerid, UnitId defenderid) const;
+        std::optional<int> getUnitPrimaryWeaponDamage(UnitId attackerid, UnitId defenderid) const;
 
         /** @brief Retrieves the damage value of a unit's secondary weapon against a target unit
          * type. */
-        int getUnitSecondaryWeaponDamage(UnitId attackerid, UnitId defenderid) const;
+        std::optional<int> getUnitSecondaryWeaponDamage(UnitId attackerid, UnitId defenderid) const;
 
         /** @brief Retrieves the movement type of a given unit type. */
         MovementType getUnitMovementType(UnitId id) const;

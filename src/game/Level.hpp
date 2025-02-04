@@ -15,6 +15,8 @@
 namespace advanced_wars
 {
 
+   
+
 /**
  * @brief The main window of the game
  */
@@ -42,6 +44,10 @@ class Level : public Scene
         int addEffect(Effect effect);
 
         Effect removeEffect(int id);
+
+        std::vector<std::pair<int, int>> calculateMovementRange(Unit& unit);
+
+        int getMoveCost(TileId type, MovementType movementType);
 
     private:
         std::string m_name;

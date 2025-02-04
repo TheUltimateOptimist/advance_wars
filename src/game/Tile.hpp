@@ -49,6 +49,7 @@ class Tile
         int    m_y;
 
         void render(Engine& engine, int scale);
+        TileId getType() const; 
 };
 
 } // namespace advanced_wars

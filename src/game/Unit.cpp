@@ -1,21 +1,45 @@
 #include "Unit.hpp"
+#include "Config.hpp"
 #include <iostream>
 
 namespace advanced_wars
 {
 
-Unit::Unit(int x, int y, UnitFaction faction, UnitId id, UnitState state)
+Unit::Unit(int x, int y, UnitFaction faction, UnitId id, UnitState state, Config& config)
     : m_x(x), m_y(y), m_faction(faction), m_id(id), m_state(state), m_maxHealth(100)
 {
-    // das ist nur für Testzwecke
-    if (m_id == UnitId::INFANTERY)
-    {
-        m_secondaryWeapon = Weapon(
-            "Machine-Gun", {
-                               {UnitId::INFANTERY, 55}
-        });
-    }
+    // Allgemeine Einheiteneinstellungen aus Konfiguration holen
+    m_cost = config.getUnitCost(id);
+    m_movementPoints = config.getUnitMovementPoints(id);
+    m_ammo = config.getUnitAmmo(id);
+    m_minRange = config.getUnitMinRange(id);
+    m_maxRange = config.getUnitMaxRange(id);
     m_health = m_maxHealth;
+
+    m_movementType = config.getUnitMovementType(id);
+
+    // Initialisieren der Primär- und Sekundärwaffe
+    std::unordered_map<UnitId, int> primaryDamage;
+    std::unordered_map<UnitId, int> secondaryDamage;
+
+    for (int targetIt = static_cast<int>(UnitId::FIRST); targetIt <= static_cast<int>(UnitId::LAST);
+         ++targetIt)
+    {
+        UnitId targetId = static_cast<UnitId>(targetIt);
+
+        // Prüfen, ob ein gültiger Schadenswert vorhanden ist, und nur dann hinzufügen
+        if (auto damage = config.getUnitPrimaryWeaponDamage(id, targetId))
+        {
+            primaryDamage[targetId] = *damage;
+        }
+        if (auto damage = config.getUnitSecondaryWeaponDamage(id, targetId))
+        {
+            secondaryDamage[targetId] = *damage;
+        }
+    }
+
+    m_primaryWeapon = Weapon(config.getUnitPrimaryWeapon(id), primaryDamage);
+    m_secondaryWeapon = Weapon(config.getUnitSecondaryWeapon(id), secondaryDamage);
 }
 
 void Unit::render(Engine& engine, int scale)
@@ -83,6 +107,7 @@ void Unit::attack(Unit& enemy)
 {
     // Angenommen, primary_weapon und secondary_weapon wurden bereits korrekt
     // initialisiert
+
     auto primary_weapon_damage_it = m_primaryWeapon.m_damage.find(enemy.m_id);
     auto secondary_weapon_damage_it = m_secondaryWeapon.m_damage.find(enemy.m_id);
 

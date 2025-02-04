@@ -4,9 +4,11 @@
 #include "Engine.hpp"
 #include "Spritesheet.hpp"
 #include "Unit.hpp"
+#include "Config.hpp"
 #include "highfive/H5File.hpp"
 #include "ui/Contextmenu.hpp"
 #include "ui/Pausemenu.hpp"
+#include <queue>
 #include <SDL.h>
 #include <algorithm>
 #include <boost/property_tree/ptree.hpp>
@@ -235,7 +237,7 @@ void Level::handleEvent(Engine& engine, SDL_Event& event)
                 }
                 else
                 {
-
+                    calculateMovementRange(m_units.at(m_selectedUnit));
                     m_units.at(m_selectedUnit).updatePosition(tileX, tileY);
                 }
             }
@@ -275,6 +277,55 @@ void Level::handleEvent(Engine& engine, SDL_Event& event)
         }
         break;
     }
+}
+
+std::vector<std::pair<int, int>> Level::calculateMovementRange(Unit& unit) {
+    std::vector<std::pair<int, int>> reachableTiles;
+    std::queue<std::tuple<int, int, int>> wavefrontQueue; // x, y, remainingMovement
+
+    wavefrontQueue.push(std::make_tuple(unit.m_x, unit.m_y, unit.m_movementPoints));
+    std::unordered_map<int, std::unordered_map<int, bool>> visited;
+
+    while (!wavefrontQueue.empty()) {
+        auto [x, y, remainingMovement] = wavefrontQueue.front();
+        wavefrontQueue.pop();
+
+        if (visited[x][y]) continue;
+        visited[x][y] = true;
+
+        reachableTiles.emplace_back(x, y);
+
+        static const std::vector<std::pair<int, int>> directions = {
+            { 1,  0},
+            {-1,  0},
+            { 0,  1},
+            { 0, -1}
+        };
+
+        for (const auto& [dx, dy] : directions) {
+            int nx = x + dx;
+            int ny = y + dy;
+
+            if (nx < 0 || nx >= m_width || ny < 0 || ny >= m_height) continue; // Boundary check
+
+            int cost = getMoveCost(m_tiles[ny * m_width + nx].getType(), unit.m_movementType);
+            if (cost >= 0 && remainingMovement >= cost) {
+                wavefrontQueue.push(std::make_tuple(nx, ny, remainingMovement - cost));
+            }
+        }
+    }
+
+     std::cout << "Reachable Tiles: " << std::endl;
+    for (const auto& tile : reachableTiles) {
+        std::cout << "(" << tile.first << ", " << tile.second << ")" << std::endl;
+    }
+    
+
+    return reachableTiles;
+}
+int Level::getMoveCost(TileId type, MovementType movementType) {
+    // Implementieren Sie die Logik zur Berechnung der Bewegungskosten hier
+    return 1; // Beispielrückgabe, passen Sie dies nach Bedarf an
 }
 
 void Level::render(Engine& engine)

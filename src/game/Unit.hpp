@@ -1,12 +1,15 @@
 #pragma once
 
 #include "Engine.hpp"
+
 #include "Weapon.hpp"
 #include <optional>
 #include <unordered_map>
 
 namespace advanced_wars
 {
+
+class Config;
 
 enum class UnitFaction
 {
@@ -38,6 +41,9 @@ enum class UnitId
     CRUISER = 16,
     LANDER = 17,
     SUBMARINE = 18,
+
+    FIRST= INFANTERY,
+    LAST = SUBMARINE
 };
 
 enum class UnitState
@@ -69,7 +75,10 @@ class Unit
         int m_y;
         int m_health; // health equals max_health at construction
 
-        Unit(int x, int y, UnitFaction faction, UnitId id, UnitState state);
+        int m_movementPoints;
+        MovementType m_movementType;
+
+        Unit(int x, int y, UnitFaction faction, UnitId id, UnitState state, Config& config);
         ~Unit()
         {
             // Assuming that the destruktion of a unit triggers events
@@ -108,7 +117,7 @@ class Unit
         Requires dijkstras algorithm and the required graphs
         */
         void calculateMovement();
-        
+
         /*
         This function calculates the difference between current position and desired position.
         It updates the unit_state accordingly, so that the units face the correct direction.
@@ -128,8 +137,9 @@ class Unit
 
         int m_maxHealth; // max_health required for damage_scaling
         int m_range;
+        /*
         int m_fuel;
-        int m_maxFuel;
+        int m_maxFuel;*/
 
         bool m_hasMoved;
         bool m_hasAttacked;
@@ -139,7 +149,11 @@ class Unit
         Weapon m_secondaryWeapon;
         Weapon m_primaryWeapon;
 
+        int m_cost;
+        
         int m_ammo;
+        int m_minRange;
+        int m_maxRange;
 };
 
 } // namespace advanced_wars
