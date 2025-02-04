@@ -20,6 +20,8 @@ class Scene
          * It should implement handling of every event that is relevant to this scene only.
          */
         virtual void handleEvent(Engine& engine, SDL_Event& event) = 0;
+
+        virtual void update() {};
 };
 
 } // namespace advanced_wars
