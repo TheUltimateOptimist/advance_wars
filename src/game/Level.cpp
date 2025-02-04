@@ -167,12 +167,6 @@ void Level::handleEvent(Engine& engine, SDL_Event& event)
     switch (m_state)
     {
     case LevelState::MENUACTIVE_STATE:
-        /*
-        Escape
-        Key Down
-        Key up
-        Enter
-         */
         handleMenuActiveEvents(engine, event);
         break;
     case LevelState::SELECTING_STATE:
@@ -187,6 +181,7 @@ void Level::handleEvent(Engine& engine, SDL_Event& event)
         escape
         enter
         */
+        handleMovementEvents(engine, event);
         break;
     default:
         break;
@@ -434,13 +429,44 @@ void Level::handleMenuActiveEvents(Engine& engine, SDL_Event& event)
             {
                 m_state = LevelState::SELECTING_STATE;
             }
+            if (m_contextMenu.getSelectedOption() == "Move")
+            {
+                m_state = LevelState::MOVEMENT_STATE;
+                // Hier Pathfinding einsetzen
+            }
+            if (m_contextMenu.getSelectedOption() == "Info")
+            {
+                // TODO: Hier Informationen zur Einheit darstellen
+            }
         }
 
+        break;
+    default:
+        break;
+    }
+}
+
+void Level::handleMovementEvents(Engine& engine, SDL_Event& event)
+{
+    switch (event.type)
+    {
+    case SDL_KEYDOWN:
+        if (event.key.keysym.sym == SDLK_RETURN)
+        {
+        }
+        if (event.key.keysym.sym == SDLK_ESCAPE)
+        {
+            m_state = LevelState::MENUACTIVE_STATE;
+        }
         break;
     case SDL_MOUSEBUTTONDOWN:
         if (event.button.button == SDL_BUTTON_LEFT)
         {
+            std::pair<int, int> tilePos = calcTilePos(event.button.x, event.button.y);
+            m_units.at(m_selectedUnit).updatePosition(tilePos.first, tilePos.second);
+            m_state = LevelState::SELECTING_STATE;
         }
+        break;
     default:
         break;
     }

@@ -79,6 +79,7 @@ class Level : public Scene
 
         void handleSelectingEvents(Engine& engine, SDL_Event& event);
         void handleMenuActiveEvents(Engine& engine, SDL_Event& event);
+        void handleMovementEvents(Engine& engine, SDL_Event& event);
 
         bool clickCheckLeft(int mouseX, int mouseY);
         bool clickCheckRight(int mouseX, int mouseY);
