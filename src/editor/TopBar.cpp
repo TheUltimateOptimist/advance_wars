@@ -1,3 +1,10 @@
+/**
+* TopBar.cpp
+*
+* @date 28.01.2025
+* @author Jonathan Dueck (jonathan.dueck@informatik.hs-fulda.de)
+*/
+
 #include "TopBar.hpp"
 #include "LevelNameEdit.hpp"
 #include "LevelTitle.hpp"

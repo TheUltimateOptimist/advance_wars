@@ -1,3 +1,10 @@
+/**
+* Tile.hpp
+*
+* @date 27.01.2025
+* @author Jonathan Dueck (jonathan.dueck@informatik.hs-fulda.de)
+*/
+
 #pragma once
 
 #include <QGraphicsPixmapItem>

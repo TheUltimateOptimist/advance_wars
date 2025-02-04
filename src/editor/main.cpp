@@ -1,3 +1,10 @@
+/**
+* main.cpp
+*
+* @date 27.01.2025
+* @author Jonathan Dueck (jonathan.dueck@informatik.hs-fulda.de)
+*/
+
 #include "LevelScene.hpp"
 #include "MainWindow.hpp"
 #include "SpriteProvider.hpp"

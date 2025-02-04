@@ -1,3 +1,11 @@
+/**
+* TileSelector.cpp
+*
+* @date 29.01.2025
+* @author Nils Jonathan Friedrich Eckardt implementation
+* @author Jonathan Dueck (jonathan.dueck@informatik.hs-fulda.de) minor changes
+*/
+
 #include "TileButton.hpp"
 #include "EventBroker.hpp"
 #include "SpriteProvider.hpp"

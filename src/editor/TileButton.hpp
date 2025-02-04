@@ -1,3 +1,11 @@
+/**
+* TileSelector.hpp
+*
+* @date 29.01.2025
+* @author Nils Jonathan Friedrich Eckardt implementation
+* @author Jonathan Dueck (jonathan.dueck@informatik.hs-fulda.de) minor changes
+*/
+
 #pragma once
 
 #include <QPushButton>

@@ -1,3 +1,10 @@
+/**
+* LevelScene.cpp
+*
+* @date 28.01.2025
+* @author Jonathan Dueck (jonathan.dueck@informatik.hs-fulda.de)
+*/
+
 #include "LevelScene.hpp"
 #include "SpriteProvider.hpp"
 #include <QGraphicsPixmapItem>

@@ -1,3 +1,10 @@
+/**
+* ZoomInfo.hpp
+*
+* @date 02.02.2025
+* @author Jonathan Dueck (jonathan.dueck@informatik.hs-fulda.de)
+*/
+
 #include "ZoomInfo.hpp"
 
 namespace editor

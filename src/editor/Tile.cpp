@@ -1,3 +1,10 @@
+/**
+* Tile.cpp
+*
+* @date 27.01.2025
+* @author Jonathan Dueck (jonathan.dueck@informatik.hs-fulda.de)
+*/
+
 #include "Tile.hpp"
 #include "EventBroker.hpp"
 #include "SpriteProvider.hpp"

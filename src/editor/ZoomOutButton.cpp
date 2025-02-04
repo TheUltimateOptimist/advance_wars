@@ -1,3 +1,10 @@
+/**
+* ZoomOutButton.cpp
+*
+* @date 02.02.2025
+* @author Jonathan Dueck (jonathan.dueck@informatik.hs-fulda.de)
+*/
+
 #include "ZoomOutButton.hpp"
 #include "EventBroker.hpp"
 

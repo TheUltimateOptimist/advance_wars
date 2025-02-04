@@ -1,3 +1,10 @@
+/**
+* MainWindow.cpp
+*
+* @date 27.01.2025
+* @author Jonathan Dueck (jonathan.dueck@informatik.hs-fulda.de)
+*/
+
 #include "MainWindow.hpp"
 #include "LevelView.hpp"
 #include "SpriteProvider.hpp"

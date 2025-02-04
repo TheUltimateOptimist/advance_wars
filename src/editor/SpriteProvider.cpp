@@ -1,3 +1,10 @@
+/**
+* SpriteProvider.cpp
+*
+* @date 27.01.2025
+* @author Jonathan Dueck (jonathan.dueck@informatik.hs-fulda.de)
+*/
+
 #include "SpriteProvider.hpp"
 #include <iostream>
 #include <stdexcept>

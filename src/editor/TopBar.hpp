@@ -1,3 +1,10 @@
+/**
+* TopBar.hpp
+*
+* @date 28.01.2025
+* @author Jonathan Dueck (jonathan.dueck@informatik.hs-fulda.de)
+*/
+
 #pragma once
 
 #include <QToolBar>

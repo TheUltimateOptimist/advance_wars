@@ -1,3 +1,10 @@
+/**
+* EventBroker.cpp
+*
+* @date 29.01.2025
+* @author Jonathan Dueck (jonathan.dueck@informatik.hs-fulda.de)
+*/
+
 #include "EventBroker.hpp"
 
 namespace editor
