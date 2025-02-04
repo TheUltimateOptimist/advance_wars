@@ -130,6 +130,9 @@ class Unit
         */
         void on_left_click(SDL_Event event);
 
+        std::vector<Unit*> getUnitsInRangeWithDamagePotential(const std::vector<Unit*>& allUnits);
+
+
     private:
         UnitFaction m_faction;
         UnitId      m_id;

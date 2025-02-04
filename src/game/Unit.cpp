@@ -228,17 +228,49 @@ void Unit::on_left_click(SDL_Event event)
     std::cout << "Left-button pressed on unit: " << this->m_health << std::endl;
 }
 
-bool Unit::inRange(Unit& enemy)
+std::vector<Unit*> Unit::getUnitsInRangeWithDamagePotential(const std::vector<Unit*>& allUnits)
 {
-    if (this->m_x == enemy.m_x)
-    {
-        return abs(this->m_y - enemy.m_y) <= this->m_range;
-    }
-    else if (this->m_y == enemy.m_y)
-    {
-        return abs(this->m_x - enemy.m_x) <= this->m_range;
-    }
-    return false;
-}
+    std::vector<Unit*> unitsInRangeWithDamage;
 
+    for (Unit* unit : allUnits)
+    { // Iteriere über Zeiger
+        // Ignoriere sich selbst
+        if (unit == this)
+        {
+            continue;
+        }
+
+        int distanceX = std::abs(unit->m_x - m_x);
+        int distanceY = std::abs(unit->m_y - m_y);
+
+        // Manhattan-Distanz Berechnung
+        int distance = distanceX + distanceY;
+        if (distance >= m_minRange && distance <= m_maxRange)
+        {
+            // Prüfen ob Schaden möglich ist
+            auto primaryDamageIter = m_primaryWeapon.m_damage.find(unit->m_id);
+            auto secondaryDamageIter = m_secondaryWeapon.m_damage.find(unit->m_id);
+
+            bool canDealDamage = false;
+
+            // Prüfen, ob Primärwaffe Schaden machen kann
+            if (primaryDamageIter != m_primaryWeapon.m_damage.end() && m_ammo > 0)
+            {
+                canDealDamage = true;
+            }
+            // Prüfen, ob Sekundärwaffe Schaden machen kann
+            if (secondaryDamageIter != m_secondaryWeapon.m_damage.end())
+            {
+                canDealDamage = true;
+            }
+
+            if (canDealDamage)
+            {
+                unitsInRangeWithDamage.push_back(unit);
+            }
+        }
+    }
+
+    return unitsInRangeWithDamage;
+}
 } // namespace advanced_wars

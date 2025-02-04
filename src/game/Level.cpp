@@ -1,19 +1,19 @@
 #include "Level.hpp"
 #include "Building.hpp"
+#include "Config.hpp"
 #include "Effect.hpp"
 #include "Engine.hpp"
 #include "Spritesheet.hpp"
 #include "Unit.hpp"
-#include "Config.hpp"
 #include "highfive/H5File.hpp"
 #include "ui/Contextmenu.hpp"
 #include "ui/Pausemenu.hpp"
-#include <queue>
 #include <SDL.h>
 #include <algorithm>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/xml_parser.hpp>
 #include <iostream>
+#include <queue>
 #include <string>
 
 namespace advanced_wars
@@ -203,6 +203,49 @@ void Level::handleEvent(Engine& engine, SDL_Event& event)
                     m_reachableTiles = calculateMovementRange(m_units.at(m_selectedUnit));
                     m_units.at(m_selectedUnit).on_left_click(event);
                     m_showReachableTiles = true;
+
+                    std::vector<Unit*> allUnits;
+                    allUnits.reserve(m_units.size());
+
+                    for (auto& [id, unit] : m_units)
+                    {
+                        allUnits.push_back(&unit); // Fügen Sie Zeiger hinzu, nicht Kopien
+                    }
+                    /*
+
+                    std::vector<Unit*> attackableTargets =
+                        m_units.at(m_selectedUnit).getUnitsInRangeWithDamagePotential(allUnits);
+
+                    m_attackableTiles.clear();
+                    m_showAttackableTiles = true;
+                    for (Unit* target : attackableTargets)
+                    {
+                        // Füge die Position jedes angreifbaren Ziels hinzu
+                        m_attackableTiles.emplace_back(target->m_x, target->m_y);
+                    }*/
+
+                    std::vector<Unit*> attackableTargets =
+                        m_units.at(m_selectedUnit).getUnitsInRangeWithDamagePotential(allUnits);
+
+                    m_attackableTiles.clear();
+                    m_showAttackableTiles = true;
+                    m_attackableUnitIds.clear(); // <-- Fügen Sie dies hier hinzu
+
+                    for (Unit* target : attackableTargets)
+                    {
+                        // Füge die Position jedes angreifbaren Ziels hinzu
+                        m_attackableTiles.emplace_back(target->m_x, target->m_y);
+
+                        // Angreifbaren Einheits-ID setzen
+                        for (auto& [id, unit] : m_units)
+                        {
+                            if (&unit == target)
+                            {
+                                m_attackableUnitIds.insert(id);
+                                break;
+                            }
+                        }
+                    }
                 }
 
                 if (m_selectedBuilding > -1)
@@ -217,6 +260,7 @@ void Level::handleEvent(Engine& engine, SDL_Event& event)
                 m_selectedUnit = -1;
                 m_selectedBuilding = -1;
                 m_showReachableTiles = false;
+                m_showAttackableTiles = false;
             }
         }
         else if (event.button.button == SDL_BUTTON_RIGHT)
@@ -231,11 +275,19 @@ void Level::handleEvent(Engine& engine, SDL_Event& event)
                 if (clickCheckRight(tileX, tileY))
                 {
 
-                    m_units.at(m_selectedUnit).attack((m_units.at(m_targetedUnit)));
-
-                    if (m_units.at(m_selectedUnit).m_health <= 0)
+                    if (m_attackableUnitIds.find(m_targetedUnit) != m_attackableUnitIds.end())
                     {
-                        removeUnit(m_selectedUnit);
+                        // Attack if the unit is a valid target
+                        m_units.at(m_selectedUnit).attack(m_units.at(m_targetedUnit));
+
+                        if (m_units.at(m_selectedUnit).m_health <= 0)
+                        {
+                            removeUnit(m_selectedUnit);
+                        }
+                    }
+                    else
+                    {
+                        std::cout << "Invalid attack target!" << std::endl;
                     }
                 }
                 else
@@ -244,7 +296,9 @@ void Level::handleEvent(Engine& engine, SDL_Event& event)
                     auto reachableTiles = calculateMovementRange(m_units.at(m_selectedUnit));
 
                     // Use std::find to check presence of {tileX, tileY} in reachableTiles vector
-                    if (std::find(reachableTiles.begin(), reachableTiles.end(),std::make_pair(tileX, tileY)) != reachableTiles.end())
+                    if (std::find(
+                            reachableTiles.begin(), reachableTiles.end(),
+                            std::make_pair(tileX, tileY)) != reachableTiles.end())
                     {
                         m_units.at(m_selectedUnit).updatePosition(tileX, tileY);
                     }
@@ -292,18 +346,21 @@ void Level::handleEvent(Engine& engine, SDL_Event& event)
     }
 }
 
-std::vector<std::pair<int, int>> Level::calculateMovementRange(Unit& unit) {
-    std::vector<std::pair<int, int>> reachableTiles;
+std::vector<std::pair<int, int>> Level::calculateMovementRange(Unit& unit)
+{
+    std::vector<std::pair<int, int>>      reachableTiles;
     std::queue<std::tuple<int, int, int>> wavefrontQueue; // x, y, remainingMovement
 
     wavefrontQueue.push(std::make_tuple(unit.m_x, unit.m_y, unit.m_movementPoints));
     std::unordered_map<int, std::unordered_map<int, bool>> visited;
 
-    while (!wavefrontQueue.empty()) {
+    while (!wavefrontQueue.empty())
+    {
         auto [x, y, remainingMovement] = wavefrontQueue.front();
         wavefrontQueue.pop();
 
-        if (visited[x][y]) continue;
+        if (visited[x][y])
+            continue;
         visited[x][y] = true;
 
         reachableTiles.emplace_back(x, y);
@@ -315,25 +372,27 @@ std::vector<std::pair<int, int>> Level::calculateMovementRange(Unit& unit) {
             { 0, -1}
         };
 
-        for (const auto& [dx, dy] : directions) {
+        for (const auto& [dx, dy] : directions)
+        {
             int nx = x + dx;
             int ny = y + dy;
 
-            if (nx < 0 || nx >= m_width || ny < 0 || ny >= m_height) continue; // Boundary check
+            if (nx < 0 || nx >= m_width || ny < 0 || ny >= m_height)
+                continue; // Boundary check
 
             int cost = getMoveCost(m_tiles[ny * m_width + nx].getType(), unit.m_movementType);
-            if (cost >= 0 && remainingMovement >= cost) {
+            if (cost >= 0 && remainingMovement >= cost)
+            {
                 wavefrontQueue.push(std::make_tuple(nx, ny, remainingMovement - cost));
             }
         }
-    }  
+    }
 
     return reachableTiles;
 }
 
-
-
-int Level::getMoveCost(TileId tileId, MovementType movementType) {
+int Level::getMoveCost(TileId tileId, MovementType movementType)
+{
     return moveCostTable[static_cast<int>(tileId)][static_cast<int>(movementType)];
 }
 
@@ -354,12 +413,15 @@ void Level::render(Engine& engine)
         tile.render(engine, RENDERING_SCALE);
     }
 
-    if (m_showReachableTiles) {
+    if (m_showReachableTiles)
+    {
         SDL_SetRenderDrawColor(engine.renderer(), 255, 255, 0, 128); // Gelb mit leichtem Alpha
 
-        for (const auto& [x, y] : m_reachableTiles) {
-            SDL_Rect rect = { x * 16 * RENDERING_SCALE, y * 16 * RENDERING_SCALE,
-                              16 * RENDERING_SCALE, 16 * RENDERING_SCALE };
+        for (const auto& [x, y] : m_reachableTiles)
+        {
+            SDL_Rect rect = {
+                x * 16 * RENDERING_SCALE, y * 16 * RENDERING_SCALE, 16 * RENDERING_SCALE,
+                16 * RENDERING_SCALE};
             SDL_RenderFillRect(engine.renderer(), &rect);
         }
 
@@ -367,6 +429,21 @@ void Level::render(Engine& engine)
         SDL_SetRenderDrawColor(engine.renderer(), 0, 0, 0, 255);
     }
 
+    if (m_showAttackableTiles)
+    {
+        SDL_SetRenderDrawColor(engine.renderer(), 255, 0, 0, 128); // Rot mit leichtem Alpha
+
+        for (const auto& [x, y] : m_attackableTiles)
+        {
+            SDL_Rect rect = {
+                x * 16 * RENDERING_SCALE, y * 16 * RENDERING_SCALE, 16 * RENDERING_SCALE,
+                16 * RENDERING_SCALE};
+            SDL_RenderFillRect(engine.renderer(), &rect);
+        }
+
+        // Optionale Rücksetzung der Zeichenfarbe
+        SDL_SetRenderDrawColor(engine.renderer(), 0, 0, 0, 255);
+    }
 
     // Buildings
     for (auto& [id, building] : m_buildings)

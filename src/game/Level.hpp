@@ -12,6 +12,8 @@
 #include <unordered_map>
 #include <vector>
 #include <array>
+#include <unordered_set>
+
 
 
 
@@ -91,6 +93,10 @@ class Level : public Scene
         int getMoveCost(TileId type, MovementType movementType);
 
         std::vector<std::pair<int, int>> m_reachableTiles;
+
+        std::vector<std::pair<int, int>> m_attackableTiles;
+
+        
         
 
     private:
@@ -119,6 +125,9 @@ class Level : public Scene
         bool clickCheckLeft(int mouseX, int mouseY);
         bool clickCheckRight(int mouseX, int mouseY);
         bool m_showReachableTiles;
+        bool m_showAttackableTiles;
+
+        std::unordered_set<int> m_attackableUnitIds;
 };
 
 } // namespace advanced_wars
