@@ -20,7 +20,8 @@ enum class LevelState
     SELECTING_STATE,
     MOVEMENT_STATE,
     ANIMATING_STATE,
-    MENUACTIVE_STATE
+    MENUACTIVE_STATE,
+    ATTACKING_STATE
 };
 
 /**
@@ -37,6 +38,21 @@ class Level : public Scene
 
         void render(Engine& engine);
 
+        /*
+        on event
+            key down
+                escape      ->  deselect/ open pause menu
+                key left    ->  move one tile left
+                key right   ->  move one tile right
+                key up      ->  move one tile up / change context menu selection up
+                key down    ->  move one tile down / change context menu selection down
+                key enter   ->  confirm selection in context menu /
+                                confirm selected position(moving)/
+                                select entity on tile
+            mousebutton down
+                button left ->  select field/building/unit/
+                                move to position
+        */
         void handleEvent(Engine& engine, SDL_Event& event);
 
         int addBuilding(Building building);
@@ -80,6 +96,7 @@ class Level : public Scene
         void handleSelectingEvents(Engine& engine, SDL_Event& event);
         void handleMenuActiveEvents(Engine& engine, SDL_Event& event);
         void handleMovementEvents(Engine& engine, SDL_Event& event);
+        void handleAttackingEvents(Engine& engine, SDL_Event& event);
 
         bool clickCheckLeft(int mouseX, int mouseY);
         bool clickCheckRight(int mouseX, int mouseY);
