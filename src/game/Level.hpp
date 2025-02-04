@@ -7,6 +7,7 @@
 #include "Tile.hpp"
 #include "Unit.hpp"
 #include "ui/Contextmenu.hpp"
+#include "ui/TileMarker.hpp"
 #include <SDL.h>
 #include <string>
 #include <unordered_map>
@@ -58,6 +59,7 @@ class Level : public Scene
         int m_selectedBuilding;
 
         ContextMenu m_contextMenu;
+        TileMarker  m_currentPos;
         bool        m_contextMenuActive;
 
         int m_id;

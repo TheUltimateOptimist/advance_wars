@@ -23,7 +23,7 @@ Level::Level(
     std::string name, int width, int height, std::vector<Tile> tiles,
     std::vector<Building> buildings, std::vector<Unit> units, std::vector<Effect> effects)
     : m_name(name), m_width(width), m_height(height), m_tiles(tiles), m_contextMenu(ContextMenu()),
-      m_contextMenuActive(false), m_id(0)
+      m_contextMenuActive(false), m_currentPos(TileMarker(RENDERING_SCALE, 1, 1)), m_id(0)
 {
 
     m_contextMenu.setOptions({"Move", "Info", "Wait"});
@@ -330,6 +330,7 @@ void Level::render(Engine& engine)
     {
         m_contextMenu.render(engine);
     }
+    m_currentPos.render(engine);
 }
 
 int Level::addBuilding(Building building)
