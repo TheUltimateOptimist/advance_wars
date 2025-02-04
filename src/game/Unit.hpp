@@ -135,6 +135,8 @@ class Unit
         Weapon m_primaryWeapon;
 
         int m_ammo;
+
+        void renderHP(Engine& engine, int scale);
 };
 
 } // namespace advanced_wars
