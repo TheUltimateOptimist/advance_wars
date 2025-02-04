@@ -17,13 +17,6 @@ LevelScene::LevelScene(
     : QGraphicsScene(parent), m_name(name), m_width(width), m_height(height), m_tile_ids(tile_ids),
       m_file_path(file_path), m_selected_tile_id(2)
 {
-    //for (int h = 0; h < m_height; h++) {
-    //for (int i = 0; i < m_width; i++) {
-    //    std::cout << (int) tile_ids[m_width*h + i] << " ";
-    //}
-    //std::cout << std::endl;
-    //}
-
     setSceneRect(0, 0, m_width * 16, m_height * 16);
     m_tile_occupants = {};
     m_tile_occupants.reserve(tile_ids.size());
