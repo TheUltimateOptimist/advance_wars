@@ -11,13 +11,13 @@ namespace advanced_wars
 class TileMarker : public Scene
 {
     public:
-        TileMarker(int renderingScale, int tileX, int tileY);
+        TileMarker(int renderingScale, int tileX, int tileY, int levelWidth, int levelHeight);
 
         void render(Engine& engine) override;
 
         void handleEvent(Engine& engine, SDL_Event& event) override;
 
-        void updatePosition(int TileX, int TileY);
+        std::pair<int, int> getPosition();
 
     private:
         int m_x;
@@ -25,5 +25,7 @@ class TileMarker : public Scene
         int m_renderingScale;
         int m_width;
         int m_height;
+        int m_levelHeight;
+        int m_levelWidth;
 };
 } // namespace advanced_wars

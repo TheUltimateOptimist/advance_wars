@@ -23,7 +23,8 @@ Level::Level(
     std::string name, int width, int height, std::vector<Tile> tiles,
     std::vector<Building> buildings, std::vector<Unit> units, std::vector<Effect> effects)
     : m_name(name), m_width(width), m_height(height), m_tiles(tiles), m_contextMenu(ContextMenu()),
-      m_contextMenuActive(false), m_currentPos(TileMarker(RENDERING_SCALE, 1, 1)), m_id(0)
+      m_contextMenuActive(false),
+      m_currentPos(TileMarker(RENDERING_SCALE, 1, 1, m_width, m_height)), m_id(0)
 {
 
     m_contextMenu.setOptions({"Move", "Info", "Wait"});
@@ -271,6 +272,14 @@ void Level::handleEvent(Engine& engine, SDL_Event& event)
             else
             {
                 m_contextMenu.handleEvent(engine, event);
+            }
+        }
+        else
+        {
+            if (event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_DOWN ||
+                event.key.keysym.sym == SDLK_RIGHT || event.key.keysym.sym == SDLK_LEFT)
+            {
+                m_currentPos.handleEvent(engine, event);
             }
         }
         break;
