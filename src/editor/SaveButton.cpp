@@ -14,8 +14,11 @@ void SaveButton::mousePressEvent(QMouseEvent* event)
 {
     QPushButton::mousePressEvent(event);
     QString file_path = QFileDialog::getSaveFileName(
-        this, "Level Speichern", QDir::homePath(), "HDF5 Files (*.h5);;All Files (*.*)");
-    EventBroker::send([file_path](EventBroker* e) { e->onLevelWriteRequested(file_path); });
+        this, "Level Speichern", QDir::currentPath(), "HDF5 Files (*.h5)");
+    if (!file_path.isEmpty())
+    {
+        EventBroker::send([file_path](EventBroker* e) { e->onLevelWriteRequested(file_path); });
+    }
 }
 
 } // namespace editor
