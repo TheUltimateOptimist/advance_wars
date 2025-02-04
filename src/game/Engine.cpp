@@ -105,6 +105,8 @@ void Engine::render()
 
     std::shared_ptr<Scene> currentScene = m_scenes.back();
 
+    currentScene->update();
+
     currentScene->render(*this);
 
     SDL_RenderPresent(this->m_SDLRenderer);

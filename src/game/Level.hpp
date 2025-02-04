@@ -1,11 +1,13 @@
 #pragma once
 
 #include "Building.hpp"
+#include "Bullet.hpp"
 #include "Effect.hpp"
 #include "Engine.hpp"
 #include "Scene.hpp"
 #include "Tile.hpp"
 #include "Unit.hpp"
+#include "box2d/b2_world.h"
 #include "ui/Contextmenu.hpp"
 #include <SDL.h>
 #include <string>
@@ -43,7 +45,13 @@ class Level : public Scene
 
         Effect removeEffect(int id);
 
+        void spawnBullet(float startX, float startY, float velocityX, float velocityY);
+
+        void update() override;
+
     private:
+        b2World m_world;
+
         std::string m_name;
         int         m_width;
         int         m_height;
@@ -52,6 +60,8 @@ class Level : public Scene
         std::unordered_map<int, Building> m_buildings;
         std::unordered_map<int, Unit>     m_units;
         std::unordered_map<int, Effect>   m_effects;
+
+        Bullet* m_bullet;
 
         int m_selectedUnit;
         int m_targetedUnit;

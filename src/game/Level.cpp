@@ -22,8 +22,8 @@ const int RENDERING_SCALE = 3;
 Level::Level(
     std::string name, int width, int height, std::vector<Tile> tiles,
     std::vector<Building> buildings, std::vector<Unit> units, std::vector<Effect> effects)
-    : m_name(name), m_width(width), m_height(height), m_tiles(tiles), m_contextMenu(ContextMenu()),
-      m_contextMenuActive(false), m_id(0)
+    : m_world(b2Vec2(0.0f, -9.81f)), m_name(name), m_width(width), m_height(height), m_tiles(tiles),
+      m_bullet(nullptr), m_contextMenu(ContextMenu()), m_contextMenuActive(false), m_id(0)
 {
 
     m_contextMenu.setOptions({"Move", "Info", "Wait"});
@@ -330,6 +330,34 @@ void Level::render(Engine& engine)
     {
         m_contextMenu.render(engine);
     }
+
+    if (m_bullet)
+    {
+        m_bullet->render(engine, RENDERING_SCALE);
+        std::cout << "Bullet Position: " << m_bullet->getBody()->GetPosition().x << ", "
+                  << m_bullet->getBody()->GetPosition().y << std::endl;
+    }
+}
+
+void Level::update()
+{
+    // Box2D-Physik-Schritt
+    float timeStep = 1.0f / 60.0f;
+    int   velocityIterations = 6;
+    int   positionIterations = 2;
+
+    m_world.Step(timeStep, velocityIterations, positionIterations);
+
+    // Falls ein Bullet existiert, updaten
+    if (m_bullet)
+    {
+        m_bullet->update();
+    }
+    else
+    {
+        // TEST: Bullet direkt bei Spielstart spawnen
+        spawnBullet(100.0f, 100.0f, 5.0f, -5.0f);
+    }
 }
 
 int Level::addBuilding(Building building)
@@ -378,6 +406,19 @@ Effect Level::removeEffect(int id)
     m_effects.erase(id);
 
     return value;
+}
+
+void Level::spawnBullet(float startX, float startY, float velocityX, float velocityY)
+{
+    // Falls bereits eine Bullet existiert, lösche sie zuerst
+    if (m_bullet)
+    {
+        delete m_bullet;
+        m_bullet = nullptr;
+    }
+
+    // Neues Bullet erstellen
+    m_bullet = new Bullet(m_world, startX, startY, velocityX, velocityY);
 }
 
 } // namespace advanced_wars
