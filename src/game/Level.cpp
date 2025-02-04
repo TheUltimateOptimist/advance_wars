@@ -335,6 +335,15 @@ void Level::handleMenuActiveEvents(Engine& engine, SDL_Event& event)
             if (cmd == "Info")
             {
                 // TODO: Hier Informationen zur Einheit darstellen
+                if (m_selectedUnit)
+                {
+                    Unit& u = m_units.at(m_selectedUnit);
+                    std::cout << "Health: " << u.m_health << std::endl;
+                }
+            }
+            if (cmd == "Train")
+            {
+                // hier Einheitenrekrutierung einsetzen
             }
         }
 
@@ -360,6 +369,7 @@ void Level::handleMovementEvents(Engine& engine, SDL_Event& event)
     case SDL_MOUSEBUTTONDOWN:
         if (event.button.button == SDL_BUTTON_LEFT)
         {
+            // Bei Movement animation in ANIMATING_STATE gehen
             std::pair<int, int> tilePos = calcTilePos(event.button.x, event.button.y);
             m_units.at(m_selectedUnit).updatePosition(tilePos.first, tilePos.second);
             m_selectedUnit = -1;
