@@ -14,15 +14,15 @@ namespace editor
 LevelScene::LevelScene(
     const std::string& name, int width, int height, std::vector<uint8_t> tile_ids,
     const std::string& file_path, QWidget* parent)
-    : QGraphicsScene(parent), m_name(name), m_width(width + 2), m_height(height + 2), m_tile_ids(tile_ids),
+    : QGraphicsScene(parent), m_name(name), m_width(width), m_height(height), m_tile_ids(tile_ids),
       m_file_path(file_path), m_selected_tile_id(2)
 {
-    for (int h = 0; h < m_height; h++) {
-    for (int i = 0; i < m_width; i++) {
-        std::cout << (int) tile_ids[m_width*h + i] << " ";
-    }
-    std::cout << std::endl;
-    }
+    //for (int h = 0; h < m_height; h++) {
+    //for (int i = 0; i < m_width; i++) {
+    //    std::cout << (int) tile_ids[m_width*h + i] << " ";
+    //}
+    //std::cout << std::endl;
+    //}
 
     setSceneRect(0, 0, m_width * 16, m_height * 16);
     m_tile_occupants = {};
@@ -50,19 +50,19 @@ LevelScene* LevelScene::empty(const std::string& name, int width, int height, QW
 {
     // + 2 because of surrounding the map with cliffs
     std::vector<uint8_t> tile_ids;
-    tile_ids.reserve((width + 2)*(height + 2));
+    tile_ids.reserve(width*height);
 
     // create top row with cliffs
     tile_ids.push_back(22); // cliff corner top left 
-    for (int i = 0; i < width; i++) {
+    for (int i = 0; i < width - 2; i++) {
         tile_ids.push_back(19); // cliff bottom
     }
     tile_ids.push_back(23); // cliff corner top right 
 
     // create main rows with cliff at start and end
-    for (int i = 0; i < height; i++) {
+    for (int i = 0; i < height - 2; i++) {
         tile_ids.push_back(21); // cliff right
-        for (int j = 0; j < width; j++) {
+        for (int j = 0; j < width - 2; j++) {
             tile_ids.push_back(0); // pleins
         }
         tile_ids.push_back(20); // cliff left
@@ -70,7 +70,7 @@ LevelScene* LevelScene::empty(const std::string& name, int width, int height, QW
 
     // create bottom row with cliffs
     tile_ids.push_back(24); // cliff corner bottom left 
-    for (int i = 0; i < width; i++) {
+    for (int i = 0; i < width - 2; i++) {
         tile_ids.push_back(18); // cliff top
     }
     tile_ids.push_back(25); // cliff corner bottom right 
@@ -108,12 +108,12 @@ std::string LevelScene::getName()
 
 int LevelScene::getWidth()
 {
-    return m_width - 2;
+    return m_width;
 }
 
 int LevelScene::getHeight()
 {
-    return m_height - 2;
+    return m_height;
 }
 
 bool LevelScene::is_border(int index)
@@ -147,8 +147,8 @@ void LevelScene::onLevelWriteRequested(QString file_path)
     boost::property_tree::ptree pt;
 
     // Add data to the property tree
-    pt.put("level.width", m_width - 2);
-    pt.put("level.height", m_height - 2);
+    pt.put("level.width", m_width);
+    pt.put("level.height", m_height);
     pt.put("level.name", m_name);
 
     // convert property tree to xml string
