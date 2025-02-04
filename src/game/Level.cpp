@@ -200,7 +200,9 @@ void Level::handleEvent(Engine& engine, SDL_Event& event)
 
                 if (m_selectedUnit > -1)
                 {
+                    m_reachableTiles = calculateMovementRange(m_units.at(m_selectedUnit));
                     m_units.at(m_selectedUnit).on_left_click(event);
+                    m_showReachableTiles = true;
                 }
 
                 if (m_selectedBuilding > -1)
@@ -214,6 +216,7 @@ void Level::handleEvent(Engine& engine, SDL_Event& event)
                 std::cout << "Neither building nor unit clicked!" << std::endl;
                 m_selectedUnit = -1;
                 m_selectedBuilding = -1;
+                m_showReachableTiles = false;
             }
         }
         else if (event.button.button == SDL_BUTTON_RIGHT)
@@ -237,8 +240,18 @@ void Level::handleEvent(Engine& engine, SDL_Event& event)
                 }
                 else
                 {
-                    calculateMovementRange(m_units.at(m_selectedUnit));
-                    m_units.at(m_selectedUnit).updatePosition(tileX, tileY);
+                    // Calculate movement range as a vector of pairs
+                    auto reachableTiles = calculateMovementRange(m_units.at(m_selectedUnit));
+
+                    // Use std::find to check presence of {tileX, tileY} in reachableTiles vector
+                    if (std::find(reachableTiles.begin(), reachableTiles.end(),std::make_pair(tileX, tileY)) != reachableTiles.end())
+                    {
+                        m_units.at(m_selectedUnit).updatePosition(tileX, tileY);
+                    }
+                    else
+                    {
+                        std::cout << "Invalid move position!" << std::endl;
+                    }
                 }
             }
             else
@@ -313,19 +326,15 @@ std::vector<std::pair<int, int>> Level::calculateMovementRange(Unit& unit) {
                 wavefrontQueue.push(std::make_tuple(nx, ny, remainingMovement - cost));
             }
         }
-    }
-
-     std::cout << "Reachable Tiles: " << std::endl;
-    for (const auto& tile : reachableTiles) {
-        std::cout << "(" << tile.first << ", " << tile.second << ")" << std::endl;
-    }
-    
+    }  
 
     return reachableTiles;
 }
-int Level::getMoveCost(TileId type, MovementType movementType) {
-    // Implementieren Sie die Logik zur Berechnung der Bewegungskosten hier
-    return 1; // Beispielrückgabe, passen Sie dies nach Bedarf an
+
+
+
+int Level::getMoveCost(TileId tileId, MovementType movementType) {
+    return moveCostTable[static_cast<int>(tileId)][static_cast<int>(movementType)];
 }
 
 void Level::render(Engine& engine)
@@ -344,6 +353,20 @@ void Level::render(Engine& engine)
     {
         tile.render(engine, RENDERING_SCALE);
     }
+
+    if (m_showReachableTiles) {
+        SDL_SetRenderDrawColor(engine.renderer(), 255, 255, 0, 128); // Gelb mit leichtem Alpha
+
+        for (const auto& [x, y] : m_reachableTiles) {
+            SDL_Rect rect = { x * 16 * RENDERING_SCALE, y * 16 * RENDERING_SCALE,
+                              16 * RENDERING_SCALE, 16 * RENDERING_SCALE };
+            SDL_RenderFillRect(engine.renderer(), &rect);
+        }
+
+        // Reset draw color if required (depends on your rendering setup)
+        SDL_SetRenderDrawColor(engine.renderer(), 0, 0, 0, 255);
+    }
+
 
     // Buildings
     for (auto& [id, building] : m_buildings)
