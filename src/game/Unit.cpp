@@ -64,7 +64,7 @@ void Unit::render(Engine& engine, int scale)
 
         SDL_Rect dst;
         dst.x = ((m_x * spritesheet->getUnitWidth()) - 4) * scale;
-        dst.y = ((m_y * spritesheet->getUnitHeight()) - 4) * scale;
+        dst.y = ((m_y * spritesheet->getUnitHeight()) - 8) * scale;
         dst.w = spritesheet->getUnitMovingWidth() * scale;
         dst.h = spritesheet->getUnitMovingHeight() * scale;
 
@@ -77,6 +77,7 @@ void Unit::render(Engine& engine, int scale)
                 .first,
             &src, &dst, 0, NULL, SDL_FLIP_NONE);
     }
+    renderHP(engine, scale);
 }
 
 void Unit::attack(Unit& enemy)
@@ -214,6 +215,40 @@ bool Unit::inRange(Unit& enemy)
         return abs(this->m_x - enemy.m_x) <= this->m_range;
     }
     return false;
+}
+
+void Unit::renderHP(Engine& engine, int scale)
+{
+    Spritesheet* spritesheet = engine.getSpritesheet();
+
+    SDL_Texture* numbers = spritesheet->getNumberTexture();
+    int          numberWidth = spritesheet->getNumberWidth();
+    int          numberHeight = spritesheet->getNumberHeight();
+
+    int hp = ceil((double)m_health / 10);
+
+    SDL_Rect src;
+    src.x = hp % 10 * numberWidth;
+    src.y = 0;
+    src.w = numberWidth;
+    src.h = numberHeight;
+
+    SDL_Rect dest;
+    dest.x = (m_x * spritesheet->getTileWidth() + 8) * scale;
+    dest.y = (m_y * spritesheet->getTileHeight() + 12) * scale;
+    dest.w = numberWidth * scale;
+    dest.h = numberHeight * scale;
+
+    SDL_RenderCopy(engine.renderer(), numbers, &src, &dest);
+
+    if (hp == 10)
+    {
+        src.x = 8;
+
+        dest.x = (m_x * spritesheet->getTileWidth() + 1) * scale;
+
+        SDL_RenderCopy(engine.renderer(), numbers, &src, &dest);
+    }
 }
 
 } // namespace advanced_wars
