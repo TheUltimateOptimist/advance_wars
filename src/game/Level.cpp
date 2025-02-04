@@ -396,6 +396,14 @@ void Level::handleSelectingEvents(Engine& engine, SDL_Event& event)
                 m_contextMenu.update(
                     (tilePos.first * 16 + 15) * RENDERING_SCALE,
                     (tilePos.second * 16 + 15) * RENDERING_SCALE);
+                if (m_selectedUnit >= 0)
+                {
+                    m_contextMenu.setOptions({"Move", "Info", "Wait"});
+                }
+                else
+                {
+                    m_contextMenu.setOptions({"Train", "Info", "Wait"});
+                }
                 m_state = LevelState::MENUACTIVE_STATE;
             }
             else
