@@ -64,7 +64,7 @@ void Unit::render(Engine& engine, int scale)
 
         SDL_Rect dst;
         dst.x = ((m_x * spritesheet->getUnitWidth()) - 4) * scale;
-        dst.y = ((m_y * spritesheet->getUnitHeight()) - 4) * scale;
+        dst.y = ((m_y * spritesheet->getUnitHeight()) - 8) * scale;
         dst.w = spritesheet->getUnitMovingWidth() * scale;
         dst.h = spritesheet->getUnitMovingHeight() * scale;
 
