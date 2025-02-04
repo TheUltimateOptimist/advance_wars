@@ -475,6 +475,21 @@ std::vector<std::pair<SDL_Texture*, int>>& Spritesheet::getEffectTextures()
     return this->m_effectTextures;
 }
 
+SDL_Texture* Spritesheet::getBulletTexture()
+{
+    return this->m_bulletTexture;
+}
+
+int Spritesheet::getBulletWidth()
+{
+    return this->m_bulletWidth;
+}
+
+int Spritesheet::getBulletHeight()
+{
+    return this->m_bulletHeight;
+}
+
 Spritesheet::~Spritesheet()
 {
     for (std::pair<SDL_Texture*, int> tile_texture : m_tileTextures)
