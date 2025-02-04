@@ -75,7 +75,7 @@ class Unit
             // Assuming that the destruktion of a unit triggers events
         }
 
-        void render(Engine& engine, int scale);
+        void render(Engine& engine, int scale, int offset_x, int offset_y);
 
         /*
         Check if attacker is in Range to initiate combat
@@ -136,7 +136,7 @@ class Unit
 
         int m_ammo;
 
-        void renderHP(Engine& engine, int scale);
+        void renderHP(Engine& engine, int scale, int offset_x, int offset_y);
 };
 
 } // namespace advanced_wars

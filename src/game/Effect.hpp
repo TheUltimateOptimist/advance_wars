@@ -19,7 +19,7 @@ class Effect
     public:
         Effect(int x, int y, EffectId id, bool repeat);
 
-        void render(Engine& engine, int scale);
+        void render(Engine& engine, int scale, int offset_x, int offset_y);
 
         bool is_finished(Engine& engine);
 

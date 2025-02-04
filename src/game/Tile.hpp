@@ -48,7 +48,7 @@ class Tile
         int    m_x;
         int    m_y;
 
-        void render(Engine& engine, int scale);
+        void render(Engine& engine, int scale, int offset_x, int offset_y);
 };
 
 } // namespace advanced_wars

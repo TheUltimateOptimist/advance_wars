@@ -10,7 +10,7 @@ Effect::Effect(int x, int y, EffectId id, bool repeat)
 
       };
 
-void Effect::render(Engine& engine, int scale)
+void Effect::render(Engine& engine, int scale, int offset_x, int offset_y)
 {
     Spritesheet* spritesheet = engine.getSpritesheet();
     if (m_start == 0)
@@ -28,8 +28,8 @@ void Effect::render(Engine& engine, int scale)
     src.h = spritesheet->getEffectHeight();
 
     SDL_Rect dest;
-    dest.x = (m_x * spritesheet->getTileWidth() * scale) - 8;
-    dest.y = (m_y * spritesheet->getTileHeight() * scale) - 8;
+    dest.x = (m_x * spritesheet->getTileWidth() * scale) - 8 + offset_x;
+    dest.y = (m_y * spritesheet->getTileHeight() * scale) - 8 + offset_y;
     dest.w = spritesheet->getEffectWidth() * scale;
     dest.h = spritesheet->getEffectHeight() * scale;
 

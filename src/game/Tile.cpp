@@ -7,7 +7,7 @@ namespace advanced_wars
 
 Tile::Tile(TileId id, int x, int y) : m_id(id), m_x(x), m_y(y) {}
 
-void Tile::render(Engine& engine, int scale)
+void Tile::render(Engine& engine, int scale, int offset_x, int offset_y)
 {
     Spritesheet* spritesheet = engine.getSpritesheet();
 
@@ -20,8 +20,8 @@ void Tile::render(Engine& engine, int scale)
     src.h = spritesheet->getTileHeight();
 
     SDL_Rect dest;
-    dest.x = m_x * spritesheet->getTileWidth() * scale;
-    dest.y = m_y * spritesheet->getTileHeight() * scale;
+    dest.x = m_x * spritesheet->getTileWidth() * scale + offset_x;
+    dest.y = m_y * spritesheet->getTileHeight() * scale + offset_y;
     dest.w = spritesheet->getTileWidth() * scale;
     dest.h = spritesheet->getTileHeight() * scale;
 

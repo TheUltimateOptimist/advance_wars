@@ -53,6 +53,8 @@ class Engine
 
         void render();
 
+        Window& getWindow();
+
         SDL_Renderer* renderer();
 
         ~Engine();
@@ -64,8 +66,9 @@ class Engine
         std::optional<Spritesheet*>         m_spritesheet;
         std::deque<SDL_Event>               m_events;
 
-        bool m_quit;
-        int  m_stage;
+        bool  m_quit;
+        int   m_stage;
+        float m_ddpi;
 };
 
 } // namespace advanced_wars

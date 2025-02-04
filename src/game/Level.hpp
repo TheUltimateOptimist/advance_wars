@@ -48,6 +48,9 @@ class Level : public Scene
         int         m_width;
         int         m_height;
 
+        int m_offset_x;
+        int m_offset_y;
+
         std::vector<Tile>                 m_tiles;
         std::unordered_map<int, Building> m_buildings;
         std::unordered_map<int, Unit>     m_units;

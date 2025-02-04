@@ -27,10 +27,7 @@ Engine::Engine(Window& window) : m_window(window), m_quit(false)
     {
         throw std::runtime_error("SDL could not generate renderer: " + std::string(SDL_GetError()));
     }
-}
 
-float Engine::getDPI()
-{
     float ddpi;
     if (SDL_GetDisplayDPI(
             SDL_GetWindowDisplayIndex(this->m_window.sdl_window()), &ddpi, nullptr, nullptr) != 0)
@@ -38,12 +35,22 @@ float Engine::getDPI()
         throw std::runtime_error("SDL could not get DPI: " + std::string(SDL_GetError()));
     }
 
-    return ddpi;
+    this->m_ddpi = ddpi;
+}
+
+float Engine::getDPI()
+{
+    return m_ddpi;
 }
 
 int Engine::getRenderingScale()
 {
     return (int)std::round(this->getDPI() / 32.0);
+}
+
+Window& Engine::getWindow()
+{
+    return m_window;
 }
 
 std::deque<SDL_Event>& Engine::events()

@@ -35,7 +35,7 @@ class Building
         BuildingId      m_id;
         BuildingFaction m_faction;
 
-        void render(Engine& engine, int scale);
+        void render(Engine& engine, int scale, int offset_x, int offset_y);
 };
 
 } // namespace advanced_wars

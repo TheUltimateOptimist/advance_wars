@@ -2,6 +2,7 @@
 #include "Building.hpp"
 #include "Effect.hpp"
 #include "Engine.hpp"
+#include "SDL_keycode.h"
 #include "Spritesheet.hpp"
 #include "Unit.hpp"
 #include "highfive/H5File.hpp"
@@ -20,8 +21,8 @@ namespace advanced_wars
 Level::Level(
     std::string name, int width, int height, std::vector<Tile> tiles,
     std::vector<Building> buildings, std::vector<Unit> units, std::vector<Effect> effects)
-    : m_name(name), m_width(width), m_height(height), m_tiles(tiles), m_contextMenu(ContextMenu()),
-      m_contextMenuActive(false), m_id(0)
+    : m_name(name), m_width(width), m_height(height), m_offset_x(0), m_offset_y(0), m_tiles(tiles),
+      m_contextMenu(ContextMenu()), m_contextMenuActive(false), m_id(0)
 {
 
     m_contextMenu.setOptions({"Move", "Info", "Wait"});
@@ -257,6 +258,40 @@ void Level::handleEvent(Engine& engine, SDL_Event& event)
             PauseMenu pauseMenu(0, currentTexture);
             engine.pushScene(std::make_shared<PauseMenu>(pauseMenu));
         }
+        if (event.key.keysym.sym == SDLK_w)
+        {
+
+            m_offset_y += engine.getRenderingScale();
+            m_offset_y = std::clamp(
+                m_offset_y,
+                std::min(0, engine.getWindow().h() - (engine.getRenderingScale() * m_height * 16)),
+                0);
+        }
+        if (event.key.keysym.sym == SDLK_s)
+        {
+            m_offset_y -= engine.getRenderingScale();
+            m_offset_y = std::clamp(
+                m_offset_y,
+                std::min(0, engine.getWindow().h() - (engine.getRenderingScale() * m_height * 16)),
+                0);
+        }
+        if (event.key.keysym.sym == SDLK_a)
+        {
+            m_offset_x += engine.getRenderingScale();
+            m_offset_x = std::clamp(
+                m_offset_x,
+                std::min(0, engine.getWindow().w() - (engine.getRenderingScale() * m_width * 16)),
+                0);
+        }
+        if (event.key.keysym.sym == SDLK_d)
+        {
+            m_offset_x -= engine.getRenderingScale();
+            m_offset_x = std::clamp(
+                m_offset_x,
+                std::min(0, engine.getWindow().w() - (engine.getRenderingScale() * m_width * 16)),
+                0);
+        }
+
         if (m_contextMenuActive)
         {
             if (event.key.keysym.sym == SDLK_RETURN)
@@ -289,19 +324,19 @@ void Level::render(Engine& engine)
     // Tiles
     for (Tile& tile : m_tiles)
     {
-        tile.render(engine, engine.getRenderingScale());
+        tile.render(engine, engine.getRenderingScale(), m_offset_x, m_offset_y);
     }
 
     // Buildings
     for (auto& [id, building] : m_buildings)
     {
-        building.render(engine, engine.getRenderingScale());
+        building.render(engine, engine.getRenderingScale(), m_offset_x, m_offset_y);
     }
 
     // Units
     for (auto& [id, unit] : m_units)
     {
-        unit.render(engine, engine.getRenderingScale());
+        unit.render(engine, engine.getRenderingScale(), m_offset_x, m_offset_y);
     }
 
     // Effects
@@ -314,7 +349,7 @@ void Level::render(Engine& engine)
         }
         else
         {
-            effect.render(engine, engine.getRenderingScale());
+            effect.render(engine, engine.getRenderingScale(), m_offset_x, m_offset_y);
         }
     }
 

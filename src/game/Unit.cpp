@@ -18,7 +18,7 @@ Unit::Unit(int x, int y, UnitFaction faction, UnitId id, UnitState state)
     m_health = m_maxHealth;
 }
 
-void Unit::render(Engine& engine, int scale)
+void Unit::render(Engine& engine, int scale, int offset_x, int offset_y)
 {
     Spritesheet* spritesheet = engine.getSpritesheet();
 
@@ -38,8 +38,8 @@ void Unit::render(Engine& engine, int scale)
         src.h = spritesheet->getUnitHeight();
 
         SDL_Rect dst;
-        dst.x = m_x * spritesheet->getUnitWidth() * scale;
-        dst.y = m_y * spritesheet->getUnitHeight() * scale;
+        dst.x = m_x * spritesheet->getUnitWidth() * scale + offset_x;
+        dst.y = m_y * spritesheet->getUnitHeight() * scale + offset_y;
         dst.w = spritesheet->getUnitWidth() * scale;
         dst.h = spritesheet->getUnitHeight() * scale;
 
@@ -63,8 +63,8 @@ void Unit::render(Engine& engine, int scale)
         src.h = spritesheet->getUnitMovingHeight();
 
         SDL_Rect dst;
-        dst.x = ((m_x * spritesheet->getUnitWidth()) - 4) * scale;
-        dst.y = ((m_y * spritesheet->getUnitHeight()) - 8) * scale;
+        dst.x = ((m_x * spritesheet->getUnitWidth()) - 4) * scale + offset_x;
+        dst.y = ((m_y * spritesheet->getUnitHeight()) - 8) * scale + offset_y;
         dst.w = spritesheet->getUnitMovingWidth() * scale;
         dst.h = spritesheet->getUnitMovingHeight() * scale;
 
@@ -77,7 +77,7 @@ void Unit::render(Engine& engine, int scale)
                 .first,
             &src, &dst, 0, NULL, SDL_FLIP_NONE);
     }
-    renderHP(engine, scale);
+    renderHP(engine, scale, offset_x, offset_y);
 }
 
 void Unit::attack(Unit& enemy)
@@ -217,7 +217,7 @@ bool Unit::inRange(Unit& enemy)
     return false;
 }
 
-void Unit::renderHP(Engine& engine, int scale)
+void Unit::renderHP(Engine& engine, int scale, int offset_x, int offset_y)
 {
     Spritesheet* spritesheet = engine.getSpritesheet();
 
@@ -234,8 +234,8 @@ void Unit::renderHP(Engine& engine, int scale)
     src.h = numberHeight;
 
     SDL_Rect dest;
-    dest.x = (m_x * spritesheet->getTileWidth() + 8) * scale;
-    dest.y = (m_y * spritesheet->getTileHeight() + 12) * scale;
+    dest.x = (m_x * spritesheet->getTileWidth() + 8) * scale + offset_x;
+    dest.y = (m_y * spritesheet->getTileHeight() + 12) * scale + offset_y;
     dest.w = numberWidth * scale;
     dest.h = numberHeight * scale;
 
@@ -245,7 +245,7 @@ void Unit::renderHP(Engine& engine, int scale)
     {
         src.x = 8;
 
-        dest.x = (m_x * spritesheet->getTileWidth() + 1) * scale;
+        dest.x = (m_x * spritesheet->getTileWidth() + 1) * scale + offset_x;
 
         SDL_RenderCopy(engine.renderer(), numbers, &src, &dest);
     }
