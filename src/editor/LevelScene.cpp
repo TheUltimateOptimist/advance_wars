@@ -6,14 +6,15 @@
 */
 
 #include "LevelScene.hpp"
-#include "SpriteProvider.hpp"
+
 #include <QGraphicsPixmapItem>
 #include <QPixmap>
 #include <QPoint>
-
-#include "highfive/H5File.hpp"
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/xml_parser.hpp>
+
+#include "highfive/H5File.hpp"
+#include "SpriteProvider.hpp"
 
 namespace editor
 {

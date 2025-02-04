@@ -6,14 +6,17 @@
 */
 
 #include "MainWindow.hpp"
-#include "LevelView.hpp"
-#include "SpriteProvider.hpp"
-#include "TileSelector.hpp"
-#include "TopBar.hpp"
+
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include <QHBoxLayout>
 #include <iostream>
+
+#include "LevelView.hpp"
+#include "SpriteProvider.hpp"
+#include "TileSelector.hpp"
+#include "TopBar.hpp"
+
 
 namespace editor
 {

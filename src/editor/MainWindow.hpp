@@ -8,13 +8,14 @@
 #pragma once
 
 #include <QMainWindow>
+
 #include "LevelScene.hpp"
-#include "EventBroker.hpp"
+#include "EventHandler.hpp"
 
 namespace editor 
 {
 
-class MainWindow : public QMainWindow, public EventBroker {
+class MainWindow : public QMainWindow, public EventHandler {
 public:
     MainWindow(LevelScene* level, QWidget *parent = nullptr);
 private:

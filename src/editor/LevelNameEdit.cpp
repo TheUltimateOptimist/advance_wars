@@ -1,13 +1,15 @@
 /**
-* EventBroker.cpp
+* EventHandler.cpp
 *
 * @date 29.01.2025
 * @author Jonathan Dueck (jonathan.dueck@informatik.hs-fulda.de)
 */
 
 #include "LevelNameEdit.hpp"
-#include "EventBroker.hpp"
+
 #include <QKeyEvent>
+
+#include "EventHandler.hpp"
 
 namespace editor
 {
@@ -22,7 +24,7 @@ void LevelNameEdit::keyPressEvent(QKeyEvent* event)
 {
     QLineEdit::keyPressEvent(event);
     std::string new_name = this->text().toStdString();
-    EventBroker::send([new_name](EventBroker* e) { e->onLevelNameUpdated(new_name); });
+    EventHandler::send([new_name](EventHandler* e) { e->onLevelNameUpdated(new_name); });
 }
 
 } // namespace editor

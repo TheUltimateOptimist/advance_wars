@@ -8,12 +8,13 @@
 #pragma once
 
 #include <QPushButton>
-#include "EventBroker.hpp"
+
+#include "EventHandler.hpp"
 
 namespace editor
 {
 
-class ZoomInfo : public QPushButton, public EventBroker {
+class ZoomInfo : public QPushButton, public EventHandler {
 public:
     ZoomInfo(QWidget* parent = nullptr);
 private:

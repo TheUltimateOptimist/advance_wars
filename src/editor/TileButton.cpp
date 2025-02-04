@@ -7,7 +7,8 @@
 */
 
 #include "TileButton.hpp"
-#include "EventBroker.hpp"
+
+#include "EventHandler.hpp"
 #include "SpriteProvider.hpp"
 
 namespace editor
@@ -26,7 +27,7 @@ void TileButton::mousePressEvent(QMouseEvent* event)
 {
     QPushButton::mousePressEvent(event);
     uint8_t tile_id = m_id;
-    EventBroker::send([tile_id](EventBroker* e) { e->onNewTileIdSelected(tile_id); });
+    EventHandler::send([tile_id](EventHandler* e) { e->onNewTileIdSelected(tile_id); });
 }
 
 } // namespace editor

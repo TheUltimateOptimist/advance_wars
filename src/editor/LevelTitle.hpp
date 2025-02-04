@@ -1,12 +1,13 @@
 #pragma once
 
 #include <QLabel>
-#include "EventBroker.hpp"
+
+#include "EventHandler.hpp"
 
 namespace editor
 {
 
-class LevelTitle : public QLabel, EventBroker {
+class LevelTitle : public QLabel, EventHandler {
 public:
     LevelTitle(int width, int height, const std::string& name, QWidget *parent = nullptr);
     void onLevelNameUpdated(std::string name) override;   

@@ -6,15 +6,17 @@
 */
 
 #include "TopBar.hpp"
+
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QSize>
+
 #include "LevelNameEdit.hpp"
 #include "LevelTitle.hpp"
 #include "SaveButton.hpp"
 #include "ZoomInButton.hpp"
 #include "ZoomInfo.hpp"
 #include "ZoomOutButton.hpp"
-#include <QHBoxLayout>
-#include <QLabel>
-#include <QSize>
 
 namespace editor
 {

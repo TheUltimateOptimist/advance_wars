@@ -12,13 +12,14 @@
 #include <QWidget>
 #include <QGraphicsRectItem>
 #include <QGraphicsSceneMouseEvent>
-#include "EventBroker.hpp"
+
+#include "EventHandler.hpp"
 #include "Tile.hpp"
 
 namespace editor
 {
 
-class LevelScene : public QGraphicsScene, public EventBroker {
+class LevelScene : public QGraphicsScene, public EventHandler {
 public:
     LevelScene(const std::string& name, int width, int height, std::vector<uint8_t> tile_ids, const std::string& file_path, QWidget *parent = nullptr);
     static LevelScene* empty(const std::string& name, int width, int height, QWidget *parent = nullptr);

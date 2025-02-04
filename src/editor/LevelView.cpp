@@ -6,6 +6,7 @@
 */
 
 #include "LevelView.hpp"
+
 #include "SpriteProvider.hpp"
 
 namespace editor

@@ -1,30 +1,30 @@
 /**
-* EventBroker.cpp
+* EventHandler.cpp
 *
 * @date 29.01.2025
 * @author Jonathan Dueck (jonathan.dueck@informatik.hs-fulda.de)
 */
 
-#include "EventBroker.hpp"
+#include "EventHandler.hpp"
 
 namespace editor
 {
 
-std::vector<EventBroker*> EventBroker::instances = {};
+std::vector<EventHandler*> EventHandler::instances = {};
 
-EventBroker::EventBroker()
+EventHandler::EventHandler()
 {
     instances.push_back(this);
 }
 
-EventBroker::~EventBroker()
+EventHandler::~EventHandler()
 {
     instances.erase(std::remove(instances.begin(), instances.end(), this), instances.end());
 }
 
-void EventBroker::send(std::function<void(EventBroker*)> callback)
+void EventHandler::send(std::function<void(EventHandler*)> callback)
 {
-    for (EventBroker* instance : instances)
+    for (EventHandler* instance : instances)
     {
         callback(instance);
     }

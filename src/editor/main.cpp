@@ -5,10 +5,11 @@
 * @author Jonathan Dueck (jonathan.dueck@informatik.hs-fulda.de)
 */
 
-#include "LevelScene.hpp"
-#include "MainWindow.hpp"
-#include "SpriteProvider.hpp"
 #include <QApplication>
+
+#include "SpriteProvider.hpp"
+#include "MainWindow.hpp"
+#include "LevelScene.hpp"
 
 using namespace editor;
 

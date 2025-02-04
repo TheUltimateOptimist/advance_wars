@@ -6,7 +6,8 @@
 */
 
 #include "ZoomOutButton.hpp"
-#include "EventBroker.hpp"
+
+#include "EventHandler.hpp"
 
 namespace editor
 {
@@ -18,7 +19,7 @@ ZoomOutButton::ZoomOutButton(QWidget* parent) : QPushButton("-", parent)
 
 void ZoomOutButton::mousePressEvent(QMouseEvent* event)
 {
-    EventBroker::send([](EventBroker* e) { e->onZoomed(-0.25); });
+    EventHandler::send([](EventHandler* e) { e->onZoomed(-0.25); });
 }
 
 } // namespace editor

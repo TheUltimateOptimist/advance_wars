@@ -6,6 +6,7 @@
 */
 
 #include "SpriteProvider.hpp"
+
 #include <iostream>
 #include <stdexcept>
 

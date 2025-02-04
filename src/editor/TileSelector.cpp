@@ -7,12 +7,15 @@
 */
 
 #include "TileSelector.hpp"
-#include "SpriteProvider.hpp"
-#include "TileButton.hpp"
+
 #include <QGridLayout>
 #include <QLabel>
 #include <QPushButton>
 #include <QVBoxLayout>
+
+#include "SpriteProvider.hpp"
+#include "TileButton.hpp"
+
 
 namespace editor
 {

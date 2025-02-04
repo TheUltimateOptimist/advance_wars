@@ -8,13 +8,14 @@
 #pragma once
 
 #include <QGraphicsView>
+
 #include "LevelScene.hpp"
-#include "EventBroker.hpp"
+#include "EventHandler.hpp"
 
 namespace editor
 {
 
-class LevelView : public QGraphicsView, public EventBroker{
+class LevelView : public QGraphicsView, public EventHandler{
 public:
     LevelView(LevelScene* scene, QWidget* parent = nullptr);
 private:

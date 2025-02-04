@@ -11,8 +11,9 @@
 #include <QScrollArea>
 #include <QLabel>
 #include <QPushButton>
-#include "SpriteProvider.hpp"
 #include <QGridLayout>
+
+#include "SpriteProvider.hpp"
 
 namespace editor
 {

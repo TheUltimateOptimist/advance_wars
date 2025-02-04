@@ -1,5 +1,5 @@
 /**
-* EventBroker.cpp
+* EventHandler.cpp
 *
 * @date 29.01.2025
 * @author Jonathan Dueck (jonathan.dueck@informatik.hs-fulda.de)
@@ -18,12 +18,12 @@ namespace editor
 {
 
 class Tile;
-class EventBroker {
+class EventHandler {
 public:
-    EventBroker();
-    virtual ~EventBroker();
+    EventHandler();
+    virtual ~EventHandler();
 
-    static void send(std::function<void(EventBroker*)> callback);
+    static void send(std::function<void(EventHandler*)> callback);
 
     virtual void onLevelNameUpdated(std::string new_name){};
 
@@ -40,7 +40,7 @@ public:
     virtual void onZoomed(double delta){}
 
 private:
-    static std::vector<EventBroker*> instances ;
+    static std::vector<EventHandler*> instances ;
 };
 
 } // namespace editor
