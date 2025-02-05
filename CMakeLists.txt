@@ -8,6 +8,8 @@ project(ADVANCED_WARS
 )
 
 include(FetchContent)
+
+# HighFive einbinden
 FetchContent_Declare(
     highfive
     GIT_REPOSITORY https://github.com/highfive-devs/highfive.git
@@ -19,13 +21,13 @@ set(HIGHFIVE_UNIT_TESTS OFF)
 
 FetchContent_MakeAvailable(highfive)
 
+# Box2D einbinden
 FetchContent_Declare(
     box2d
     GIT_REPOSITORY https://github.com/erincatto/box2d.git
     GIT_TAG v3.0.0
 )
 
-# Box2D Build-Optionen konfigurieren
 set(BOX2D_BUILD_TESTBED OFF CACHE BOOL "" FORCE)
 set(BOX2D_BUILD_UNIT_TESTS OFF CACHE BOOL "" FORCE)
 set(BOX2D_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
@@ -72,12 +74,67 @@ file(GLOB HDF5_FILES ${RES_DIR}/*.h5)
 # Executable erstellen
 add_executable(advanced_wars ${ADVANCED_WARS_SOURCES})
 
-target_include_directories(advanced_wars
-    PRIVATE 
-        ${highfive_SOURCE_DIR}/include
-        ${Boost_INCLUDE_DIRS}
-)
+# Plattform-spezifische Konfiguration
+if(APPLE)
+    # SDL2 Frameworks für macOS
+    set(SDL2_PATH "/Library/Frameworks")
+    set(CMAKE_OSX_ARCHITECTURES "arm64")
 
+    target_include_directories(
+            advanced_wars PRIVATE
+            ${SDL2_PATH}/SDL2.framework/Headers
+            ${SDL2_PATH}/SDL2_image.framework/Headers
+            ${SDL2_PATH}/SDL2_ttf.framework/Headers
+    )
+
+    target_link_libraries(
+            advanced_wars PRIVATE
+            ${SDL2_PATH}/SDL2.framework/SDL2
+            ${SDL2_PATH}/SDL2_image.framework/SDL2_image
+            ${SDL2_PATH}/SDL2_ttf.framework/SDL2_ttf
+            Boost::graph
+            box2d
+    )
+
+    # HDF5 für macOS korrekt einbinden
+    find_package(HDF5 REQUIRED COMPONENTS CXX HL)
+    target_include_directories(advanced_wars PRIVATE ${HDF5_INCLUDE_DIRS} ${highfive_SOURCE_DIR}/include)
+    target_link_libraries(advanced_wars PRIVATE ${HDF5_LIBRARIES})
+
+    message(STATUS "Include Dir (SDL2): ${SDL2_PATH}/SDL2.framework/Headers")
+    message(STATUS "Include Dir (SDL2_image): ${SDL2_PATH}/SDL2_image.framework/Headers")
+    message(STATUS "Include Dir (SDL2_ttf): ${SDL2_PATH}/SDL2_ttf.framework/Headers")
+    message(STATUS "HDF5 Include Dirs: ${HDF5_INCLUDE_DIRS}")
+    message(STATUS "HDF5 Libraries: ${HDF5_LIBRARIES}")
+    message(STATUS "Boost Include Dirs: ${Boost_INCLUDE_DIRS}")
+
+else()
+    # Linux Konfiguration
+    find_package(SDL2 REQUIRED)
+    find_package(SDL2_IMAGE REQUIRED)
+    find_package(SDL2_ttf REQUIRED)
+    find_package(HDF5 REQUIRED COMPONENTS CXX HL)
+
+    include_directories(/usr/include/SDL2)
+    include_directories(${SDL2_INCLUDE_DIR})
+    include_directories(${SDL2_IMG_INCLUDE_DIR})
+    include_directories(${SDL2_TTF_INCLUDE_DIR})
+    include_directories(${HDF5_INCLUDE_DIRS})
+
+    target_link_libraries(advanced_wars
+        ${HDF5_LIBRARIES}
+        -lSDL2
+        -lSDL2_image
+        -lSDL2_ttf
+        Boost::graph
+        box2d
+        m
+    )
+
+    target_include_directories(advanced_wars PRIVATE ${highfive_SOURCE_DIR}/include)
+endif()
+
+# Ressourcen kopieren (plattformübergreifend)
 foreach(FONT ${FONT_FILES})
     add_custom_command(
             TARGET advanced_wars PRE_BUILD
@@ -103,52 +160,3 @@ foreach(H5_FILE ${HDF5_FILES})
 endforeach()
 
 set(CMAKE_MODULE_PATH ${ADVANCED_WARS_SOURCE_DIR}/cmake/ ${CMAKE_MODULE_PATH})
-
-# Plattform-spezifische Konfiguration
-if(APPLE)
-    # SDL2 Frameworks für macOS
-    set(SDL2_PATH "/Library/Frameworks")
-    set(CMAKE_OSX_ARCHITECTURES "arm64")
-    target_include_directories(
-            advanced_wars PRIVATE
-            ${SDL2_PATH}/SDL2.framework/Headers
-            ${SDL2_PATH}/SDL2_image.framework/Headers
-            ${SDL2_PATH}/SDL2_ttf.framework/Headers
-    )
-
-    target_link_libraries(
-            advanced_wars PRIVATE
-            ${SDL2_PATH}/SDL2.framework/SDL2
-            ${SDL2_PATH}/SDL2_image.framework/SDL2_image
-            ${SDL2_PATH}/SDL2_ttf.framework/SDL2_ttf
-            Boost::graph  
-            box2d
-    )
-
-    message(STATUS "Include Dir (SDL2): ${SDL2_PATH}/SDL2.framework/Headers")
-    message(STATUS "Include Dir (SDL2_image): ${SDL2_PATH}/SDL2_image.framework/Headers")
-    message(STATUS "Include Dir (SDL2_ttf): ${SDL2_PATH}/SDL2_ttf.framework/Headers")
-    message(STATUS "Boost Include Dirs: ${Boost_INCLUDE_DIRS}")
-else()
-    find_package(SDL2 REQUIRED)
-    find_package(SDL2_IMAGE REQUIRED)
-    find_package(SDL2_ttf REQUIRED)
-    find_package(HDF5 REQUIRED COMPONENTS CXX)
-
-    include_directories(/usr/include/SDL2)
-
-    include_directories(${SDL2_INCLUDE_DIR})
-    include_directories(${SDL2_IMG_INCLUDE_DIR})
-    include_directories(${SDL2_TTF_INCLUDE_DIR})
-    include_directories(${HDF5_INCLUDE_DIRS})
-
-    target_link_libraries(advanced_wars
-        ${HDF5_LIBRARIES}
-        -lSDL2
-        -lSDL2_image
-        -lSDL2_ttf
-        Boost::graph
-        box2d
-        m
-    )
-endif()
