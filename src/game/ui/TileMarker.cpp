@@ -82,4 +82,9 @@ std::pair<int, int> TileMarker::getPosition()
     return {tileX, tileY};
 }
 
+void TileMarker::setPosition(int tileX, int tileY){
+    m_x = tileX * 16 * m_renderingScale;
+    m_y = tileY * 16 * m_renderingScale + (16 * m_renderingScale - m_height);
+}
+
 } // namespace advanced_wars
