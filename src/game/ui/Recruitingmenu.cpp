@@ -9,27 +9,41 @@ namespace advanced_wars
 
     }
 
-    void RecruitingMenu::setOptions(const std::vector<std::string>& newOptions) {
-        m_options = newOptions;
-        m_selectedOption = 0;
-        renderableunit = {};
-    }
-/*
     void RecruitingMenu::setOptions(const std::vector<UnitId> recruitableUnits) {
 
         std::vector<std::string> options;
         for (UnitId id : recruitableUnits) {
-            switch (id)
-            {
-            case UnitId::INFANTERY
-                options
-                break;
-            
-            default:
-                break;
-            }
+            options.push_back(unitIdToString(id));
         }
-    } */
+
+        m_options = options;
+        m_selectedOption = 0;
+    }
+
+   std::string RecruitingMenu::unitIdToString(UnitId id) {
+    static const std::unordered_map<UnitId, std::string> unitNames = {
+        {UnitId::INFANTERY, "Infantry"},
+        {UnitId::MECHANIZED_INFANTERY, "Mechanized Infantry"},
+        {UnitId::RECON, "Recon"},
+        {UnitId::APC, "APC"},
+        {UnitId::ARTILLERY, "Artillery"},
+        {UnitId::ANTI_AIR_TANK, "Anti-Air Tank"},
+        {UnitId::ANTI_AIR_MISSILE_LAUNCHER, "Missile Launcher"},
+        {UnitId::ROCKET_ARTILLERY, "Rocket Artillery"},
+        {UnitId::MEDIUM_TANK, "Medium Tank"},
+        {UnitId::NEO_TANK, "Neo Tank"},
+        {UnitId::HEAVY_TANK, "Heavy Tank"},
+        {UnitId::LANDER, "Lander"},
+        {UnitId::CRUISER, "Cruiser"},
+        {UnitId::SUBMARINE, "Submarine"},
+        {UnitId::BATTLESHIP, "Battleship"},
+        {UnitId::TRANSPORT_HELICOPTER, "Transport Helicopter"},
+        {UnitId::BATTLE_HELICOPTER, "Battle Helicopter"},
+        {UnitId::FIGHTER, "Fighter"},
+        {UnitId::BOMBER, "Bomber"}
+    };
+
+   }
 
     void RecruitingMenu::render(Engine& engine)
 {

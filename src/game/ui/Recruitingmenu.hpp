@@ -13,11 +13,7 @@ namespace advanced_wars
         std::vector<std::string> m_options;
         int m_x;
         int m_y;
-
-        std::vector<std::vector<std::vector<std::pair<SDL_Texture *, int>>>> renderableunit;
-
-        
-
+ 
         void handleEvent(Engine& engine, SDL_Event& event);
 
         
@@ -26,13 +22,15 @@ namespace advanced_wars
 
         std::string getSelectedOption();
 
+        std::string unitIdToString(UnitId id);
+
         public:
 
         void update(int x, int y);
 
         RecruitingMenu();
 
-        void setOptions(const std::vector<std::string>& newOptions);
+        void setOptions(const std::vector<UnitId> recruitableUnits);
 
         void render(Engine& engine) override;
         

@@ -450,8 +450,7 @@ void Level::handleMenuActiveEvents(Engine& engine, SDL_Event& event)
                 m_recruitingMenu.update(
                     (tilePos.first * 16 + 15) * RENDERING_SCALE,
                     (tilePos.second * 16 + 15) * RENDERING_SCALE);
-                m_recruitingMenu.setOptions(
-                    {"Infantery", "Tank", "Artillery", "Medium", "Heavy", "Light"});
+                m_recruitingMenu.setOptions();
                 std::cout << "no training here" << std::endl;
             }
         }
