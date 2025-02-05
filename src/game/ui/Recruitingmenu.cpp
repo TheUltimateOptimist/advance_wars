@@ -1,6 +1,7 @@
 #include "Recruitingmenu.hpp"
 #include <iostream>
 #include <SDL_ttf.h>
+#include "../Unit.hpp"
 
 namespace advanced_wars
 {
@@ -16,6 +17,8 @@ namespace advanced_wars
 
     void RecruitingMenu::render(Engine& engine)
 {
+
+    Spritesheet* spritesheet = engine.getSpritesheet();
 
     if (TTF_Init() == -1)
     {
@@ -45,7 +48,7 @@ namespace advanced_wars
     int spacing = 20; // Abstand zwischen den Optionen
     // box around options
     SDL_SetRenderDrawColor(engine.renderer(), 0, 0, 255, 255);
-    SDL_Rect box = {m_x, m_y - 3, 50, static_cast<int>(m_options.size() * spacing)};
+    SDL_Rect box = {m_x, m_y - 3, 125, static_cast<int>(m_options.size() * spacing)};
     SDL_RenderFillRect(engine.renderer(), &box);
 
     SDL_SetRenderDrawColor(engine.renderer(), 0, 0, 0, 255);
@@ -61,9 +64,24 @@ namespace advanced_wars
 
         SDL_Texture* textTexture = SDL_CreateTextureFromSurface(engine.renderer(), textSurface);
         SDL_Rect     textRect = {
-            m_x + 10, m_y + static_cast<int>(i * spacing), textSurface->w, textSurface->h};
+            m_x + 10 + 16, m_y + static_cast<int>(i * spacing), textSurface->w, textSurface->h};
         SDL_RenderCopy(engine.renderer(), textTexture, nullptr, &textRect);
 
+
+        SDL_Texture* unit_texture = spritesheet->getUnitTextures()
+                .at(static_cast<int>(UnitFaction::URED))
+                .at(static_cast<int>(UnitId::INFANTERY))
+                .at(static_cast<int>(UnitState::IDLE))
+                .first;
+
+        SDL_Rect rect = {
+            m_x + 5, // X-Position rechts neben dem Text
+            m_y + static_cast<int>(i * spacing),                   // Gleiche Y-Position wie der Text
+            16,                            // Breite des Rechtecks
+            16                                 // Höhe des Rechtecks entspricht der Texthöhe
+        };
+        SDL_RenderCopy(engine.renderer(), unit_texture, nullptr, &rect);
+        
         SDL_DestroyTexture(textTexture);
         SDL_FreeSurface(textSurface);
     }
