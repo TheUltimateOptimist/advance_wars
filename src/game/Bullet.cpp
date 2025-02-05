@@ -1,5 +1,7 @@
 #include "Bullet.hpp"
 #include "Engine.hpp"
+#include "UnitContactListener.hpp"
+#include <iostream>
 #include <stdexcept>
 
 namespace advanced_wars
@@ -8,6 +10,31 @@ namespace advanced_wars
 Bullet::Bullet(b2World& world, float startX, float startY, float velocityX, float velocityY)
     : m_renderX(0), m_renderY(0)
 {
+    b2BodyDef bodyDef;
+    bodyDef.type = b2_dynamicBody;
+    bodyDef.position.Set(startX / PIXELS_PER_METER, startY / PIXELS_PER_METER);
+    bodyDef.linearVelocity.Set(velocityX, velocityY);
+
+    m_body = world.CreateBody(&bodyDef);
+
+    b2PolygonShape shape;
+    shape.SetAsBox(4.0f / PIXELS_PER_METER, 4.0f / PIXELS_PER_METER);
+
+    b2FixtureDef fixtureDef;
+    fixtureDef.shape = &shape;
+    fixtureDef.density = 1.0f;
+    fixtureDef.friction = 0.1f;
+    fixtureDef.restitution = 0.1f;
+    fixtureDef.isSensor = true;
+
+    m_body->CreateFixture(&fixtureDef);
+
+    BodyUserData* bud = new BodyUserData();
+    bud->type = BodyUserData::Type::Bullet;
+    bud->data = this;
+    m_body->GetUserData().pointer = reinterpret_cast<uintptr_t>(bud);
+
+    std::cout << "Bullet erstellt bei (" << startX << ", " << startY << ")" << std::endl;
 }
 
 Bullet::~Bullet()

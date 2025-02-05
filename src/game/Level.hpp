@@ -7,6 +7,7 @@
 #include "Scene.hpp"
 #include "Tile.hpp"
 #include "Unit.hpp"
+#include "UnitContactListener.hpp"
 #include "box2d/b2_world.h"
 #include "ui/Contextmenu.hpp"
 #include <SDL.h>
@@ -37,17 +38,23 @@ class Level : public Scene
 
         Building removeBuilding(int id);
 
-        int addUnit(Unit unit);
+        int addUnit(std::unique_ptr<Unit> unit);
 
-        Unit removeUnit(int id);
+        std::unique_ptr<Unit> removeUnit(int id);
 
         int addEffect(Effect effect);
 
         Effect removeEffect(int id);
 
-        void spawnBullet(float startX, float startY, float velocityX, float velocityY);
+        void spawnBullet(Unit* shooter, Unit* target);
 
         void update() override;
+
+        void checkBulletCollision(Unit* unit);
+
+        void removeBullet();
+
+        void markBulletForRemoval();
 
     private:
         b2World m_world;
@@ -56,16 +63,18 @@ class Level : public Scene
         int         m_width;
         int         m_height;
 
-        std::vector<Tile>                 m_tiles;
-        std::unordered_map<int, Building> m_buildings;
-        std::unordered_map<int, Unit>     m_units;
-        std::unordered_map<int, Effect>   m_effects;
+        std::vector<Tile>                              m_tiles;
+        std::unordered_map<int, Building>              m_buildings;
+        std::unordered_map<int, std::unique_ptr<Unit>> m_units;
+        std::unordered_map<int, Effect>                m_effects;
 
-        Bullet* m_bullet;
+        Bullet*             m_bullet;
+        UnitContactListener m_contactListener;
+        bool                m_removeBulletFlag = false;
 
-        int m_selectedUnit;
-        int m_targetedUnit;
-        int m_selectedBuilding;
+        int   m_selectedUnit;
+        Unit* m_targetedUnit;
+        int   m_selectedBuilding;
 
         ContextMenu m_contextMenu;
         bool        m_contextMenuActive;

@@ -1,10 +1,12 @@
 #include "Unit.hpp"
+#include "Bullet.hpp"
+#include "UnitContactListener.hpp"
 #include <iostream>
 
 namespace advanced_wars
 {
 
-Unit::Unit(int x, int y, UnitFaction faction, UnitId id, UnitState state)
+Unit::Unit(int x, int y, UnitFaction faction, UnitId id, UnitState state, b2World* world = nullptr)
     : m_x(x), m_y(y), m_faction(faction), m_id(id), m_state(state), m_maxHealth(100)
 {
     // das ist nur für Testzwecke
@@ -16,6 +18,35 @@ Unit::Unit(int x, int y, UnitFaction faction, UnitId id, UnitState state)
         });
     }
     m_health = m_maxHealth;
+}
+
+void Unit::setWorld(b2World* world)
+{
+    b2BodyDef bodyDef;
+    bodyDef.type = b2_dynamicBody;
+    // Positioniere den Body so, dass sein Zentrum in der Mitte des Tiles liegt:
+    float posX = (this->getX() * 16 + 8) / PIXELS_PER_METER;
+    float posY = (this->getY() * 16 + 8) / PIXELS_PER_METER;
+    bodyDef.position.Set(posX, posY);
+
+    m_body = world->CreateBody(&bodyDef);
+
+    b2PolygonShape hitboxShape;
+    // Erstelle ein Rechteck von 16x16 Pixeln (halbe Breite = 8 Pixel, umgerechnet in Meter)
+    hitboxShape.SetAsBox((16.0f / 2.0f) / PIXELS_PER_METER, (16.0f / 2.0f) / PIXELS_PER_METER);
+
+    b2FixtureDef fixtureDef;
+    fixtureDef.shape = &hitboxShape;
+    fixtureDef.isSensor = true;
+
+    m_body->CreateFixture(&fixtureDef);
+
+    // User-Daten setzen
+    BodyUserData* bud = new BodyUserData();
+    bud->type = BodyUserData::Type::Unit;
+    bud->data = this;
+    bud->uniqueId = this->getMapId();
+    m_body->GetUserData().pointer = reinterpret_cast<uintptr_t>(bud);
 }
 
 void Unit::render(Engine& engine, int scale)
@@ -214,6 +245,46 @@ bool Unit::inRange(Unit& enemy)
         return abs(this->m_x - enemy.m_x) <= this->m_range;
     }
     return false;
+}
+
+int Unit::getX() const
+{
+    return this->m_x;
+}
+
+int Unit::getY() const
+{
+    return this->m_y;
+}
+
+int Unit::getHealth() const
+{
+    return this->m_health;
+}
+
+int Unit::getId() const
+{
+    return static_cast<int>(this->m_id);
+}
+
+float Unit::getPixelX()
+{
+    return getX() * 16 * 3;
+}
+
+float Unit::getPixelY()
+{
+    return getY() * 16 * 3;
+}
+
+void Unit::setMapId(int id)
+{
+    this->m_mapId = id;
+}
+
+int Unit::getMapId()
+{
+    return this->m_mapId;
 }
 
 } // namespace advanced_wars

@@ -2,6 +2,7 @@
 
 #include "Engine.hpp"
 #include "Weapon.hpp"
+#include <box2d/box2d.h>
 #include <optional>
 #include <unordered_map>
 
@@ -69,7 +70,7 @@ class Unit
         int m_y;
         int m_health; // health equals max_health at construction
 
-        Unit(int x, int y, UnitFaction faction, UnitId id, UnitState state);
+        Unit(int x, int y, UnitFaction faction, UnitId id, UnitState state, b2World* world);
         ~Unit()
         {
             // Assuming that the destruktion of a unit triggers events
@@ -116,10 +117,97 @@ class Unit
         */
         void on_left_click(SDL_Event event);
 
+        /**
+         * @brief Gibt die X-Koordinate der Unit im Tile-Raster zurück.
+         *
+         * Diese Methode liefert den Tile-Index in X-Richtung,
+         * der angibt, in welcher Spalte die Unit positioniert ist.
+         *
+         * @return int Der X-Index (Tile-Koordinate).
+         */
+        int getX() const;
+
+        /**
+         * @brief Gibt die Y-Koordinate der Unit im Tile-Raster zurück.
+         *
+         * Diese Methode liefert den Tile-Index in Y-Richtung,
+         * der angibt, in welcher Zeile die Unit positioniert ist.
+         *
+         * @return int Der Y-Index (Tile-Koordinate).
+         */
+        int getY() const;
+
+        /**
+         * @brief Gibt die aktuelle Gesundheit der Unit zurück.
+         *
+         * @return int Die Gesundheit der Unit.
+         */
+        int getHealth() const;
+
+        /**
+         * @brief Gibt die ID der Unit zurück.
+         *
+         * Diese ID ist möglicherweise nicht eindeutig, siehe @ref getMapId().
+         *
+         * @return int Die ID der Unit.
+         */
+        int getId() const;
+
+        /**
+         * @brief Setzt den Box2D-Body der Unit in der übergebenen Welt.
+         *
+         * Diese Methode erstellt den Box2D-Body und konfiguriert die Hitbox (als Sensor),
+         * basierend auf der Position (Tile-Koordinaten) der Unit.
+         *
+         * @param world Zeiger auf die Box2D-Welt, in der der Body erstellt wird.
+         */
+        void setWorld(b2World* world);
+
+        /**
+         * @brief Berechnet und gibt die X-Position der Unit in Pixeln zurück.
+         *
+         * Dies ist hilfreich für das Rendering, um die Position in Pixelkoordinaten zu erhalten.
+         *
+         * @return float Die X-Position in Pixeln.
+         */
+        float getPixelX();
+
+        /**
+         * @brief Berechnet und gibt die Y-Position der Unit in Pixeln zurück.
+         *
+         * Dies ist hilfreich für das Rendering, um die Position in Pixelkoordinaten zu erhalten.
+         *
+         * @return float Die Y-Position in Pixeln.
+         */
+        float getPixelY();
+
+        /**
+         * @brief Setzt eine eindeutige Map-ID für die Unit.
+         *
+         * Diese eindeutige ID wird genutzt, um die Unit in der Level-Map
+         * zu identifizieren, da die interne Unit-ID (getId()) möglicherweise nicht eindeutig ist.
+         *
+         * @param id Die eindeutige Map-ID, die der Unit zugewiesen werden soll.
+         */
+        void setMapId(int id);
+
+        /**
+         * @brief Gibt die eindeutige Map-ID der Unit zurück.
+         *
+         * Diese Map-ID ist eindeutig und entspricht dem Schlüssel, unter dem die Unit in der
+         * Level-Map gespeichert ist.
+         *
+         * @return int Die eindeutige Map-ID der Unit.
+         */
+        int getMapId();
+
     private:
         UnitFaction m_faction;
         UnitId      m_id;
         UnitState   m_state;
+        b2Body*     m_body = nullptr;
+        b2World*    m_world = nullptr;
+        int         m_mapId = -1;
 
         int m_maxHealth; // max_health required for damage_scaling
         int m_range;

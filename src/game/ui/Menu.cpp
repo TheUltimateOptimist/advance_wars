@@ -188,7 +188,7 @@ void Menu::handleEvent(Engine& engine, SDL_Event& event)
                     {
                         units.push_back(Unit(
                             x + 9, y + 2, UnitFaction::URED, static_cast<UnitId>(y),
-                            static_cast<UnitState>(x)));
+                            static_cast<UnitState>(x), nullptr));
                     }
                 }
 
