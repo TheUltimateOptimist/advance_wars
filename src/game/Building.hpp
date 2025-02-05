@@ -22,8 +22,8 @@ enum class BuildingId
     HEADQUARTER = 0,
     CITY = 1,
     FACTORY = 2,
-    PORT = 3,
-    SATELLITE = 4,
+    AIRPORT = 3,
+    PORT = 4,
 };
 
 class Building
