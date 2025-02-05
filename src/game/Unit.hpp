@@ -201,6 +201,17 @@ class Unit
          */
         int getMapId();
 
+        /**
+         * @brief Aktualisiert den Zustand der Unit.
+         *
+         * Diese Methode prüft, ob sich die Unit gerade bewegt und ob sie nahe genug am Ziel ist.
+         * Ist das der Fall, wird die Bewegung gestoppt, und die Tile-Koordinaten werden
+         * aktualisiert.
+         */
+        void update();
+
+        void moveToTile(int targetX, int targetY);
+
     private:
         UnitFaction m_faction;
         UnitId      m_id;
@@ -208,6 +219,9 @@ class Unit
         b2Body*     m_body = nullptr;
         b2World*    m_world = nullptr;
         int         m_mapId = -1;
+
+        int m_targetTileX;
+        int m_targetTileY;
 
         int m_maxHealth; // max_health required for damage_scaling
         int m_range;

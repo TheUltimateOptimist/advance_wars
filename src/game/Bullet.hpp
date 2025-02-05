@@ -8,10 +8,6 @@
 namespace advanced_wars
 {
 
-// Wir definieren einen Umrechnungsfaktor, um zwischen Pixeln und Box2D-Metern umzurechnen.
-// Passe diesen Wert an deine Spielwelt an. Hier gehen wir von 32 Pixel pro Meter aus.
-constexpr float PIXELS_PER_METER = 32.0f;
-
 class Bullet
 {
     public:

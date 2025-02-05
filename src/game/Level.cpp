@@ -1,4 +1,5 @@
 #include "Level.hpp"
+#include "Box2dHelper.hpp"
 #include "Building.hpp"
 #include "Effect.hpp"
 #include "Engine.hpp"
@@ -241,8 +242,7 @@ void Level::handleEvent(Engine& engine, SDL_Event& event)
                 }
                 else
                 {
-
-                    m_units.at(m_selectedUnit)->updatePosition(tileX, tileY);
+                    m_units.at(m_selectedUnit)->moveToTile(tileX, tileY);
                 }
             }
             else
@@ -309,6 +309,7 @@ void Level::render(Engine& engine)
     // Units
     for (auto& [id, unit] : m_units)
     {
+        unit->update();
         unit->render(engine, RENDERING_SCALE);
     }
 

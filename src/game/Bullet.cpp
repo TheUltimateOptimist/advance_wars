@@ -1,4 +1,5 @@
 #include "Bullet.hpp"
+#include "Box2dHelper.hpp"
 #include "Engine.hpp"
 #include "UnitContactListener.hpp"
 #include <iostream>

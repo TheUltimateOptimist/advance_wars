@@ -1,4 +1,5 @@
 #include "Unit.hpp"
+#include "Box2dHelper.hpp"
 #include "Bullet.hpp"
 #include "UnitContactListener.hpp"
 #include <iostream>
@@ -51,6 +52,8 @@ void Unit::setWorld(b2World* world)
 
 void Unit::render(Engine& engine, int scale)
 {
+    b2Vec2 pos = m_body->GetPosition();
+
     Spritesheet* spritesheet = engine.getSpritesheet();
 
     int step = engine.getStage() % spritesheet->getUnitTextures()
@@ -58,56 +61,44 @@ void Unit::render(Engine& engine, int scale)
                                        .at(static_cast<int>(m_id))
                                        .at(static_cast<int>(m_state))
                                        .second;
-
+    SDL_Rect src;
+    SDL_Rect dst;
     if (m_state == UnitState::IDLE || m_state == UnitState::UNAVAILABLE)
     {
 
-        SDL_Rect src;
         src.x = step * spritesheet->getUnitWidth();
         src.y = 0;
         src.w = spritesheet->getUnitWidth();
         src.h = spritesheet->getUnitHeight();
 
-        SDL_Rect dst;
-        dst.x = m_x * spritesheet->getUnitWidth() * scale;
-        dst.y = m_y * spritesheet->getUnitHeight() * scale;
+        dst.x = worldToTile(pos.x) * spritesheet->getUnitWidth() * scale;
+        dst.y = worldToTile(pos.y) * spritesheet->getUnitHeight() * scale;
         dst.w = spritesheet->getUnitWidth() * scale;
         dst.h = spritesheet->getUnitHeight() * scale;
-
-        SDL_RenderCopyEx(
-            engine.renderer(),
-            spritesheet->getUnitTextures()
-                .at(static_cast<int>(m_faction))
-                .at(static_cast<int>(m_id))
-                .at(static_cast<int>(m_state))
-                .first,
-            &src, &dst, 0, NULL, SDL_FLIP_NONE);
     }
     else
     {
         // The moving states have a resolution of 24x24 instead of 16x16 and need to
         // be handled separately
-        SDL_Rect src;
         src.x = step * spritesheet->getUnitMovingWidth();
         src.y = 0;
         src.w = spritesheet->getUnitMovingWidth();
         src.h = spritesheet->getUnitMovingHeight();
 
-        SDL_Rect dst;
-        dst.x = ((m_x * spritesheet->getUnitWidth()) - 4) * scale;
-        dst.y = ((m_y * spritesheet->getUnitHeight()) - 4) * scale;
+        dst.x = ((worldToTile(pos.x) * spritesheet->getUnitWidth()) - 4) * scale;
+        dst.y = ((worldToTile(pos.y) * spritesheet->getUnitHeight()) - 4) * scale;
         dst.w = spritesheet->getUnitMovingWidth() * scale;
         dst.h = spritesheet->getUnitMovingHeight() * scale;
-
-        SDL_RenderCopyEx(
-            engine.renderer(),
-            spritesheet->getUnitTextures()
-                .at(static_cast<int>(m_faction))
-                .at(static_cast<int>(m_id))
-                .at(static_cast<int>(m_state))
-                .first,
-            &src, &dst, 0, NULL, SDL_FLIP_NONE);
     }
+
+    SDL_RenderCopyEx(
+        engine.renderer(),
+        spritesheet->getUnitTextures()
+            .at(static_cast<int>(m_faction))
+            .at(static_cast<int>(m_id))
+            .at(static_cast<int>(m_state))
+            .first,
+        &src, &dst, 0, NULL, SDL_FLIP_NONE);
 }
 
 void Unit::attack(Unit& enemy)
@@ -285,6 +276,64 @@ void Unit::setMapId(int id)
 int Unit::getMapId()
 {
     return this->m_mapId;
+}
+
+void Unit::moveToTile(int targetX, int targetY)
+{
+    // Speichere die Ziel-Tile-Koordinaten
+    m_targetTileX = targetX;
+    m_targetTileY = targetY;
+
+    // Zielposition in Meter umrechnen (Mitte des Tiles)
+    float worldTargetX = (targetX * 16 + 8) / PIXELS_PER_METER;
+    float worldTargetY = (targetY * 16 + 8) / PIXELS_PER_METER;
+
+    // Aktuelle Position abrufen
+    b2Vec2 currentPos = m_body->GetPosition();
+
+    // Differenz berechnen
+    float deltaX = worldTargetX - currentPos.x;
+    float deltaY = worldTargetY - currentPos.y;
+
+    // Distanz berechnen
+    float distance = std::sqrt(deltaX * deltaX + deltaY * deltaY);
+    if (distance < 0.1f)
+    {
+        return; // Falls schon fast da, nichts tun
+    }
+
+    // Normierte Richtung berechnen
+    float directionX = deltaX / distance;
+    float directionY = deltaY / distance;
+
+    // Geschwindigkeit setzen
+    float speed = 2.0f; // Tiles pro Sekunde
+    m_body->SetLinearVelocity(b2Vec2(directionX * speed, directionY * speed));
+
+    // State setzen
+    calcState(targetX, targetY);
+}
+
+void Unit::update()
+{
+    b2Vec2 pos = m_body->GetPosition();
+
+    // Berechne aktuelle Tile-Position
+    int currentTileX = static_cast<int>((pos.x * PIXELS_PER_METER) / 16);
+    int currentTileY = static_cast<int>((pos.y * PIXELS_PER_METER) / 16);
+    /*  if (getMapId() == 66)
+     {
+         std::cout << "Current Tile: " << currentTileX << ", " << currentTileY << std::endl;
+     } */
+    // Prüfe, ob wir am Ziel sind
+    if (currentTileX == m_targetTileX && currentTileY == m_targetTileY)
+    {
+        m_body->SetLinearVelocity(b2Vec2(0, 0)); // Bewegung stoppen
+        m_x = m_targetTileX; // Stelle sicher, dass die Unit auf dem richtigen Tile registriert
+                             // ist
+        m_y = m_targetTileY;
+        m_state = UnitState::IDLE;
+    }
 }
 
 } // namespace advanced_wars
