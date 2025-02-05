@@ -42,6 +42,8 @@ Unit::Unit(int x, int y, UnitFaction faction, UnitId id, UnitState state, Config
     m_secondaryWeapon = Weapon(config.getUnitSecondaryWeapon(id), secondaryDamage);
 }
 
+ 
+
 void Unit::render(Engine& engine, int scale)
 {
     Spritesheet* spritesheet = engine.getSpritesheet();

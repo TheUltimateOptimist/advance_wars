@@ -199,13 +199,12 @@ void Level::handleEvent(Engine& engine, SDL_Event& event)
                     m_showReachableTiles = true;
 
                     std::vector<Unit*> allUnits;
-                    allUnits.reserve(m_units.size());
 
                     for (auto& [id, unit] : m_units)
                     {
                         allUnits.push_back(&unit);
                     }
-                    
+
                     std::vector<Unit*> attackableTargets =
                         m_units.at(m_selectedUnit).getUnitsInRangeWithDamagePotential(allUnits);
 
@@ -266,6 +265,10 @@ void Level::handleEvent(Engine& engine, SDL_Event& event)
                         {
                             removeUnit(m_selectedUnit);
                         }
+                        if (m_units.at(m_targetedUnit).m_health <= 0)
+                        {
+                            removeUnit(m_targetedUnit);
+                        }
                     }
                     else
                     {
@@ -277,16 +280,24 @@ void Level::handleEvent(Engine& engine, SDL_Event& event)
                     // Calculate movement range as a vector of pairs
                     auto reachableTiles = calculateMovementRange(m_units.at(m_selectedUnit));
 
-                    // Use std::find to check presence of {tileX, tileY} in reachableTiles vector
-                    if (std::find(
-                            reachableTiles.begin(), reachableTiles.end(),
-                            std::make_pair(tileX, tileY)) != reachableTiles.end())
+                    bool isReachable = false;
+
+                    for (const auto& pos : reachableTiles)
+                    {
+                        if (pos == std::make_pair(tileX, tileY))
+                        {
+                            isReachable = true;
+                            break;
+                        }
+                    }
+                    
+                    if (isReachable)
                     {
                         m_units.at(m_selectedUnit).updatePosition(tileX, tileY);
                     }
                     else
                     {
-                        std::cout << "Invalid move position!" << std::endl;
+                        std::cout << "Ungültige Bewegungsposition!" << std::endl;
                     }
                 }
             }
@@ -330,7 +341,7 @@ void Level::handleEvent(Engine& engine, SDL_Event& event)
 
 std::vector<std::pair<int, int>> Level::calculateMovementRange(Unit& unit)
 {
-    std::vector<std::pair<int, int>> reachableTiles;
+    std::vector<std::pair<int, int>>      reachableTiles;
     std::queue<std::tuple<int, int, int>> wavefrontQueue; // x, y, remainingMovement
 
     wavefrontQueue.push(std::make_tuple(unit.m_x, unit.m_y, unit.m_movementPoints));
@@ -363,7 +374,10 @@ std::vector<std::pair<int, int>> Level::calculateMovementRange(Unit& unit)
         }
 
         static const std::vector<std::pair<int, int>> directions = {
-            {1, 0}, {-1, 0}, {0, 1}, {0, -1}
+            { 1,  0},
+            {-1,  0},
+            { 0,  1},
+            { 0, -1}
         };
 
         for (const auto& [dx, dy] : directions)
@@ -384,7 +398,6 @@ std::vector<std::pair<int, int>> Level::calculateMovementRange(Unit& unit)
 
     return reachableTiles;
 }
-
 
 int Level::getMoveCost(TileId tileId, MovementType movementType)
 {
@@ -420,7 +433,6 @@ void Level::render(Engine& engine)
             SDL_RenderFillRect(engine.renderer(), &rect);
         }
 
-        
         SDL_SetRenderDrawColor(engine.renderer(), 0, 0, 0, 255);
     }
 
@@ -436,7 +448,6 @@ void Level::render(Engine& engine)
             SDL_RenderFillRect(engine.renderer(), &rect);
         }
 
-        
         SDL_SetRenderDrawColor(engine.renderer(), 0, 0, 0, 255);
     }
 
