@@ -15,6 +15,15 @@
 namespace advanced_wars
 {
 
+enum class LevelState
+{
+    SELECTING_STATE,
+    MOVEMENT_STATE,
+    ANIMATING_STATE,
+    MENUACTIVE_STATE,
+    ATTACKING_STATE
+};
+
 /**
  * @brief The main window of the game
  */
@@ -29,6 +38,21 @@ class Level : public Scene
 
         void render(Engine& engine);
 
+        /*
+        on event
+            key down
+                escape      ->  deselect/ open pause menu
+                key left    ->  move one tile left
+                key right   ->  move one tile right
+                key up      ->  move one tile up / change context menu selection up
+                key down    ->  move one tile down / change context menu selection down
+                key enter   ->  confirm selection in context menu /
+                                confirm selected position(moving)/
+                                select entity on tile
+            mousebutton down
+                button left ->  select field/building/unit/
+                                move to position
+        */
         void handleEvent(Engine& engine, SDL_Event& event);
 
         int addBuilding(Building building);
@@ -44,30 +68,28 @@ class Level : public Scene
         Effect removeEffect(int id);
 
     private:
-        std::string m_name;
-        int         m_width;
-        int         m_height;
-
+        std::string                       m_name;
+        int                               m_width;
+        int                               m_height;
         std::vector<Tile>                 m_tiles;
         std::unordered_map<int, Building> m_buildings;
         std::unordered_map<int, Unit>     m_units;
         std::unordered_map<int, Effect>   m_effects;
+        int                               m_selectedUnit;
+        int                               m_selectedBuilding;
+        ContextMenu                       m_contextMenu;
+        int                               m_id;
+        LevelState                        m_state;
 
-        int m_selectedUnit;
-        int m_targetedUnit;
-        int m_selectedBuilding;
+        std::pair<int, int> calcTilePos(int mouseX, int mouseY);
+        void                selectEntity(int x, int y);
+        int                 selectUnit(int tileX, int tileY);
+        int                 selectBuilding(int tileX, int tileY);
 
-        ContextMenu m_contextMenu;
-        bool        m_contextMenuActive;
-
-        int m_id;
-
-        bool selectUnit(int tileX, int tileY);
-        bool targetUnit(int tileX, int tileY);
-        bool selectBuilding(int tileX, int tileY);
-
-        bool clickCheckLeft(int mouseX, int mouseY);
-        bool clickCheckRight(int mouseX, int mouseY);
+        void handleSelectingEvents(Engine& engine, SDL_Event& event);
+        void handleMenuActiveEvents(Engine& engine, SDL_Event& event);
+        void handleMovementEvents(Engine& engine, SDL_Event& event);
+        void handleAttackingEvents(Engine& engine, SDL_Event& event);
 };
 
 } // namespace advanced_wars
