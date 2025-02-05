@@ -408,10 +408,28 @@ void Level::handleMovementEvents(Engine& engine, SDL_Event& event)
     case SDL_KEYDOWN:
         if (event.key.keysym.sym == SDLK_RETURN)
         {
+            std::pair<int, int> tilePos = m_currentPos.getPosition();   
+             for (auto& [id, unit] : m_units)
+            {
+                if (unit.m_x == tilePos.first && unit.m_y == tilePos.second)
+                {
+                    // unit already at clicked position (maybe even selected unit)
+                    std::cout << "Unit already at clicked position" << std::endl;
+                    return;
+                }
+            }
+            m_units.at(m_selectedUnit).updatePosition(tilePos.first, tilePos.second);
+            m_selectedUnit = -1;
+            m_state = LevelState::SELECTING_STATE;
+
         }
         if (event.key.keysym.sym == SDLK_ESCAPE)
         {
             m_state = LevelState::MENUACTIVE_STATE;
+        }
+        if(event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_DOWN || event.key.keysym.sym == SDLK_LEFT || event.key.keysym.sym == SDLK_RIGHT)
+        {
+            m_currentPos.handleEvent(engine, event);
         }
         break;
     case SDL_MOUSEBUTTONDOWN:
