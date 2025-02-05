@@ -1,0 +1,74 @@
+#include "Recruitingmenu.hpp"
+#include <iostream>
+#include <SDL_ttf.h>
+
+namespace advanced_wars
+{
+    Recruitingmenu::Recruitingmenu() : m_selectedOption(0) {
+
+    }
+
+    void Recruitingmenu::setOptions(const std::vector<std::string>& newOptions) {
+        m_options = newOptions;
+        m_selectedOption = 0;
+    }
+
+    void Recruitingmenu::render(Engine& engine)
+{
+
+    if (TTF_Init() == -1)
+    {
+        std::cerr << "Failed to initialize TTF: " << TTF_GetError() << std::endl;
+        return;
+    }
+
+    if (m_options.empty())
+    {
+        // TODO handle somehow
+        return;
+    }
+
+    std::string basePath = SDL_GetBasePath();
+    std::string relativePath = "res/ARCADECLASSIC.TTF";
+    std::string fullPath = basePath + relativePath;
+    TTF_Font*   font = TTF_OpenFont(fullPath.c_str(), 16);
+    if (!font)
+    {
+        std::cerr << "Failed to load font: " << TTF_GetError() << std::endl;
+        return;
+    }
+
+    SDL_Color white = {255, 255, 255, 255};
+    SDL_Color yellow = {192, 255, 0, 255};
+
+    int spacing = 20; // Abstand zwischen den Optionen
+    // box around options
+    SDL_SetRenderDrawColor(engine.renderer(), 0, 0, 255, 255);
+    SDL_Rect box = {m_x, m_y - 3, 50, static_cast<int>(m_options.size() * spacing)};
+    SDL_RenderFillRect(engine.renderer(), &box);
+
+    SDL_SetRenderDrawColor(engine.renderer(), 0, 0, 0, 255);
+
+    for (size_t i = 0; i < m_options.size(); ++i)
+    {
+        SDL_Surface* textSurface = TTF_RenderText_Solid(
+            font, m_options[i].c_str(), (i == m_selectedOption) ? yellow : white);
+        if (!textSurface)
+        {
+            continue;
+        }
+
+        SDL_Texture* textTexture = SDL_CreateTextureFromSurface(engine.renderer(), textSurface);
+        SDL_Rect     textRect = {
+            m_x + 10, m_y + static_cast<int>(i * spacing), textSurface->w, textSurface->h};
+        SDL_RenderCopy(engine.renderer(), textTexture, nullptr, &textRect);
+
+        SDL_DestroyTexture(textTexture);
+        SDL_FreeSurface(textSurface);
+    }
+
+    TTF_CloseFont(font);
+    TTF_Quit();
+}
+
+}//namespace advance_wars
