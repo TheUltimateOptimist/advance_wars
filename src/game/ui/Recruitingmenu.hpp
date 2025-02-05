@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../Scene.hpp"
+#include "../Unit.hpp"
 
 namespace advanced_wars
 {
@@ -10,10 +11,12 @@ namespace advanced_wars
         private: 
 
         size_t m_selectedOption;
-        std::vector<std::string> m_options;
+        std::vector<std::pair<std::string, int>> m_options;
         int m_x;
         int m_y;
- 
+        const std::unordered_map <UnitId ,std::pair <std::string, int>> unitNames;
+        std::unordered_map<int, UnitId> cost2UnitId;
+    
         void handleEvent(Engine& engine, SDL_Event& event);
 
         
@@ -21,8 +24,6 @@ namespace advanced_wars
         void selectSprite();
 
         std::string getSelectedOption();
-
-        std::string unitIdToString(UnitId id);
 
         public:
 

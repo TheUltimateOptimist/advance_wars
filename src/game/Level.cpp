@@ -450,7 +450,18 @@ void Level::handleMenuActiveEvents(Engine& engine, SDL_Event& event)
                 m_recruitingMenu.update(
                     (tilePos.first * 16 + 15) * RENDERING_SCALE,
                     (tilePos.second * 16 + 15) * RENDERING_SCALE);
-                m_recruitingMenu.setOptions();
+                m_recruitingMenu.setOptions({
+            UnitId::INFANTERY,
+            UnitId::MECHANIZED_INFANTERY,
+            UnitId::RECON,
+            UnitId::APC,
+            UnitId::ARTILLERY,
+            UnitId::ANTI_AIR_TANK,
+            UnitId::ANTI_AIR_MISSILE_LAUNCHER,
+            UnitId::ROCKET_ARTILLERY,
+            UnitId::MEDIUM_TANK,
+            UnitId::NEO_TANK,
+            UnitId::HEAVY_TANK});
                 std::cout << "no training here" << std::endl;
             }
         }
