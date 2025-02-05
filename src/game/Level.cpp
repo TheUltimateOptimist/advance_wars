@@ -272,8 +272,12 @@ void Level::handleRecruitingEvent(Engine& engine, SDL_Event& event) {
 
     Building& b = m_buildings.at(m_selectedBuilding);
     UnitFaction u_faction = static_cast<UnitFaction> (b.m_faction);
+
     
+    std::vector<UnitId> recruitableUnits = b.recruitableUnits();
     //show appropriate interface -> provide vector of UnitId
+    
+    //show Interface here
     //select UnitId
     UnitId u_id = UnitId::INFANTERY;
 
