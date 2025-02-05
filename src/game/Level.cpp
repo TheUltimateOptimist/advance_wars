@@ -411,9 +411,17 @@ void Level::handleAttackingEvents(Engine& engine, SDL_Event& event)
         if (event.button.button == SDL_BUTTON_LEFT)
         {
             std::pair<int, int> tilePos = calcTilePos(event.button.x, event.button.y);
-            int                 targetedUnit;
-            if ((targetedUnit = selectUnit(tilePos.first, tilePos.second)) >= 0)
+            int                 targetedUnit = selectUnit(tilePos.first, tilePos.second);
+
+            if (targetedUnit >= 0)
             {
+                if (m_units.at(m_selectedUnit).getFaction() ==
+                    m_units.at(targetedUnit).getFaction())
+                {
+                    std::cout << "You cannot attack your allies!" << std::endl;
+                    return;
+                }
+
                 Unit& attacking = m_units.at(m_selectedUnit);
                 Unit& defending = m_units.at(targetedUnit);
                 attacking.attack(defending);
@@ -427,6 +435,10 @@ void Level::handleAttackingEvents(Engine& engine, SDL_Event& event)
                 }
                 m_selectedUnit = -1;
                 m_state = LevelState::SELECTING_STATE;
+            }
+            else
+            {
+                std::cout << "No valid target clicked" << std::endl;
             }
         }
         break;
