@@ -286,7 +286,6 @@ void Level::handleSelectingEvents(Engine& engine, SDL_Event& event)
         if(event.key.keysym.sym == SDLK_RETURN){
             
             std::pair<int, int> tilePos = m_currentPos.getPosition();
-            std::cout << "TilePos: " << tilePos.first << " " << tilePos.second << std::endl;
             selectEntity(tilePos.first * 16 * RENDERING_SCALE, tilePos.second* 16 * RENDERING_SCALE);
             if (m_selectedUnit >= 0 || m_selectedBuilding >= 0)
             {
@@ -464,6 +463,42 @@ void Level::handleAttackingEvents(Engine& engine, SDL_Event& event)
         if (event.key.keysym.sym == SDLK_ESCAPE)
         {
             m_state = LevelState::MENUACTIVE_STATE;
+        }
+        if(event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_DOWN || event.key.keysym.sym == SDLK_LEFT || event.key.keysym.sym == SDLK_RIGHT)
+        {
+            m_currentPos.handleEvent(engine, event);
+        }
+        if (event.key.keysym.sym == SDLK_RETURN)
+        {
+            std::pair<int, int> tilePos = m_currentPos.getPosition();
+            int                 targetedUnit = selectUnit(tilePos.first, tilePos.second);
+            if (targetedUnit >= 0)
+            {
+                if (m_units.at(m_selectedUnit).getFaction() ==
+                    m_units.at(targetedUnit).getFaction())
+                {
+                    std::cout << "You cannot attack your allies!" << std::endl;
+                    return;
+                }
+
+                Unit& attacking = m_units.at(m_selectedUnit);
+                Unit& defending = m_units.at(targetedUnit);
+                attacking.attack(defending);
+                if (attacking.m_health <= 0)
+                {
+                    removeUnit(m_selectedUnit);
+                }
+                if (defending.m_health <= 0)
+                {
+                    removeUnit(targetedUnit);
+                }
+                m_selectedUnit = -1;
+                m_state = LevelState::SELECTING_STATE;
+            }
+            else
+            {
+                std::cout << "No valid target clicked" << std::endl;
+            }
         }
         break;
     case SDL_MOUSEBUTTONDOWN:
