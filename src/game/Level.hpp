@@ -96,6 +96,10 @@ class Level : public Scene
         void handleMenuActiveEvents(Engine& engine, SDL_Event& event);
         void handleMovementEvents(Engine& engine, SDL_Event& event);
         void handleAttackingEvents(Engine& engine, SDL_Event& event);
+
+        void handleAttack(std::pair<int, int> tilePos);
+        void handleMovement(std::pair<int, int> tilePos);
+        void handlePositionMarker(Engine& engine, SDL_Event& event);
 };
 
 } // namespace advanced_wars

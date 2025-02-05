@@ -215,8 +215,8 @@ void Level::render(Engine& engine)
         m_contextMenu.render(engine);
     }
 
-    if (m_state == LevelState::RECRUITING_STATE) 
-    {   
+    if (m_state == LevelState::RECRUITING_STATE)
+    {
         m_recruitingMenu.render(engine);
     }
     m_currentPos.render(engine);
@@ -270,23 +270,85 @@ Effect Level::removeEffect(int id)
     return value;
 }
 
+//*******************helper functions for event Handling*************************************
+
+void Level::handleAttack(std::pair<int, int> tilePos)
+{
+    int targetedUnit = selectUnit(tilePos.first, tilePos.second);
+    if (targetedUnit >= 0)
+    {
+        if (m_units.at(m_selectedUnit).getFaction() == m_units.at(targetedUnit).getFaction())
+        {
+            std::cout << "You cannot attack your allies!" << std::endl;
+            return;
+        }
+
+        Unit& attacking = m_units.at(m_selectedUnit);
+        Unit& defending = m_units.at(targetedUnit);
+        attacking.attack(defending);
+        if (attacking.m_health <= 0)
+        {
+            removeUnit(m_selectedUnit);
+        }
+        if (defending.m_health <= 0)
+        {
+            removeUnit(targetedUnit);
+        }
+        m_selectedUnit = -1;
+        m_state = LevelState::SELECTING_STATE;
+    }
+    else
+    {
+        std::cout << "No valid target clicked" << std::endl;
+    }
+}
+
+void Level::handleMovement(std::pair<int, int> tilePos)
+{
+    for (auto& [id, unit] : m_units)
+    {
+        if (unit.m_x == tilePos.first && unit.m_y == tilePos.second)
+        {
+            // unit already at clicked position (maybe even selected unit)
+            std::cout << "Unit already at clicked position" << std::endl;
+            return;
+        }
+    }
+    m_units.at(m_selectedUnit).updatePosition(tilePos.first, tilePos.second);
+    m_selectedUnit = -1;
+    m_state = LevelState::SELECTING_STATE;
+}
+
+void Level::handlePositionMarker(Engine& engine, SDL_Event& event)
+{
+    if (event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_DOWN ||
+        event.key.keysym.sym == SDLK_LEFT || event.key.keysym.sym == SDLK_RIGHT)
+    {
+        m_currentPos.handleEvent(engine, event);
+    }
+}
+
+//*******************end helper functions for event Handling*********************************
+
+//************event handler delegates for different level states*****************************
+
 void Level::handleSelectingEvents(Engine& engine, SDL_Event& event)
 {
     switch (event.type)
     {
     case SDL_KEYDOWN:
+        handlePositionMarker(engine, event);
         if (event.key.keysym.sym == SDLK_ESCAPE)
         {
             engine.pushScene(std::make_shared<PauseMenu>(0, nullptr));
         }
-        if(event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_DOWN || event.key.keysym.sym == SDLK_LEFT || event.key.keysym.sym == SDLK_RIGHT)
+
+        if (event.key.keysym.sym == SDLK_RETURN)
         {
-            m_currentPos.handleEvent(engine, event);
-        }
-        if(event.key.keysym.sym == SDLK_RETURN){
-            
+
             std::pair<int, int> tilePos = m_currentPos.getPosition();
-            selectEntity(tilePos.first * 16 * RENDERING_SCALE, tilePos.second* 16 * RENDERING_SCALE);
+            selectEntity(
+                tilePos.first * 16 * RENDERING_SCALE, tilePos.second * 16 * RENDERING_SCALE);
             if (m_selectedUnit >= 0 || m_selectedBuilding >= 0)
             {
                 m_contextMenu.update(
@@ -302,7 +364,7 @@ void Level::handleSelectingEvents(Engine& engine, SDL_Event& event)
                 }
                 m_state = LevelState::MENUACTIVE_STATE;
             }
-        }          
+        }
         break;
     case SDL_MOUSEBUTTONDOWN:
         if (event.button.button == SDL_BUTTON_LEFT)
@@ -382,13 +444,14 @@ void Level::handleMenuActiveEvents(Engine& engine, SDL_Event& event)
                 }
             }
             if (cmd == "Train")
-            {   
+            {
                 m_state = LevelState::RECRUITING_STATE;
                 std::pair<int, int> tilePos = m_currentPos.getPosition();
                 m_recruitingMenu.update(
                     (tilePos.first * 16 + 15) * RENDERING_SCALE,
                     (tilePos.second * 16 + 15) * RENDERING_SCALE);
-                m_recruitingMenu.setOptions({"Infantery", "Tank", "Artillery", "Medium", "Heavy", "Light"});
+                m_recruitingMenu.setOptions(
+                    {"Infantery", "Tank", "Artillery", "Medium", "Heavy", "Light"});
                 std::cout << "no training here" << std::endl;
             }
         }
@@ -399,36 +462,19 @@ void Level::handleMenuActiveEvents(Engine& engine, SDL_Event& event)
     }
 }
 
-
 void Level::handleMovementEvents(Engine& engine, SDL_Event& event)
 {
     switch (event.type)
     {
     case SDL_KEYDOWN:
+        handlePositionMarker(engine, event);
         if (event.key.keysym.sym == SDLK_RETURN)
         {
-            std::pair<int, int> tilePos = m_currentPos.getPosition();   
-             for (auto& [id, unit] : m_units)
-            {
-                if (unit.m_x == tilePos.first && unit.m_y == tilePos.second)
-                {
-                    // unit already at clicked position (maybe even selected unit)
-                    std::cout << "Unit already at clicked position" << std::endl;
-                    return;
-                }
-            }
-            m_units.at(m_selectedUnit).updatePosition(tilePos.first, tilePos.second);
-            m_selectedUnit = -1;
-            m_state = LevelState::SELECTING_STATE;
-
+            handleMovement(m_currentPos.getPosition());
         }
         if (event.key.keysym.sym == SDLK_ESCAPE)
         {
             m_state = LevelState::MENUACTIVE_STATE;
-        }
-        if(event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_DOWN || event.key.keysym.sym == SDLK_LEFT || event.key.keysym.sym == SDLK_RIGHT)
-        {
-            m_currentPos.handleEvent(engine, event);
         }
         break;
     case SDL_MOUSEBUTTONDOWN:
@@ -436,18 +482,8 @@ void Level::handleMovementEvents(Engine& engine, SDL_Event& event)
         {
             // Bei Movement animation in ANIMATING_STATE gehen
             std::pair<int, int> tilePos = calcTilePos(event.button.x, event.button.y);
-            for (auto& [id, unit] : m_units)
-            {
-                if (unit.m_x == tilePos.first && unit.m_y == tilePos.second)
-                {
-                    // unit already at clicked position (maybe even selected unit)
-                    std::cout << "Unit already at clicked position" << std::endl;
-                    return;
-                }
-            }
-            m_units.at(m_selectedUnit).updatePosition(tilePos.first, tilePos.second);
-            m_selectedUnit = -1;
-            m_state = LevelState::SELECTING_STATE;
+            m_currentPos.setPosition(tilePos.first, tilePos.second);
+            handleMovement(tilePos);
         }
         break;
     default:
@@ -460,85 +496,27 @@ void Level::handleAttackingEvents(Engine& engine, SDL_Event& event)
     switch (event.type)
     {
     case SDL_KEYDOWN:
+        handlePositionMarker(engine, event);
         if (event.key.keysym.sym == SDLK_ESCAPE)
         {
             m_state = LevelState::MENUACTIVE_STATE;
         }
-        if(event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_DOWN || event.key.keysym.sym == SDLK_LEFT || event.key.keysym.sym == SDLK_RIGHT)
-        {
-            m_currentPos.handleEvent(engine, event);
-        }
         if (event.key.keysym.sym == SDLK_RETURN)
         {
-            std::pair<int, int> tilePos = m_currentPos.getPosition();
-            int                 targetedUnit = selectUnit(tilePos.first, tilePos.second);
-            if (targetedUnit >= 0)
-            {
-                if (m_units.at(m_selectedUnit).getFaction() ==
-                    m_units.at(targetedUnit).getFaction())
-                {
-                    std::cout << "You cannot attack your allies!" << std::endl;
-                    return;
-                }
-
-                Unit& attacking = m_units.at(m_selectedUnit);
-                Unit& defending = m_units.at(targetedUnit);
-                attacking.attack(defending);
-                if (attacking.m_health <= 0)
-                {
-                    removeUnit(m_selectedUnit);
-                }
-                if (defending.m_health <= 0)
-                {
-                    removeUnit(targetedUnit);
-                }
-                m_selectedUnit = -1;
-                m_state = LevelState::SELECTING_STATE;
-            }
-            else
-            {
-                std::cout << "No valid target clicked" << std::endl;
-            }
+            handleAttack(m_currentPos.getPosition());
         }
         break;
     case SDL_MOUSEBUTTONDOWN:
         if (event.button.button == SDL_BUTTON_LEFT)
         {
             std::pair<int, int> tilePos = calcTilePos(event.button.x, event.button.y);
-            int                 targetedUnit = selectUnit(tilePos.first, tilePos.second);
-
-            if (targetedUnit >= 0)
-            {
-                if (m_units.at(m_selectedUnit).getFaction() ==
-                    m_units.at(targetedUnit).getFaction())
-                {
-                    std::cout << "You cannot attack your allies!" << std::endl;
-                    return;
-                }
-
-                Unit& attacking = m_units.at(m_selectedUnit);
-                Unit& defending = m_units.at(targetedUnit);
-                attacking.attack(defending);
-                if (attacking.m_health <= 0)
-                {
-                    removeUnit(m_selectedUnit);
-                }
-                if (defending.m_health <= 0)
-                {
-                    removeUnit(targetedUnit);
-                }
-                m_selectedUnit = -1;
-                m_state = LevelState::SELECTING_STATE;
-            }
-            else
-            {
-                std::cout << "No valid target clicked" << std::endl;
-            }
+            m_currentPos.setPosition(tilePos.first, tilePos.second);
+            handleAttack(tilePos);
         }
         break;
     default:
         break;
     }
 }
-
+//************end event handler delegates for different level states*****************************
 } // namespace advanced_wars
