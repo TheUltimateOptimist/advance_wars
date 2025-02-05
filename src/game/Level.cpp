@@ -280,11 +280,11 @@ void Level::handleRecruitingEvent(Engine& engine, SDL_Event& event) {
     
     //show Interface here
     //select UnitId
-    UnitId u_id = UnitId::INFANTERY;
+    UnitId unit_id = UnitId::INFANTERY;
 
     if(b.check_money(500)) {
         if(b.check_spawn(m_units)){
-            addUnit(Unit(b.m_x, b.m_y, u_faction, u_id, UnitState::IDLE));
+            addUnit(Unit(b.m_x, b.m_y, u_faction, unit_id, UnitState::IDLE));
             m_state = LevelState::SELECTING_STATE;
             m_selectedBuilding = -1;
         }
