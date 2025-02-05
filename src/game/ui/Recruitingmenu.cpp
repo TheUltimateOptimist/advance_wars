@@ -14,6 +14,22 @@ namespace advanced_wars
         m_selectedOption = 0;
         renderableunit = {};
     }
+/*
+    void RecruitingMenu::setOptions(const std::vector<UnitId> recruitableUnits) {
+
+        std::vector<std::string> options;
+        for (UnitId id : recruitableUnits) {
+            switch (id)
+            {
+            case UnitId::INFANTERY
+                options
+                break;
+            
+            default:
+                break;
+            }
+        }
+    } */
 
     void RecruitingMenu::render(Engine& engine)
 {
