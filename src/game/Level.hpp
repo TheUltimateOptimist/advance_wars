@@ -21,7 +21,8 @@ enum class LevelState
     MOVEMENT_STATE,
     ANIMATING_STATE,
     MENUACTIVE_STATE,
-    ATTACKING_STATE
+    ATTACKING_STATE,
+    RECRUITING_STATE
 };
 
 /**
@@ -90,6 +91,7 @@ class Level : public Scene
         void handleMenuActiveEvents(Engine& engine, SDL_Event& event);
         void handleMovementEvents(Engine& engine, SDL_Event& event);
         void handleAttackingEvents(Engine& engine, SDL_Event& event);
+        void handleRecruitingEvent(Engine& engine, SDL_Event& event);
 };
 
 } // namespace advanced_wars

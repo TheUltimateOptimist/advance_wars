@@ -48,6 +48,9 @@ Level::Level(
     {
         throw std::runtime_error("level tile mismatch");
     }
+
+    m_selectedBuilding = -1;
+    m_selectedUnit = -1;
 };
 
 Level Level::loadLevel(std::string path)
@@ -143,6 +146,7 @@ int Level::selectBuilding(int tileX, int tileY)
     return -1;
 }
 
+
 void Level::handleEvent(Engine& engine, SDL_Event& event)
 {
     switch (m_state)
@@ -161,6 +165,9 @@ void Level::handleEvent(Engine& engine, SDL_Event& event)
         break;
     case LevelState::ATTACKING_STATE:
         handleAttackingEvents(engine, event);
+        break;
+    case LevelState::RECRUITING_STATE:
+        handleRecruitingEvent(engine, event);
         break;
     default:
         break;
@@ -261,6 +268,24 @@ Effect Level::removeEffect(int id)
     return value;
 }
 
+void Level::handleRecruitingEvent(Engine& engine, SDL_Event& event) {
+
+    Building& b = m_buildings.at(m_selectedBuilding);
+    UnitFaction u_faction = static_cast<UnitFaction> (b.m_faction);
+    
+    //show appropriate interface -> provide vector of UnitId
+    //select UnitId
+    UnitId u_id = UnitId::INFANTERY;
+
+    if(b.check_money(500)) {
+        if(b.check_spawn(m_units)){
+            addUnit(Unit(b.m_x, b.m_y, u_faction, u_id, UnitState::IDLE));
+            m_state = LevelState::SELECTING_STATE;
+            m_selectedBuilding = -1;
+        }
+    }
+}
+
 void Level::handleSelectingEvents(Engine& engine, SDL_Event& event)
 {
     switch (event.type)
@@ -349,8 +374,8 @@ void Level::handleMenuActiveEvents(Engine& engine, SDL_Event& event)
             }
             if (cmd == "Train")
             {
-                // hier Einheitenrekrutierung einsetzen
-                std::cout << "no training here" << std::endl;
+                m_state = LevelState::RECRUITING_STATE;
+        
             }
         }
 
