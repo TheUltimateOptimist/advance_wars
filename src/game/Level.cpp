@@ -330,7 +330,7 @@ void Level::handleEvent(Engine& engine, SDL_Event& event)
 
 std::vector<std::pair<int, int>> Level::calculateMovementRange(Unit& unit)
 {
-    std::vector<std::pair<int, int>>      reachableTiles;
+    std::vector<std::pair<int, int>> reachableTiles;
     std::queue<std::tuple<int, int, int>> wavefrontQueue; // x, y, remainingMovement
 
     wavefrontQueue.push(std::make_tuple(unit.m_x, unit.m_y, unit.m_movementPoints));
@@ -341,17 +341,29 @@ std::vector<std::pair<int, int>> Level::calculateMovementRange(Unit& unit)
         auto [x, y, remainingMovement] = wavefrontQueue.front();
         wavefrontQueue.pop();
 
+        // Check if this tile has been visited already
         if (visited[x][y])
             continue;
         visited[x][y] = true;
 
-        reachableTiles.emplace_back(x, y);
+        // Check if a unit is on the current tile, skip adding it if true
+        bool isOccupied = false;
+        for (const auto& [id, otherUnit] : m_units)
+        {
+            if (otherUnit.m_x == x && otherUnit.m_y == y && id != m_selectedUnit)
+            {
+                isOccupied = true;
+                break;
+            }
+        }
+        // Add to reachable tiles only if not occupied
+        if (!isOccupied)
+        {
+            reachableTiles.emplace_back(x, y);
+        }
 
         static const std::vector<std::pair<int, int>> directions = {
-            { 1,  0},
-            {-1,  0},
-            { 0,  1},
-            { 0, -1}
+            {1, 0}, {-1, 0}, {0, 1}, {0, -1}
         };
 
         for (const auto& [dx, dy] : directions)
@@ -372,6 +384,7 @@ std::vector<std::pair<int, int>> Level::calculateMovementRange(Unit& unit)
 
     return reachableTiles;
 }
+
 
 int Level::getMoveCost(TileId tileId, MovementType movementType)
 {
@@ -407,7 +420,7 @@ void Level::render(Engine& engine)
             SDL_RenderFillRect(engine.renderer(), &rect);
         }
 
-        // Reset draw color if required (depends on your rendering setup)
+        
         SDL_SetRenderDrawColor(engine.renderer(), 0, 0, 0, 255);
     }
 
@@ -423,7 +436,7 @@ void Level::render(Engine& engine)
             SDL_RenderFillRect(engine.renderer(), &rect);
         }
 
-        // Optionale Rücksetzung der Zeichenfarbe
+        
         SDL_SetRenderDrawColor(engine.renderer(), 0, 0, 0, 255);
     }
 

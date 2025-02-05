@@ -256,8 +256,8 @@ std::vector<Unit*> Unit::getUnitsInRangeWithDamagePotential(const std::vector<Un
         if (distance >= m_minRange && distance <= m_maxRange)
         {
             // Prüfen ob Schaden möglich ist
-            auto primaryDamageIter = m_primaryWeapon.m_damage.find(unit->m_id);
-            auto secondaryDamageIter = m_secondaryWeapon.m_damage.find(unit->m_id);
+            auto primaryDamageIt = m_primaryWeapon.m_damage.find(unit->m_id);
+            auto secondaryDamageIt = m_secondaryWeapon.m_damage.find(unit->m_id);
 
             bool canDealDamage = false;
 
