@@ -43,6 +43,8 @@ void Building::on_click() {
     std::cout << "A building is selected!" << std::endl;
 };
 
+
+
 bool Building::check_spawn(std::unordered_map<int, advanced_wars::Unit>& units) {
     
     for(auto& [id, unit] : units) {
