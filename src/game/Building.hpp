@@ -1,9 +1,9 @@
 #pragma once
 
-#include <unordered_map>
 #include "Engine.hpp"
 #include "Scene.hpp"
 #include "Unit.hpp"
+#include <unordered_map>
 
 namespace advanced_wars
 {
@@ -45,7 +45,6 @@ class Building
         */
         void switch_faction(BuildingFaction faction);
 
-        
         /*
         checks if the tile ontop of the building is free
         */
@@ -57,21 +56,22 @@ class Building
         bool check_money(int price);
 
         /*
-        When the building is selected, the player should have the ability to recruit a selection of units
-        They should be displayed by the UI On_click();
+        When the building is selected, the player should have the ability to recruit a selection of
+        units They should be displayed by the UI On_click();
         */
         void recruit_unit();
 
         /**
-        If the building is clicked, it shows information to the player, here it will be a list of all available units
+        If the building is clicked, it shows information to the player, here it will be a list of
+        all available units
          */
         void on_click();
 
         /**
          * Provides a vector of recruitable units, depending on the building id
-         * 
+         *
          */
-        std::vector<int> recruitableUnits();
+        std::vector<UnitId> recruitableUnits();
 };
 
 } // namespace advanced_wars

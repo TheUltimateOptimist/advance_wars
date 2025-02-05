@@ -29,26 +29,30 @@ void Building::render(Engine& engine, int scale)
         &dst, 0, NULL, SDL_FLIP_NONE);
 }
 
-void Building::switch_faction(BuildingFaction faction) {
+void Building::switch_faction(BuildingFaction faction)
+{
 
     this->m_faction = faction;
 
-    if(this->m_id == BuildingId::HEADQUARTER) {
+    if (this->m_id == BuildingId::HEADQUARTER)
+    {
         std::cout << "The game is over!" << std::endl;
     }
 }
 
-//implement call to UI to show available units
-void Building::on_click() {
+// implement call to UI to show available units
+void Building::on_click()
+{
     std::cout << "A building is selected!" << std::endl;
 };
 
+bool Building::check_spawn(std::unordered_map<int, advanced_wars::Unit>& units)
+{
 
-
-bool Building::check_spawn(std::unordered_map<int, advanced_wars::Unit>& units) {
-    
-    for(auto& [id, unit] : units) {
-        if(unit.m_x == this->m_x && unit.m_y == this->m_y) {
+    for (auto& [id, unit] : units)
+    {
+        if (unit.m_x == this->m_x && unit.m_y == this->m_y)
+        {
             return false;
         }
     }
@@ -56,28 +60,48 @@ bool Building::check_spawn(std::unordered_map<int, advanced_wars::Unit>& units) 
     return true;
 }
 // can be added as soon as the playerobject is available
-bool Building::check_money(int price) {
-    //replace 400 with player.money and replace price with chosenUnit.price
-    if(400 > price) {
+bool Building::check_money(int price)
+{
+    // replace 400 with player.money and replace price with chosenUnit.price
+    if (400 > price)
+    {
         return false;
     }
     return true;
-
 }
 
-std::vector<int> Building::recruitableUnits() {
+std::vector<UnitId> Building::recruitableUnits()
+{
 
-    if(this->m_id == BuildingId::FACTORY) {
-        return {0,1,2,3,4,5,6,7,8,9,10};
+    if (this->m_id == BuildingId::FACTORY)
+    {
+        return {
+            UnitId::INFANTERY,
+            UnitId::MECHANIZED_INFANTERY,
+            UnitId::RECON,
+            UnitId::APC,
+            UnitId::ARTILLERY,
+            UnitId::ANTI_AIR_TANK,
+            UnitId::ANTI_AIR_MISSILE_LAUNCHER,
+            UnitId::ROCKET_ARTILLERY,
+            UnitId::MEDIUM_TANK,
+            UnitId::NEO_TANK,
+            UnitId::HEAVY_TANK};
     }
 
-    if(this->m_id == BuildingId::PORT) {
-        return {};
+    if (this->m_id == BuildingId::PORT)
+    {
+        return {UnitId::LANDER, UnitId::CRUISER, UnitId::SUBMARINE, UnitId::BATTLESHIP};
     }
 
-    if(this->m_id ==BuildingId::SATELLITE) {
-        return {};
+    if (this->m_id == BuildingId::AIRPORT)
+    {
+        return {
+            UnitId::TRANSPORT_HELICOPTER, UnitId::BATTLE_HELICOPTER, UnitId::FIGHTER,
+            UnitId::BOMBER};
     }
+
+    return {};
 }
 
 } // namespace advanced_wars
