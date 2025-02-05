@@ -7,6 +7,8 @@
 #include "Tile.hpp"
 #include "Unit.hpp"
 #include "ui/Contextmenu.hpp"
+#include "ui/TileMarker.hpp"
+#include "ui/Recruitingmenu.hpp"
 #include <SDL.h>
 #include <string>
 #include <unordered_map>
@@ -22,7 +24,7 @@ enum class LevelState
     ANIMATING_STATE,
     MENUACTIVE_STATE,
     ATTACKING_STATE,
-    RECRUITING_STATE
+    RECRUITING_STATE,
 };
 
 /**
@@ -79,6 +81,7 @@ class Level : public Scene
         int                               m_selectedUnit;
         int                               m_selectedBuilding;
         ContextMenu                       m_contextMenu;
+        RecruitingMenu                    m_recruitingMenu;
         int                               m_id;
         LevelState                        m_state;
 
@@ -87,11 +90,17 @@ class Level : public Scene
         int                 selectUnit(int tileX, int tileY);
         int                 selectBuilding(int tileX, int tileY);
 
+        TileMarker m_currentPos;
+
         void handleSelectingEvents(Engine& engine, SDL_Event& event);
         void handleMenuActiveEvents(Engine& engine, SDL_Event& event);
         void handleMovementEvents(Engine& engine, SDL_Event& event);
         void handleAttackingEvents(Engine& engine, SDL_Event& event);
         void handleRecruitingEvent(Engine& engine, SDL_Event& event);
+
+        void handleAttack(std::pair<int, int> tilePos);
+        void handleMovement(std::pair<int, int> tilePos);
+        void handlePositionMarker(Engine& engine, SDL_Event& event);
 };
 
 } // namespace advanced_wars
