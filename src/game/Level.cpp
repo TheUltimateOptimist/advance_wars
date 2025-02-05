@@ -272,6 +272,31 @@ void Level::handleSelectingEvents(Engine& engine, SDL_Event& event)
         {
             engine.pushScene(std::make_shared<PauseMenu>(0, nullptr));
         }
+        if(event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_DOWN || event.key.keysym.sym == SDLK_LEFT || event.key.keysym.sym == SDLK_RIGHT)
+        {
+            m_currentPos.handleEvent(engine, event);
+        }
+        if(event.key.keysym.sym == SDLK_RETURN){
+            
+            std::pair<int, int> tilePos = m_currentPos.getPosition();
+            std::cout << "TilePos: " << tilePos.first << " " << tilePos.second << std::endl;
+            selectEntity(tilePos.first * 16 * RENDERING_SCALE, tilePos.second* 16 * RENDERING_SCALE);
+            if (m_selectedUnit >= 0 || m_selectedBuilding >= 0)
+            {
+                m_contextMenu.update(
+                    (tilePos.first * 16 + 15) * RENDERING_SCALE,
+                    (tilePos.second * 16 + 15) * RENDERING_SCALE);
+                if (m_selectedUnit >= 0)
+                {
+                    m_contextMenu.setOptions({"Move", "Attack", "Info", "Wait"});
+                }
+                else
+                {
+                    m_contextMenu.setOptions({"Train", "Info", "Wait"});
+                }
+                m_state = LevelState::MENUACTIVE_STATE;
+            }
+        }          
         break;
     case SDL_MOUSEBUTTONDOWN:
         if (event.button.button == SDL_BUTTON_LEFT)
@@ -280,6 +305,7 @@ void Level::handleSelectingEvents(Engine& engine, SDL_Event& event)
             if (m_selectedUnit >= 0 || m_selectedBuilding >= 0)
             {
                 std::pair<int, int> tilePos = calcTilePos(event.button.x, event.button.y);
+                m_currentPos.setPosition(tilePos.first, tilePos.second);
                 m_contextMenu.update(
                     (tilePos.first * 16 + 15) * RENDERING_SCALE,
                     (tilePos.second * 16 + 15) * RENDERING_SCALE);

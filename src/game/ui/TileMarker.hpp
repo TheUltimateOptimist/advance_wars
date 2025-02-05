@@ -19,6 +19,8 @@ class TileMarker : public Scene
 
         std::pair<int, int> getPosition();
 
+        void setPosition(int x, int y);
+
     private:
         int m_x;
         int m_y;
