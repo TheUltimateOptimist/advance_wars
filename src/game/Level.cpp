@@ -163,6 +163,8 @@ void Level::handleEvent(Engine& engine, SDL_Event& event)
     case LevelState::ATTACKING_STATE:
         handleAttackingEvents(engine, event);
         break;
+    case LevelState::RECRUITING_STATE:
+
     default:
         break;
     }
@@ -211,6 +213,11 @@ void Level::render(Engine& engine)
     if (m_state == LevelState::MENUACTIVE_STATE)
     {
         m_contextMenu.render(engine);
+    }
+
+    if (m_state == LevelState::RECRUITING_STATE) 
+    {   
+        m_recruitingMenu.render(engine);
     }
     m_currentPos.render(engine);
 }
@@ -376,8 +383,13 @@ void Level::handleMenuActiveEvents(Engine& engine, SDL_Event& event)
                 }
             }
             if (cmd == "Train")
-            {
-                // hier Einheitenrekrutierung einsetzen
+            {   
+                m_state = LevelState::RECRUITING_STATE;
+                std::pair<int, int> tilePos = m_currentPos.getPosition();
+                m_recruitingMenu.update(
+                    (tilePos.first * 16 + 15) * RENDERING_SCALE,
+                    (tilePos.second * 16 + 15) * RENDERING_SCALE);
+                m_recruitingMenu.setOptions({"Infantery", "Tank", "Artillery", "Medium", "Heavy", "Light"});
                 std::cout << "no training here" << std::endl;
             }
         }
@@ -387,6 +399,7 @@ void Level::handleMenuActiveEvents(Engine& engine, SDL_Event& event)
         break;
     }
 }
+
 
 void Level::handleMovementEvents(Engine& engine, SDL_Event& event)
 {

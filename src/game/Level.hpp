@@ -8,6 +8,7 @@
 #include "Unit.hpp"
 #include "ui/Contextmenu.hpp"
 #include "ui/TileMarker.hpp"
+#include "ui/Recruitingmenu.hpp"
 #include <SDL.h>
 #include <string>
 #include <unordered_map>
@@ -22,7 +23,8 @@ enum class LevelState
     MOVEMENT_STATE,
     ANIMATING_STATE,
     MENUACTIVE_STATE,
-    ATTACKING_STATE
+    ATTACKING_STATE,
+    RECRUITING_STATE,
 };
 
 /**
@@ -79,6 +81,7 @@ class Level : public Scene
         int                               m_selectedUnit;
         int                               m_selectedBuilding;
         ContextMenu                       m_contextMenu;
+        RecruitingMenu                    m_recruitingMenu;
         int                               m_id;
         LevelState                        m_state;
 
