@@ -87,19 +87,8 @@ class Level : public Scene
         int                 selectUnit(int tileX, int tileY);
         int                 selectBuilding(int tileX, int tileY);
 
-        ContextMenu m_contextMenu;
-        TileMarker  m_currentPos;
-        bool        m_contextMenuActive;
+        TileMarker m_currentPos;
 
-        int m_id;
-
-        bool selectUnit(int tileX, int tileY);
-        bool targetUnit(int tileX, int tileY);
-        bool selectBuilding(int tileX, int tileY);
-
-        bool clickCheckLeft(int mouseX, int mouseY);
-        bool clickCheckRight(int mouseX, int mouseY);
-        
         void handleSelectingEvents(Engine& engine, SDL_Event& event);
         void handleMenuActiveEvents(Engine& engine, SDL_Event& event);
         void handleMovementEvents(Engine& engine, SDL_Event& event);
