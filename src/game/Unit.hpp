@@ -104,6 +104,10 @@ class Unit
 
         void attack(Unit& enemy);
 
+        void performAttack(Unit& target, int damage);
+
+        int calculateDamage(Unit& target);
+
         /*
         @params Takes the desired position of the unit and updates its values
         This will teleport the unit, there is no smooth transition between tiles

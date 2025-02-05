@@ -127,14 +127,11 @@ bool Level::clickCheckRight(int tileX, int tileY)
 bool Level::selectUnit(int tileX, int tileY)
 {
 
-    // std::cout << "tileX:" << tileX << "tileX:" << tileY << std::endl;
     for (auto& [id, unit] : m_units)
     {
 
         if (unit.m_x == tileX && unit.m_y == tileY)
         {
-            // std::cout << "unitX:" << unit.x << "unitY:" << unit.y << std::endl;
-
             m_selectedUnit = id;
             return true;
         }
@@ -146,14 +143,11 @@ bool Level::selectUnit(int tileX, int tileY)
 bool Level::targetUnit(int tileX, int tileY)
 {
 
-    // std::cout << "tileX:" << tileX << "tileX:" << tileY << std::endl;
     for (auto& [id, unit] : m_units)
     {
 
         if (unit.m_x == tileX && unit.m_y == tileY)
         {
-            // std::cout << "unitX:" << unit.x << "unitY:" << unit.y << std::endl;
-
             m_targetedUnit = id;
             return true;
         }
@@ -209,27 +203,15 @@ void Level::handleEvent(Engine& engine, SDL_Event& event)
 
                     for (auto& [id, unit] : m_units)
                     {
-                        allUnits.push_back(&unit); // Fügen Sie Zeiger hinzu, nicht Kopien
+                        allUnits.push_back(&unit);
                     }
-                    /*
-
+                    
                     std::vector<Unit*> attackableTargets =
                         m_units.at(m_selectedUnit).getUnitsInRangeWithDamagePotential(allUnits);
 
                     m_attackableTiles.clear();
                     m_showAttackableTiles = true;
-                    for (Unit* target : attackableTargets)
-                    {
-                        // Füge die Position jedes angreifbaren Ziels hinzu
-                        m_attackableTiles.emplace_back(target->m_x, target->m_y);
-                    }*/
-
-                    std::vector<Unit*> attackableTargets =
-                        m_units.at(m_selectedUnit).getUnitsInRangeWithDamagePotential(allUnits);
-
-                    m_attackableTiles.clear();
-                    m_showAttackableTiles = true;
-                    m_attackableUnitIds.clear(); // <-- Fügen Sie dies hier hinzu
+                    m_attackableUnitIds.clear();
 
                     for (Unit* target : attackableTargets)
                     {
