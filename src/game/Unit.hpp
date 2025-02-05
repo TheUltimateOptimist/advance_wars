@@ -74,6 +74,7 @@ class Unit
         int m_x;
         int m_y;
         int m_health; // Current health of the unit, initialized to max health at construction.
+        int m_price;
 
         int          m_movementPoints; // The number of tiles this unit can move per turn.
         MovementType m_movementType;   // The type of movement this unit has (e.g., foot, wheeled).
@@ -182,6 +183,8 @@ class Unit
          */
         std::vector<Unit*> getUnitsInRangeWithDamagePotential(const std::vector<Unit*>& allUnits);
 
+        UnitFaction getFaction();
+
     private:
         UnitFaction m_faction; // The faction to which this unit belongs.
         UnitId      m_id;      // The identifier for the unit type.
@@ -202,5 +205,7 @@ class Unit
         int m_ammo;     // The amount of available ammo for attacks.
         int m_minRange; // The minimum range of the unit's attack capability.
         int m_maxRange; // The maximum range of the unit's attack capability.
+
+        void renderHP(Engine& engine, int scale);
 };
 } // namespace advanced_wars
