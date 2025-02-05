@@ -74,13 +74,21 @@ namespace advanced_wars
                 .at(static_cast<int>(UnitState::IDLE))
                 .first;
 
-        SDL_Rect rect = {
-            m_x + 5, // X-Position rechts neben dem Text
-            m_y + static_cast<int>(i * spacing),                   // Gleiche Y-Position wie der Text
-            16,                            // Breite des Rechtecks
-            16                                 // Höhe des Rechtecks entspricht der Texthöhe
+        SDL_Rect trgt_rect = {
+            m_x + 5, 
+            m_y + static_cast<int>(i * spacing),                  
+            16,                           
+            16                                
         };
-        SDL_RenderCopy(engine.renderer(), unit_texture, nullptr, &rect);
+
+        SDL_Rect src_rect = {
+            5,
+            0,
+            10,
+            10
+        };
+
+        SDL_RenderCopy(engine.renderer(), unit_texture, &src_rect, &trgt_rect);
         
         SDL_DestroyTexture(textTexture);
         SDL_FreeSurface(textSurface);
