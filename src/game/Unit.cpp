@@ -217,6 +217,11 @@ bool Unit::inRange(Unit& enemy)
     return false;
 }
 
+UnitFaction Unit::getFaction()
+{
+    return this->m_faction;
+}
+
 void Unit::renderHP(Engine& engine, int scale)
 {
     Spritesheet* spritesheet = engine.getSpritesheet();
