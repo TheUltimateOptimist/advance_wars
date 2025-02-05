@@ -33,6 +33,7 @@ MainWindow::MainWindow(LevelScene* level, QWidget* parent)
 
     // CREATE LEVELMAP
     LevelView* level_map = new LevelView(level, this);
+    level->setParent(level_map); // allow Qt to handle the memory
 
     // LAYOUT-------------------------------------------------------
     QHBoxLayout* layout = new QHBoxLayout(mainWidget);
