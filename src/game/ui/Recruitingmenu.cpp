@@ -4,16 +4,17 @@
 
 namespace advanced_wars
 {
-    Recruitingmenu::Recruitingmenu() : m_selectedOption(0) {
+    RecruitingMenu::RecruitingMenu() : m_selectedOption(0) {
 
     }
 
-    void Recruitingmenu::setOptions(const std::vector<std::string>& newOptions) {
+    void RecruitingMenu::setOptions(const std::vector<std::string>& newOptions) {
         m_options = newOptions;
         m_selectedOption = 0;
+        renderableunit = {};
     }
 
-    void Recruitingmenu::render(Engine& engine)
+    void RecruitingMenu::render(Engine& engine)
 {
 
     if (TTF_Init() == -1)
@@ -69,6 +70,32 @@ namespace advanced_wars
 
     TTF_CloseFont(font);
     TTF_Quit();
+}
+
+void RecruitingMenu::handleEvent(Engine& engine, SDL_Event& event)
+{
+    if (event.type == SDL_KEYDOWN)
+    {
+        if (event.key.keysym.sym == SDLK_DOWN)
+        {
+            m_selectedOption = (m_selectedOption + 1) % m_options.size();
+        }
+        else if (event.key.keysym.sym == SDLK_UP)
+        {
+            m_selectedOption = (m_selectedOption - 1 + m_options.size()) % m_options.size();
+        }
+    }
+}
+
+std::string RecruitingMenu::getSelectedOption()
+{
+    return m_options[m_selectedOption];
+}
+
+void RecruitingMenu::update(int x, int y)
+{
+    this->m_x = x;
+    this->m_y = y;
 }
 
 }//namespace advance_wars
