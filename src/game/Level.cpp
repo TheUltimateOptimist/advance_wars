@@ -275,6 +275,7 @@ void Level::handleRecruitingEvent(Engine& engine, SDL_Event& event) {
 
     
     std::vector<UnitId> recruitableUnits = b.recruitableUnits();
+    //m_recruitingmenu.setoptions(recruitableUnits)
     //show appropriate interface -> provide vector of UnitId
     
     //show Interface here
