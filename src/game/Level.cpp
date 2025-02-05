@@ -335,15 +335,22 @@ void Level::handleMenuActiveEvents(Engine& engine, SDL_Event& event)
             if (cmd == "Info")
             {
                 // TODO: Hier Informationen zur Einheit darstellen
-                if (m_selectedUnit)
+                if (m_selectedUnit > -1)
                 {
                     Unit& u = m_units.at(m_selectedUnit);
                     std::cout << "Health: " << u.m_health << std::endl;
+                }
+                if (m_selectedBuilding > -1)
+                {
+                    Building b = m_buildings.at(m_selectedBuilding);
+                    std::cout << "Building ID: " << static_cast<int>(b.m_id) << " || "
+                              << "Building Faction: " << static_cast<int>(b.m_faction) << std::endl;
                 }
             }
             if (cmd == "Train")
             {
                 // hier Einheitenrekrutierung einsetzen
+                std::cout << "no training here" << std::endl;
             }
         }
 
