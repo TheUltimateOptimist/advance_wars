@@ -34,6 +34,8 @@ Bullet::Bullet(b2World& world, float startX, float startY, float velocityX, floa
     bud->data = this;
     m_body->GetUserData().pointer = reinterpret_cast<uintptr_t>(bud);
 
+    this->update();
+
     std::cout << "Bullet erstellt bei (" << startX << ", " << startY << ")" << std::endl;
 }
 
