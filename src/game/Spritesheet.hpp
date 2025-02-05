@@ -153,6 +153,26 @@ class Spritesheet
          */
         std::vector<std::pair<SDL_Texture*, int>>& getEffectTextures();
 
+        // Numbers
+        /**
+         * @return The width of a number in pixels
+         */
+        int getNumberWidth();
+
+        /**
+         * @return The height of a number in pixels
+         */
+        int getNumberHeight();
+
+        /**
+         * The texture represents the individual texture for all numbers linearised.
+         *
+         * The order of the numbers is the following: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9.
+         *
+         * @return Number texture
+         */
+        SDL_Texture* getNumberTexture();
+
     private:
         // Tiles
         std::vector<std::pair<SDL_Texture*, int>> m_tileTextures;
@@ -179,5 +199,11 @@ class Spritesheet
 
         int m_effectWidth;
         int m_effectHeight;
+
+        // Numbers
+        SDL_Texture* m_numberTextures;
+
+        int m_numberWidth;
+        int m_numberHeight;
 };
 } // namespace advanced_wars

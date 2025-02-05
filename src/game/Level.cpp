@@ -22,9 +22,10 @@ const int RENDERING_SCALE = 3;
 Level::Level(
     std::string name, int width, int height, std::vector<Tile> tiles,
     std::vector<Building> buildings, std::vector<Unit> units, std::vector<Effect> effects)
-    : m_name(name), m_width(width), m_height(height), m_tiles(tiles), m_contextMenu(ContextMenu()),
-      m_contextMenuActive(false),
-      m_currentPos(TileMarker(RENDERING_SCALE, 1, 1, m_width, m_height)), m_id(0)
+    : m_name(name), m_width(width), m_height(height), m_tiles(tiles), m_selectedUnit(-1),
+      m_selectedBuilding(-1), m_contextMenu(ContextMenu()), m_id(0),
+      m_state(LevelState::SELECTING_STATE),
+      m_currentPos(TileMarker(RENDERING_SCALE, 1, 1, m_width, m_height))
 {
 
     m_contextMenu.setOptions({"Move", "Info", "Wait"});
@@ -96,207 +97,79 @@ Level Level::loadLevel(std::string path)
     return Level(name, width, height, tiles, buildings, {}, {});
 };
 
-bool Level::clickCheckLeft(int tileX, int tileY)
+std::pair<int, int> Level::calcTilePos(int mouseX, int mouseY)
 {
+    int tileSize = (16 * RENDERING_SCALE);
+    int tileX = mouseX / tileSize;
+    int tileY = mouseY / tileSize;
 
-    if (selectUnit(tileX, tileY))
-    {
-        return true;
-    }
-
-    if (selectBuilding(tileX, tileY))
-    {
-        return true;
-    }
-
-    return false;
+    return {tileX, tileY};
 }
 
-bool Level::clickCheckRight(int tileX, int tileY)
+void Level::selectEntity(int x, int y)
 {
+    std::pair<int, int> tilePos = calcTilePos(x, y);
 
-    if (targetUnit(tileX, tileY))
+    if ((m_selectedUnit = selectUnit(tilePos.first, tilePos.second)) >= 0)
     {
-        return true;
+        return;
     }
-
-    return false;
+    if ((m_selectedBuilding = selectBuilding(tilePos.first, tilePos.second)) >= 0)
+    {
+        return;
+    }
 }
 
-bool Level::selectUnit(int tileX, int tileY)
+int Level::selectUnit(int tileX, int tileY)
 {
-
-    // std::cout << "tileX:" << tileX << "tileX:" << tileY << std::endl;
     for (auto& [id, unit] : m_units)
     {
-
         if (unit.m_x == tileX && unit.m_y == tileY)
         {
-            // std::cout << "unitX:" << unit.x << "unitY:" << unit.y << std::endl;
-
-            m_selectedUnit = id;
-            return true;
+            return id;
         }
     }
-
-    return false;
+    return -1;
 }
 
-bool Level::targetUnit(int tileX, int tileY)
+int Level::selectBuilding(int tileX, int tileY)
 {
-
-    // std::cout << "tileX:" << tileX << "tileX:" << tileY << std::endl;
-    for (auto& [id, unit] : m_units)
-    {
-
-        if (unit.m_x == tileX && unit.m_y == tileY)
-        {
-            // std::cout << "unitX:" << unit.x << "unitY:" << unit.y << std::endl;
-
-            m_targetedUnit = id;
-            return true;
-        }
-    }
-
-    return false;
-}
-
-bool Level::selectBuilding(int tileX, int tileY)
-{
-
     for (auto& [id, building] : m_buildings)
     {
-
         if (building.m_x == tileX && building.m_y == tileY)
         {
-            // std::cout << "X:" << unit.x << "Y:" << unit.y << std::endl;
-            m_selectedBuilding = id;
-            return true;
+            return id;
         }
     }
-    return false;
+    return -1;
 }
 
 void Level::handleEvent(Engine& engine, SDL_Event& event)
 {
-
-    switch (event.type)
+    switch (m_state)
     {
-    case SDL_MOUSEBUTTONDOWN:
-
-        // the current unit debug combat should be handled by the contextmenu with its menu options
-        if (event.button.button == SDL_BUTTON_LEFT)
-        {
-
-            int tileX = event.button.x / (16 * RENDERING_SCALE);
-            int tileY = event.button.y / (16 * RENDERING_SCALE);
-            if (clickCheckLeft(tileX, tileY))
-            {
-                if (m_selectedUnit > -1)
-                {
-                    m_units.at(m_selectedUnit).on_left_click(event);
-                    int menuPositionX = (tileX * 16 + 12) * RENDERING_SCALE;
-                    int menuPositionY = (tileY * 16 + 12) * RENDERING_SCALE;
-                    m_contextMenu.update(menuPositionX, menuPositionY);
-                    m_contextMenuActive = true;
-                }
-
-                if (m_selectedBuilding > -1)
-                {
-                    // building stuff
-                }
-            }
-            else
-            {
-
-                std::cout << "Neither building nor unit clicked!" << std::endl;
-                m_selectedUnit = -1;
-                m_selectedBuilding = -1;
-                m_contextMenuActive = false;
-            }
-        }
-        else if (event.button.button == SDL_BUTTON_RIGHT)
-        {
-
-            if (m_selectedUnit > -1)
-            {
-
-                int tileX = event.button.x / (16 * RENDERING_SCALE);
-                int tileY = event.button.y / (16 * RENDERING_SCALE);
-
-                if (clickCheckRight(tileX, tileY))
-                {
-
-                    m_units.at(m_selectedUnit).attack((m_units.at(m_targetedUnit)));
-
-                    if (m_units.at(m_selectedUnit).m_health <= 0)
-                    {
-                        removeUnit(m_selectedUnit);
-                    }
-                }
-                else
-                {
-
-                    m_units.at(m_selectedUnit).updatePosition(tileX, tileY);
-                }
-            }
-            else
-            {
-
-                std::cout << "No unit selected! " << std::endl;
-            }
-        }
+    case LevelState::MENUACTIVE_STATE:
+        handleMenuActiveEvents(engine, event);
         break;
-
-    case SDL_KEYDOWN:
-
-        if (event.key.keysym.sym == SDLK_ESCAPE)
-        {
-            // Pause the game
-            std::cout << "Pausing game..." << std::endl;
-            SDL_Texture* currentTexture = SDL_CreateTexture(
-                engine.renderer(), SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, 800, 600);
-
-            PauseMenu pauseMenu(0, currentTexture);
-            engine.pushScene(std::make_shared<PauseMenu>(pauseMenu));
-        }
-        if (m_contextMenuActive)
-        {
-            if (event.key.keysym.sym == SDLK_RETURN)
-            {
-                if (m_contextMenu.getSelectedOption() == "Wait")
-                {
-                    m_contextMenuActive = false;
-                }
-            }
-            else
-            {
-                m_contextMenu.handleEvent(engine, event);
-            }
-        }
-        else
-        {
-            if (event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_DOWN ||
-                event.key.keysym.sym == SDLK_RIGHT || event.key.keysym.sym == SDLK_LEFT)
-            {
-                m_currentPos.handleEvent(engine, event);
-            }
-        }
+    case LevelState::SELECTING_STATE:
+        handleSelectingEvents(engine, event);
+        break;
+    case LevelState::ANIMATING_STATE:
+        // maybe do nothing
+        break;
+    case LevelState::MOVEMENT_STATE:
+        handleMovementEvents(engine, event);
+        break;
+    case LevelState::ATTACKING_STATE:
+        handleAttackingEvents(engine, event);
+        break;
+    default:
         break;
     }
 }
 
 void Level::render(Engine& engine)
 {
-
-    // Iterate over all events
-    while (!engine.events().empty())
-    {
-        handleEvent(engine, engine.events().at(0));
-
-        engine.events().pop_front();
-    }
-
     // Tiles
     for (Tile& tile : m_tiles)
     {
@@ -335,7 +208,7 @@ void Level::render(Engine& engine)
         this->removeEffect(id);
     }
 
-    if (m_contextMenuActive)
+    if (m_state == LevelState::MENUACTIVE_STATE)
     {
         m_contextMenu.render(engine);
     }
@@ -388,6 +261,192 @@ Effect Level::removeEffect(int id)
     m_effects.erase(id);
 
     return value;
+}
+
+void Level::handleSelectingEvents(Engine& engine, SDL_Event& event)
+{
+    switch (event.type)
+    {
+    case SDL_KEYDOWN:
+        if (event.key.keysym.sym == SDLK_ESCAPE)
+        {
+            engine.pushScene(std::make_shared<PauseMenu>(0, nullptr));
+        }
+        break;
+    case SDL_MOUSEBUTTONDOWN:
+        if (event.button.button == SDL_BUTTON_LEFT)
+        {
+            selectEntity(event.button.x, event.button.y);
+            if (m_selectedUnit >= 0 || m_selectedBuilding >= 0)
+            {
+                std::pair<int, int> tilePos = calcTilePos(event.button.x, event.button.y);
+                m_contextMenu.update(
+                    (tilePos.first * 16 + 15) * RENDERING_SCALE,
+                    (tilePos.second * 16 + 15) * RENDERING_SCALE);
+                if (m_selectedUnit >= 0)
+                {
+                    m_contextMenu.setOptions({"Move", "Attack", "Info", "Wait"});
+                }
+                else
+                {
+                    m_contextMenu.setOptions({"Train", "Info", "Wait"});
+                }
+                m_state = LevelState::MENUACTIVE_STATE;
+            }
+            else
+            {
+                m_state = LevelState::SELECTING_STATE;
+            }
+        }
+    default:
+        break;
+    }
+}
+
+void Level::handleMenuActiveEvents(Engine& engine, SDL_Event& event)
+{
+    switch (event.type)
+    {
+    case SDL_KEYDOWN:
+        if (event.key.keysym.sym == SDLK_ESCAPE)
+        {
+            m_selectedUnit = -1;
+            m_selectedBuilding = -1;
+            m_state = LevelState::SELECTING_STATE;
+        }
+        if (event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_DOWN)
+        {
+            m_contextMenu.handleEvent(engine, event);
+        }
+        if (event.key.keysym.sym == SDLK_RETURN)
+        {
+            std::string cmd = m_contextMenu.getSelectedOption();
+            if (cmd == "Wait")
+            {
+                m_state = LevelState::SELECTING_STATE;
+            }
+            if (cmd == "Move")
+            {
+                m_state = LevelState::MOVEMENT_STATE;
+                // Hier Pathfinding einsetzen
+            }
+            if (cmd == "Attack")
+            {
+                m_state = LevelState::ATTACKING_STATE;
+            }
+            if (cmd == "Info")
+            {
+                // TODO: Hier Informationen zur Einheit darstellen
+                if (m_selectedUnit > -1)
+                {
+                    Unit& u = m_units.at(m_selectedUnit);
+                    std::cout << "Health: " << u.m_health << std::endl;
+                }
+                if (m_selectedBuilding > -1)
+                {
+                    Building b = m_buildings.at(m_selectedBuilding);
+                    std::cout << "Building ID: " << static_cast<int>(b.m_id) << " || "
+                              << "Building Faction: " << static_cast<int>(b.m_faction) << std::endl;
+                }
+            }
+            if (cmd == "Train")
+            {
+                // hier Einheitenrekrutierung einsetzen
+                std::cout << "no training here" << std::endl;
+            }
+        }
+
+        break;
+    default:
+        break;
+    }
+}
+
+void Level::handleMovementEvents(Engine& engine, SDL_Event& event)
+{
+    switch (event.type)
+    {
+    case SDL_KEYDOWN:
+        if (event.key.keysym.sym == SDLK_RETURN)
+        {
+        }
+        if (event.key.keysym.sym == SDLK_ESCAPE)
+        {
+            m_state = LevelState::MENUACTIVE_STATE;
+        }
+        break;
+    case SDL_MOUSEBUTTONDOWN:
+        if (event.button.button == SDL_BUTTON_LEFT)
+        {
+            // Bei Movement animation in ANIMATING_STATE gehen
+            std::pair<int, int> tilePos = calcTilePos(event.button.x, event.button.y);
+            for (auto& [id, unit] : m_units)
+            {
+                if (unit.m_x == tilePos.first && unit.m_y == tilePos.second)
+                {
+                    // unit already at clicked position (maybe even selected unit)
+                    std::cout << "Unit already at clicked position" << std::endl;
+                    return;
+                }
+            }
+            m_units.at(m_selectedUnit).updatePosition(tilePos.first, tilePos.second);
+            m_selectedUnit = -1;
+            m_state = LevelState::SELECTING_STATE;
+        }
+        break;
+    default:
+        break;
+    }
+}
+
+void Level::handleAttackingEvents(Engine& engine, SDL_Event& event)
+{
+    switch (event.type)
+    {
+    case SDL_KEYDOWN:
+        if (event.key.keysym.sym == SDLK_ESCAPE)
+        {
+            m_state = LevelState::MENUACTIVE_STATE;
+        }
+        break;
+    case SDL_MOUSEBUTTONDOWN:
+        if (event.button.button == SDL_BUTTON_LEFT)
+        {
+            std::pair<int, int> tilePos = calcTilePos(event.button.x, event.button.y);
+            int                 targetedUnit = selectUnit(tilePos.first, tilePos.second);
+
+            if (targetedUnit >= 0)
+            {
+                if (m_units.at(m_selectedUnit).getFaction() ==
+                    m_units.at(targetedUnit).getFaction())
+                {
+                    std::cout << "You cannot attack your allies!" << std::endl;
+                    return;
+                }
+
+                Unit& attacking = m_units.at(m_selectedUnit);
+                Unit& defending = m_units.at(targetedUnit);
+                attacking.attack(defending);
+                if (attacking.m_health <= 0)
+                {
+                    removeUnit(m_selectedUnit);
+                }
+                if (defending.m_health <= 0)
+                {
+                    removeUnit(targetedUnit);
+                }
+                m_selectedUnit = -1;
+                m_state = LevelState::SELECTING_STATE;
+            }
+            else
+            {
+                std::cout << "No valid target clicked" << std::endl;
+            }
+        }
+        break;
+    default:
+        break;
+    }
 }
 
 } // namespace advanced_wars

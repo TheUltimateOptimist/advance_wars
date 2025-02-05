@@ -116,6 +116,8 @@ class Unit
         */
         void on_left_click(SDL_Event event);
 
+        UnitFaction getFaction();
+
     private:
         UnitFaction m_faction;
         UnitId      m_id;
@@ -135,6 +137,8 @@ class Unit
         Weapon m_primaryWeapon;
 
         int m_ammo;
+
+        void renderHP(Engine& engine, int scale);
 };
 
 } // namespace advanced_wars
