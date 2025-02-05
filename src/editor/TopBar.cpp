@@ -12,7 +12,6 @@
 #include <QSize>
 
 #include "LevelNameEdit.hpp"
-#include "LevelTitle.hpp"
 #include "SaveButton.hpp"
 #include "ZoomInButton.hpp"
 #include "ZoomInfo.hpp"
