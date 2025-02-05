@@ -19,25 +19,26 @@ QPixmap SpriteProvider::get_sprite(uint8_t id)
 {
     if (sprites.empty())
     {
-        throw std::runtime_error("Sprites accessed before initilization");
+        throw std::runtime_error("Sprites accessed before initilization!");
     }
     if (id >= 50)
     {
-        return SpriteProvider::sprites[id - 20];
+        return SpriteProvider::sprites[id - 20]; // theres a 20 gap between floor tiles 0-29
+                                                 // and building tiles 50-79
     }
     return SpriteProvider::sprites[id];
 }
 
 void SpriteProvider::initialize(const std::string& path)
 {
-    // Check ob bereits initialisiert
+    // check if sprites have already been initialized
     if (sprites.size() > 0)
     {
         return;
     }
 
     HighFive::File file(path, HighFive::File::ReadOnly);
-    sprites.reserve(60);
+    sprites.reserve(60); // we now that we will load 60 sprites
 
     // load terrains
     for (size_t i = 0; i < tile_names.size(); i++)
@@ -59,8 +60,7 @@ void SpriteProvider::initialize(const std::string& path)
     }
 }
 
-QPixmap
-SpriteProvider::load_pixmap(std::vector<std::vector<std::vector<uint32_t>>> pixels, int index)
+QPixmap SpriteProvider::load_pixmap(std::vector<std::vector<std::vector<uint32_t>>> pixels, int index)
 {
     int    width = pixels[index][0].size();
     int    height = pixels[index].size();
@@ -70,10 +70,10 @@ SpriteProvider::load_pixmap(std::vector<std::vector<std::vector<uint32_t>>> pixe
         for (int x = 0; x < width; x++)
         {
             uint32_t color = pixels[index][height - 1 - y][x];
-            uint32_t r = (color >> 24) & 0xFF; // Most significant byte     //uint8_t sollte reichen
-            uint32_t g = (color >> 16) & 0xFF; // Second byte               //uint8_t sollte reichen
-            uint32_t b = (color >> 8) & 0xFF;  // Third byte                //uint8_t sollte reichen
-            uint32_t a = color & 0xFF;         // Least significant byte    //uint8_t sollte reichen
+            uint32_t r = (color >> 24) & 0xFF;
+            uint32_t g = (color >> 16) & 0xFF;
+            uint32_t b = (color >> 8) & 0xFF;
+            uint32_t a = color & 0xFF;
             image.setPixel(x, y, qRgba(r, g, b, a));
         }
     }
