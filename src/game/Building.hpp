@@ -66,6 +66,12 @@ class Building
         If the building is clicked, it shows information to the player, here it will be a list of all available units
          */
         void on_click();
+
+        /**
+         * Provides a vector of recruitable units, depending on the building id
+         * 
+         */
+        std::vector<int> recruitableUnits();
 };
 
 } // namespace advanced_wars

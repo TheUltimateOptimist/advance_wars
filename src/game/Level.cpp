@@ -272,13 +272,14 @@ void Level::handleRecruitingEvent(Engine& engine, SDL_Event& event) {
 
     Building& b = m_buildings.at(m_selectedBuilding);
     UnitFaction u_faction = static_cast<UnitFaction> (b.m_faction);
-    //show appropriate interface
-    //select UnitId
     
+    //show appropriate interface -> provide vector of UnitId
+    //select UnitId
+    UnitId u_id = UnitId::INFANTERY;
 
     if(b.check_money(500)) {
         if(b.check_spawn(m_units)){
-            addUnit(Unit(b.m_x, b.m_y, u_faction, UnitId::INFANTERY, UnitState::IDLE));
+            addUnit(Unit(b.m_x, b.m_y, u_faction, u_id, UnitState::IDLE));
             m_state = LevelState::SELECTING_STATE;
             m_selectedBuilding = -1;
         }
