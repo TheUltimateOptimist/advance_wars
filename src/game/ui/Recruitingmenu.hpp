@@ -16,16 +16,15 @@ namespace advanced_wars
         int m_y;
         const std::unordered_map <UnitId ,std::pair <std::string, int>> unitNames;
         std::unordered_map<int, UnitId> cost2UnitId;
+        UnitId m_selectedId;
     
-        void handleEvent(Engine& engine, SDL_Event& event);
-
-        
-
         void selectSprite();
 
-        std::string getSelectedOption();
-
         public:
+
+        UnitId getSelectedOption();
+
+        void handleEvent(Engine& engine, SDL_Event& event);
 
         void update(int x, int y);
 

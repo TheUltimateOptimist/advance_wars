@@ -84,7 +84,10 @@ namespace advanced_wars
     for (auto& [render_name, cost] : m_options)
     {
         //std::pair<std::string, int> unit_option = unitNames.at(cost2UnitId.at(cost));
-
+        if(i == m_selectedOption) {
+            m_selectedId = cost2UnitId.at(cost);
+        }
+        
         SDL_Surface* textSurface = TTF_RenderText_Solid(
             font, render_name.c_str(), (i == m_selectedOption) ? yellow : white);
         if (!textSurface)
@@ -167,6 +170,10 @@ void RecruitingMenu::update(int x, int y)
 {
     this->m_x = x;
     this->m_y = y;
+}
+
+UnitId RecruitingMenu::getSelectedOption(){
+    return m_selectedId;
 }
 
 }//namespace advance_wars

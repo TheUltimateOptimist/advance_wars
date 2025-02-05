@@ -277,26 +277,32 @@ Effect Level::removeEffect(int id)
 
 void Level::handleRecruitingEvent(Engine& engine, SDL_Event& event) {
 
-    Building& b = m_buildings.at(m_selectedBuilding);
-    UnitFaction u_faction = static_cast<UnitFaction> (b.m_faction);
-
-    
-    std::vector<UnitId> recruitableUnits = b.recruitableUnits();
-    //m_recruitingmenu.setoptions(recruitableUnits)
-    //show appropriate interface -> provide vector of UnitId
-    
-    //show Interface here
-    //select UnitId
-    UnitId unit_id = UnitId::INFANTERY;
-
-    if(b.check_money(500)) {
-        if(b.check_spawn(m_units)){
-            addUnit(Unit(b.m_x, b.m_y, u_faction, unit_id, UnitState::IDLE));
-            m_state = LevelState::SELECTING_STATE;
-            m_selectedBuilding = -1;
+    switch (event.type)
+    {
+    case SDL_KEYDOWN:
+        if (event.key.keysym.sym == SDLK_ESCAPE)
+        {
+            m_state = LevelState::MENUACTIVE_STATE;
         }
-    }
-}
+        if (event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_DOWN)
+        {
+            m_recruitingMenu.handleEvent(engine, event);
+        }
+        if (event.key.keysym.sym == SDLK_RETURN) 
+        {
+            Building& b = m_buildings.at(m_selectedBuilding);
+            UnitFaction u_faction = static_cast<UnitFaction> (b.m_faction);
+            UnitId unit_id = m_recruitingMenu.getSelectedOption();
+
+            if(b.check_money(500)) {
+                if(b.check_spawn(m_units)){
+                    addUnit(Unit(b.m_x, b.m_y, u_faction, unit_id, UnitState::IDLE));
+                    m_state = LevelState::SELECTING_STATE;
+                    m_selectedBuilding = -1;
+                }
+            }
+        }
+}}
 
 //*******************helper functions for event Handling*************************************
 
