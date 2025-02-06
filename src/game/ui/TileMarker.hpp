@@ -1,4 +1,5 @@
 #pragma once
+#include "../Player.hpp"
 #include "../Scene.hpp"
 
 namespace advanced_wars
@@ -21,13 +22,16 @@ class TileMarker : public Scene
 
         void setPosition(int x, int y);
 
+        void setMarkerColor(PlayerFaction faction);
+
     private:
-        int m_x;
-        int m_y;
-        int m_renderingScale;
-        int m_width;
-        int m_height;
-        int m_levelHeight;
-        int m_levelWidth;
+        int       m_x;
+        int       m_y;
+        int       m_renderingScale;
+        int       m_width;
+        int       m_height;
+        int       m_levelHeight;
+        int       m_levelWidth;
+        SDL_Color m_markerColor;
 };
 } // namespace advanced_wars

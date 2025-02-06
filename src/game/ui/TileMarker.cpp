@@ -4,7 +4,7 @@
 namespace advanced_wars
 {
 TileMarker::TileMarker(int renderingScale, int tileX, int tileY, int levelWidth, int levelHeight)
-    : m_renderingScale(renderingScale), m_width(16), m_height(16)
+    : m_renderingScale(renderingScale), m_width(16), m_height(16), m_markerColor({255, 0, 0, 255})
 {
     int tileSize = 16 * renderingScale;
     m_x = tileX * tileSize;
@@ -15,7 +15,8 @@ TileMarker::TileMarker(int renderingScale, int tileX, int tileY, int levelWidth,
 
 void TileMarker::render(Engine& engine)
 {
-    SDL_SetRenderDrawColor(engine.renderer(), 255, 0, 0, 255);
+    SDL_SetRenderDrawColor(
+        engine.renderer(), m_markerColor.r, m_markerColor.g, m_markerColor.b, m_markerColor.a);
     SDL_Rect box = {m_x, m_y, m_width, m_height};
     SDL_RenderFillRect(engine.renderer(), &box);
 }
@@ -88,4 +89,27 @@ void TileMarker::setPosition(int tileX, int tileY)
     m_y = tileY * 16 * m_renderingScale + (16 * m_renderingScale - m_height);
 }
 
+void TileMarker::setMarkerColor(PlayerFaction faction)
+{
+    switch (faction)
+    {
+    case PlayerFaction::RED:
+        m_markerColor = {255, 0, 0, 255};
+        break;
+    case PlayerFaction::BLUE:
+        m_markerColor = {0, 0, 255, 255};
+        break;
+    case PlayerFaction::GREEN:
+        m_markerColor = {0, 255, 0, 255};
+        break;
+    case PlayerFaction::YELLOW:
+        m_markerColor = {255, 255, 0, 255};
+        break;
+    case PlayerFaction::PURPLE:
+        m_markerColor = {255, 0, 255, 255};
+        break;
+    default:
+        break;
+    }
+}
 } // namespace advanced_wars
