@@ -10,6 +10,7 @@
 #include "ui/Contextmenu.hpp"
 #include "ui/Recruitingmenu.hpp"
 #include "ui/TileMarker.hpp"
+#include "ui/Helpmenu.hpp"
 #include <SDL.h>
 #include <array>
 #include <queue>
@@ -135,6 +136,8 @@ class Level : public Scene
         int            m_selectedBuilding;
         ContextMenu    m_contextMenu;
         RecruitingMenu m_recruitingMenu;
+        bool toggle_Helpmenu = false;
+        HelpMenu       m_helpMenu;
         int            m_id;
         LevelState     m_state;
 
