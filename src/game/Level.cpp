@@ -572,7 +572,7 @@ void Level::handleSelectingEvents(Engine& engine, SDL_Event& event)
                 m_contextMenu.update(
                     (tilePos.first * 16 + 15) * RENDERING_SCALE,
                     (tilePos.second * 16 + 15) * RENDERING_SCALE);
-                if (m_selectedUnit >= 0)
+                if (m_selectedUnit >= 0 )
                 {
                     m_reachableTiles = calculateMovementRange(m_units.at(m_selectedUnit));
                     m_units.at(m_selectedUnit).on_left_click(event);
@@ -593,7 +593,8 @@ void Level::handleSelectingEvents(Engine& engine, SDL_Event& event)
                     m_attackableUnitIds.clear();
 
                     // Set Fallback_position if movement will be canceled
-                    unit_fallback_position =  std::make_pair(m_units.at(m_selectedUnit).m_x, m_units.at(m_selectedUnit).m_y);
+                    unit_fallback_position = std::make_pair(
+                        m_units.at(m_selectedUnit).m_x, m_units.at(m_selectedUnit).m_y);
 
                     for (Unit* target : attackableTargets)
                     {
@@ -613,13 +614,13 @@ void Level::handleSelectingEvents(Engine& engine, SDL_Event& event)
 
                     // Show according menu options if unit has same/different faction than current
                     // player
-                    if (m_units.at(m_selectedUnit).getFaction() == m_turnQ.front().getFaction())
+                    if (m_units.at(m_selectedUnit).getFaction() == m_turnQ.front().getFaction() && m_units.at(m_selectedUnit).getState()!= UnitState::UNAVAILABLE)
                     {
                         m_contextMenu.setOptions({"Move", "Attack", "Info", "Wait", "End Turn"});
                     }
                     else
                     {
-                        m_contextMenu.setOptions({"Info", "Wait", "End Turn"});
+                        m_contextMenu.setOptions({"Info", "End Turn"});
                     }
                 }
                 else
@@ -629,11 +630,11 @@ void Level::handleSelectingEvents(Engine& engine, SDL_Event& event)
                     if (m_buildings.at(m_selectedBuilding).getFaction() ==
                         static_cast<BuildingFaction>(m_turnQ.front().getFaction()))
                     {
-                        m_contextMenu.setOptions({"Train", "Info", "Wait", "End Turn"});
+                        m_contextMenu.setOptions({"Train", "Info", "End Turn"});
                     }
                     else
                     {
-                        m_contextMenu.setOptions({"Info", "Wait", "End Turn"});
+                        m_contextMenu.setOptions({"Info", "End Turn"});
                     }
                 }
                 m_state = LevelState::MENUACTIVE_STATE;
@@ -680,9 +681,12 @@ void Level::handleMenuActiveEvents(Engine& engine, SDL_Event& event)
     case SDL_KEYDOWN:
         if (event.key.keysym.sym == SDLK_ESCAPE)
         {
-            if (m_selectedUnit > -1 && unit_fallback_position != std::make_pair(m_units.at(m_selectedUnit).m_x, m_units.at(m_selectedUnit).m_y))
+            if (m_selectedUnit > -1 &&
+                unit_fallback_position !=
+                    std::make_pair(m_units.at(m_selectedUnit).m_x, m_units.at(m_selectedUnit).m_y))
             {
-                m_units.at(m_selectedUnit).updatePosition(unit_fallback_position.first, unit_fallback_position.second);
+                m_units.at(m_selectedUnit)
+                    .updatePosition(unit_fallback_position.first, unit_fallback_position.second);
             }
             m_selectedUnit = -1;
             m_selectedBuilding = -1;
@@ -705,6 +709,10 @@ void Level::handleMenuActiveEvents(Engine& engine, SDL_Event& event)
                     it->second.setState(UnitState::UNAVAILABLE);
                     std::cout << "Unit state set to UNAVAILABLE." << std::endl;
                     m_state = LevelState::SELECTING_STATE;
+                    m_selectedUnit = -1;
+                    m_selectedBuilding = -1;
+                    m_showAttackableTiles = false;
+                    m_showReachableTiles = false;
                 }
                 else
                 {
