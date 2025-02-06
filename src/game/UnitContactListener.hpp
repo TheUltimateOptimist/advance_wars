@@ -26,7 +26,7 @@ struct BodyUserData
 class UnitContactListener : public b2ContactListener
 {
     public:
-        explicit UnitContactListener(Level* level);
+        UnitContactListener(Level* level);
 
         void BeginContact(b2Contact* contact) override;
 

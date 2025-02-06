@@ -42,7 +42,7 @@ void UnitContactListener::BeginContact(b2Contact* contact)
         std::cout
             << "Kollision erkannt: Bullet trifft auf Unit (Body A ist Bullet, Body B ist Unit): "
             << std::endl;
-        m_level->checkBulletCollision(static_cast<Unit*>(userDataB->data));
+        m_level->checkBulletCollision(*static_cast<Unit*>(userDataB->data));
         // m_level->markBulletForRemoval();
         //  m_level->removeBullet();
     }
@@ -53,7 +53,7 @@ void UnitContactListener::BeginContact(b2Contact* contact)
         std::cout
             << "Kollision erkannt: Bullet trifft auf Unit (Body B ist Bullet, Body A ist Unit)!"
             << std::endl;
-        m_level->checkBulletCollision(static_cast<Unit*>(userDataA->data));
+        m_level->checkBulletCollision(*static_cast<Unit*>(userDataA->data));
         // m_level->markBulletForRemoval();
         //  m_level->removeBullet();
     }

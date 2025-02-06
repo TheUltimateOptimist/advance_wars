@@ -135,6 +135,7 @@ void Unit::attack(Unit& enemy)
 
     if (attacker_damage_value > 0)
     {
+        // TODO spawn bullet
         performAttack(enemy, attacker_damage_value);
         std::cout << "Enemy health after attack: " << enemy.m_health << std::endl;
 

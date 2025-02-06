@@ -124,11 +124,11 @@ class Level : public Scene
 
         std::vector<std::pair<int, int>> m_attackableTiles;
 
-        void spawnBullet(Unit* shooter, Unit* target);
+        void spawnBullet(Unit shooter, Unit target);
 
         void update() override;
 
-        void checkBulletCollision(Unit* unit);
+        void checkBulletCollision(Unit& unit);
 
         void removeBullet();
 
