@@ -1,12 +1,15 @@
 #pragma once
 
 #include "Building.hpp"
+#include "Bullet.hpp"
 #include "Effect.hpp"
 #include "Engine.hpp"
 #include "Player.hpp"
 #include "Scene.hpp"
 #include "Tile.hpp"
 #include "Unit.hpp"
+#include "UnitContactListener.hpp"
+#include "box2d/b2_world.h"
 #include "ui/Contextmenu.hpp"
 #include "ui/Recruitingmenu.hpp"
 #include "ui/TileMarker.hpp"
@@ -121,7 +124,18 @@ class Level : public Scene
 
         std::vector<std::pair<int, int>> m_attackableTiles;
 
+        void spawnBullet(Unit* shooter, Unit* target);
+
+        void update() override;
+
+        void checkBulletCollision(Unit* unit);
+
+        void removeBullet();
+
+        void markBulletForRemoval();
+
     private:
+        b2World                           m_world;
         std::string                       m_name;
         int                               m_width;
         int                               m_height;
@@ -131,7 +145,12 @@ class Level : public Scene
         std::unordered_map<int, Effect>   m_effects;
         std::queue<Player>                m_turnQ;
 
+        Bullet*             m_bullet;
+        UnitContactListener m_contactListener;
+        bool                m_removeBulletFlag = false;
+
         int            m_selectedUnit;
+        int            m_targetedUnit;
         int            m_selectedBuilding;
         ContextMenu    m_contextMenu;
         RecruitingMenu m_recruitingMenu;

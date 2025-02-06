@@ -383,7 +383,7 @@ Spritesheet::Spritesheet(std::string path, Engine& engine)
     if (tmp == nullptr)
     {
         throw std::runtime_error(
-            "Fehler beim Erstellen der Textur für die Effects: " + std::string(SDL_GetError()));
+            "Fehler beim Erstellen der Textur für die Numbers: " + std::string(SDL_GetError()));
     }
 
     if (SDL_UpdateTexture(tmp, NULL, number_buffer.data(), 80 * sizeof(int32_t)) != 0)
@@ -395,6 +395,47 @@ Spritesheet::Spritesheet(std::string path, Engine& engine)
     this->m_numberTextures = tmp;
     this->m_numberWidth = 8;
     this->m_numberHeight = 8;
+
+    // Bullet
+    HighFive::DataSet bullet_ds = file.getDataSet("/misc/bullet");
+
+    std::vector<std::vector<uint32_t>> bullet_frames;
+    bullet_ds.read(bullet_frames);
+
+    std::vector<uint32_t> number_buffer(8 * 8, 0);
+
+    // every animation frame
+
+    for (size_t y = 0; y < 8; y++)
+    {
+        for (size_t x = 0; x < 8; x++)
+        {
+            size_t index = (y * 8) + x;
+
+            number_buffer.at(index) = bullet_frames.at(8 - y - 1).at(x);
+        }
+    }
+
+    SDL_Texture* tmp = SDL_CreateTexture(
+        engine.renderer(), SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STATIC, 8, 8);
+
+    SDL_SetTextureBlendMode(tmp, SDL_BLENDMODE_BLEND);
+
+    if (tmp == nullptr)
+    {
+        throw std::runtime_error(
+            "Fehler beim Erstellen der Textur für die Bullets: " + std::string(SDL_GetError()));
+    }
+
+    if (SDL_UpdateTexture(tmp, NULL, number_buffer.data(), 8 * sizeof(int32_t)) != 0)
+    {
+        throw std::runtime_error(
+            "Fehler beim updaten der Textur für die Tiles: " + std::string(SDL_GetError()));
+    }
+
+    this->m_bulletTexture = tmp;
+    this->m_bulletWidth = 8;
+    this->m_bulletHeight = 8;
 }
 
 // Tiles
@@ -486,6 +527,21 @@ int Spritesheet::getNumberHeight()
 SDL_Texture* Spritesheet::getNumberTexture()
 {
     return this->m_numberTextures;
+}
+
+SDL_Texture* Spritesheet::getBulletTexture()
+{
+    return this->m_bulletTexture;
+}
+
+int Spritesheet::getBulletWidth()
+{
+    return this->m_bulletWidth;
+}
+
+int Spritesheet::getBulletHeight()
+{
+    return this->m_bulletHeight;
 }
 
 Spritesheet::~Spritesheet()

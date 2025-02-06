@@ -172,6 +172,24 @@ class Spritesheet
          * @return Number texture
          */
         SDL_Texture* getNumberTexture();
+        // Bullet
+        /**
+         * @return The width of a bullet in pixels
+         */
+        int getBulletWidth();
+
+        /**
+         * @return The height of an bullet in pixels
+         */
+        int getBulletHeight();
+
+        /**
+         * The texture represents the bullet texture.
+         *
+         * @return Bullet texture
+         */
+
+        SDL_Texture* getBulletTexture();
 
     private:
         // Tiles
@@ -205,5 +223,10 @@ class Spritesheet
 
         int m_numberWidth;
         int m_numberHeight;
+        // Bullet
+        SDL_Texture* m_bulletTexture;
+
+        int m_bulletWidth;
+        int m_bulletHeight;
 };
 } // namespace advanced_wars

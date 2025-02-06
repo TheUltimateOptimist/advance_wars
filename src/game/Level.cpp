@@ -1,4 +1,5 @@
 #include "Level.hpp"
+#include "Box2dHelper.hpp"
 #include "Building.hpp"
 #include "Config.hpp"
 #include "Effect.hpp"
@@ -12,6 +13,7 @@
 #include <algorithm>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/xml_parser.hpp>
+#include <box2d/box2d.h>
 #include <iostream>
 #include <queue>
 #include <string>
@@ -25,12 +27,14 @@ Level::Level(
     std::string name, int width, int height, std::vector<Tile> tiles,
     std::vector<Building> buildings, std::vector<Unit> units, std::vector<Effect> effects,
     std::queue<Player> turnQ)
-    : m_name(name), m_width(width), m_height(height), m_tiles(tiles), m_selectedUnit(-1),
+    : m_world(b2Vec2(0.0f, 0.0f)), m_name(name), m_width(width), m_height(height), m_tiles(tiles),
+      m_turnQ(turnQ), m_bullet(nullptr), m_contactListener(this), m_selectedUnit(-1),
       m_selectedBuilding(-1), m_contextMenu(ContextMenu()), m_id(0),
       m_state(LevelState::SELECTING_STATE),
-      m_currentPos(TileMarker(RENDERING_SCALE, 1, 1, m_width, m_height)), m_turnQ(turnQ)
-{
+      m_currentPos(TileMarker(RENDERING_SCALE, 1, 1, m_width, m_height))
 
+{
+    m_world.SetContactListener(&m_contactListener);
     m_contextMenu.setOptions({"Move", "Info", "Wait"});
 
     for (Building building : buildings)
@@ -40,6 +44,7 @@ Level::Level(
 
     for (Unit unit : units)
     {
+        unit.setWorld(&m_world);
         this->addUnit(unit);
     }
 
@@ -53,6 +58,7 @@ Level::Level(
         throw std::runtime_error("level tile mismatch");
     }
 
+    // TODO Why duplicated?
     m_selectedBuilding = -1;
     m_selectedUnit = -1;
 };
@@ -315,6 +321,7 @@ void Level::render(Engine& engine)
     // Units
     for (auto& [id, unit] : m_units)
     {
+        unit.update();
         unit.render(engine, RENDERING_SCALE);
     }
 
@@ -347,7 +354,55 @@ void Level::render(Engine& engine)
     {
         m_recruitingMenu.render(engine);
     }
+
+    if (m_bullet)
+    {
+        m_bullet->render(engine, RENDERING_SCALE);
+    }
+
     m_currentPos.render(engine);
+}
+
+void Level::update()
+{
+    // Box2D-Physik-Schritt
+    float timeStep = 1.0f / 60.0f;
+    int   velocityIterations = 6;
+    int   positionIterations = 2;
+
+    m_world.Step(timeStep, velocityIterations, positionIterations);
+
+    if (m_bullet)
+    {
+        m_bullet->update();
+    }
+    else
+    {
+        std::cout << "Bullet existiert nicht, versuche eine zu spawnen!" << std::endl; // Debug
+        std::cout << m_units.size() << std::endl;
+        std::cout << "Vorhandene Unit-Indizes: ";
+        for (const auto& unit : m_units)
+        {
+            std::cout << unit.first << " "; // Falls `m_units` eine Map ist
+        }
+        std::cout << std::endl;
+        // Prüfen, ob genügend Units existieren
+        if (m_units.size() > 6)
+        {
+            // std::cout << "Unit Position: " << m_units.at(1).getX() << std::endl; // Debug
+            spawnBullet(m_units.at(66), m_units.at(71));
+        }
+        else
+        {
+            std::cout << "FEHLER: Nicht genug Units vorhanden!" << std::endl; // Debug
+        }
+    }
+
+    if (m_removeBulletFlag)
+    {
+        removeBullet();
+        m_removeBulletFlag = false;
+    }
 }
 
 int Level::addBuilding(Building building)
@@ -368,7 +423,8 @@ Building Level::removeBuilding(int id)
 
 int Level::addUnit(Unit unit)
 {
-    m_units.insert({m_id, unit});
+    unit.setMapId(m_id);
+    m_units.insert({m_id, std::move(unit)});
     m_id += 1;
 
     return m_id - 1;
@@ -800,4 +856,93 @@ void Level::handleAttackingEvents(Engine& engine, SDL_Event& event)
     }
 }
 //************end event handler delegates for different level states*****************************
+void Level::spawnBullet(Unit shooter, Unit target)
+{
+    if (m_bullet)
+    {
+        removeBullet(); // Falls noch eine Bullet existiert, zuerst löschen
+        std::cout << "Bullet deleted" << std::endl;
+    }
+
+    std::cout << "Bullet wird von Unit " << shooter.getId() << " auf Unit " << target.getId()
+              << " geschossen!" << std::endl;
+
+    std::cout << "Bullet wird gespawnt an: " << std::endl;
+    std::cout << "Tile-Koordinaten (shooter): " << shooter.getX() << ", " << shooter.getY()
+              << std::endl;
+
+    // Umrechnung von Tile-Koordinaten in Pixel
+    float startX = shooter.getX() * 16 + 8;
+    float startY = shooter.getY() * 16 + 8;
+    float targetX = target.getX() * 16 + 8;
+    float targetY = target.getY() * 16 + 8;
+
+    // Umrechnung von Pixel in Meter für Box2D
+    float worldStartX = startX / PIXELS_PER_METER;
+    float worldTargetX = targetX / PIXELS_PER_METER;
+
+    float worldStartY = startY / PIXELS_PER_METER;
+    float worldTargetY = targetY / PIXELS_PER_METER;
+
+    std::cout << "Pixel-Koordinaten: " << startX << ", " << startY << std::endl;
+    std::cout << "Box2D-Welt-Koordinaten: " << worldStartX << ", " << worldStartY << std::endl;
+
+    // Distanz zwischen Start und Ziel
+    float deltaX = worldTargetX - worldStartX;
+    float deltaY = worldTargetY - worldStartY;
+
+    // Gesamtstrecke berechnen (euklidische Distanz)
+    float distance = std::sqrt(deltaX * deltaX + deltaY * deltaY);
+
+    // Normierte Richtung berechnen (Einheitsvektor)
+    float directionX = deltaX / distance;
+    float directionY = deltaY / distance;
+
+    // Konstante Bullet-Geschwindigkeit (z. B. 1 m/s)
+    float bulletSpeed = 1.0f;
+
+    // Geschwindigkeit in x- und y-Richtung setzen
+    float velocityX = directionX * bulletSpeed;
+    float velocityY = directionY * bulletSpeed;
+
+    std::cout << "Velocity: " << velocityX << ", " << velocityY << std::endl;
+
+    m_bullet = new Bullet(m_world, startX, startY, velocityX, velocityY);
+    // m_targetedUnit = target;
+}
+
+void Level::checkBulletCollision(Unit& hitUnit)
+{
+    if (!m_bullet)
+    {
+        return;
+    }
+    if (hitUnit.getMapId() == m_targetedUnit)
+    {
+        std::cout << "Bullet hat das Ziel getroffen!" << std::endl;
+
+        m_removeBulletFlag = true;
+    }
+    else
+    {
+        std::cout << "Bullet fliegt weiter, hat falsches Ziel getroffen." << std::endl;
+    }
+}
+
+void Level::removeBullet()
+{
+    if (m_bullet)
+    {
+        std::cout << "Bullet wird entfernt." << std::endl;
+        m_world.DestroyBody(m_bullet->getBody());
+        delete m_bullet;
+        m_bullet = nullptr;
+    }
+}
+
+void Level::markBulletForRemoval()
+{
+    m_removeBulletFlag = true;
+}
+
 } // namespace advanced_wars
