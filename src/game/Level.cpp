@@ -138,27 +138,31 @@ std::pair<int, int> Level::calcTilePos(int mouseX, int mouseY)
     return {tileX, tileY};
 }
 
-void Level::selectEntity(int x, int y) {
-       std::pair<int, int> tilePos = calcTilePos(x, y);
+void Level::selectEntity(int x, int y)
+{
+    std::pair<int, int> tilePos = calcTilePos(x, y);
 
-       if ((m_selectedUnit = selectUnit(tilePos.first, tilePos.second)) >= 0) {
+    if ((m_selectedUnit = selectUnit(tilePos.first, tilePos.second)) >= 0)
+    {
         auto it = m_units.find(m_selectedUnit);
-        if (it != m_units.end()) {
+        if (it != m_units.end())
+        {
             Unit& unit = it->second;
             m_unitInfoMenu.setUnit(unit);
             // Position das Menu rechts neben der ausgewählten Einheit
             m_unitInfoMenu.update(
-                (tilePos.first * 16 + 20) * RENDERING_SCALE,  // x-Position
-                (tilePos.second * 16) * RENDERING_SCALE       // y-Position
+                (tilePos.first * 16 + 20) * RENDERING_SCALE, // x-Position
+                (tilePos.second * 16) * RENDERING_SCALE      // y-Position
             );
         }
         return;
-       }
-       if ((m_selectedBuilding = selectBuilding(tilePos.first, tilePos.second)) >= 0) {
-           // Optionale Handhabung für Gebäude
-           return;
-       }
-   }
+    }
+    if ((m_selectedBuilding = selectBuilding(tilePos.first, tilePos.second)) >= 0)
+    {
+        // Optionale Handhabung für Gebäude
+        return;
+    }
+}
 
 int Level::selectUnit(int tileX, int tileY)
 {
@@ -356,13 +360,10 @@ void Level::render(Engine& engine)
         m_recruitingMenu.render(engine);
     }
 
-    
-
-    
-
-    m_unitInfoMenu.render(engine);
-
-    
+    if (m_showUnitInfoMenu)
+    {
+        m_unitInfoMenu.render(engine);
+    }
 
     m_currentPos.render(engine);
 }
@@ -695,6 +696,7 @@ void Level::handleMenuActiveEvents(Engine& engine, SDL_Event& event)
             m_state = LevelState::SELECTING_STATE;
             m_showAttackableTiles = false;
             m_showReachableTiles = false;
+            m_showUnitInfoMenu = false;
         }
         if (event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_DOWN)
         {
@@ -706,15 +708,18 @@ void Level::handleMenuActiveEvents(Engine& engine, SDL_Event& event)
             if (cmd == "Wait")
             {
                 m_state = LevelState::SELECTING_STATE;
+                m_showUnitInfoMenu = false;
             }
             if (cmd == "Move")
             {
                 m_state = LevelState::MOVEMENT_STATE;
+                m_showUnitInfoMenu = false;
                 // Hier Pathfinding einsetzen
             }
             if (cmd == "Attack")
             {
                 m_state = LevelState::ATTACKING_STATE;
+                m_showUnitInfoMenu = false;
             }
             if (cmd == "Info")
             {
@@ -723,6 +728,7 @@ void Level::handleMenuActiveEvents(Engine& engine, SDL_Event& event)
                 {
                     Unit& u = m_units.at(m_selectedUnit);
                     std::cout << "Health: " << u.m_health << std::endl;
+                    m_showUnitInfoMenu = !m_showUnitInfoMenu; 
                 }
                 if (m_selectedBuilding > -1)
                 {
@@ -751,6 +757,7 @@ void Level::handleMenuActiveEvents(Engine& engine, SDL_Event& event)
                 m_showAttackableTiles = false;
                 m_showReachableTiles = false;
                 changeTurn();
+                m_showUnitInfoMenu = false;
             }
         }
 

@@ -125,6 +125,7 @@ class Unit
 
         int getAmmo() const { return m_ammo; }
         int getHealth() const { return m_health; }
+        UnitId getId() const { return m_id;}
 
         void setState(UnitState state);
 

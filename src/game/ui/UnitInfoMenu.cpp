@@ -10,22 +10,22 @@ namespace advanced_wars
 UnitInfoMenu::UnitInfoMenu() : m_currentUnit(nullptr) {
 }
 
-std::string UnitInfoMenu::getMovementTypeString(MovementType type)
-{
-    switch (type)
-    {
-    case MovementType::FOOT:
-        return "Foot";
-    case MovementType::WHEELED:
-        return "Wheeled";
-    case MovementType::TREAD:
-        return "Tracked";
-    case MovementType::SEA:
-        return "Ship";
-    case MovementType::AIR:
-        return "Aircraft";
-    default:
-        return "Unknown";
+std::string UnitInfoMenu::getMovementTypeString(MovementType type) {
+    switch (type) {
+        case MovementType::FOOT:
+            return "Foot";
+        case MovementType::WHEELED:
+            return "Wheeled";
+        case MovementType::TREAD:
+            return "Tracked";
+        case MovementType::AIR:
+            return "Aircraft";
+        case MovementType::SEA:
+            return "Ship";
+        case MovementType::LANDER:
+            return "Lander";  
+        default:
+            return "Unknown";
     }
 }
 
@@ -84,7 +84,7 @@ void UnitInfoMenu::render(Engine& engine)
     Spritesheet* spritesheet = engine.getSpritesheet();
     SDL_Texture* unit_texture = spritesheet->getUnitTextures()
                                     .at(static_cast<int>(m_currentUnit->getFaction()))
-                                    .at(static_cast<int>(UnitId::INFANTERY))
+                                    .at(static_cast<int>(m_currentUnit->getId()))
                                     .at(static_cast<int>(UnitState::IDLE))
                                     .first;
 

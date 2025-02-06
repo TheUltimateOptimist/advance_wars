@@ -168,6 +168,8 @@ class Level : public Scene
         void handlePositionMarker(Engine& engine, SDL_Event& event);
 
         UnitInfoMenu m_unitInfoMenu;
+
+        bool m_showUnitInfoMenu = false;
 };
 
 } // namespace advanced_wars
