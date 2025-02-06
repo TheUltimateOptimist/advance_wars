@@ -1,3 +1,9 @@
+/**
+ * Config.hpp
+ *
+ * @author
+ */
+
 #pragma once
 
 #include <boost/property_tree/ptree.hpp>

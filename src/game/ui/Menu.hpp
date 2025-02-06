@@ -1,3 +1,9 @@
+/**
+ * Menu.hpp
+ *
+ * @author
+ */
+
 #pragma once
 
 #include "../Scene.hpp"

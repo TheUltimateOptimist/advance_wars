@@ -1,3 +1,9 @@
+/**
+ * Building.hpp
+ *
+ * @author
+ */
+
 #pragma once
 
 #include "Engine.hpp"
