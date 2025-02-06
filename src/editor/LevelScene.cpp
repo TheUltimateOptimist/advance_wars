@@ -225,11 +225,11 @@ void LevelScene::setTile(int index, uint8_t id)
 
 void LevelScene::onTileClicked(int index)
 {
-
-    m_tile_ids[index] = m_selected_tile_id;
-    //if(!(m_advanced_tile_placement)) return;
-
-
+	std::cout << m_advanced_tile_placement << std::endl;
+	if (!m_advanced_tile_placement) {
+    	m_tile_ids[index] = m_selected_tile_id;
+		return;
+	}
 	if(m_selected_tile_id > 5 && m_selected_tile_id < 17){	//Straße plaziert
 		placeRoad(index, true);
 		return;
@@ -255,9 +255,9 @@ void LevelScene::onNewTileIdSelected(uint8_t tile_id)
     m_selected_tile_id = tile_id;
 }
 
-void LevelScene::onCheckBoxToggle(bool isToggled)
+void LevelScene::onCheckBoxToggled()
 {
-    m_advanced_tile_placement = isToggled;
+    m_advanced_tile_placement = !m_advanced_tile_placement;
 }
 
 QGraphicsPixmapItem* LevelScene::occupy_tile(int index, uint8_t tile_id)

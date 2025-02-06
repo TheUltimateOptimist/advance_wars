@@ -16,15 +16,13 @@ namespace editor
 AutomateButton::AutomateButton(const QString text, QWidget* parent) : QCheckBox(text,parent)
 {
     setChecked(false);
-    toggled = false;
 }
 
-void AutomateButton::changeEvent(QEvent* event)
+void AutomateButton::mousePressEvent(QMouseEvent *event)
 {
-    QCheckBox::changeEvent(event);
-    toggled =!toggled;
-    bool isToggled= toggled;
-    EventHandler::send([isToggled](EventHandler* e) { e->onCheckBoxToggle(isToggled); });
+    QCheckBox::mousePressEvent(event);
+    std::cout << "clicked" << std::endl;
+    EventHandler::send([](EventHandler* e) { e->onCheckBoxToggled(); });
 }
 
 } // namespace editor

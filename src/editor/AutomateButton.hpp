@@ -18,9 +18,7 @@ class AutomateButton : public QCheckBox {
 public:
     AutomateButton(const QString text, QWidget *parent = nullptr);
 protected:
-    void changeEvent(QEvent* event) override;
-private:
-    bool toggled;
+    void mousePressEvent(QMouseEvent *event) override;
 };
 
 } // namespace editor

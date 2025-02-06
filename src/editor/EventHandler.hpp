@@ -101,7 +101,7 @@ public:
      * to the user selecting automatic tile placement assisstance.
      * @param isToggled Boolean that enables tile placing assisstment.
      */
-    virtual void onCheckBoxToggle(bool isToggled){};
+    virtual void onCheckBoxToggled(){};
 
     /**
      * Overwrite this event method to handle the dispatch of a new delta due to 
