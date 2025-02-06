@@ -597,18 +597,22 @@ void Level::handleSelectingEvents(Engine& engine, SDL_Event& event)
                     }
 
                     Unit& u = m_units.at(m_selectedUnit);
-
-                    
-
+                    m_captureBuilding = -1;
                     for (auto& [id, building] : m_buildings)
                     {
                         if (building.m_x == u.m_x && building.m_y == u.m_y)
-                        {
-                            m_captureBuilding = id;
-                            m_contextMenu.setOptions(
+                        {   
+                            if(building.getFaction() != static_cast<BuildingFaction> (u.getFaction())){
+                                m_captureBuilding = id;
+                                m_contextMenu.setOptions(
                                 {"Capture", "Move", "Attack", "Info", "Wait"});
                             break;
+                            }
                         }
+                    } 
+
+                    if(m_captureBuilding == -1) {
+                        m_contextMenu.setOptions({"Move", "Attack", "Info", "Wait"});
                     }
                                        
                 }
@@ -686,6 +690,10 @@ void Level::handleMenuActiveEvents(Engine& engine, SDL_Event& event)
             if (cmd == "Wait")
             {
                 m_state = LevelState::SELECTING_STATE;
+                m_selectedBuilding = -1;
+                m_selectedUnit = -1;
+                m_showReachableTiles = false;
+                m_showAttackableTiles = false;
             }
             if (cmd == "Move")
             {
@@ -727,8 +735,9 @@ void Level::handleMenuActiveEvents(Engine& engine, SDL_Event& event)
                 Building&   b = m_buildings.at(m_captureBuilding);
                 UnitFaction u_f = m_units.at(m_selectedUnit).getFaction();
 
-                BuildingFaction b_f = static_cast<BuildingFaction>(static_cast<int>(u_f));
+                BuildingFaction b_f = static_cast<BuildingFaction>(u_f);
                 b.switch_faction(b_f);
+                m_state = LevelState::SELECTING_STATE;
                 m_selectedBuilding = -1;
                 m_selectedUnit = -1;
             }
