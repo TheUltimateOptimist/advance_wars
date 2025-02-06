@@ -198,11 +198,12 @@ void Menu::handleEvent(Engine& engine, SDL_Event& event)
                      Effect(5, 15, EffectId::AIR_EXPLOSION, true),
                      Effect(5, 18, EffectId::NAVAL_EXPLOSION, true)});
 
-                // std::shared_ptr<Level> level =
-                //     std::make_shared<Level>("Osnabrück", 20, 20, tiles, buildings, units,
-                //     effects, std::queue<Player>{});
+                std::shared_ptr<Level> level =
+                std::make_shared<Level>("Osnabrück", 20, 20, tiles, buildings, units,
+                effects, std::queue<Player>{});
 
-                engine.pushScene(Level::loadLevel("../res/level.h5", engine));
+                //Level::loadLevel("../res/level.h5", engine)
+                engine.pushScene(level);
             }
             else if (m_options[m_selectedOption] == "Options")
             {
