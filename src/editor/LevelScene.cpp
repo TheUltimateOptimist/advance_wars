@@ -225,13 +225,11 @@ void LevelScene::setTile(int index, uint8_t id)
 
 void LevelScene::onTileClicked(int index)
 {
-<<<<<<< HEAD
-
+    /*
     m_tile_ids[index] = m_selected_tile_id;
     if(!(m_advanced_tile_placement)) return;
+    */
 
-
-=======
 	if (is_border(index) && !is_water_tile(m_selected_tile_id)) {
 		return;
 	}
@@ -240,7 +238,6 @@ void LevelScene::onTileClicked(int index)
     	m_tile_ids[index] = m_selected_tile_id;
 		return;
 	}
->>>>>>> 86bccb1daa8fabd3e70c0057b4f209c2f6b06284
 	if(m_selected_tile_id > 5 && m_selected_tile_id < 17){	//Straße plaziert
 		placeRoad(index, true);
 		return;
