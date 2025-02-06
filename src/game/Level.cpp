@@ -119,7 +119,7 @@ std::shared_ptr<Level> Level::loadLevel(std::string path, Engine& engine)
     {
         if (has_factions[i])
         {
-            turnQ.push(Player(2000, static_cast<PlayerFaction>(i)));
+            turnQ.push(Player(2000, static_cast<UnitFaction>(i)));
         }
     }
 
@@ -430,16 +430,24 @@ void Level::handleRecruitingEvent(Engine& engine, SDL_Event& event)
             Building&   b = m_buildings.at(m_selectedBuilding);
             UnitFaction u_faction = static_cast<UnitFaction>(b.m_faction);
             UnitId      unit_id = m_recruitingMenu.getSelectedOption();
+            int         cost = engine.getUnitConfig().getUnitCost(unit_id);
 
-            if (b.check_money(500))
+            if (b.check_money(cost, m_turnQ.front().getMoney()))
             {
                 if (b.check_spawn(m_units))
                 {
                     addUnit(Unit(
                         b.m_x, b.m_y, u_faction, unit_id, UnitState::IDLE, engine.getUnitConfig()));
                     m_state = LevelState::SELECTING_STATE;
+                    m_turnQ.front().spendMoney(cost);
                     m_selectedBuilding = -1;
                 }
+            }
+            else
+            {
+                std::cout << "You dont have enough money, current money: "
+                          << m_turnQ.front().getMoney() << " || needed money: " << cost
+                          << std::endl;
             }
         }
     }
@@ -596,11 +604,30 @@ void Level::handleSelectingEvents(Engine& engine, SDL_Event& event)
                         }
                     }
 
-                    m_contextMenu.setOptions({"Move", "Attack", "Info", "Wait"});
+                    // Show according menu options if unit has same/different faction than current
+                    // player
+                    if (m_units.at(m_selectedUnit).getFaction() == m_turnQ.front().getFaction())
+                    {
+                        m_contextMenu.setOptions({"Move", "Attack", "Info", "Wait", "End Turn"});
+                    }
+                    else
+                    {
+                        m_contextMenu.setOptions({"Info", "Wait", "End Turn"});
+                    }
                 }
                 else
                 {
-                    m_contextMenu.setOptions({"Train", "Info", "Wait"});
+                    // Show according menu options if building has same/different faction than
+                    // current player
+                    if (m_buildings.at(m_selectedBuilding).getFaction() ==
+                        static_cast<BuildingFaction>(m_turnQ.front().getFaction()))
+                    {
+                        m_contextMenu.setOptions({"Train", "Info", "Wait", "End Turn"});
+                    }
+                    else
+                    {
+                        m_contextMenu.setOptions({"Info", "Wait", "End Turn"});
+                    }
                 }
                 m_state = LevelState::MENUACTIVE_STATE;
             }
@@ -700,6 +727,13 @@ void Level::handleMenuActiveEvents(Engine& engine, SDL_Event& event)
                      UnitId::ROCKET_ARTILLERY, UnitId::MEDIUM_TANK, UnitId::NEO_TANK,
                      UnitId::HEAVY_TANK});
                 std::cout << "no training here" << std::endl;
+            }
+            if (cmd == "End Turn")
+            {
+                m_state = LevelState::SELECTING_STATE;
+                m_showAttackableTiles = false;
+                m_showReachableTiles = false;
+                changeTurn();
             }
         }
 
