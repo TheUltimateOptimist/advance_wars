@@ -343,7 +343,8 @@ void LevelScene::placeCliff(bool placedLand, int index){
 
 	//ID remapping um damit arbeiten zu können
 	for(int i = 0; i < 8; i++){
-		if(surroundingIDs[i] == 0){
+        if(surroundingIDs[i] == -1){
+        } else if(surroundingIDs[i] == 0){
 			surroundingIDs[i] = 15;
 		} else if(surroundingIDs[i] == 1){
 			surroundingIDs[i] = 0;
@@ -387,16 +388,18 @@ void LevelScene::placeCliff(bool placedLand, int index){
 	
 	//Berechne remapped ID aus Marching Squares
 	for(int i = 0; i < 8; i++){
-		surroundingIDs[i] = 0;
-		if(marchingSquares[i][0]) surroundingIDs[i] += 8;
-		if(marchingSquares[i][1]) surroundingIDs[i] += 4;
-		if(marchingSquares[i][2]) surroundingIDs[i] += 2;
-		if(marchingSquares[i][3]) surroundingIDs[i] += 1;
-	}
+		if(surroundingIDs[i] > -1){
+            surroundingIDs[i] = 0;
+		    if(marchingSquares[i][0]) surroundingIDs[i] += 8;
+	    	if(marchingSquares[i][1]) surroundingIDs[i] += 4;
+		    if(marchingSquares[i][2]) surroundingIDs[i] += 2;
+    		if(marchingSquares[i][3]) surroundingIDs[i] += 1;
+        }
+    }
 	
 	//Remappe ID für setzbare Tiles
 	for(int i = 0; i < 8; i++){
-		surroundingIDs[i] = SumToId[ surroundingIDs[i] ];
+		if(surroundingIDs[i] > -1) surroundingIDs[i] = SumToId[ surroundingIDs[i] ];
 	}
 	
 	//Plaziere Tiles
