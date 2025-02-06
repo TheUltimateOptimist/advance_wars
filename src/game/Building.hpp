@@ -39,12 +39,6 @@ class Building
         */
         bool check_money(int price);
 
-        /*
-        When the building is selected, the player should have the ability to recruit a selection of
-        units They should be displayed by the UI On_click();
-        */
-        void recruit_unit();
-
         /**
         If the building is clicked, it shows information to the player, here it will be a list of
         all available units

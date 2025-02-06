@@ -600,7 +600,8 @@ void Level::handleSelectingEvents(Engine& engine, SDL_Event& event)
                 }
                 else
                 {   
-                    if(m_buildings.at(m_selectedBuilding).getBuildingId() == BuildingId::CITY) {
+                    BuildingId b_id = m_buildings.at(m_selectedBuilding).getBuildingId();
+                    if(b_id == BuildingId::CITY || b_id == BuildingId::HEADQUARTER) {
                         m_contextMenu.setOptions({"Info", "Wait"});
                     } else {
                         m_contextMenu.setOptions({"Train", "Info", "Wait"});
