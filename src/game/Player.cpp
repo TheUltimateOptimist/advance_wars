@@ -85,4 +85,14 @@ UnitFaction Player::getFaction()
 {
     return m_faction;
 }
+
+int Player::getMoney()
+{
+    return m_money;
+}
+
+void Player::spendMoney(int toSpend)
+{
+    m_money -= toSpend;
+}
 } // namespace advanced_wars

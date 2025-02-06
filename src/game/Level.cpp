@@ -430,16 +430,24 @@ void Level::handleRecruitingEvent(Engine& engine, SDL_Event& event)
             Building&   b = m_buildings.at(m_selectedBuilding);
             UnitFaction u_faction = static_cast<UnitFaction>(b.m_faction);
             UnitId      unit_id = m_recruitingMenu.getSelectedOption();
+            int         cost = engine.getUnitConfig().getUnitCost(unit_id);
 
-            if (b.check_money(500))
+            if (b.check_money(cost, m_turnQ.front().getMoney()))
             {
                 if (b.check_spawn(m_units))
                 {
                     addUnit(Unit(
                         b.m_x, b.m_y, u_faction, unit_id, UnitState::IDLE, engine.getUnitConfig()));
                     m_state = LevelState::SELECTING_STATE;
+                    m_turnQ.front().spendMoney(cost);
                     m_selectedBuilding = -1;
                 }
+            }
+            else
+            {
+                std::cout << "You dont have enough money, current money: "
+                          << m_turnQ.front().getMoney() << " || needed money: " << cost
+                          << std::endl;
             }
         }
     }

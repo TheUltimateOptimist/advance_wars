@@ -38,6 +38,10 @@ class Player
         void endTurn(std::unordered_map<int, Unit>& lvUnits);
 
         UnitFaction getFaction();
+
+        int getMoney();
+
+        void spendMoney(int toSpend);
 };
 
 } // namespace advanced_wars
