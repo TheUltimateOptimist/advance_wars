@@ -1,5 +1,6 @@
 #include "Engine.hpp"
 #include "SDL_events.h"
+#include "SDL_rect.h"
 #include "SDL_timer.h"
 #include "SDL_video.h"
 #include "Scene.hpp"
@@ -10,6 +11,7 @@
 #include <SDL_render.h>
 #include <cmath>
 #include <deque>
+#include <iostream>
 #include <memory>
 #include <optional>
 #include <stdexcept>
@@ -32,7 +34,21 @@ Engine::Engine(Window& window) : m_window(window), m_quit(false)
     if (SDL_GetDisplayDPI(
             SDL_GetWindowDisplayIndex(this->m_window.sdl_window()), &ddpi, nullptr, nullptr) != 0)
     {
-        throw std::runtime_error("SDL could not get DPI: " + std::string(SDL_GetError()));
+        SDL_Rect size;
+
+        if (SDL_GetDisplayBounds(SDL_GetWindowDisplayIndex(this->m_window.sdl_window()), &size) !=
+            0)
+        {
+            throw std::runtime_error(
+                "Even SDL_GetDisplayBounds fails, get a proper computer: " +
+                std::string(SDL_GetError()));
+        }
+
+        float display_diagonal = 24.0; // 24 inch
+
+        ddpi = std::hypot(size.w, size.h) / display_diagonal;
+
+        std::cout << "Couldn't get DPI using fallback ddpi of " << ddpi << std::endl;
     }
 
     this->m_ddpi = ddpi;
