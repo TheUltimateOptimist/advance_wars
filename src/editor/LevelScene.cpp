@@ -225,11 +225,11 @@ void LevelScene::setTile(int index, uint8_t id)
 
 void LevelScene::onTileClicked(int index)
 {
-	std::cout << m_advanced_tile_placement << std::endl;
-	if (!m_advanced_tile_placement) {
-    	m_tile_ids[index] = m_selected_tile_id;
-		return;
-	}
+
+    m_tile_ids[index] = m_selected_tile_id;
+    if(!(m_advanced_tile_placement)) return;
+
+
 	if(m_selected_tile_id > 5 && m_selected_tile_id < 17){	//Straße plaziert
 		placeRoad(index, true);
 		return;
@@ -392,14 +392,10 @@ void LevelScene::placeCliff(bool placedLand, int index){
 	}
 	
 	//Plaziere Tiles
-	if(surroundingIDs[0] != -1) setTile( index - m_width     ,(uint8_t)surroundingIDs[0] );
-	if(surroundingIDs[1] != -1) setTile( index - m_width + 1 ,(uint8_t)surroundingIDs[1] );
-	if(surroundingIDs[2] != -1) setTile( index + 1           ,(uint8_t)surroundingIDs[2] );
-	if(surroundingIDs[3] != -1) setTile( index + m_width + 1 ,(uint8_t)surroundingIDs[3] );
-	if(surroundingIDs[4] != -1) setTile( index + m_width     ,(uint8_t)surroundingIDs[4] );
-	if(surroundingIDs[5] != -1) setTile( index + m_width - 1 ,(uint8_t)surroundingIDs[5] );
-	if(surroundingIDs[6] != -1) setTile( index - 1           ,(uint8_t)surroundingIDs[6] );
-	if(surroundingIDs[7] != -1) setTile( index - m_width - 1 ,(uint8_t)surroundingIDs[7] );
+    for(int i = 0; i < 8; i++){
+	    if(isntIdentical(surroundingIDs[i], calcDir(i, index)))
+            setTile( calcDir(i, index),(uint8_t)surroundingIDs[i] );
+    }
 }
 
 void LevelScene::placeRoad(int index, bool updateFlag){
@@ -449,6 +445,25 @@ void LevelScene::placeRoad(int index, bool updateFlag){
 		if(tileDirections[2]) placeRoad((index + m_width), false);	//update unten
 		if(tileDirections[3]) placeRoad((index - 1),       false);	//update links
 	}
+}
+
+int LevelScene::calcDir(int i, int index){
+    if(i==0) return (index - m_width);
+    if(i==1) return (index - m_width + 1);
+    if(i==2) return (index + 1);
+    if(i==3) return (index + m_width + 1);
+    if(i==4) return (index + m_width);
+    if(i==5) return (index + m_width - 1);
+    if(i==6) return (index - 1);
+    if(i==7) return (index - m_width - 1);
+}
+
+bool LevelScene::isntIdentical(int16_t id, int index){
+    bool flag  = (!(id == -1 ||               //kartenrand
+    (id == 0 && m_tile_ids[index]==2) ||   //wald
+    (id == 0 && m_tile_ids[index]==3) ||   //gebirge
+    (id == 1 && m_tile_ids[index]==17)) );  //riff
+    return flag;
 }
 
 } // namespace editor

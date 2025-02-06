@@ -31,7 +31,7 @@ public:
 private:
     bool is_border(int index);
     bool is_water_tile(uint8_t id);
-    bool m_advanced_tile_placement;
+    bool isntIdentical(int16_t id, int index);
     void onLevelNameUpdated(std::string new_name) override;
     void onLevelWriteRequested(QString file_path) override;
     void onTileEntered(int index) override;  
@@ -42,9 +42,11 @@ private:
     void setTile(int index, uint8_t id);
     void placeCliff(bool placedLand, int index);
     void placeRoad(int index, bool updateFlag);
+    int calcDir(int i, int index);
     QGraphicsPixmapItem* occupy_tile(int index, uint8_t tile_id);
     uint8_t m_selected_tile_id;
     std::string m_name;
+    bool m_advanced_tile_placement;
     int m_width;
     int m_height;
     std::vector<uint8_t> m_tile_ids;
