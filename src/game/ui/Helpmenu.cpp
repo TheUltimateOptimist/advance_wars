@@ -12,10 +12,10 @@ void HelpMenu::handleEvent(Engine& engine, SDL_Event& event) {}
 std::vector<std::string> helpTable = {
     "Willkommen im Hilfe menu",                                                               // 0
     "Nutzen Sie die PFEILTASTEN zur Navigation in allen Menus",                               // 1
-    "Einheiten bewegen; Wenn Sie an der Reihe sind, nutzen Sie die PFEILTASTEN, um den "      // 2
-    "Selection_Cursor (das kleine rote Quadrat) auf dem Spielfeld zu verschieben Nutzen Sie " // 3
-    "RETURN, um eine Einheit zu selektieren. Nutzen Sie die PFEILTASTEN, um eine Option "     // 4
-    "auszuwählen und RETURN, um ihre Auswahl zu bestätigen",                                  // 5
+    "Einheiten bewegen; Wenn Sie an der Reihe sind nutzen Sie die PFEILTASTEN um den "      // 2
+    "Selection_Cursor (das kleine rote Quadrat) auf dem Spielfeld zu verschieben. Nutzen Sie " // 3
+    "RETURN um eine Einheit zu selektieren. Nutzen Sie die PFEILTASTEN um eine Option "     // 4
+    "auszuwählen und RETURN um ihre Auswahl zu bestätigen",                                  // 5
     "Spielregeln;",                                                                           // 6
     "Einheiten dürfen sich in einer Runde nur ein Mal bewegen und ein Mal angreifen",         // 7
     "Gegnerische Einheiten müssen sich in REICHWEITE befinden",                               // 8
@@ -81,7 +81,7 @@ void HelpMenu::render(advanced_wars::Engine& engine)
     SDL_RenderCopy(engine.renderer(), buildingTexture, &src_rect, &trgt_rect);
 
     renderTextPortion(
-        engine, "Das ist das Hauptquartier. Wenn es fällt, haben Sie das Spiel verloren.", font,
+        engine, "Das ist das Hauptquartier. Wenn es faellt, haben Sie das Spiel verloren.", font,
         white, boxWidth - 120 - 5, 120, text_y);
 
     text_y += 48;
@@ -92,7 +92,7 @@ void HelpMenu::render(advanced_wars::Engine& engine)
 
     renderTextPortion(
         engine,
-        "Nehmen Sie Städte auf der Karte ein, um jede Runde Geld für das Rekrutieren der Einheiten "
+        "Nehmen Sie Staedte auf der Karte ein, um jede Runde Geld für das Rekrutieren der Einheiten "
         "zu bekommen.",
         font, white, boxWidth - 120 - 5, 120, text_y + 48);
     renderTextPortion(
@@ -104,7 +104,7 @@ void HelpMenu::render(advanced_wars::Engine& engine)
         white, boxWidth - 120 - 5, 120, text_y + 144);
     renderTextPortion(
         engine,
-        "Der Hafen stellt ihnen verschiedene Marineeinheiten zur Verfügung. Um den Sieg zu "
+        "Der Hafen stellt ihnen verschiedene Marineeinheiten zur Verfuegung. Um den Sieg zu "
         "erringen sollten Sie Ihre Flotte nicht vernachlässigen!",
         font, white, boxWidth - 120 - 5, 120, text_y + 192);
 
