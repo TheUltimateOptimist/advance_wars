@@ -596,11 +596,30 @@ void Level::handleSelectingEvents(Engine& engine, SDL_Event& event)
                         }
                     }
 
-                    m_contextMenu.setOptions({"Move", "Attack", "Info", "Wait"});
+                    // Show according menu options if unit has same/different faction than current
+                    // player
+                    if (m_units.at(m_selectedUnit).getFaction() == m_turnQ.front().getFaction())
+                    {
+                        m_contextMenu.setOptions({"Move", "Attack", "Info", "Wait"});
+                    }
+                    else
+                    {
+                        m_contextMenu.setOptions({"Info", "Wait"});
+                    }
                 }
                 else
                 {
-                    m_contextMenu.setOptions({"Train", "Info", "Wait"});
+                    // Show according menu options if building has same/different faction than
+                    // current player
+                    if (m_buildings.at(m_selectedBuilding).getFaction() ==
+                        static_cast<BuildingFaction>(m_turnQ.front().getFaction()))
+                    {
+                        m_contextMenu.setOptions({"Train", "Info", "Wait"});
+                    }
+                    else
+                    {
+                        m_contextMenu.setOptions({"Info", "Wait"});
+                    }
                 }
                 m_state = LevelState::MENUACTIVE_STATE;
             }
