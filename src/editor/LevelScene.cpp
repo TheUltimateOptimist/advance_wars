@@ -178,6 +178,7 @@ void LevelScene::onTileEntered(int index)
     if (m_tile_occupants[index] != nullptr)
     {
         removeItem(m_tile_occupants[index]);
+        delete m_tile_occupants[index];
         m_tile_occupants[index] = nullptr;
     }
     if (!is_border(index) && m_selected_tile_id > 0 || is_border(index))
@@ -195,6 +196,7 @@ void LevelScene::onTileExited(int index)
     if (m_tile_occupants[index] != nullptr)
     {
         removeItem(m_tile_occupants[index]);
+        delete m_tile_occupants[index];
         m_tile_occupants[index] = nullptr;
     }
     if (!is_border(index) && m_tile_ids[index] > 0 || is_border(index))
