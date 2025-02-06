@@ -608,11 +608,11 @@ void Level::handleSelectingEvents(Engine& engine, SDL_Event& event)
                     // player
                     if (m_units.at(m_selectedUnit).getFaction() == m_turnQ.front().getFaction())
                     {
-                        m_contextMenu.setOptions({"Move", "Attack", "Info", "Wait"});
+                        m_contextMenu.setOptions({"Move", "Attack", "Info", "Wait", "End Turn"});
                     }
                     else
                     {
-                        m_contextMenu.setOptions({"Info", "Wait"});
+                        m_contextMenu.setOptions({"Info", "Wait", "End Turn"});
                     }
                 }
                 else
@@ -622,11 +622,13 @@ void Level::handleSelectingEvents(Engine& engine, SDL_Event& event)
                     if (m_buildings.at(m_selectedBuilding).getFaction() ==
                         static_cast<BuildingFaction>(m_turnQ.front().getFaction()))
                     {
-                        m_contextMenu.setOptions({"Train", "Info", "Wait"});
+                        m_contextMenu.setOptions({"Train", "Info", "Wait", "End Turn"});
                     }
                     else
                     {
-                        m_contextMenu.setOptions({"Info", "Wait"});
+                        m_contextMenu.setOptions(
+                            {"Info", "Wait"
+                                     "End Turn"});
                     }
                 }
                 m_state = LevelState::MENUACTIVE_STATE;
@@ -727,6 +729,13 @@ void Level::handleMenuActiveEvents(Engine& engine, SDL_Event& event)
                      UnitId::ROCKET_ARTILLERY, UnitId::MEDIUM_TANK, UnitId::NEO_TANK,
                      UnitId::HEAVY_TANK});
                 std::cout << "no training here" << std::endl;
+            }
+            if (cmd == "End Turn")
+            {
+                m_state = LevelState::SELECTING_STATE;
+                m_showAttackableTiles = false;
+                m_showReachableTiles = false;
+                changeTurn();
             }
         }
 
