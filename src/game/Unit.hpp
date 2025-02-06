@@ -10,6 +10,7 @@
 
 namespace advanced_wars
 {
+
 class Engine;
 class Config;
 
@@ -120,6 +121,10 @@ class Unit
          */
         void on_left_click(SDL_Event event);
 
+        UnitFaction getFaction();
+
+        void setState(UnitState state);
+
         /**
          * Retrieves units within range that this unit can deal damage to.
          * Considers all units provided in 'allUnits', excluding itself, and checks movement and
@@ -129,8 +134,6 @@ class Unit
          * @return Vector of pointers to units in range that can be engaged.
          */
         std::vector<Unit*> getUnitsInRangeWithDamagePotential(const std::vector<Unit*>& allUnits);
-
-        UnitFaction getFaction();
 
     private:
         UnitFaction m_faction; // The faction to which this unit belongs.

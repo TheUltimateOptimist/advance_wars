@@ -62,7 +62,7 @@ void TileMarker::handleEvent(Engine& engine, SDL_Event& event)
             newX = m_x - 16 * m_renderingScale;
             std::cout << "New X: " << newX << std::endl;
 
-            if (newX <= 0)
+            if (newX < 0)
             {
                 break;
             }
@@ -82,7 +82,8 @@ std::pair<int, int> TileMarker::getPosition()
     return {tileX, tileY};
 }
 
-void TileMarker::setPosition(int tileX, int tileY){
+void TileMarker::setPosition(int tileX, int tileY)
+{
     m_x = tileX * 16 * m_renderingScale;
     m_y = tileY * 16 * m_renderingScale + (16 * m_renderingScale - m_height);
 }

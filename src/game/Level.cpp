@@ -23,11 +23,12 @@ const int RENDERING_SCALE = 3;
 
 Level::Level(
     std::string name, int width, int height, std::vector<Tile> tiles,
-    std::vector<Building> buildings, std::vector<Unit> units, std::vector<Effect> effects)
+    std::vector<Building> buildings, std::vector<Unit> units, std::vector<Effect> effects,
+    std::queue<Player> turnQ)
     : m_name(name), m_width(width), m_height(height), m_tiles(tiles), m_selectedUnit(-1),
       m_selectedBuilding(-1), m_contextMenu(ContextMenu()), m_id(0),
       m_state(LevelState::SELECTING_STATE),
-      m_currentPos(TileMarker(RENDERING_SCALE, 1, 1, m_width, m_height))
+      m_currentPos(TileMarker(RENDERING_SCALE, 1, 1, m_width, m_height)), m_turnQ(turnQ)
 {
 
     m_contextMenu.setOptions({"Move", "Info", "Wait"});
@@ -56,7 +57,7 @@ Level::Level(
     m_selectedUnit = -1;
 };
 
-Level Level::loadLevel(std::string path)
+std::shared_ptr<Level> Level::loadLevel(std::string path, Engine& engine)
 {
     HighFive::File file(path, HighFive::File::ReadOnly);
 
@@ -76,10 +77,12 @@ Level Level::loadLevel(std::string path)
     int         height = pt.get<int>("level.height");
     std::string name = pt.get<std::string>("level.name");
 
-    // create tiles and buildings vector from tiles array
+    // create tiles, buildings and units vector from tiles array
     std::vector<Tile>     tiles;
     std::vector<Building> buildings;
+    std::vector<Unit>     units;
     tiles.reserve(width * height);
+    bool has_factions[] = {false, false, false, false, false};
     for (int i = 0; i < level_tilesarray.size(); i++)
     {
         int x = i % width;
@@ -90,6 +93,17 @@ Level Level::loadLevel(std::string path)
             BuildingId      building_id = static_cast<BuildingId>((level_tilesarray[i] - 50) % 5);
             BuildingFaction faction_id =
                 static_cast<BuildingFaction>((level_tilesarray[i] - 50) / 5);
+            if (building_id == BuildingId::HEADQUARTER)
+            {
+                int index = static_cast<int>(faction_id);
+                if (!has_factions[index])
+                {
+                    units.push_back(Unit(
+                        x, y, static_cast<UnitFaction>(faction_id), UnitId::INFANTERY,
+                        UnitState::UNAVAILABLE, engine.getUnitConfig()));
+                }
+                has_factions[static_cast<int>(faction_id)] = true;
+            }
             buildings.push_back(Building(x, y, building_id, faction_id));
         }
         else
@@ -99,8 +113,21 @@ Level Level::loadLevel(std::string path)
         }
     }
 
-    return Level(name, width, height, tiles, buildings, {}, {});
-};
+    // create turnQ from has_factions array
+    std::queue<Player> turnQ;
+    for (int i = 0; i < 5; i++)
+    {
+        if (has_factions[i])
+        {
+            turnQ.push(Player(2000, static_cast<PlayerFaction>(i)));
+        }
+    }
+
+    Level level(name, width, height, tiles, buildings, units, std::vector<Effect>{}, turnQ);
+
+    level.m_turnQ.front().startTurn(level.m_units, level.m_buildings);
+    return std::make_shared<Level>(level);
+}
 
 std::pair<int, int> Level::calcTilePos(int mouseX, int mouseY)
 {
@@ -369,6 +396,19 @@ Effect Level::removeEffect(int id)
     m_effects.erase(id);
 
     return value;
+}
+
+void Level::changeTurn()
+{
+    Player temp = m_turnQ.front();
+
+    temp.endTurn(m_units);
+
+    // Cycle Player at end of queue
+    m_turnQ.pop();
+    m_turnQ.push(temp);
+
+    m_turnQ.front().startTurn(m_units, m_buildings);
 }
 
 void Level::handleRecruitingEvent(Engine& engine, SDL_Event& event)

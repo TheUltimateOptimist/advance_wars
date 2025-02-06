@@ -29,6 +29,11 @@ void Building::render(Engine& engine, int scale)
         &dst, 0, NULL, SDL_FLIP_NONE);
 }
 
+BuildingFaction Building::getFaction()
+{
+    return this->m_faction;
+}
+
 void Building::switch_faction(BuildingFaction faction)
 {
 

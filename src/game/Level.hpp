@@ -3,6 +3,7 @@
 #include "Building.hpp"
 #include "Effect.hpp"
 #include "Engine.hpp"
+#include "Player.hpp"
 #include "Scene.hpp"
 #include "Tile.hpp"
 #include "Unit.hpp"
@@ -11,6 +12,7 @@
 #include "ui/TileMarker.hpp"
 #include <SDL.h>
 #include <array>
+#include <queue>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
@@ -75,9 +77,10 @@ class Level : public Scene
     public:
         Level(
             std::string name, int width, int height, std::vector<Tile> tiles,
-            std::vector<Building> buildings, std::vector<Unit> units, std::vector<Effect>);
+            std::vector<Building> buildings, std::vector<Unit> units, std::vector<Effect> effects,
+            std::queue<Player> turnQ);
 
-        static Level loadLevel(std::string path);
+        static std::shared_ptr<Level> loadLevel(std::string path, Engine& engine);
 
         void render(Engine& engine);
 
@@ -126,12 +129,14 @@ class Level : public Scene
         std::unordered_map<int, Building> m_buildings;
         std::unordered_map<int, Unit>     m_units;
         std::unordered_map<int, Effect>   m_effects;
-        int                               m_selectedUnit;
-        int                               m_selectedBuilding;
-        ContextMenu                       m_contextMenu;
-        RecruitingMenu                    m_recruitingMenu;
-        int                               m_id;
-        LevelState                        m_state;
+        std::queue<Player>                m_turnQ;
+
+        int            m_selectedUnit;
+        int            m_selectedBuilding;
+        ContextMenu    m_contextMenu;
+        RecruitingMenu m_recruitingMenu;
+        int            m_id;
+        LevelState     m_state;
 
         std::pair<int, int> calcTilePos(int mouseX, int mouseY);
         void                selectEntity(int x, int y);
@@ -148,6 +153,9 @@ class Level : public Scene
 
         bool clickCheckLeft(int mouseX, int mouseY);
         bool clickCheckRight(int mouseX, int mouseY);
+
+        void changeTurn();
+
         bool m_showReachableTiles;
         bool m_showAttackableTiles;
 

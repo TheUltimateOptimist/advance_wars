@@ -20,6 +20,8 @@ class Building
 
         void render(Engine& engine, int scale);
 
+        BuildingFaction getFaction();
+
         /**
         Changes the faction to the specified one
 

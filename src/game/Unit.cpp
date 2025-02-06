@@ -42,8 +42,6 @@ Unit::Unit(int x, int y, UnitFaction faction, UnitId id, UnitState state, Config
     m_secondaryWeapon = Weapon(config.getUnitSecondaryWeapon(id), secondaryDamage);
 }
 
- 
-
 void Unit::render(Engine& engine, int scale)
 {
     Spritesheet* spritesheet = engine.getSpritesheet();
@@ -149,9 +147,9 @@ void Unit::attack(Unit& enemy)
 int Unit::calculateDamage(Unit& target)
 {
     // Pointers to Weapon objects
-    Weapon* primaryWeapon =  &m_primaryWeapon;
+    Weapon* primaryWeapon = &m_primaryWeapon;
     Weapon* secondaryWeapon = &m_secondaryWeapon;
-    
+
     // Find the corresponding damage values
     auto primary_damage_it = primaryWeapon->m_damage.find(target.m_id);
     auto secondary_damage_it = secondaryWeapon->m_damage.find(target.m_id);
@@ -180,8 +178,6 @@ int Unit::calculateDamage(Unit& target)
 
     return damage_value;
 }
-
-
 
 void Unit::performAttack(Unit& target, int damage)
 {
@@ -244,7 +240,7 @@ std::vector<Unit*> Unit::getUnitsInRangeWithDamagePotential(const std::vector<Un
     std::vector<Unit*> unitsInRangeWithDamage;
 
     for (Unit* unit : allUnits)
-    { //Iterate over all units
+    { // Iterate over all units
         // except itself
         if (unit == this)
         {
@@ -254,7 +250,6 @@ std::vector<Unit*> Unit::getUnitsInRangeWithDamagePotential(const std::vector<Un
         int distanceX = std::abs(unit->m_x - m_x);
         int distanceY = std::abs(unit->m_y - m_y);
 
-        
         int distance = distanceX + distanceY;
         if (distance >= m_minRange && distance <= m_maxRange)
         {
@@ -283,11 +278,6 @@ std::vector<Unit*> Unit::getUnitsInRangeWithDamagePotential(const std::vector<Un
     }
 
     return unitsInRangeWithDamage;
-}
-
-UnitFaction Unit::getFaction()
-{
-    return this->m_faction;
 }
 
 void Unit::renderHP(Engine& engine, int scale)
@@ -322,6 +312,16 @@ void Unit::renderHP(Engine& engine, int scale)
 
         SDL_RenderCopy(engine.renderer(), numbers, &src, &dest);
     }
+}
+
+UnitFaction Unit::getFaction()
+{
+    return this->m_faction;
+}
+
+void Unit::setState(UnitState state)
+{
+    this->m_state = state;
 }
 
 } // namespace advanced_wars

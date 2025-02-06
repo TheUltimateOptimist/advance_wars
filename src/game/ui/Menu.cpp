@@ -1,7 +1,7 @@
 #include "Menu.hpp"
 #include "../Building.hpp"
-#include "../Level.hpp"
 #include "../Config.hpp"
+#include "../Level.hpp"
 #include "../Spritesheet.hpp"
 #include "../Tile.hpp"
 #include "../Unit.hpp"
@@ -126,7 +126,6 @@ void Menu::handleEvent(Engine& engine, SDL_Event& event)
             {
                 std::cout << "Starting game..." << std::endl;
 
-
                 // Construct a level
                 std::vector<Tile> tiles;
                 for (int y = 0; y < 20; y++)
@@ -199,10 +198,11 @@ void Menu::handleEvent(Engine& engine, SDL_Event& event)
                      Effect(5, 15, EffectId::AIR_EXPLOSION, true),
                      Effect(5, 18, EffectId::NAVAL_EXPLOSION, true)});
 
-                std::shared_ptr<Level> level =
-                    std::make_shared<Level>("Osnabrück", 20, 20, tiles, buildings, units, effects);
+                // std::shared_ptr<Level> level =
+                //     std::make_shared<Level>("Osnabrück", 20, 20, tiles, buildings, units,
+                //     effects, std::queue<Player>{});
 
-                engine.pushScene(level);
+                engine.pushScene(Level::loadLevel("../res/level.h5", engine));
             }
             else if (m_options[m_selectedOption] == "Options")
             {
