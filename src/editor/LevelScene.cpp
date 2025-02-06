@@ -225,6 +225,9 @@ void LevelScene::setTile(int index, uint8_t id)
 
 void LevelScene::onTileClicked(int index)
 {
+	if (is_border(index) && !is_water_tile(m_selected_tile_id)) {
+		return;
+	}
 	std::cout << m_advanced_tile_placement << std::endl;
 	if (!m_advanced_tile_placement) {
     	m_tile_ids[index] = m_selected_tile_id;
