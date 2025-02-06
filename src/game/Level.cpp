@@ -7,8 +7,8 @@
 #include "Unit.hpp"
 #include "highfive/H5File.hpp"
 #include "ui/Contextmenu.hpp"
-#include "ui/Pausemenu.hpp"
 #include "ui/Helpmenu.hpp"
+#include "ui/Pausemenu.hpp"
 #include <SDL.h>
 #include <algorithm>
 #include <boost/property_tree/ptree.hpp>
@@ -179,11 +179,13 @@ int Level::selectBuilding(int tileX, int tileY)
 
 void Level::handleEvent(Engine& engine, SDL_Event& event)
 {
-    if (event.type == SDL_KEYDOWN) {
-    if (event.key.keysym.sym == SDLK_h) {
-        toggle_Helpmenu = !toggle_Helpmenu; 
+    if (event.type == SDL_KEYDOWN)
+    {
+        if (event.key.keysym.sym == SDLK_h)
+        {
+            toggle_Helpmenu = !toggle_Helpmenu;
+        }
     }
-}
     switch (m_state)
     {
     case LevelState::MENUACTIVE_STATE:
@@ -355,10 +357,10 @@ void Level::render(Engine& engine)
     }
     m_currentPos.render(engine);
 
-     if(toggle_Helpmenu) {
+    if (toggle_Helpmenu)
+    {
         m_helpMenu.render(engine);
     }
-    
 }
 
 int Level::addBuilding(Building building)
@@ -420,6 +422,7 @@ void Level::changeTurn()
     m_turnQ.push(temp);
 
     m_turnQ.front().startTurn(m_units, m_buildings);
+    m_currentPos.setMarkerColor(m_turnQ.front().getFaction());
 }
 
 void Level::handleRecruitingEvent(Engine& engine, SDL_Event& event)

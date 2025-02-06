@@ -11,23 +11,23 @@ Endscreen::Endscreen(Player& player) : m_moenyLeft(player.getMoney())
     std::cout << "Player faction: " << static_cast<int>(player.getFaction()) << std::endl;
     switch (player.getFaction())
     {
-    case PlayerFaction::BLUE:
+    case UnitFaction::UBLUE:
         m_color = {0, 0, 255, 255};
         m_playerString = "Blue";
         break;
-    case PlayerFaction::GREEN:
+    case UnitFaction::UGREEN:
         m_color = {0, 255, 0, 255};
         m_playerString = "Green";
         break;
-    case PlayerFaction::PURPLE:
+    case UnitFaction::UPURPLE:
         m_color = {255, 0, 255, 255};
         m_playerString = "Purple";
         break;
-    case PlayerFaction::RED:
+    case UnitFaction::URED:
         m_color = {255, 0, 0, 255};
         m_playerString = "Red";
         break;
-    case PlayerFaction::YELLOW:
+    case UnitFaction::UYELLOW:
         m_color = {255, 255, 0, 255};
         m_playerString = "Yellow";
         break;
@@ -118,13 +118,7 @@ void Endscreen::handleEvent(Engine& engine, SDL_Event& event)
 {
     if (event.key.keysym.sym == SDLK_RETURN)
     {
-        std::string           basePath = SDL_GetBasePath();
-        std::string           relativePath = "res/main_background.png";
-        std::string           fullPath = basePath + relativePath;
-        std::shared_ptr<Menu> menu = std::make_shared<Menu>(Menu(0));
-
-        menu->loadBackground(engine, fullPath);
-        engine.pushScene(menu);
+        engine.returnToMenu();
     }
 }
 } // namespace advanced_wars

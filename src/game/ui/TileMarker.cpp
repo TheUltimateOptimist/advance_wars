@@ -89,23 +89,23 @@ void TileMarker::setPosition(int tileX, int tileY)
     m_y = tileY * 16 * m_renderingScale + (16 * m_renderingScale - m_height);
 }
 
-void TileMarker::setMarkerColor(PlayerFaction faction)
+void TileMarker::setMarkerColor(UnitFaction faction)
 {
     switch (faction)
     {
-    case PlayerFaction::RED:
+    case UnitFaction::URED:
         m_markerColor = {255, 0, 0, 255};
         break;
-    case PlayerFaction::BLUE:
+    case UnitFaction::UBLUE:
         m_markerColor = {0, 0, 255, 255};
         break;
-    case PlayerFaction::GREEN:
+    case UnitFaction::UGREEN:
         m_markerColor = {0, 255, 0, 255};
         break;
-    case PlayerFaction::YELLOW:
+    case UnitFaction::UYELLOW:
         m_markerColor = {255, 255, 0, 255};
         break;
-    case PlayerFaction::PURPLE:
+    case UnitFaction::UPURPLE:
         m_markerColor = {255, 0, 255, 255};
         break;
     default:

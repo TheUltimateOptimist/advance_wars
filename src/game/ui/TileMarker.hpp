@@ -22,7 +22,7 @@ class TileMarker : public Scene
 
         void setPosition(int x, int y);
 
-        void setMarkerColor(PlayerFaction faction);
+        void setMarkerColor(UnitFaction faction);
 
     private:
         int       m_x;
