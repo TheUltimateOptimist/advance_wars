@@ -311,7 +311,7 @@ void LevelScene::placeCliff(bool placedLand, int index){
 		surroundingIDs[2] = -1;
 		surroundingIDs[3] = -1;
 	}
-	if(index > m_width * (m_height - 1)){	//unterer Kartenrand
+	if(index >= m_width * (m_height - 1)){	//unterer Kartenrand
 		surroundingIDs[3] = -1;
 		surroundingIDs[4] = -1;
 		surroundingIDs[5] = -1;
