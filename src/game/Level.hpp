@@ -10,6 +10,7 @@
 #include "ui/Contextmenu.hpp"
 #include "ui/Recruitingmenu.hpp"
 #include "ui/TileMarker.hpp"
+#include "ui/Helpmenu.hpp"
 #include <SDL.h>
 #include <array>
 #include <queue>
@@ -80,7 +81,7 @@ class Level : public Scene
             std::vector<Building> buildings, std::vector<Unit> units, std::vector<Effect> effects,
             std::queue<Player> turnQ);
 
-        static std::shared_ptr<Level> loadLevel(std::string path, Engine& engine);
+        static std::shared_ptr<Level> loadLevel(const std::string& path, Engine& engine);
 
         void render(Engine& engine);
 
@@ -135,6 +136,8 @@ class Level : public Scene
         int            m_selectedBuilding;
         ContextMenu    m_contextMenu;
         RecruitingMenu m_recruitingMenu;
+        bool toggle_Helpmenu = false;
+        HelpMenu       m_helpMenu;
         int            m_id;
         LevelState     m_state;
 
@@ -164,6 +167,9 @@ class Level : public Scene
         void handleAttack(std::pair<int, int> tilePos);
         void handleMovement(std::pair<int, int> tilePos);
         void handlePositionMarker(Engine& engine, SDL_Event& event);
+
+        std::pair<int, int> unit_fallback_position;
+
 };
 
 } // namespace advanced_wars

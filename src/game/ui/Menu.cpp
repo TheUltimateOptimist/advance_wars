@@ -1,7 +1,7 @@
 #include "Menu.hpp"
+#include "../Level.hpp"
 #include "../Building.hpp"
 #include "../Config.hpp"
-#include "../Level.hpp"
 #include "../Spritesheet.hpp"
 #include "../Tile.hpp"
 #include "../Unit.hpp"
@@ -14,8 +14,9 @@
 namespace advanced_wars
 {
 
-Menu::Menu(int selectedOption)
-    : m_selectedOption(selectedOption), m_options({"Start Game", "Options", "Exit"}),
+Menu::Menu(int selectedOption, const std::string& level_filepath)
+    : m_selectedOption(selectedOption), m_level_filepath(level_filepath),
+      m_options({"Start Game", "Options", "Exit"}),
       m_backgroundTexture(nullptr)
 {
 }
@@ -202,7 +203,7 @@ void Menu::handleEvent(Engine& engine, SDL_Event& event)
                 //     std::make_shared<Level>("Osnabrück", 20, 20, tiles, buildings, units,
                 //     effects, std::queue<Player>{});
 
-                engine.pushScene(Level::loadLevel("../res/level.h5", engine));
+                engine.pushScene(Level::loadLevel(m_level_filepath, engine));
             }
             else if (m_options[m_selectedOption] == "Options")
             {

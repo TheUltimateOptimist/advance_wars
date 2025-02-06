@@ -7,25 +7,16 @@
 namespace advanced_wars
 {
 
-enum class PlayerFaction
-{
-    RED,
-    BLUE,
-    YELLOW,
-    GREEN,
-    PURPLE
-};
-
 class Player
 {
     private:
-        int           m_money;
-        bool          m_alive;
-        bool          m_activeTurn;
-        PlayerFaction m_faction;
+        int         m_money;
+        bool        m_alive;
+        bool        m_activeTurn;
+        UnitFaction m_faction;
 
     public:
-        Player(int money, PlayerFaction faction);
+        Player(int money, UnitFaction faction);
         ~Player();
 
         /**
@@ -46,8 +37,11 @@ class Player
          */
         void endTurn(std::unordered_map<int, Unit>& lvUnits);
 
-        PlayerFaction getFaction();
-        int           getMoney();
+        UnitFaction getFaction();
+
+        int getMoney();
+
+        void spendMoney(int toSpend);
 };
 
 } // namespace advanced_wars

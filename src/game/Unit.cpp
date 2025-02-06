@@ -242,7 +242,7 @@ std::vector<Unit*> Unit::getUnitsInRangeWithDamagePotential(const std::vector<Un
     for (Unit* unit : allUnits)
     { // Iterate over all units
         // except itself
-        if (unit == this)
+        if (unit->getFaction() == this->m_faction)
         {
             continue;
         }
