@@ -11,7 +11,7 @@
 namespace advanced_wars
 {
 
-Config::Config(const std::string& filename)
+Config::Config(std::string filename)
 {
     namespace pt = boost::property_tree;
     pt::ptree tree;
@@ -220,27 +220,33 @@ std::string Config::getUnitSecondaryWeapon(UnitId id) const
     return "";
 }
 
-std::optional<int> Config::getUnitPrimaryWeaponDamage(UnitId attackerId, UnitId targetId) const {
-        auto attackerMapIt = m_primaryWeaponDamage.find(attackerId);
-        if (attackerMapIt != m_primaryWeaponDamage.end()) {
-            auto damageIt = attackerMapIt->second.find(targetId);
-            if (damageIt != attackerMapIt->second.end()) {
-                return damageIt->second;
-            }
+std::optional<int> Config::getUnitPrimaryWeaponDamage(UnitId attackerId, UnitId targetId) const
+{
+    auto attackerMapIt = m_primaryWeaponDamage.find(attackerId);
+    if (attackerMapIt != m_primaryWeaponDamage.end())
+    {
+        auto damageIt = attackerMapIt->second.find(targetId);
+        if (damageIt != attackerMapIt->second.end())
+        {
+            return damageIt->second;
         }
-        // Kein spezifischer Schaden vorhanden
-        return std::nullopt;
     }
+    // Kein spezifischer Schaden vorhanden
+    return std::nullopt;
+}
 
-std::optional<int> Config::getUnitSecondaryWeaponDamage(UnitId attackerId, UnitId targetId) const {
-        auto attackerMapIt = m_secondaryWeaponDamage.find(attackerId);
-        if (attackerMapIt != m_secondaryWeaponDamage.end()) {
-            auto damageIt = attackerMapIt->second.find(targetId);
-            if (damageIt != attackerMapIt->second.end()) {
-                return damageIt->second;
-            }
+std::optional<int> Config::getUnitSecondaryWeaponDamage(UnitId attackerId, UnitId targetId) const
+{
+    auto attackerMapIt = m_secondaryWeaponDamage.find(attackerId);
+    if (attackerMapIt != m_secondaryWeaponDamage.end())
+    {
+        auto damageIt = attackerMapIt->second.find(targetId);
+        if (damageIt != attackerMapIt->second.end())
+        {
+            return damageIt->second;
         }
-        // Kein spezifischer Schaden vorhanden
-        return std::nullopt;
     }
+    // Kein spezifischer Schaden vorhanden
+    return std::nullopt;
+}
 } // namespace advanced_wars

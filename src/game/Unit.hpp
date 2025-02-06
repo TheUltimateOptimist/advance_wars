@@ -3,68 +3,15 @@
 #include "Engine.hpp"
 
 #include "Weapon.hpp"
+#include <SDL_events.h>
 #include <optional>
 #include <unordered_map>
+#include <vector>
 
 namespace advanced_wars
 {
-
+class Engine;
 class Config;
-
-enum class UnitFaction
-{
-    URED = 0,
-    UBLUE = 1,
-    UGREEN = 2,
-    UYELLOW = 3,
-    UPURPLE = 4,
-};
-
-enum class UnitId
-{
-    INFANTERY = 0,
-    MECHANIZED_INFANTERY = 1,
-    RECON = 2,
-    MEDIUM_TANK = 3,
-    HEAVY_TANK = 4,
-    NEO_TANK = 5,
-    APC = 6,
-    ANTI_AIR_TANK = 7,
-    ARTILLERY = 8,
-    ROCKET_ARTILLERY = 9,
-    ANTI_AIR_MISSILE_LAUNCHER = 10,
-    FIGHTER = 11,
-    BOMBER = 12,
-    BATTLE_HELICOPTER = 13,
-    TRANSPORT_HELICOPTER = 14,
-    BATTLESHIP = 15,
-    CRUISER = 16,
-    LANDER = 17,
-    SUBMARINE = 18,
-
-    FIRST = INFANTERY,
-    LAST = SUBMARINE
-};
-
-enum class UnitState
-{
-    IDLE = 0,
-    UNAVAILABLE = 1,
-    MOVEMENTLEFT = 2,
-    MOVEMENTRIGHT = 3,
-    MOVEMENTDOWN = 4,
-    MOVEMENTUP = 5,
-};
-
-enum class MovementType
-{
-    FOOT = 0,
-    WHEELED = 1,
-    TREAD = 2,
-    AIR = 3,
-    SEA = 4,
-    LANDER = 5,
-};
 
 using MatchupTable = std::unordered_map<UnitId, std::unordered_map<UnitId, int>>;
 
@@ -91,7 +38,7 @@ class Unit
          * (Currently assumes this triggers certain game events, though not explicitly detailed
          * here.)
          */
-        ~Unit(){};
+        ~Unit() {};
 
         /**
          * Renders the unit on the game screen.

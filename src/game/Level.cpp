@@ -149,7 +149,6 @@ int Level::selectBuilding(int tileX, int tileY)
     return -1;
 }
 
-
 void Level::handleEvent(Engine& engine, SDL_Event& event)
 {
     switch (m_state)

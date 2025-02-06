@@ -1,14 +1,124 @@
 #pragma once
 
-#include "Unit.hpp" // Include for UnitId and MovementType
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/xml_parser.hpp>
+#include <optional>
 #include <stdexcept>
 #include <string>
 #include <unordered_map>
 
 namespace advanced_wars
 {
+/* ENUMS FOR GLOBAL USE*/
+enum class BuildingFaction
+{
+    URED = 0,
+    UBLUE = 1,
+    UGREEN = 2,
+    UYELLOW = 3,
+    UPURPLE = 4,
+};
+
+enum class BuildingId
+{
+    HEADQUARTER = 0,
+    CITY = 1,
+    FACTORY = 2,
+    AIRPORT = 3,
+    PORT = 4,
+};
+
+enum class UnitFaction
+{
+    URED = 0,
+    UBLUE = 1,
+    UGREEN = 2,
+    UYELLOW = 3,
+    UPURPLE = 4,
+};
+
+enum class UnitId
+{
+    INFANTERY = 0,
+    MECHANIZED_INFANTERY = 1,
+    RECON = 2,
+    MEDIUM_TANK = 3,
+    HEAVY_TANK = 4,
+    NEO_TANK = 5,
+    APC = 6,
+    ANTI_AIR_TANK = 7,
+    ARTILLERY = 8,
+    ROCKET_ARTILLERY = 9,
+    ANTI_AIR_MISSILE_LAUNCHER = 10,
+    FIGHTER = 11,
+    BOMBER = 12,
+    BATTLE_HELICOPTER = 13,
+    TRANSPORT_HELICOPTER = 14,
+    BATTLESHIP = 15,
+    CRUISER = 16,
+    LANDER = 17,
+    SUBMARINE = 18,
+
+    FIRST = INFANTERY,
+    LAST = SUBMARINE
+};
+
+enum class UnitState
+{
+    IDLE = 0,
+    UNAVAILABLE = 1,
+    MOVEMENTLEFT = 2,
+    MOVEMENTRIGHT = 3,
+    MOVEMENTDOWN = 4,
+    MOVEMENTUP = 5,
+};
+
+enum class MovementType
+{
+    FOOT = 0,
+    WHEELED = 1,
+    TREAD = 2,
+    AIR = 3,
+    SEA = 4,
+    LANDER = 5,
+};
+
+enum class TileId
+{
+    PLAIN = 0,
+    WATER = 1,
+    FOREST = 2,
+    MOUNTAIN = 3,
+    BRIDGE_HORIZONTAL = 4,
+    BRIDGE_VERTICAL = 5,
+    STREET_HORIZONTAL = 6,
+    STREET_VERTICAL = 7,
+    STREET_CROSSING = 8,
+    STREET_JUNCTION_RIGHT = 9,
+    STREET_JUNCTION_LEFT = 10,
+    STREET_JUNCTION_DOWN = 11,
+    STREET_JUNCTION_UP = 12,
+    STREET_CORNER_TOP_LEFT = 13,
+    STREET_CORNER_TOP_RIGHT = 14,
+    STREET_CORNER_BOTTOM_LEFT = 15,
+    STREET_CORNER_BOTTOM_RIGHT = 16,
+    RIFF = 17,
+    CLIFF_TOP = 18,
+    CLIFF_BOTTOM = 19,
+    CLIFF_LEFT = 20,
+    CLIFF_RIGHT = 21,
+    CLIFF_CORNER_TOP_LEFT = 22,
+    CLIFF_CORNER_TOP_RIGHT = 23,
+    CLIFF_CORNER_BOTTOM_LEFT = 24,
+    CLIFF_CORNER_BOTTOM_RIGHT = 25,
+    CLIFF_INVERSE_CORNER_TOP_LEFT = 26,
+    CLIFF_INVERSE_CORNER_TOP_RIGHT = 27,
+    CLIFF_INVERSE_CORNER_BOTTOM_LEFT = 28,
+    CLIFF_INVERSE_CORNER_BOTTOM_RIGHT = 29,
+};
+
+/* END OF ALL ENUMS*/
+
 /**
  * @class Config
  * @brief Parses and stores unit configuration data from an XML file.
@@ -28,7 +138,7 @@ class Config
          * @param filename Path to the XML configuration file.
          * @throws std::runtime_error if the file cannot be read or parsed.
          */
-        explicit Config(const std::string& filename);
+        Config(std::string filename);
 
         /** @brief Retrieves the cost of a given unit type. */
         int getUnitCost(UnitId id) const;

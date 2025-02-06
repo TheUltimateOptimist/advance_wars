@@ -7,17 +7,14 @@
 #include "Tile.hpp"
 #include "Unit.hpp"
 #include "ui/Contextmenu.hpp"
-#include "ui/TileMarker.hpp"
 #include "ui/Recruitingmenu.hpp"
+#include "ui/TileMarker.hpp"
 #include <SDL.h>
+#include <array>
 #include <string>
 #include <unordered_map>
-#include <vector>
-#include <array>
 #include <unordered_set>
-
-
-
+#include <vector>
 
 namespace advanced_wars
 {
@@ -119,9 +116,6 @@ class Level : public Scene
         std::vector<std::pair<int, int>> m_reachableTiles;
 
         std::vector<std::pair<int, int>> m_attackableTiles;
-
-        
-        
 
     private:
         std::string                       m_name;
