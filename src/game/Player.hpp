@@ -45,6 +45,9 @@ class Player
          * @param lvUnits All current units of a level
          */
         void endTurn(std::unordered_map<int, Unit>& lvUnits);
+
+        PlayerFaction getFaction();
+        int           getMoney();
 };
 
 } // namespace advanced_wars

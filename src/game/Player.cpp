@@ -144,4 +144,14 @@ void Player::endTurn(std::unordered_map<int, Unit>& lvUnits)
     }
     m_activeTurn = false;
 }
+
+PlayerFaction Player::getFaction()
+{
+    return m_faction;
+}
+
+int Player::getMoney()
+{
+    return m_money;
+}
 } // namespace advanced_wars
