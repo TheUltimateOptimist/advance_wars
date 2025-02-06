@@ -397,8 +397,8 @@
                     <Damage unitId="battle_helicopter" value="105"/>
                     <Damage unitId="fighter" value="85"/>
                     <Damage unitId="bomber" value="100"/>
-                    <Damage unitId="Cruiser" value="25" />
-                    <Damage unitId="Battleship" value="5" />
+                    <Damage unitId="cruiser" value="25" />
+                    <Damage unitId="battleship" value="5" />
                 </DamageTable>
             </PrimaryWeapon>
             <SecondaryWeapon name="Anti-Air Gun">

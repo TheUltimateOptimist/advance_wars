@@ -3,6 +3,7 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/xml_parser.hpp>
 #include <iostream>
+#include <optional>
 #include <stdexcept>
 #include <string>
 #include <unordered_map>
@@ -10,7 +11,7 @@
 namespace advanced_wars
 {
 
-Config::Config(const std::string& filename)
+Config::Config(std::string filename)
 {
     namespace pt = boost::property_tree;
     pt::ptree tree;
@@ -206,7 +207,7 @@ std::string Config::getUnitPrimaryWeapon(UnitId id) const
     {
         return it->second;
     }
-    throw std::runtime_error("Primary weapon for unit ID not found");
+    return "";
 }
 
 std::string Config::getUnitSecondaryWeapon(UnitId id) const
@@ -216,36 +217,36 @@ std::string Config::getUnitSecondaryWeapon(UnitId id) const
     {
         return it->second;
     }
-    throw std::runtime_error("Secondary weapon for unit ID not found");
+    return "";
 }
 
-int Config::getUnitPrimaryWeaponDamage(UnitId attackerid, UnitId defenderid) const
+std::optional<int> Config::getUnitPrimaryWeaponDamage(UnitId attackerId, UnitId targetId) const
 {
-    auto it = m_primaryWeaponDamage.find(attackerid);
-    if (it != m_primaryWeaponDamage.end())
+    auto attackerMapIt = m_primaryWeaponDamage.find(attackerId);
+    if (attackerMapIt != m_primaryWeaponDamage.end())
     {
-        auto damageIt = it->second.find(defenderid);
-        if (damageIt != it->second.end())
+        auto damageIt = attackerMapIt->second.find(targetId);
+        if (damageIt != attackerMapIt->second.end())
         {
             return damageIt->second;
         }
     }
-    throw std::runtime_error(
-        "Primary weapon damage not found for given attacker/defender combination");
+    // Kein spezifischer Schaden vorhanden
+    return std::nullopt;
 }
 
-int Config::getUnitSecondaryWeaponDamage(UnitId attackerid, UnitId defenderid) const
+std::optional<int> Config::getUnitSecondaryWeaponDamage(UnitId attackerId, UnitId targetId) const
 {
-    auto it = m_secondaryWeaponDamage.find(attackerid);
-    if (it != m_secondaryWeaponDamage.end())
+    auto attackerMapIt = m_secondaryWeaponDamage.find(attackerId);
+    if (attackerMapIt != m_secondaryWeaponDamage.end())
     {
-        auto damageIt = it->second.find(defenderid);
-        if (damageIt != it->second.end())
+        auto damageIt = attackerMapIt->second.find(targetId);
+        if (damageIt != attackerMapIt->second.end())
         {
             return damageIt->second;
         }
     }
-    throw std::runtime_error(
-        "Secondary weapon damage not found for given attacker/defender combination");
+    // Kein spezifischer Schaden vorhanden
+    return std::nullopt;
 }
 } // namespace advanced_wars

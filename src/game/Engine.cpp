@@ -15,7 +15,7 @@
 namespace advanced_wars
 {
 
-Engine::Engine(Window& window) : m_window(window), m_quit(false)
+Engine::Engine(Window& window) : m_window(window), m_quit(false), m_unitConfig("../config.xml")
 {
 
     this->m_SDLRenderer = SDL_CreateRenderer(
@@ -118,6 +118,11 @@ int Engine::getStage()
 Spritesheet* Engine::getSpritesheet()
 {
     return m_spritesheet.value();
+}
+
+Config& Engine::getUnitConfig()
+{
+    return m_unitConfig;
 }
 
 SDL_Renderer* Engine::renderer()

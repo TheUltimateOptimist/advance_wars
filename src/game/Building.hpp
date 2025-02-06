@@ -8,24 +8,6 @@
 namespace advanced_wars
 {
 
-enum class BuildingFaction
-{
-    URED = 0,
-    UBLUE = 1,
-    UGREEN = 2,
-    UYELLOW = 3,
-    UPURPLE = 4,
-};
-
-enum class BuildingId
-{
-    HEADQUARTER = 0,
-    CITY = 1,
-    FACTORY = 2,
-    AIRPORT = 3,
-    PORT = 4,
-};
-
 class Building
 {
     public:
