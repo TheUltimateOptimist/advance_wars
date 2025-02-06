@@ -522,10 +522,14 @@ void Level::handleMovement(std::pair<int, int> tilePos)
     if (isReachable)
     {
         m_units.at(m_selectedUnit).updatePosition(tilePos.first, tilePos.second);
-        m_selectedUnit = -1;
-        m_showAttackableTiles = false;
-        m_showReachableTiles = false;
-        m_state = LevelState::SELECTING_STATE;
+
+        m_contextMenu.update(
+            (tilePos.first * 16 + 15) * RENDERING_SCALE,
+            (tilePos.second * 16 + 15) * RENDERING_SCALE);
+
+        m_contextMenu.setOptions({"Attack", "Wait", "End Turn"});
+
+        m_state = LevelState::MENUACTIVE_STATE;
     }
     else
     {
@@ -587,6 +591,9 @@ void Level::handleSelectingEvents(Engine& engine, SDL_Event& event)
                     m_attackableTiles.clear();
                     m_showAttackableTiles = true;
                     m_attackableUnitIds.clear();
+
+                    // Set Fallback_position if movement will be canceled
+                    unit_fallback_position =  std::make_pair(m_units.at(m_selectedUnit).m_x, m_units.at(m_selectedUnit).m_y);
 
                     for (Unit* target : attackableTargets)
                     {
@@ -673,6 +680,10 @@ void Level::handleMenuActiveEvents(Engine& engine, SDL_Event& event)
     case SDL_KEYDOWN:
         if (event.key.keysym.sym == SDLK_ESCAPE)
         {
+            if (m_selectedUnit > -1 && unit_fallback_position != std::make_pair(m_units.at(m_selectedUnit).m_x, m_units.at(m_selectedUnit).m_y))
+            {
+                m_units.at(m_selectedUnit).updatePosition(unit_fallback_position.first, unit_fallback_position.second);
+            }
             m_selectedUnit = -1;
             m_selectedBuilding = -1;
             m_state = LevelState::SELECTING_STATE;
@@ -751,6 +762,7 @@ void Level::handleMovementEvents(Engine& engine, SDL_Event& event)
         handlePositionMarker(engine, event);
         if (event.key.keysym.sym == SDLK_RETURN)
         {
+
             handleMovement(m_currentPos.getPosition());
         }
         if (event.key.keysym.sym == SDLK_ESCAPE)
