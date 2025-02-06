@@ -100,7 +100,7 @@ std::shared_ptr<Level> Level::loadLevel(std::string path, Engine& engine)
                 {
                     units.push_back(Unit(
                         x, y, static_cast<UnitFaction>(faction_id), UnitId::INFANTERY,
-                        UnitState::IDLE, engine.getUnitConfig()));
+                        UnitState::UNAVAILABLE, engine.getUnitConfig()));
                 }
                 has_factions[static_cast<int>(faction_id)] = true;
             }
