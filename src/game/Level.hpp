@@ -11,8 +11,8 @@
 #include "ui/Recruitingmenu.hpp"
 #include "ui/TileMarker.hpp"
 #include <SDL.h>
-#include <queue>
 #include <array>
+#include <queue>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
@@ -77,10 +77,10 @@ class Level : public Scene
     public:
         Level(
             std::string name, int width, int height, std::vector<Tile> tiles,
-            std::vector<Building> buildings, std::vector<Unit> units, 
-            std::vector<Effect> effects, std::queue<Player> turnQ);
+            std::vector<Building> buildings, std::vector<Unit> units, std::vector<Effect> effects,
+            std::queue<Player> turnQ);
 
-        static std::shared_ptr<Level> loadLevel(std::string path);
+        static std::shared_ptr<Level> loadLevel(std::string path, Engine& engine);
 
         void render(Engine& engine);
 
@@ -131,12 +131,12 @@ class Level : public Scene
         std::unordered_map<int, Effect>   m_effects;
         std::queue<Player>                m_turnQ;
 
-        int                               m_selectedUnit;
-        int                               m_selectedBuilding;
-        ContextMenu                       m_contextMenu;
-        RecruitingMenu                    m_recruitingMenu;
-        int                               m_id;
-        LevelState                        m_state;
+        int            m_selectedUnit;
+        int            m_selectedBuilding;
+        ContextMenu    m_contextMenu;
+        RecruitingMenu m_recruitingMenu;
+        int            m_id;
+        LevelState     m_state;
 
         std::pair<int, int> calcTilePos(int mouseX, int mouseY);
         void                selectEntity(int x, int y);

@@ -58,31 +58,31 @@ void Player::startTurn(
         switch (m_faction)
         {
         case PlayerFaction::RED:
-            if (building.getFaction() == BuildingFaction::RED)
+            if (building.getFaction() == BuildingFaction::URED)
             {
                 underControl++;
             }
             break;
         case PlayerFaction::BLUE:
-            if (building.getFaction() == BuildingFaction::BLUE)
+            if (building.getFaction() == BuildingFaction::UBLUE)
             {
                 underControl++;
             }
             break;
         case PlayerFaction::YELLOW:
-            if (building.getFaction() == BuildingFaction::YELLOW)
+            if (building.getFaction() == BuildingFaction::UYELLOW)
             {
                 underControl++;
             }
             break;
         case PlayerFaction::GREEN:
-            if (building.getFaction() == BuildingFaction::GREEN)
+            if (building.getFaction() == BuildingFaction::UGREEN)
             {
                 underControl++;
             }
             break;
         case PlayerFaction::PURPLE:
-            if (building.getFaction() == BuildingFaction::PURPLE)
+            if (building.getFaction() == BuildingFaction::UPURPLE)
             {
                 underControl++;
             }

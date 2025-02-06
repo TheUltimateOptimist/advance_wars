@@ -23,12 +23,12 @@ const int RENDERING_SCALE = 3;
 
 Level::Level(
     std::string name, int width, int height, std::vector<Tile> tiles,
-    std::vector<Building> buildings, std::vector<Unit> units, std::vector<Effect> effects
+    std::vector<Building> buildings, std::vector<Unit> units, std::vector<Effect> effects,
     std::queue<Player> turnQ)
     : m_name(name), m_width(width), m_height(height), m_tiles(tiles), m_selectedUnit(-1),
       m_selectedBuilding(-1), m_contextMenu(ContextMenu()), m_id(0),
       m_state(LevelState::SELECTING_STATE),
-      m_currentPos(TileMarker(RENDERING_SCALE, 1, 1, m_width, m_height), m_turnQ(turnQ))
+      m_currentPos(TileMarker(RENDERING_SCALE, 1, 1, m_width, m_height)), m_turnQ(turnQ)
 {
 
     m_contextMenu.setOptions({"Move", "Info", "Wait"});
@@ -57,7 +57,7 @@ Level::Level(
     m_selectedUnit = -1;
 };
 
-std::shared_ptr<Level> Level::loadLevel(std::string path)
+std::shared_ptr<Level> Level::loadLevel(std::string path, Engine& engine)
 {
     HighFive::File file(path, HighFive::File::ReadOnly);
 
@@ -100,7 +100,7 @@ std::shared_ptr<Level> Level::loadLevel(std::string path)
                 {
                     units.push_back(Unit(
                         x, y, static_cast<UnitFaction>(faction_id), UnitId::INFANTERY,
-                        UnitState::IDLE));
+                        UnitState::IDLE, engine.getUnitConfig()));
                 }
                 has_factions[static_cast<int>(faction_id)] = true;
             }
