@@ -4,12 +4,15 @@
 namespace advanced_wars
 {
 
-Player::Player(int money, PlayerFaction faction) : m_money(money), m_faction(faction) {}
+Player::Player(int money, PlayerFaction faction)
+    : m_money(money), m_alive(true), m_activeTurn(false), m_faction(faction)
+{
+}
 
 Player::~Player() {}
 
 void Player::startTurn(
-    std::unordered_map<int, Unit> lvUnits, std::unordered_map<int, Building> lvBuildings)
+    std::unordered_map<int, Unit>& lvUnits, std::unordered_map<int, Building>& lvBuildings)
 {
     for (auto& [id, unit] : lvUnits)
     {
@@ -98,7 +101,7 @@ void Player::startTurn(
     m_activeTurn = true;
 }
 
-void Player::endTurn(std::unordered_map<int, Unit> lvUnits)
+void Player::endTurn(std::unordered_map<int, Unit>& lvUnits)
 {
     for (auto& [id, unit] : lvUnits)
     {

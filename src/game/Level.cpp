@@ -123,9 +123,11 @@ std::shared_ptr<Level> Level::loadLevel(std::string path, Engine& engine)
         }
     }
 
-    return std::make_shared<Level>(
-        name, width, height, tiles, buildings, units, std::vector<Effect>{}, turnQ);
-};
+    Level level(name, width, height, tiles, buildings, units, std::vector<Effect>{}, turnQ);
+
+    level.m_turnQ.front().startTurn(level.m_units, level.m_buildings);
+    return std::make_shared<Level>(level);
+}
 
 std::pair<int, int> Level::calcTilePos(int mouseX, int mouseY)
 {
