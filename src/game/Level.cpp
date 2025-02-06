@@ -57,7 +57,7 @@ Level::Level(
     m_selectedUnit = -1;
 };
 
-std::shared_ptr<Level> Level::loadLevel(std::string path, Engine& engine)
+std::shared_ptr<Level> Level::loadLevel(const std::string& path, Engine& engine)
 {
     HighFive::File file(path, HighFive::File::ReadOnly);
 
