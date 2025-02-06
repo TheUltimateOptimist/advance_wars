@@ -1,3 +1,9 @@
+/**
+ * Level.hpp
+ *
+ * @author Frederik Keens
+ */
+
 #pragma once
 
 #include "Building.hpp"
@@ -21,9 +27,10 @@
 namespace advanced_wars
 {
 
-const int NUM_TILE_IDS = 30; // Aktualisieren, falls weitere IDs hinzugefügt werden
-const int NUM_MOVEMENT_TYPES = 6;
+const int NUM_TILE_IDS = 30;      // update if more tiles are implemented
+const int NUM_MOVEMENT_TYPES = 6; // number of different movement types
 
+// Table describing the movement cost of a movement type to get to a given tile
 const std::array<std::array<int, NUM_MOVEMENT_TYPES>, NUM_TILE_IDS> moveCostTable = {
     {
      // FOOT, WHEELED, TREAD, AIR, SEA, LANDER
@@ -75,11 +82,29 @@ enum class LevelState
 class Level : public Scene
 {
     public:
+        /**
+         * Constructor
+         *
+         * @param name String of the level name
+         * @param width Width of the level in tiles
+         * @param height Height of the level in tiles
+         * @param tiles Vector of the levels tiles
+         * @param buildings Vector of the levels buildings
+         * @param units Vector of the levels starting units
+         * @param effects Vector of the levels starting effects
+         * @param turnQ Vector of Players that will play this level
+         */
         Level(
             std::string name, int width, int height, std::vector<Tile> tiles,
             std::vector<Building> buildings, std::vector<Unit> units, std::vector<Effect> effects,
             std::queue<Player> turnQ);
 
+        /**
+         * Load a level from a file.
+         *
+         * @param path A path to a hdf5 level file
+         * @param engine An engine Object with valid unit config
+         */
         static std::shared_ptr<Level> loadLevel(std::string path, Engine& engine);
 
         void render(Engine& engine);
@@ -99,70 +124,236 @@ class Level : public Scene
                 button left ->  select field/building/unit/
                                 move to position
         */
+
+        /**
+         * Handle events relevant to this scene.
+         *
+         * @param engine An engine object with valid render context and unit config
+         * @param event The SDL event to handle
+         */
         void handleEvent(Engine& engine, SDL_Event& event);
 
+        /**
+         * Add a building to this levels map with a unique id.
+         *
+         * @param building The building to add
+         *
+         * @return The unique id of the building added
+         */
         int addBuilding(Building building);
 
+        /**
+         * Remove a building from this levels map.
+         *
+         * @param id The unique id of the building to remove
+         *
+         * @return The building object that was removed
+         */
         Building removeBuilding(int id);
 
+        /**
+         * Add a unit to this levels map.
+         *
+         * @param unit The unit to add
+         *
+         * @return The unique id of the unit added
+         */
         int addUnit(Unit unit);
 
+        /**
+         * Remove a unit from this levels map.
+         *
+         * @param id The unique id of the unit to remove
+         *
+         * @return The unit object that was removed
+         */
         Unit removeUnit(int id);
 
+        /**
+         * Add an effect to this levels map.
+         *
+         * @param effect The effect to add
+         *
+         * @return The unique id of the effect added
+         */
         int addEffect(Effect effect);
 
+        /**
+         * Remove an effect from this levels map.
+         *
+         * @param id The unique id of the effect to remove
+         *
+         * @return The effect object that was removed
+         */
         Effect removeEffect(int id);
 
+        /**
+         * TODO add comment
+         */
         std::vector<std::pair<int, int>> calculateMovementRange(Unit& unit);
 
+        /**
+         * Returns the movement cost of a given tile.
+         *
+         * @param type The tile type to move to
+         * @param movementType The movementType of the the unit to move
+         *
+         * @return The calculated movement cost
+         */
         int getMoveCost(TileId type, MovementType movementType);
 
+        /**
+         * TODO add comment
+         */
         std::vector<std::pair<int, int>> m_reachableTiles;
 
+        /**
+         * TODO add comment
+         */
         std::vector<std::pair<int, int>> m_attackableTiles;
 
     private:
-        std::string                       m_name;
-        int                               m_width;
-        int                               m_height;
-        std::vector<Tile>                 m_tiles;
-        std::unordered_map<int, Building> m_buildings;
-        std::unordered_map<int, Unit>     m_units;
-        std::unordered_map<int, Effect>   m_effects;
-        std::queue<Player>                m_turnQ;
+        std::string m_name;   // the name of the level
+        int         m_width;  // the width of the level
+        int         m_height; // the height of the level
 
-        int            m_selectedUnit;
-        int            m_selectedBuilding;
-        ContextMenu    m_contextMenu;
-        RecruitingMenu m_recruitingMenu;
-        int            m_id;
-        LevelState     m_state;
+        std::vector<Tile>                 m_tiles;     // the tiles of the level
+        std::unordered_map<int, Building> m_buildings; /* the buildings of the level
+                                                       mapped to their unique ids*/
 
+        std::unordered_map<int, Unit> m_units; /* the units of the level
+                                                   mapped to their uniqie ids*/
+
+        std::unordered_map<int, Effect> m_effects; /* the effects of the level
+                                                   mapped to their unique ids*/
+
+        std::queue<Player> m_turnQ; /* The queue of players,
+                                    the player at the front is currently active*/
+
+        int            m_selectedUnit;     // The unique id of the currently selected unit
+        int            m_selectedBuilding; // The unqique id of the currently selected building
+        ContextMenu    m_contextMenu;      // The context menu
+        RecruitingMenu m_recruitingMenu;   // The recruiting menu
+        int            m_id;               // TODO add comment
+        LevelState     m_state;            // The current state of the level
+
+        /**
+         * TODO subject to remove?
+         */
         std::pair<int, int> calcTilePos(int mouseX, int mouseY);
-        void                selectEntity(int x, int y);
-        int                 selectUnit(int tileX, int tileY);
-        int                 selectBuilding(int tileX, int tileY);
 
-        TileMarker m_currentPos;
+        /**
+         * @brief Selects the entity at the given position.
+         *
+         * Sets m_selectedUnit or m_selectedBuilding of this level
+         * to the unique id of the entity at (x,y).
+         * Units get preferred if both are on the same position.
+         *
+         * @param x The tile-based x-position
+         * @param y The tile-based y-position
+         */
+        void selectEntity(int x, int y);
 
+        /**
+         * Selects the unit at the given position.
+         *
+         * @param tileX The x-position
+         * @param tileY the y-position
+         *
+         * @return The unique id of the unit or ```-1``` if none was found
+         */
+        int selectUnit(int tileX, int tileY);
+
+        /**
+         * Selects the building at the given position.
+         *
+         * @param tileX The x-position
+         * @param tileY the y-position
+         *
+         * @return The unique id of the building or ```-1``` if none was found
+         */
+        int selectBuilding(int tileX, int tileY);
+
+        TileMarker m_currentPos; // A cursor that marks the current position
+
+        /**
+         * Helper function that gets called when in the SELECTING state
+         *
+         * @param engine An engine object with valid rendering context and config
+         * @param event The SDL event to handle
+         */
         void handleSelectingEvents(Engine& engine, SDL_Event& event);
+
+        /**
+         * Helper function that gets called when in the MENUACTIVE state
+         *
+         * @param engine An engine object with valid rendering context and config
+         * @param event The SDL event to handle
+         */
         void handleMenuActiveEvents(Engine& engine, SDL_Event& event);
+
+        /**
+         * Helper function that gets called when in the MOVEMENT state
+         *
+         * @param engine An engine object with valid rendering context and config
+         * @param event The SDL event to handle
+         */
         void handleMovementEvents(Engine& engine, SDL_Event& event);
+
+        /**
+         * Helper function that gets called when in the ATTACKING state
+         *
+         * @param engine An engine object with valid rendering context and config
+         * @param event The SDL event to handle
+         */
         void handleAttackingEvents(Engine& engine, SDL_Event& event);
+
+        /**
+         * Helper function that gets called when in the RECRUITING state
+         *
+         * @param engine An engine object with valid rendering context and config
+         * @param event The SDL event to handle
+         */
         void handleRecruitingEvent(Engine& engine, SDL_Event& event);
 
+        // TODO ClickChecks subject to remove?
         bool clickCheckLeft(int mouseX, int mouseY);
         bool clickCheckRight(int mouseX, int mouseY);
 
+        /**
+         * @brief Changes the turn between this levels players.
+         *
+         * This will call the functions of the players to end the turn and setup the next.
+         * After this the front Player in m_turnQ will be the next active player.
+         */
         void changeTurn();
 
-        bool m_showReachableTiles;
-        bool m_showAttackableTiles;
+        bool m_showReachableTiles;  // Trigger to mark the tiles reachable by movement
+        bool m_showAttackableTiles; // Trigger to mark the tiles with valid attack targets
 
-        std::unordered_set<int> m_attackableUnitIds;
+        std::unordered_set<int>
+            m_attackableUnitIds; // set of unique unit ids that are valid attack targets
 
+        /**
+         * Helper function that gets called when trying to attack a unit
+         *
+         * @param tilePos (x,y) tile position of the unit to attack
+         */
         void handleAttack(std::pair<int, int> tilePos);
+
+        /**
+         * Helper function that gets called when trying to move
+         *
+         * @param tilePos (x,y) tile position of the tile to move to
+         */
         void handleMovement(std::pair<int, int> tilePos);
+
+        /**
+         * Event Handler for the Cursor
+         *
+         * @param engine An engine object with valid rendering context
+         * @param event The SDL event to handle
+         */
         void handlePositionMarker(Engine& engine, SDL_Event& event);
 };
 
