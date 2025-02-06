@@ -106,7 +106,7 @@ void Engine::render()
     std::shared_ptr<Scene> currentScene = m_scenes.back();
 
     currentScene->render(*this);
-
+    SDL_SetRenderDrawColor(this->m_SDLRenderer, 0, 0, 0, 255);
     SDL_RenderPresent(this->m_SDLRenderer);
 }
 
