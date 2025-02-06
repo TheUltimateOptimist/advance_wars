@@ -83,6 +83,7 @@ std::shared_ptr<Level> Level::loadLevel(std::string path, Engine& engine)
     std::vector<Unit>     units;
     tiles.reserve(width * height);
     bool has_factions[] = {false, false, false, false, false};
+
     for (int i = 0; i < level_tilesarray.size(); i++)
     {
         int x = i % width;
@@ -275,7 +276,7 @@ void Level::render(Engine& engine)
     {
         tile.render(engine, RENDERING_SCALE);
     }
-
+    
     if (m_showReachableTiles)
     {
         SDL_SetRenderDrawColor(engine.renderer(), 255, 255, 0, 128); // Gelb mit leichtem Alpha
@@ -476,6 +477,7 @@ void Level::handleAttack(std::pair<int, int> tilePos)
             m_showAttackableTiles = false;
             m_showReachableTiles = false;
             m_state = LevelState::SELECTING_STATE;
+            attacking.setState(UnitState::UNAVAILABLE);
         }
         else
         {
@@ -490,6 +492,8 @@ void Level::handleAttack(std::pair<int, int> tilePos)
 
 void Level::handleMovement(std::pair<int, int> tilePos)
 {
+    //Herausnehmen um sich nicht bewegen zu müssen um ins kontextmenü zu kommen
+    /*
     for (auto& [id, unit] : m_units)
     {
         if (unit.m_x == tilePos.first && unit.m_y == tilePos.second)
@@ -498,7 +502,7 @@ void Level::handleMovement(std::pair<int, int> tilePos)
             std::cout << "Unit already at clicked position" << std::endl;
             return;
         }
-    }
+    }*/
 
     bool isReachable = false;
 
@@ -514,10 +518,13 @@ void Level::handleMovement(std::pair<int, int> tilePos)
     if (isReachable)
     {
         m_units.at(m_selectedUnit).updatePosition(tilePos.first, tilePos.second);
-        m_selectedUnit = -1;
+        // m_selectedUnit = -1;
         m_showAttackableTiles = false;
         m_showReachableTiles = false;
-        m_state = LevelState::SELECTING_STATE;
+        m_state = LevelState::MENUACTIVE_STATE;
+        m_contextMenu.update(
+                    (tilePos.first * 16 + 15) * RENDERING_SCALE,
+                    (tilePos.second * 16 + 15) * RENDERING_SCALE);
     }
     else
     {
@@ -557,56 +564,33 @@ void Level::handleSelectingEvents(Engine& engine, SDL_Event& event)
                 tilePos.first * 16 * RENDERING_SCALE, tilePos.second * 16 * RENDERING_SCALE);
             if (m_selectedUnit >= 0 || m_selectedBuilding >= 0)
             {
-                m_contextMenu.update(
-                    (tilePos.first * 16 + 15) * RENDERING_SCALE,
-                    (tilePos.second * 16 + 15) * RENDERING_SCALE);
+                
                 if (m_selectedUnit >= 0)
                 {
-                    m_reachableTiles = calculateMovementRange(m_units.at(m_selectedUnit));
-                    m_units.at(m_selectedUnit).on_left_click(event);
-                    m_showReachableTiles = true;
-
-                    std::vector<Unit*> allUnits;
-
-                    for (auto& [id, unit] : m_units)
+                    if (m_units.at(m_selectedUnit).getState() != UnitState::UNAVAILABLE)
                     {
-                        allUnits.push_back(&unit);
+                        m_reachableTiles = calculateMovementRange(m_units.at(m_selectedUnit));
+                        m_units.at(m_selectedUnit).on_left_click(event);
+                        m_showReachableTiles = true;
+
+                        m_contextMenu.setOptions({"Attack", "Info", "Wait"});
+                        m_state = LevelState::MOVEMENT_STATE;
                     }
-
-                    std::vector<Unit*> attackableTargets =
-                        m_units.at(m_selectedUnit).getUnitsInRangeWithDamagePotential(allUnits);
-
-                    m_attackableTiles.clear();
-                    m_showAttackableTiles = true;
-                    m_attackableUnitIds.clear();
-
-                    for (Unit* target : attackableTargets)
+                    else
                     {
-                        // Füge die Position jedes angreifbaren Ziels hinzu
-                        m_attackableTiles.emplace_back(target->m_x, target->m_y);
-
-                        // Angreifbaren Einheits-ID setzen
-                        for (auto& [id, unit] : m_units)
-                        {
-                            if (&unit == target)
-                            {
-                                m_attackableUnitIds.insert(id);
-                                break;
-                            }
-                        }
+                        std::cout << "unit is unavailable" << std::endl;
                     }
-
-                    m_contextMenu.setOptions({"Move", "Attack", "Info", "Wait"});
                 }
                 else
                 {
                     m_contextMenu.setOptions({"Train", "Info", "Wait"});
+                    m_state = LevelState::MENUACTIVE_STATE;
                 }
-                m_state = LevelState::MENUACTIVE_STATE;
             }
         }
         break;
     case SDL_MOUSEBUTTONDOWN:
+    /*
         if (event.button.button == SDL_BUTTON_LEFT)
         {
             selectEntity(event.button.x, event.button.y);
@@ -634,6 +618,7 @@ void Level::handleSelectingEvents(Engine& engine, SDL_Event& event)
                 m_state = LevelState::SELECTING_STATE;
             }
         }
+    */
     default:
         break;
     }
@@ -646,11 +631,9 @@ void Level::handleMenuActiveEvents(Engine& engine, SDL_Event& event)
     case SDL_KEYDOWN:
         if (event.key.keysym.sym == SDLK_ESCAPE)
         {
-            m_selectedUnit = -1;
-            m_selectedBuilding = -1;
             m_state = LevelState::SELECTING_STATE;
-            m_showAttackableTiles = false;
-            m_showReachableTiles = false;
+            m_units.at(m_selectedUnit)
+                .updatePosition(unit_fallback_position.first, unit_fallback_position.second);
         }
         if (event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_DOWN)
         {
@@ -661,12 +644,20 @@ void Level::handleMenuActiveEvents(Engine& engine, SDL_Event& event)
             std::string cmd = m_contextMenu.getSelectedOption();
             if (cmd == "Wait")
             {
-                m_state = LevelState::SELECTING_STATE;
-            }
-            if (cmd == "Move")
-            {
-                m_state = LevelState::MOVEMENT_STATE;
-                // Hier Pathfinding einsetzen
+                // m_units.at(m_selectedUnit).setState(UnitState::UNAVAILABLE);
+
+                // Pruefen, ob der Key existiert
+                auto it = m_units.find(m_selectedUnit);
+                if (it != m_units.end())
+                {
+                    it->second.setState(UnitState::UNAVAILABLE);
+                    std::cout << "Unit state set to UNAVAILABLE." << std::endl;
+                    m_state = LevelState::SELECTING_STATE;
+                }
+                else
+                {
+                    std::cerr << "Selected unit id is invalid: " << m_selectedUnit << std::endl;
+                }
             }
             if (cmd == "Attack")
             {
@@ -717,11 +708,26 @@ void Level::handleMovementEvents(Engine& engine, SDL_Event& event)
         handlePositionMarker(engine, event);
         if (event.key.keysym.sym == SDLK_RETURN)
         {
+
+            if (m_units.find(m_selectedUnit) != m_units.end())
+            {
+
+                Unit& selectedUnit = m_units.at(m_selectedUnit);
+                unit_fallback_position = {selectedUnit.m_x, selectedUnit.m_y};
+            }
+            else
+            {
+                std::cerr << "No unit selected or invalid unit index!" << std::endl;
+            }
             handleMovement(m_currentPos.getPosition());
         }
         if (event.key.keysym.sym == SDLK_ESCAPE)
         {
-            m_state = LevelState::MENUACTIVE_STATE;
+            m_selectedUnit = -1;
+            m_selectedBuilding = -1;
+            m_state = LevelState::SELECTING_STATE;
+            m_showAttackableTiles = false;
+            m_showReachableTiles = false;
         }
         break;
     case SDL_MOUSEBUTTONDOWN:
@@ -740,6 +746,35 @@ void Level::handleMovementEvents(Engine& engine, SDL_Event& event)
 
 void Level::handleAttackingEvents(Engine& engine, SDL_Event& event)
 {
+    std::vector<Unit*> allUnits;
+
+    for (auto& [id, unit] : m_units)
+    {
+        allUnits.push_back(&unit);
+    }
+
+    std::vector<Unit*> attackableTargets =
+        m_units.at(m_selectedUnit).getUnitsInRangeWithDamagePotential(allUnits);
+
+    m_attackableTiles.clear();
+    m_showAttackableTiles = true;
+    m_attackableUnitIds.clear();
+
+    for (Unit* target : attackableTargets)
+    {
+        // Füge die Position jedes angreifbaren Ziels hinzu
+        m_attackableTiles.emplace_back(target->m_x, target->m_y);
+
+        // Angreifbaren Einheits-ID setzen
+        for (auto& [id, unit] : m_units)
+        {
+            if (&unit == target)
+            {
+                m_attackableUnitIds.insert(id);
+                break;
+            }
+        }
+    }
     switch (event.type)
     {
     case SDL_KEYDOWN:
@@ -747,6 +782,9 @@ void Level::handleAttackingEvents(Engine& engine, SDL_Event& event)
         if (event.key.keysym.sym == SDLK_ESCAPE)
         {
             m_state = LevelState::MENUACTIVE_STATE;
+            m_attackableTiles.clear();
+            m_showAttackableTiles = false;
+            m_attackableUnitIds.clear();
         }
         if (event.key.keysym.sym == SDLK_RETURN)
         {

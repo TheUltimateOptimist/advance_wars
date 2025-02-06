@@ -10,6 +10,9 @@ Unit::Unit(int x, int y, UnitFaction faction, UnitId id, UnitState state, Config
 {
     // Allgemeine Einheiteneinstellungen aus Konfiguration holen
     m_cost = config.getUnitCost(id);
+
+    std::cout<<"cost"<<m_cost<< std::endl;
+
     m_movementPoints = config.getUnitMovementPoints(id);
     m_ammo = config.getUnitAmmo(id);
     m_minRange = config.getUnitMinRange(id);
@@ -242,7 +245,7 @@ std::vector<Unit*> Unit::getUnitsInRangeWithDamagePotential(const std::vector<Un
     for (Unit* unit : allUnits)
     { // Iterate over all units
         // except itself
-        if (unit == this)
+        if (unit->getFaction() == this->m_faction)
         {
             continue;
         }

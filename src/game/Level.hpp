@@ -164,6 +164,8 @@ class Level : public Scene
         void handleAttack(std::pair<int, int> tilePos);
         void handleMovement(std::pair<int, int> tilePos);
         void handlePositionMarker(Engine& engine, SDL_Event& event);
+
+        std::pair<int, int> unit_fallback_position;
 };
 
 } // namespace advanced_wars
