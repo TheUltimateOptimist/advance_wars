@@ -3,6 +3,7 @@
 *
 * @date 29.01.2025
 * @author Jonathan Dueck (jonathan.dueck@informatik.hs-fulda.de)
+* @author Nils Jonathan Friedrich Eckardt onCheckBoxToggle added
 */
 
 #pragma once
@@ -94,6 +95,13 @@ public:
      * @param tile_id Id of the tile to use when an existing tile is clicked on the levelmap.
      */
     virtual void onNewTileIdSelected(uint8_t tile_id){};
+
+    /**
+     * Overwrite this event method to handle the change of tile placement method due
+     * to the user selecting automatic tile placement assisstance.
+     * @param isToggled Boolean that enables tile placing assisstment.
+     */
+    virtual void onCheckBoxToggle(bool isToggled){};
 
     /**
      * Overwrite this event method to handle the dispatch of a new delta due to 

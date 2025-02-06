@@ -3,6 +3,7 @@
 *
 * @date 28.01.2025
 * @author Jonathan Dueck (jonathan.dueck@informatik.hs-fulda.de)
+* @author Nils Jonathan Friedrich Eckardt minor change
 */
 
 #include "TopBar.hpp"
@@ -16,6 +17,7 @@
 #include "ZoomInButton.hpp"
 #include "ZoomInfo.hpp"
 #include "ZoomOutButton.hpp"
+#include "AutomateButton.hpp"
 
 namespace editor
 {
@@ -39,6 +41,7 @@ TopBar::TopBar(const std::string& level_name, QWidget* parent) : QToolBar(parent
     QPushButton* zoom_in = new ZoomInButton(right_container);
     QPushButton* zoom_out = new ZoomOutButton(right_container);
     QPushButton* zoom_info = new ZoomInfo(right_container);
+    AutomateButton* checkedBox = new AutomateButton("Kacheln automatisch setzen", container);
     right_layout->addStretch();
     right_layout->addWidget(zoom_out);
     right_layout->addWidget(zoom_info);
@@ -50,6 +53,7 @@ TopBar::TopBar(const std::string& level_name, QWidget* parent) : QToolBar(parent
     right_container->setFixedWidth(300);
     main_layout->addWidget(left_container, 1);
     main_layout->addWidget(right_container);
+    main_layout->addWidget(checkedBox);
 
     this->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred); // Allow resizing
     this->addWidget(container);
