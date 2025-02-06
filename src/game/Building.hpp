@@ -56,6 +56,8 @@ class Building
          *
          */
         std::vector<UnitId> recruitableUnits();
+
+        BuildingId getBuildingId();
 };
 
 } // namespace advanced_wars

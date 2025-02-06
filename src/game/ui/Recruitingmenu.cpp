@@ -32,7 +32,8 @@ namespace advanced_wars
 
         std::vector<std::pair<std::string, int>> options;
 
-        for (UnitId id : recruitableUnits) {
+        for (UnitId id : recruitableUnits) 
+        {
             options.push_back(unitNames.at(id));
             cost2UnitId.insert(std::make_pair(unitNames.at(id).second, id));
 
