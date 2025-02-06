@@ -10,20 +10,20 @@ HelpMenu::HelpMenu() {}
 void HelpMenu::handleEvent(Engine& engine, SDL_Event& event) {}
 
 std::vector<std::string> helpTable = {
-    "Willkommen im Hilfe menu",                                                               // 0
-    "Nutzen Sie die PFEILTASTEN zur Navigation in allen Menus",                               // 1
-    "Einheiten bewegen; Wenn Sie an der Reihe sind nutzen Sie die PFEILTASTEN um den "      // 2
-    "Selection_Cursor (das kleine rote Quadrat) auf dem Spielfeld zu verschieben. Nutzen Sie " // 3
-    "RETURN um eine Einheit zu selektieren. Nutzen Sie die PFEILTASTEN um eine Option "     // 4
-    "auszuwählen und RETURN um ihre Auswahl zu bestätigen",                                  // 5
-    "Spielregeln;",                                                                           // 6
-    "Einheiten dürfen sich in einer Runde nur ein Mal bewegen und ein Mal angreifen",         // 7
-    "Gegnerische Einheiten müssen sich in REICHWEITE befinden",                               // 8
-    "Einheiten kosten Geld",                                                                  // 9
-    "Am Start ihres Zuges erhalten Sie pro Stadt 1000 Geld",                                  // 10
-    "Angreifer schiessen immer zuerst!",                                                      // 11
-    "Achten Sie auf die Einheitenklassen, um Schadensboni auszunutzen!",                      // 12
-    "Nutzen Sie diese Werkzeuge, um das Spiel gegen ihren Gegner zu gewinnen!"};              // 13
+    "Willkommen   im   Tutorial!",                                                               // 0
+    "Nutzen  Sie  die  PFEILTASTEN  zur  Navigation  in  allen  Menus!  ",                               // 1
+    "Wenn  Sie  an  der  Reihe  sind  nutzen  Sie  die  PFEILTASTEN  um  den "      // 2
+    "Selectioncursor  !das  kleine  farbige  Quadrat!  auf  dem  Spielfeld  zu  verschieben!  Nutzen  Sie " // 3
+    "RETURN  um  eine  Einheit  zu  selektieren!  Nutzen  Sie  die  PFEILTASTEN  um  eine  Option  "     // 4
+    "auszuwaehlen  und  RETURN  um  ihre  Auswahl  zu  bestaetigen!  ",                                  // 5
+    "Spielregeln!  ",                                                                           // 6
+    "Einheiten  daerfen  sich  in  einer  Runde  nur  ein  Mal  bewegen  und  ein  Mal  angreifen!  ",         // 7
+    "Gegnerische  Einheiten  muessen  sich  in  REICHWEITE  befinden!  ",                               // 8
+    "Einheiten  kosten  Geld!  ",                                                                  // 9
+    "Am Start  ihres  Zuges  erhalten  Sie  pro  Stadt  1000  Geld!  ",                                  // 10
+    "Angreifer  schiessen  immer  zuerst!  ",                                                      // 11
+    "Achten  Sie  auf  die  Einheitenklassen  um  Schadensboni  auszunutzen!  ",                      // 12
+    "Nutzen  Sie  diese  Werkzeuge um  das Spiel  gegen  ihren  Gegner  zu  gewinnen!  "};              // 13
 
 void HelpMenu::render(advanced_wars::Engine& engine)
 {
@@ -81,7 +81,7 @@ void HelpMenu::render(advanced_wars::Engine& engine)
     SDL_RenderCopy(engine.renderer(), buildingTexture, &src_rect, &trgt_rect);
 
     renderTextPortion(
-        engine, "Das ist das Hauptquartier. Wenn es faellt, haben Sie das Spiel verloren.", font,
+        engine, "Das ist das Hauptquartier! Wenn es faellt, haben Sie das Spiel verloren!", font,
         white, boxWidth - 120 - 5, 120, text_y);
 
     text_y += 48;
@@ -92,20 +92,20 @@ void HelpMenu::render(advanced_wars::Engine& engine)
 
     renderTextPortion(
         engine,
-        "Nehmen Sie Staedte auf der Karte ein, um jede Runde Geld für das Rekrutieren der Einheiten "
-        "zu bekommen.",
+        "Nehmen  Sie  Staedte  auf  der  Karte  ein  um  jede  Runde  Geld  fuer  das  Rekrutieren  der  Einheiten  "
+        "zu  bekommen!",
         font, white, boxWidth - 120 - 5, 120, text_y + 48);
     renderTextPortion(
-        engine, "Aus der Kaserne können Sie Landeinheiten anfordern.", font, white,
+        engine, "Aus  der  Kaserne  koennen  Sie  Landeinheiten  anfordern!", font, white,
         boxWidth - 120 - 5, 120, text_y + 96);
     renderTextPortion(
         engine,
-        "Mit einem Flughafen können Sie die Lufthoheit erkäpfen. Achten Sie auf Flugabwehr!", font,
+        "Mit  einem  Flughafen  koennen  Sie  die  Lufthoheit  erkaempfen!  Achten  Sie  auf  Flugabwehr!", font,
         white, boxWidth - 120 - 5, 120, text_y + 144);
     renderTextPortion(
         engine,
-        "Der Hafen stellt ihnen verschiedene Marineeinheiten zur Verfuegung. Um den Sieg zu "
-        "erringen sollten Sie Ihre Flotte nicht vernachlässigen!",
+        "Der  Hafen  stellt  ihnen  verschiedene  Marineeinheiten  zur  Verfuegung!  Um  den  Sieg  zu  "
+        "erringen  sollten  Sie  Ihre  Flotte  nicht  vernachlaessigen!",
         font, white, boxWidth - 120 - 5, 120, text_y + 192);
 
     TTF_CloseFont(font);
