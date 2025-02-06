@@ -699,7 +699,17 @@ void Level::handleMenuActiveEvents(Engine& engine, SDL_Event& event)
             std::string cmd = m_contextMenu.getSelectedOption();
             if (cmd == "Wait")
             {
-                m_state = LevelState::SELECTING_STATE;
+                auto it = m_units.find(m_selectedUnit);
+                if (it != m_units.end())
+                {
+                    it->second.setState(UnitState::UNAVAILABLE);
+                    std::cout << "Unit state set to UNAVAILABLE." << std::endl;
+                    m_state = LevelState::SELECTING_STATE;
+                }
+                else
+                {
+                    std::cerr << "Selected unit id is invalid: " << m_selectedUnit << std::endl;
+                }
             }
             if (cmd == "Move")
             {
