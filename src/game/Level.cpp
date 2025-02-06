@@ -626,9 +626,7 @@ void Level::handleSelectingEvents(Engine& engine, SDL_Event& event)
                     }
                     else
                     {
-                        m_contextMenu.setOptions(
-                            {"Info", "Wait"
-                                     "End Turn"});
+                        m_contextMenu.setOptions({"Info", "Wait", "End Turn"});
                     }
                 }
                 m_state = LevelState::MENUACTIVE_STATE;
