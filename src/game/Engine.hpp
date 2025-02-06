@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Config.hpp"
 #include "SDL_events.h"
 #include "Scene.hpp"
 #include "Spritesheet.hpp"
@@ -15,6 +16,7 @@ namespace advanced_wars
 
 // Forward declaration
 class Scene;
+class Config;
 
 /**
  * @brief The main window of the game
@@ -47,6 +49,8 @@ class Engine
 
         int getStage();
 
+        Config& getUnitConfig();
+
         void render();
 
         SDL_Renderer* renderer();
@@ -62,6 +66,8 @@ class Engine
 
         bool m_quit;
         int  m_stage;
+
+        Config m_unitConfig;
 };
 
 } // namespace advanced_wars

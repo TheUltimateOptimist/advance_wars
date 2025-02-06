@@ -1,5 +1,6 @@
 #include "Level.hpp"
 #include "Building.hpp"
+#include "Config.hpp"
 #include "Effect.hpp"
 #include "Engine.hpp"
 #include "Spritesheet.hpp"
@@ -12,6 +13,7 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/xml_parser.hpp>
 #include <iostream>
+#include <queue>
 #include <string>
 
 namespace advanced_wars
@@ -147,7 +149,6 @@ int Level::selectBuilding(int tileX, int tileY)
     return -1;
 }
 
-
 void Level::handleEvent(Engine& engine, SDL_Event& event)
 {
     switch (m_state)
@@ -175,12 +176,107 @@ void Level::handleEvent(Engine& engine, SDL_Event& event)
     }
 }
 
+std::vector<std::pair<int, int>> Level::calculateMovementRange(Unit& unit)
+{
+    std::vector<std::pair<int, int>>      reachableTiles;
+    std::queue<std::tuple<int, int, int>> wavefrontQueue; // x, y, remainingMovement
+
+    wavefrontQueue.push(std::make_tuple(unit.m_x, unit.m_y, unit.m_movementPoints));
+    std::unordered_map<int, std::unordered_map<int, bool>> visited;
+
+    while (!wavefrontQueue.empty())
+    {
+        auto [x, y, remainingMovement] = wavefrontQueue.front();
+        wavefrontQueue.pop();
+
+        // Check if this tile has been visited already
+        if (visited[x][y])
+            continue;
+        visited[x][y] = true;
+
+        // Check if a unit is on the current tile, skip adding it if true
+        bool isOccupied = false;
+        for (const auto& [id, otherUnit] : m_units)
+        {
+            if (otherUnit.m_x == x && otherUnit.m_y == y && id != m_selectedUnit)
+            {
+                isOccupied = true;
+                break;
+            }
+        }
+        // Add to reachable tiles only if not occupied
+        if (!isOccupied)
+        {
+            reachableTiles.emplace_back(x, y);
+        }
+
+        static const std::vector<std::pair<int, int>> directions = {
+            { 1,  0},
+            {-1,  0},
+            { 0,  1},
+            { 0, -1}
+        };
+
+        for (const auto& [dx, dy] : directions)
+        {
+            int nx = x + dx;
+            int ny = y + dy;
+
+            if (nx < 0 || nx >= m_width || ny < 0 || ny >= m_height)
+                continue; // Boundary check
+
+            int cost = getMoveCost(m_tiles[ny * m_width + nx].getType(), unit.m_movementType);
+            if (cost >= 0 && remainingMovement >= cost)
+            {
+                wavefrontQueue.push(std::make_tuple(nx, ny, remainingMovement - cost));
+            }
+        }
+    }
+
+    return reachableTiles;
+}
+
+int Level::getMoveCost(TileId tileId, MovementType movementType)
+{
+    return moveCostTable[static_cast<int>(tileId)][static_cast<int>(movementType)];
+}
+
 void Level::render(Engine& engine)
 {
     // Tiles
     for (Tile& tile : m_tiles)
     {
         tile.render(engine, RENDERING_SCALE);
+    }
+
+    if (m_showReachableTiles)
+    {
+        SDL_SetRenderDrawColor(engine.renderer(), 255, 255, 0, 128); // Gelb mit leichtem Alpha
+
+        for (const auto& [x, y] : m_reachableTiles)
+        {
+            SDL_Rect rect = {
+                x * 16 * RENDERING_SCALE, y * 16 * RENDERING_SCALE, 16 * RENDERING_SCALE,
+                16 * RENDERING_SCALE};
+            SDL_RenderFillRect(engine.renderer(), &rect);
+        }
+
+        SDL_SetRenderDrawColor(engine.renderer(), 0, 0, 0, 255);
+    }
+
+    if (m_showAttackableTiles)
+    {
+        SDL_SetRenderDrawColor(engine.renderer(), 255, 0, 0, 128); // Rot mit leichtem Alpha
+
+        for (const auto& [x, y] : m_attackableTiles)
+        {
+            SDL_Rect rect = {
+                x * 16 * RENDERING_SCALE, y * 16 * RENDERING_SCALE, 16 * RENDERING_SCALE,
+                16 * RENDERING_SCALE};
+            SDL_RenderFillRect(engine.renderer(), &rect);
+        }
+
+        SDL_SetRenderDrawColor(engine.renderer(), 0, 0, 0, 255);
     }
 
     // Buildings
@@ -275,7 +371,8 @@ Effect Level::removeEffect(int id)
     return value;
 }
 
-void Level::handleRecruitingEvent(Engine& engine, SDL_Event& event) {
+void Level::handleRecruitingEvent(Engine& engine, SDL_Event& event)
+{
 
     switch (event.type)
     {
@@ -288,21 +385,25 @@ void Level::handleRecruitingEvent(Engine& engine, SDL_Event& event) {
         {
             m_recruitingMenu.handleEvent(engine, event);
         }
-        if (event.key.keysym.sym == SDLK_RETURN) 
+        if (event.key.keysym.sym == SDLK_RETURN)
         {
-            Building& b = m_buildings.at(m_selectedBuilding);
-            UnitFaction u_faction = static_cast<UnitFaction> (b.m_faction);
-            UnitId unit_id = m_recruitingMenu.getSelectedOption();
+            Building&   b = m_buildings.at(m_selectedBuilding);
+            UnitFaction u_faction = static_cast<UnitFaction>(b.m_faction);
+            UnitId      unit_id = m_recruitingMenu.getSelectedOption();
 
-            if(b.check_money(500)) {
-                if(b.check_spawn(m_units)){
-                    addUnit(Unit(b.m_x, b.m_y, u_faction, unit_id, UnitState::IDLE));
+            if (b.check_money(500))
+            {
+                if (b.check_spawn(m_units))
+                {
+                    addUnit(Unit(
+                        b.m_x, b.m_y, u_faction, unit_id, UnitState::IDLE, engine.getUnitConfig()));
                     m_state = LevelState::SELECTING_STATE;
                     m_selectedBuilding = -1;
                 }
             }
         }
-}}
+    }
+}
 
 //*******************helper functions for event Handling*************************************
 
@@ -319,17 +420,27 @@ void Level::handleAttack(std::pair<int, int> tilePos)
 
         Unit& attacking = m_units.at(m_selectedUnit);
         Unit& defending = m_units.at(targetedUnit);
-        attacking.attack(defending);
-        if (attacking.m_health <= 0)
+
+        if (m_attackableUnitIds.find(targetedUnit) != m_attackableUnitIds.end())
         {
-            removeUnit(m_selectedUnit);
+            attacking.attack(defending);
+            if (attacking.m_health <= 0)
+            {
+                removeUnit(m_selectedUnit);
+            }
+            if (defending.m_health <= 0)
+            {
+                removeUnit(targetedUnit);
+            }
+            m_selectedUnit = -1;
+            m_showAttackableTiles = false;
+            m_showReachableTiles = false;
+            m_state = LevelState::SELECTING_STATE;
         }
-        if (defending.m_health <= 0)
+        else
         {
-            removeUnit(targetedUnit);
+            std::cout << "No target in range clicked!" << std::endl;
         }
-        m_selectedUnit = -1;
-        m_state = LevelState::SELECTING_STATE;
     }
     else
     {
@@ -348,9 +459,30 @@ void Level::handleMovement(std::pair<int, int> tilePos)
             return;
         }
     }
-    m_units.at(m_selectedUnit).updatePosition(tilePos.first, tilePos.second);
-    m_selectedUnit = -1;
-    m_state = LevelState::SELECTING_STATE;
+
+    bool isReachable = false;
+
+    for (auto& pos : m_reachableTiles)
+    {
+        if (pos == tilePos)
+        {
+            isReachable = true;
+            break;
+        }
+    }
+
+    if (isReachable)
+    {
+        m_units.at(m_selectedUnit).updatePosition(tilePos.first, tilePos.second);
+        m_selectedUnit = -1;
+        m_showAttackableTiles = false;
+        m_showReachableTiles = false;
+        m_state = LevelState::SELECTING_STATE;
+    }
+    else
+    {
+        std::cout << "Unglültige Bewegunsposition!" << std::endl;
+    }
 }
 
 void Level::handlePositionMarker(Engine& engine, SDL_Event& event)
@@ -390,6 +522,40 @@ void Level::handleSelectingEvents(Engine& engine, SDL_Event& event)
                     (tilePos.second * 16 + 15) * RENDERING_SCALE);
                 if (m_selectedUnit >= 0)
                 {
+                    m_reachableTiles = calculateMovementRange(m_units.at(m_selectedUnit));
+                    m_units.at(m_selectedUnit).on_left_click(event);
+                    m_showReachableTiles = true;
+
+                    std::vector<Unit*> allUnits;
+
+                    for (auto& [id, unit] : m_units)
+                    {
+                        allUnits.push_back(&unit);
+                    }
+
+                    std::vector<Unit*> attackableTargets =
+                        m_units.at(m_selectedUnit).getUnitsInRangeWithDamagePotential(allUnits);
+
+                    m_attackableTiles.clear();
+                    m_showAttackableTiles = true;
+                    m_attackableUnitIds.clear();
+
+                    for (Unit* target : attackableTargets)
+                    {
+                        // Füge die Position jedes angreifbaren Ziels hinzu
+                        m_attackableTiles.emplace_back(target->m_x, target->m_y);
+
+                        // Angreifbaren Einheits-ID setzen
+                        for (auto& [id, unit] : m_units)
+                        {
+                            if (&unit == target)
+                            {
+                                m_attackableUnitIds.insert(id);
+                                break;
+                            }
+                        }
+                    }
+
                     m_contextMenu.setOptions({"Move", "Attack", "Info", "Wait"});
                 }
                 else
@@ -423,6 +589,8 @@ void Level::handleSelectingEvents(Engine& engine, SDL_Event& event)
             }
             else
             {
+                m_showReachableTiles = false;
+                m_showAttackableTiles = false;
                 m_state = LevelState::SELECTING_STATE;
             }
         }
@@ -441,6 +609,8 @@ void Level::handleMenuActiveEvents(Engine& engine, SDL_Event& event)
             m_selectedUnit = -1;
             m_selectedBuilding = -1;
             m_state = LevelState::SELECTING_STATE;
+            m_showAttackableTiles = false;
+            m_showReachableTiles = false;
         }
         if (event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_DOWN)
         {
@@ -484,18 +654,11 @@ void Level::handleMenuActiveEvents(Engine& engine, SDL_Event& event)
                 m_recruitingMenu.update(
                     (tilePos.first * 16 + 15) * RENDERING_SCALE,
                     (tilePos.second * 16 + 15) * RENDERING_SCALE);
-                m_recruitingMenu.setOptions({
-            UnitId::INFANTERY,
-            UnitId::MECHANIZED_INFANTERY,
-            UnitId::RECON,
-            UnitId::APC,
-            UnitId::ARTILLERY,
-            UnitId::ANTI_AIR_TANK,
-            UnitId::ANTI_AIR_MISSILE_LAUNCHER,
-            UnitId::ROCKET_ARTILLERY,
-            UnitId::MEDIUM_TANK,
-            UnitId::NEO_TANK,
-            UnitId::HEAVY_TANK});
+                m_recruitingMenu.setOptions(
+                    {UnitId::INFANTERY, UnitId::MECHANIZED_INFANTERY, UnitId::RECON, UnitId::APC,
+                     UnitId::ARTILLERY, UnitId::ANTI_AIR_TANK, UnitId::ANTI_AIR_MISSILE_LAUNCHER,
+                     UnitId::ROCKET_ARTILLERY, UnitId::MEDIUM_TANK, UnitId::NEO_TANK,
+                     UnitId::HEAVY_TANK});
                 std::cout << "no training here" << std::endl;
             }
         }
