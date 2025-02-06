@@ -18,6 +18,9 @@ class HelpMenu : public Scene
             Engine& engine, std::string text, TTF_Font* font, SDL_Color color, int boxWidth,
             int text_x, int text_y);
 
+        void
+        renderTexture(SDL_Texture* texture, Engine& engine, int x, int y, int src_x, int src_y);
+
     public:
         void handleEvent(Engine& engine, SDL_Event& event);
 
