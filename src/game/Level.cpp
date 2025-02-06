@@ -844,7 +844,7 @@ void Level::handleAttackingEvents(Engine& engine, SDL_Event& event)
     if (m_attackableUnitIds.empty())
     {
         std::cout << "No units are within attack range." << std::endl;
-        m_state = LevelState::SELECTING_STATE;
+        m_state = LevelState::MENUACTIVE_STATE;
         return; // Early exit if no units to attack
     }
     switch (event.type)
