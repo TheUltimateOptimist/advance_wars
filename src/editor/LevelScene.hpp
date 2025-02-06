@@ -3,6 +3,7 @@
 *
 * @date 28.01.2025
 * @author Jonathan Dueck (jonathan.dueck@informatik.hs-fulda.de)
+* @author Nils Jonathan Friedrich Eckardt minor changes
 */
 
 #pragma once
@@ -36,8 +37,10 @@ private:
     void onTileExited(int index) override;
     void onTileClicked(int index) override;
     void onNewTileIdSelected(uint8_t tile_id) override;
+    void onCheckBoxToggle(bool isToggled) override;
     QGraphicsPixmapItem* occupy_tile(int index, uint8_t tile_id);
     uint8_t m_selected_tile_id;
+    bool m_advanced_tile_placement;
     std::string m_name;
     int m_width;
     int m_height;

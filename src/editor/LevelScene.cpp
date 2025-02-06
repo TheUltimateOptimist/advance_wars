@@ -3,6 +3,7 @@
 *
 * @date 28.01.2025
 * @author Jonathan Dueck (jonathan.dueck@informatik.hs-fulda.de)
+* @author Nils Jonathan Friedrich Eckardt implemented advanced placement
 */
 
 #include "LevelScene.hpp"
@@ -12,6 +13,7 @@
 #include <QPoint>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/xml_parser.hpp>
+
 
 #include "highfive/H5File.hpp"
 #include "SpriteProvider.hpp"
@@ -213,6 +215,11 @@ void LevelScene::onTileClicked(int index)
 void LevelScene::onNewTileIdSelected(uint8_t tile_id)
 {
     m_selected_tile_id = tile_id;
+}
+
+void LevelScene::onCheckBoxToggle(bool isToggled)
+{
+    m_advanced_tile_placement = isToggled;
 }
 
 QGraphicsPixmapItem* LevelScene::occupy_tile(int index, uint8_t tile_id)
