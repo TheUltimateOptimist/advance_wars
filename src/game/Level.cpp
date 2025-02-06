@@ -371,7 +371,8 @@ Effect Level::removeEffect(int id)
     return value;
 }
 
-void Level::handleRecruitingEvent(Engine& engine, SDL_Event& event) {
+void Level::handleRecruitingEvent(Engine& engine, SDL_Event& event)
+{
 
     switch (event.type)
     {
@@ -384,21 +385,25 @@ void Level::handleRecruitingEvent(Engine& engine, SDL_Event& event) {
         {
             m_recruitingMenu.handleEvent(engine, event);
         }
-        if (event.key.keysym.sym == SDLK_RETURN) 
+        if (event.key.keysym.sym == SDLK_RETURN)
         {
-            Building& b = m_buildings.at(m_selectedBuilding);
-            UnitFaction u_faction = static_cast<UnitFaction> (b.m_faction);
-            UnitId unit_id = m_recruitingMenu.getSelectedOption();
+            Building&   b = m_buildings.at(m_selectedBuilding);
+            UnitFaction u_faction = static_cast<UnitFaction>(b.m_faction);
+            UnitId      unit_id = m_recruitingMenu.getSelectedOption();
 
-            if(b.check_money(500)) {
-                if(b.check_spawn(m_units)){
-                    addUnit(Unit(b.m_x, b.m_y, u_faction, unit_id, UnitState::IDLE));
+            if (b.check_money(500))
+            {
+                if (b.check_spawn(m_units))
+                {
+                    addUnit(Unit(
+                        b.m_x, b.m_y, u_faction, unit_id, UnitState::IDLE, engine.getUnitConfig()));
                     m_state = LevelState::SELECTING_STATE;
                     m_selectedBuilding = -1;
                 }
             }
         }
-}}
+    }
+}
 
 //*******************helper functions for event Handling*************************************
 
@@ -415,17 +420,27 @@ void Level::handleAttack(std::pair<int, int> tilePos)
 
         Unit& attacking = m_units.at(m_selectedUnit);
         Unit& defending = m_units.at(targetedUnit);
-        attacking.attack(defending);
-        if (attacking.m_health <= 0)
+
+        if (m_attackableUnitIds.find(targetedUnit) != m_attackableUnitIds.end())
         {
-            removeUnit(m_selectedUnit);
+            attacking.attack(defending);
+            if (attacking.m_health <= 0)
+            {
+                removeUnit(m_selectedUnit);
+            }
+            if (defending.m_health <= 0)
+            {
+                removeUnit(targetedUnit);
+            }
+            m_selectedUnit = -1;
+            m_showAttackableTiles = false;
+            m_showReachableTiles = false;
+            m_state = LevelState::SELECTING_STATE;
         }
-        if (defending.m_health <= 0)
+        else
         {
-            removeUnit(targetedUnit);
+            std::cout << "No target in range clicked!" << std::endl;
         }
-        m_selectedUnit = -1;
-        m_state = LevelState::SELECTING_STATE;
     }
     else
     {
@@ -444,9 +459,30 @@ void Level::handleMovement(std::pair<int, int> tilePos)
             return;
         }
     }
-    m_units.at(m_selectedUnit).updatePosition(tilePos.first, tilePos.second);
-    m_selectedUnit = -1;
-    m_state = LevelState::SELECTING_STATE;
+
+    bool isReachable = false;
+
+    for (auto& pos : m_reachableTiles)
+    {
+        if (pos == tilePos)
+        {
+            isReachable = true;
+            break;
+        }
+    }
+
+    if (isReachable)
+    {
+        m_units.at(m_selectedUnit).updatePosition(tilePos.first, tilePos.second);
+        m_selectedUnit = -1;
+        m_showAttackableTiles = false;
+        m_showReachableTiles = false;
+        m_state = LevelState::SELECTING_STATE;
+    }
+    else
+    {
+        std::cout << "Unglültige Bewegunsposition!" << std::endl;
+    }
 }
 
 void Level::handlePositionMarker(Engine& engine, SDL_Event& event)
@@ -486,6 +522,40 @@ void Level::handleSelectingEvents(Engine& engine, SDL_Event& event)
                     (tilePos.second * 16 + 15) * RENDERING_SCALE);
                 if (m_selectedUnit >= 0)
                 {
+                    m_reachableTiles = calculateMovementRange(m_units.at(m_selectedUnit));
+                    m_units.at(m_selectedUnit).on_left_click(event);
+                    m_showReachableTiles = true;
+
+                    std::vector<Unit*> allUnits;
+
+                    for (auto& [id, unit] : m_units)
+                    {
+                        allUnits.push_back(&unit);
+                    }
+
+                    std::vector<Unit*> attackableTargets =
+                        m_units.at(m_selectedUnit).getUnitsInRangeWithDamagePotential(allUnits);
+
+                    m_attackableTiles.clear();
+                    m_showAttackableTiles = true;
+                    m_attackableUnitIds.clear();
+
+                    for (Unit* target : attackableTargets)
+                    {
+                        // Füge die Position jedes angreifbaren Ziels hinzu
+                        m_attackableTiles.emplace_back(target->m_x, target->m_y);
+
+                        // Angreifbaren Einheits-ID setzen
+                        for (auto& [id, unit] : m_units)
+                        {
+                            if (&unit == target)
+                            {
+                                m_attackableUnitIds.insert(id);
+                                break;
+                            }
+                        }
+                    }
+
                     m_contextMenu.setOptions({"Move", "Attack", "Info", "Wait"});
                 }
                 else
@@ -519,6 +589,8 @@ void Level::handleSelectingEvents(Engine& engine, SDL_Event& event)
             }
             else
             {
+                m_showReachableTiles = false;
+                m_showAttackableTiles = false;
                 m_state = LevelState::SELECTING_STATE;
             }
         }
@@ -537,6 +609,8 @@ void Level::handleMenuActiveEvents(Engine& engine, SDL_Event& event)
             m_selectedUnit = -1;
             m_selectedBuilding = -1;
             m_state = LevelState::SELECTING_STATE;
+            m_showAttackableTiles = false;
+            m_showReachableTiles = false;
         }
         if (event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_DOWN)
         {
@@ -580,18 +654,11 @@ void Level::handleMenuActiveEvents(Engine& engine, SDL_Event& event)
                 m_recruitingMenu.update(
                     (tilePos.first * 16 + 15) * RENDERING_SCALE,
                     (tilePos.second * 16 + 15) * RENDERING_SCALE);
-                m_recruitingMenu.setOptions({
-            UnitId::INFANTERY,
-            UnitId::MECHANIZED_INFANTERY,
-            UnitId::RECON,
-            UnitId::APC,
-            UnitId::ARTILLERY,
-            UnitId::ANTI_AIR_TANK,
-            UnitId::ANTI_AIR_MISSILE_LAUNCHER,
-            UnitId::ROCKET_ARTILLERY,
-            UnitId::MEDIUM_TANK,
-            UnitId::NEO_TANK,
-            UnitId::HEAVY_TANK});
+                m_recruitingMenu.setOptions(
+                    {UnitId::INFANTERY, UnitId::MECHANIZED_INFANTERY, UnitId::RECON, UnitId::APC,
+                     UnitId::ARTILLERY, UnitId::ANTI_AIR_TANK, UnitId::ANTI_AIR_MISSILE_LAUNCHER,
+                     UnitId::ROCKET_ARTILLERY, UnitId::MEDIUM_TANK, UnitId::NEO_TANK,
+                     UnitId::HEAVY_TANK});
                 std::cout << "no training here" << std::endl;
             }
         }

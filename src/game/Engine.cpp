@@ -120,6 +120,11 @@ Spritesheet* Engine::getSpritesheet()
     return m_spritesheet.value();
 }
 
+Config& Engine::getUnitConfig()
+{
+    return m_unitConfig;
+}
+
 SDL_Renderer* Engine::renderer()
 {
     return this->m_SDLRenderer;
