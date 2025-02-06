@@ -22,39 +22,40 @@ namespace advanced_wars
 const int NUM_TILE_IDS = 30; // Aktualisieren, falls weitere IDs hinzugefügt werden
 const int NUM_MOVEMENT_TYPES = 6;
 
-
-const std::array<std::array<int, NUM_MOVEMENT_TYPES>, NUM_TILE_IDS> moveCostTable = {{
-    // FOOT, WHEELED, TREAD, AIR, SEA, LANDER
-    {  1,      2,       1,    1, 999,   999 }, // PLAIN
-    {999,    999,     999,    1,   1,     1 }, // WATER
-    {  1,      3,       2,    1, 999,   999 }, // FOREST
-    {  2,    999,     999,    1, 999,   999 }, // MOUNTAIN
-    {  1,      1,       1,    1, 999,   999 }, // BRIDGE_HORIZONTAL
-    {  1,      1,       1,    1, 999,   999 }, // STREET_HORIZONTAL
-    {  1,      1,       1,    1, 999,   999 }, // STREET_VERTICAL
-    {  1,      1,       1,    1, 999,   999 }, // STREET_CROSSING
-    {  1,      1,       1,    1, 999,   999 }, // STREET_JUNCTION_RIGHT
-    {  1,      1,       1,    1, 999,   999 }, // STREET_JUNCTION_LEFT
-    {  1,      1,       1,    1, 999,   999 }, // STREET_JUNCTION_DOWN
-    {  1,      1,       1,    1, 999,   999 }, // STREET_JUNCTION_UP
-    {  1,      1,       1,    1, 999,   999 }, // STREET_CORNER_TOP_LEFT
-    {  1,      1,       1,    1, 999,   999 }, // STREET_CORNER_TOP_RIGHT
-    {  1,      1,       1,    1, 999,   999 }, // STREET_CORNER_BOTTOM_LEFT
-    {  1,      1,       1,    1, 999,   999 }, // STREET_CORNER_BOTTOM_RIGHT 
-    {999,    999,     999,    1,   2,     2 }, // RIFF
-    {999,    999,     999,    1,   1,     1 }, // CLIFF_TOP
-    {999,    999,     999,    1,   1,     1 }, // CLIFF_BOTTOM
-    {999,    999,     999,    1,   1,     1 }, // CLIFF_LEFT
-    {999,    999,     999,    1,   1,     1 }, // CLIFF_RIGHT
-    {999,    999,     999,    1,   1,     1 }, // CLIFF_CORNER_TOP_LEFT
-    {999,    999,     999,    1,   1,     1 }, // CLIFF_CORNER_TOP_RIGHT
-    {999,    999,     999,    1,   1,     1 }, // CLIFF_CORNER_BOTTOM_LEFT
-    {999,    999,     999,    1,   1,     1 }, // CLIFF_CORNER_BOTTOM_RIGHT
-    {  1,      2,       1,    1, 999,   999 }, // CLIFF_INVERSE_CORNER_TOP_LEFT
-    {  1,      2,       1,    1, 999,   999 }, // CLIFF_INVERSE_CORNER_TOP_RIGHT
-    {  1,      2,       1,    1, 999,   999 }, // CLIFF_INVERSE_CORNER_BOTTOM_LEFT
-    {  1,      2,       1,    1, 999,   999 }, // CLIFF_INVERSE_CORNER_BOTTOM_RIGHT
-}};
+const std::array<std::array<int, NUM_MOVEMENT_TYPES>, NUM_TILE_IDS> moveCostTable = {
+    {
+     // FOOT, WHEELED, TREAD, AIR, SEA, LANDER
+        {1, 2, 1, 1, 999, 999},     // PLAIN
+        {999, 999, 999, 1, 1, 1},   // WATER
+        {1, 3, 2, 1, 999, 999},     // FOREST
+        {2, 999, 999, 1, 999, 999}, // MOUNTAIN
+        {1, 1, 1, 1, 999, 999},     // BRIDGE_HORIZONTAL
+        {1, 1, 1, 1, 999, 999},     // STREET_HORIZONTAL
+        {1, 1, 1, 1, 999, 999},     // STREET_VERTICAL
+        {1, 1, 1, 1, 999, 999},     // STREET_CROSSING
+        {1, 1, 1, 1, 999, 999},     // STREET_JUNCTION_RIGHT
+        {1, 1, 1, 1, 999, 999},     // STREET_JUNCTION_LEFT
+        {1, 1, 1, 1, 999, 999},     // STREET_JUNCTION_DOWN
+        {1, 1, 1, 1, 999, 999},     // STREET_JUNCTION_UP
+        {1, 1, 1, 1, 999, 999},     // STREET_CORNER_TOP_LEFT
+        {1, 1, 1, 1, 999, 999},     // STREET_CORNER_TOP_RIGHT
+        {1, 1, 1, 1, 999, 999},     // STREET_CORNER_BOTTOM_LEFT
+        {1, 1, 1, 1, 999, 999},     // STREET_CORNER_BOTTOM_RIGHT
+        {999, 999, 999, 1, 2, 2},   // RIFF
+        {999, 999, 999, 1, 1, 1},   // CLIFF_TOP
+        {999, 999, 999, 1, 1, 1},   // CLIFF_BOTTOM
+        {999, 999, 999, 1, 1, 1},   // CLIFF_LEFT
+        {999, 999, 999, 1, 1, 1},   // CLIFF_RIGHT
+        {999, 999, 999, 1, 1, 1},   // CLIFF_CORNER_TOP_LEFT
+        {999, 999, 999, 1, 1, 1},   // CLIFF_CORNER_TOP_RIGHT
+        {999, 999, 999, 1, 1, 1},   // CLIFF_CORNER_BOTTOM_LEFT
+        {999, 999, 999, 1, 1, 1},   // CLIFF_CORNER_BOTTOM_RIGHT
+        {999, 999, 999, 1, 1, 1},   // CLIFF_INVERSE_CORNER_TOP_LEFT
+        {999, 999, 999, 1, 1, 1},   // CLIFF_INVERSE_CORNER_TOP_RIGHT
+        {999, 999, 999, 1, 1, 1},   // CLIFF_INVERSE_CORNER_BOTTOM_LEFT
+        {999, 999, 999, 1, 1, 1},   // CLIFF_INVERSE_CORNER_BOTTOM_RIGHT
+    }
+};
 
 enum class LevelState
 {
