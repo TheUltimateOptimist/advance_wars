@@ -595,8 +595,22 @@ void Level::handleSelectingEvents(Engine& engine, SDL_Event& event)
                             }
                         }
                     }
-
-                    m_contextMenu.setOptions({"Move", "Attack", "Info", "Wait"});
+                    
+                    Unit& u = m_units.at(m_selectedUnit);
+                    
+                    if(u.hasMoved()) {
+                        m_contextMenu.setOptions({"Attack", "Info", "Wait"});
+                    } else {
+                        
+                        for(auto& [id, building] : m_buildings) {
+                            if(building.m_x == u.m_x && building.m_y == u.m_y) {
+                                m_contextMenu.setOptions({"Capture", "Move", "Attack","Info", "Wait"});
+                                m_captureBuilding = id;
+                                break;
+                            }
+                        }
+                        
+                    }                   
                 }
                 else
                 {   
@@ -702,6 +716,14 @@ void Level::handleMenuActiveEvents(Engine& engine, SDL_Event& event)
                     (tilePos.second * 16 + 15) * RENDERING_SCALE);
                 m_recruitingMenu.setOptions(m_buildings.at(m_selectedBuilding).recruitableUnits());
                 std::cout << "no training here" << std::endl;
+            }
+
+            if(cmd == "Capture") {
+                Building& b = m_buildings.at(m_captureBuilding);
+                UnitFaction u_f = m_units.at(m_selectedUnit).getFaction();
+
+                BuildingFaction b_f = static_cast <BuildingFaction> (static_cast<int> (u_f));
+                b.switch_faction(b_f);
             }
         }
 
