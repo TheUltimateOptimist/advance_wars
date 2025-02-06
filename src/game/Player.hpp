@@ -1,3 +1,9 @@
+/**
+ * Player.hpp
+ *
+ * @author Frederik Keens
+ */
+
 #pragma once
 
 #include "Building.hpp"
@@ -10,12 +16,18 @@ namespace advanced_wars
 class Player
 {
     private:
-        int         m_money;
-        bool        m_alive;
-        bool        m_activeTurn;
-        UnitFaction m_faction;
+        int         m_money;      // The players current amound of money
+        bool        m_alive;      // Signals if the player is alive or not
+        bool        m_activeTurn; // Signals if this player is currently the active player
+        UnitFaction m_faction;    // The players commanding faction
 
     public:
+        /**
+         * Constructor
+         *
+         * @param money The players starting money
+         * @param faction The faction this player will command
+         */
         Player(int money, UnitFaction faction);
         ~Player();
 
@@ -37,10 +49,20 @@ class Player
          */
         void endTurn(std::unordered_map<int, Unit>& lvUnits);
 
+        /**
+         * @return This players faction
+         */
         UnitFaction getFaction();
 
+        /**
+         * @return This players current money
+         */
         int getMoney();
 
+        /**
+         * Decreses this players money by the given amount.
+         * @param toSpend The money to subtract
+         */
         void spendMoney(int toSpend);
 };
 

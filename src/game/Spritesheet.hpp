@@ -20,7 +20,9 @@ namespace advanced_wars
 class Engine;
 
 /**
- * Spritesheet representation
+ * @brief Spritesheet representation
+ *
+ * Saves all the needed textures and their metadata for the project.
  */
 class Spritesheet
 {
@@ -175,35 +177,37 @@ class Spritesheet
 
     private:
         // Tiles
-        std::vector<std::pair<SDL_Texture*, int>> m_tileTextures;
+        std::vector<std::pair<SDL_Texture*, int>> m_tileTextures; // Vector of all tile Textures
 
-        int m_tileWidth;
-        int m_tileHeight;
+        int m_tileWidth;  // Width of a tile in pixels
+        int m_tileHeight; // Height of a tile in pixels
 
         // Buildings
-        std::vector<SDL_Texture*> m_buildingTextures;
+        std::vector<SDL_Texture*> m_buildingTextures; // Vector of all building textures
 
-        int m_buildingWidth;
-        int m_buildingHeight;
+        int m_buildingWidth;  // Width of a building in pixels
+        int m_buildingHeight; // Height of a building in pixels
 
         // Units
+
+        // vector of all unit textures
         std::vector<std::vector<std::vector<std::pair<SDL_Texture*, int>>>> m_unitTextures;
 
-        int m_unitWidth;
-        int m_unitHeight;
-        int m_unitMovingWidth;
-        int m_unitMovingHeight;
+        int m_unitWidth;        // Width of a unit in pixels
+        int m_unitHeight;       // Height of a unit in pixels
+        int m_unitMovingWidth;  // Width of moving unit
+        int m_unitMovingHeight; // Height of a moving unit
 
         // Effects
-        std::vector<std::pair<SDL_Texture*, int>> m_effectTextures;
+        std::vector<std::pair<SDL_Texture*, int>> m_effectTextures; // vector of all effect textures
 
-        int m_effectWidth;
-        int m_effectHeight;
+        int m_effectWidth;  // Width of an effect in pixels
+        int m_effectHeight; // Height of an effect in pixels
 
         // Numbers
-        SDL_Texture* m_numberTextures;
+        SDL_Texture* m_numberTextures; // Texture of digits 0-9
 
-        int m_numberWidth;
-        int m_numberHeight;
+        int m_numberWidth;  // Width of a digit
+        int m_numberHeight; // Height of a digit
 };
 } // namespace advanced_wars

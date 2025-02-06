@@ -1,3 +1,9 @@
+/**
+ * Window.hpp
+ *
+ * @author
+ */
+
 #pragma once
 
 #include <SDL.h>

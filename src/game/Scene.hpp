@@ -1,3 +1,9 @@
+/**
+ * Scene.hpp
+ *
+ * @author
+ */
+
 #pragma once
 
 #include "Engine.hpp"
@@ -9,6 +15,12 @@ namespace advanced_wars
 // Forward declaration
 class Engine;
 
+/**
+ * @brief Scene Interface
+ *
+ * Everything, that can to be saved in the engines scene stack needs to be renderable and provide
+ * a function to handle SDL events in the pump step.
+ */
 class Scene
 {
     public:

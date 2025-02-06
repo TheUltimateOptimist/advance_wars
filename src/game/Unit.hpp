@@ -1,3 +1,9 @@
+/**
+ * Unit.hpp
+ *
+ * @author
+ */
+
 #pragma once
 
 #include "Engine.hpp"
@@ -11,18 +17,22 @@
 namespace advanced_wars
 {
 
+// forward Declarations
 class Engine;
 class Config;
 
 using MatchupTable = std::unordered_map<UnitId, std::unordered_map<UnitId, int>>;
 
+/**
+ * @brief Unit representation
+ */
 class Unit
 {
     public:
-        int m_x;
-        int m_y;
+        int m_x;      // Tile x-position
+        int m_y;      // Tile y-position
         int m_health; // Current health of the unit, initialized to max health at construction.
-        int m_price;
+        int m_price;  // The cost to train this unit at a building
 
         int          m_movementPoints; // The number of tiles this unit can move per turn.
         MovementType m_movementType;   // The type of movement this unit has (e.g., foot, wheeled).
@@ -121,6 +131,9 @@ class Unit
          */
         void on_left_click(SDL_Event event);
 
+        /**
+         * @return This units faction
+         */
         UnitFaction getFaction();
 
         void setState(UnitState state);
@@ -156,6 +169,14 @@ class Unit
         int m_minRange; // The minimum range of the unit's attack capability.
         int m_maxRange; // The maximum range of the unit's attack capability.
 
+        /**
+         * @brief Renders this units current HP
+         *
+         * Should only be used in the original render function of unit
+         *
+         * @param engine A engine object with valid render context
+         * @param scale The scale factor for the rendered visuals
+         */
         void renderHP(Engine& engine, int scale);
 };
 } // namespace advanced_wars
