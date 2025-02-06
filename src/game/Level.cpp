@@ -476,6 +476,10 @@ void Level::handleAttack(std::pair<int, int> tilePos)
             {
                 removeUnit(m_selectedUnit);
             }
+            else
+            {
+                attacking.setState(UnitState::UNAVAILABLE);
+            }
             if (defending.m_health <= 0)
             {
                 removeUnit(targetedUnit);
@@ -527,6 +531,38 @@ void Level::handleMovement(std::pair<int, int> tilePos)
             (tilePos.first * 16 + 15) * RENDERING_SCALE,
             (tilePos.second * 16 + 15) * RENDERING_SCALE);
 
+        std::vector<Unit*> allUnits;
+
+        for (auto& [id, unit] : m_units)
+        {
+            allUnits.push_back(&unit);
+        }
+
+        std::vector<Unit*> attackableTargets =
+            m_units.at(m_selectedUnit).getUnitsInRangeWithDamagePotential(allUnits);
+
+        m_attackableTiles.clear();
+        m_showAttackableTiles = true;
+        m_attackableUnitIds.clear();
+
+        for (Unit* target : attackableTargets)
+        {
+            // Füge die Position jedes angreifbaren Ziels hinzu
+            m_attackableTiles.emplace_back(target->m_x, target->m_y);
+
+            // Angreifbaren Einheits-ID setzen
+            for (auto& [id, unit] : m_units)
+            {
+                if (&unit == target)
+                {
+                    m_attackableUnitIds.insert(id);
+                    break;
+                }
+            }
+        }
+
+        m_showReachableTiles = false;
+
         m_contextMenu.setOptions({"Attack", "Wait", "End Turn"});
 
         m_state = LevelState::MENUACTIVE_STATE;
@@ -572,7 +608,7 @@ void Level::handleSelectingEvents(Engine& engine, SDL_Event& event)
                 m_contextMenu.update(
                     (tilePos.first * 16 + 15) * RENDERING_SCALE,
                     (tilePos.second * 16 + 15) * RENDERING_SCALE);
-                if (m_selectedUnit >= 0 )
+                if (m_selectedUnit >= 0)
                 {
                     m_reachableTiles = calculateMovementRange(m_units.at(m_selectedUnit));
                     m_units.at(m_selectedUnit).on_left_click(event);
@@ -614,7 +650,8 @@ void Level::handleSelectingEvents(Engine& engine, SDL_Event& event)
 
                     // Show according menu options if unit has same/different faction than current
                     // player
-                    if (m_units.at(m_selectedUnit).getFaction() == m_turnQ.front().getFaction() && m_units.at(m_selectedUnit).getState()!= UnitState::UNAVAILABLE)
+                    if (m_units.at(m_selectedUnit).getFaction() == m_turnQ.front().getFaction() &&
+                        m_units.at(m_selectedUnit).getState() != UnitState::UNAVAILABLE)
                     {
                         m_contextMenu.setOptions({"Move", "Attack", "Info", "Wait", "End Turn"});
                     }
@@ -804,6 +841,12 @@ void Level::handleMovementEvents(Engine& engine, SDL_Event& event)
 
 void Level::handleAttackingEvents(Engine& engine, SDL_Event& event)
 {
+    if (m_attackableUnitIds.empty())
+    {
+        std::cout << "No units are within attack range." << std::endl;
+        m_state = LevelState::SELECTING_STATE;
+        return; // Early exit if no units to attack
+    }
     switch (event.type)
     {
     case SDL_KEYDOWN:
