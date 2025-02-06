@@ -30,6 +30,9 @@ public:
 private:
     bool is_border(int index);
     bool is_water_tile(uint8_t id);
+    std::vector<std::pair<int, uint8_t>> getAdvancedPlacementChanges(int index, uint8_t placedID);
+    void placeCliff(std::vector<std::pair<int, uint8_t>> &output, bool placedLand, int index);
+    void placeRoad(std::vector<std::pair<int, uint8_t>> &output, int index, bool updateFlag);
     void onLevelNameUpdated(std::string new_name) override;
     void onLevelWriteRequested(QString file_path) override;
     void onTileEntered(int index) override;  
@@ -37,6 +40,7 @@ private:
     void onTileClicked(int index) override;
     void onNewTileIdSelected(uint8_t tile_id) override;
     QGraphicsPixmapItem* occupy_tile(int index, uint8_t tile_id);
+    bool m_apply_advanced_placement;
     uint8_t m_selected_tile_id;
     std::string m_name;
     int m_width;
