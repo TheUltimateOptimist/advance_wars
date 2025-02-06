@@ -201,8 +201,13 @@ void Menu::handleEvent(Engine& engine, SDL_Event& event)
                 // std::shared_ptr<Level> level =
                 //     std::make_shared<Level>("Osnabrück", 20, 20, tiles, buildings, units,
                 //     effects, std::queue<Player>{});
-
-                engine.pushScene(Level::loadLevel("../res/level.h5", engine));
+                std::cout << "Creating world" << std::endl;
+                std::shared_ptr<b2World> world = std::make_shared<b2World>(b2Vec2(0.0f, 0.0f));
+                std::cout << "World created: " << world << std::endl;
+                auto level = Level::loadLevel("../res/level.h5", engine, world);
+                std::cout << level->getName() << std::endl;
+                engine.pushScene(level);
+                std::cout << "Level loaded" << std::endl;
             }
             else if (m_options[m_selectedOption] == "Options")
             {

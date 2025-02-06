@@ -26,15 +26,14 @@ const int RENDERING_SCALE = 3;
 Level::Level(
     std::string name, int width, int height, std::vector<Tile> tiles,
     std::vector<Building> buildings, std::vector<Unit> units, std::vector<Effect> effects,
-    std::queue<Player> turnQ)
-    : m_world(b2Vec2(0.0f, 0.0f)), m_name(name), m_width(width), m_height(height), m_tiles(tiles),
-      m_turnQ(turnQ), m_bullet(nullptr), m_contactListener(this), m_selectedUnit(-1),
-      m_selectedBuilding(-1), m_contextMenu(ContextMenu()), m_id(0),
-      m_state(LevelState::SELECTING_STATE),
-      m_currentPos(TileMarker(RENDERING_SCALE, 1, 1, m_width, m_height))
+    std::queue<Player> turnQ, std::shared_ptr<b2World> world)
+    : m_name(name), m_width(width), m_height(height), m_tiles(tiles), m_turnQ(turnQ),
+      m_bullet(nullptr), m_contactListener(this), m_selectedUnit(-1), m_selectedBuilding(-1),
+      m_contextMenu(ContextMenu()), m_id(0), m_state(LevelState::SELECTING_STATE),
+      m_currentPos(TileMarker(RENDERING_SCALE, 1, 1, m_width, m_height)), m_world(world)
 
 {
-    m_world.SetContactListener(&m_contactListener);
+    world->SetContactListener(&m_contactListener);
     m_contextMenu.setOptions({"Move", "Info", "Wait"});
 
     for (Building building : buildings)
@@ -44,7 +43,7 @@ Level::Level(
 
     for (Unit unit : units)
     {
-        unit.setWorld(&m_world);
+        unit.setWorld(world);
         this->addUnit(unit);
     }
 
@@ -63,7 +62,8 @@ Level::Level(
     m_selectedUnit = -1;
 };
 
-std::shared_ptr<Level> Level::loadLevel(std::string path, Engine& engine)
+std::shared_ptr<Level>
+Level::loadLevel(std::string path, Engine& engine, std::shared_ptr<b2World> world)
 {
     HighFive::File file(path, HighFive::File::ReadOnly);
 
@@ -106,7 +106,7 @@ std::shared_ptr<Level> Level::loadLevel(std::string path, Engine& engine)
                 {
                     units.push_back(Unit(
                         x, y, static_cast<UnitFaction>(faction_id), UnitId::INFANTERY,
-                        UnitState::UNAVAILABLE, engine.getUnitConfig()));
+                        UnitState::UNAVAILABLE, engine.getUnitConfig(), world));
                 }
                 has_factions[static_cast<int>(faction_id)] = true;
             }
@@ -129,10 +129,15 @@ std::shared_ptr<Level> Level::loadLevel(std::string path, Engine& engine)
         }
     }
 
-    Level level(name, width, height, tiles, buildings, units, std::vector<Effect>{}, turnQ);
+    Level level(name, width, height, tiles, buildings, units, std::vector<Effect>{}, turnQ, world);
 
     level.m_turnQ.front().startTurn(level.m_units, level.m_buildings);
     return std::make_shared<Level>(level);
+}
+
+std::string Level::getName() const
+{
+    return m_name;
 }
 
 std::pair<int, int> Level::calcTilePos(int mouseX, int mouseY)
@@ -317,7 +322,6 @@ void Level::render(Engine& engine)
     {
         building.render(engine, RENDERING_SCALE);
     }
-
     // Units
     for (auto& [id, unit] : m_units)
     {
@@ -369,9 +373,10 @@ void Level::update()
     float timeStep = 1.0f / 60.0f;
     int   velocityIterations = 6;
     int   positionIterations = 2;
-
-    m_world.Step(timeStep, velocityIterations, positionIterations);
-
+    std::cout << "World Step begin" << std::endl;
+    std::cout << "World is: " << m_world << std::endl;
+    m_world->Step(timeStep, velocityIterations, positionIterations);
+    std::cout << "World Step end" << std::endl;
     if (m_bullet)
     {
         m_bullet->update();
@@ -493,7 +498,8 @@ void Level::handleRecruitingEvent(Engine& engine, SDL_Event& event)
                 if (b.check_spawn(m_units))
                 {
                     addUnit(Unit(
-                        b.m_x, b.m_y, u_faction, unit_id, UnitState::IDLE, engine.getUnitConfig()));
+                        b.m_x, b.m_y, u_faction, unit_id, UnitState::IDLE, engine.getUnitConfig(),
+                        m_world));
                     m_state = LevelState::SELECTING_STATE;
                     m_turnQ.front().spendMoney(cost);
                     m_selectedBuilding = -1;
@@ -908,7 +914,7 @@ void Level::spawnBullet(Unit shooter, Unit target)
     std::cout << "Velocity: " << velocityX << ", " << velocityY << std::endl;
 
     m_bullet = new Bullet(m_world, startX, startY, velocityX, velocityY);
-    // m_targetedUnit = target;
+    m_targetedUnit = target.getMapId();
 }
 
 void Level::checkBulletCollision(Unit& hitUnit)
@@ -934,7 +940,7 @@ void Level::removeBullet()
     if (m_bullet)
     {
         std::cout << "Bullet wird entfernt." << std::endl;
-        m_world.DestroyBody(m_bullet->getBody());
+        m_world->DestroyBody(m_bullet->getBody());
         delete m_bullet;
         m_bullet = nullptr;
     }

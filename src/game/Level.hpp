@@ -81,9 +81,10 @@ class Level : public Scene
         Level(
             std::string name, int width, int height, std::vector<Tile> tiles,
             std::vector<Building> buildings, std::vector<Unit> units, std::vector<Effect> effects,
-            std::queue<Player> turnQ);
+            std::queue<Player> turnQ, std::shared_ptr<b2World> world);
 
-        static std::shared_ptr<Level> loadLevel(std::string path, Engine& engine);
+        static std::shared_ptr<Level>
+        loadLevel(std::string path, Engine& engine, std::shared_ptr<b2World> world);
 
         void render(Engine& engine);
 
@@ -134,8 +135,10 @@ class Level : public Scene
 
         void markBulletForRemoval();
 
+        std::string getName() const;
+
     private:
-        b2World                           m_world;
+        std::shared_ptr<b2World>          m_world;
         std::string                       m_name;
         int                               m_width;
         int                               m_height;

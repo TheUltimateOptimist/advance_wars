@@ -10,7 +10,7 @@ namespace advanced_wars
 
 Unit::Unit(
     int x, int y, UnitFaction faction, UnitId id, UnitState state, Config& config,
-    b2World* world = nullptr)
+    std::shared_ptr<b2World> world)
     : m_x(x), m_y(y), m_faction(faction), m_id(id), m_state(state), m_maxHealth(100)
 {
     // Allgemeine Einheiteneinstellungen aus Konfiguration holen
@@ -47,7 +47,7 @@ Unit::Unit(
     m_secondaryWeapon = Weapon(config.getUnitSecondaryWeapon(id), secondaryDamage);
 }
 
-void Unit::setWorld(b2World* world)
+void Unit::setWorld(std::shared_ptr<b2World> world)
 {
     b2BodyDef bodyDef;
     bodyDef.type = b2_dynamicBody;
@@ -428,6 +428,7 @@ void Unit::moveToTile(int targetX, int targetY)
 
 void Unit::update()
 {
+    std::cout << "Unit update" << std::endl;
     b2Vec2 pos = m_body->GetPosition();
 
     // Berechne aktuelle Tile-Position

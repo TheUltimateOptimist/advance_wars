@@ -34,7 +34,7 @@ class Unit
          */
         Unit(
             int x, int y, UnitFaction faction, UnitId id, UnitState state, Config& config,
-            b2World* world = nullptr);
+            std::shared_ptr<b2World> world);
 
         /**
          * Destructor for Unit.
@@ -182,7 +182,7 @@ class Unit
          *
          * @param world Zeiger auf die Box2D-Welt, in der der Body erstellt wird.
          */
-        void setWorld(b2World* world);
+        void setWorld(std::shared_ptr<b2World> world);
 
         /**
          * @brief Berechnet und gibt die X-Position der Unit in Pixeln zurück.

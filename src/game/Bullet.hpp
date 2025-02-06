@@ -23,7 +23,9 @@ class Bullet
          * @param width     Breite der Bullet in Pixeln.
          * @param height    Höhe der Bullet in Pixeln.
          */
-        Bullet(b2World& world, float startX, float startY, float velocityX, float velocityY);
+        Bullet(
+            std::shared_ptr<b2World> world, float startX, float startY, float velocityX,
+            float velocityY);
 
         ~Bullet();
 

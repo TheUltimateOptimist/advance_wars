@@ -8,7 +8,8 @@
 namespace advanced_wars
 {
 
-Bullet::Bullet(b2World& world, float startX, float startY, float velocityX, float velocityY)
+Bullet::Bullet(
+    std::shared_ptr<b2World> world, float startX, float startY, float velocityX, float velocityY)
     : m_renderX(0), m_renderY(0)
 {
     b2BodyDef bodyDef;
@@ -16,7 +17,7 @@ Bullet::Bullet(b2World& world, float startX, float startY, float velocityX, floa
     bodyDef.position.Set(startX / PIXELS_PER_METER, startY / PIXELS_PER_METER);
     bodyDef.linearVelocity.Set(velocityX, velocityY);
 
-    m_body = world.CreateBody(&bodyDef);
+    m_body = world->CreateBody(&bodyDef);
 
     b2PolygonShape shape;
     shape.SetAsBox(4.0f / PIXELS_PER_METER, 4.0f / PIXELS_PER_METER);

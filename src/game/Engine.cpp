@@ -8,6 +8,7 @@
 #include <SDL_image.h>
 #include <SDL_render.h>
 #include <deque>
+#include <iostream>
 #include <memory>
 #include <optional>
 #include <stdexcept>

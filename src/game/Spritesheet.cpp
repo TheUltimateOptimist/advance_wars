@@ -375,24 +375,24 @@ Spritesheet::Spritesheet(std::string path, Engine& engine)
         }
     }
 
-    SDL_Texture* tmp = SDL_CreateTexture(
+    SDL_Texture* tmp_number = SDL_CreateTexture(
         engine.renderer(), SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STATIC, 80, 8);
 
-    SDL_SetTextureBlendMode(tmp, SDL_BLENDMODE_BLEND);
+    SDL_SetTextureBlendMode(tmp_number, SDL_BLENDMODE_BLEND);
 
-    if (tmp == nullptr)
+    if (tmp_number == nullptr)
     {
         throw std::runtime_error(
             "Fehler beim Erstellen der Textur für die Numbers: " + std::string(SDL_GetError()));
     }
 
-    if (SDL_UpdateTexture(tmp, NULL, number_buffer.data(), 80 * sizeof(int32_t)) != 0)
+    if (SDL_UpdateTexture(tmp_number, NULL, number_buffer.data(), 80 * sizeof(int32_t)) != 0)
     {
         throw std::runtime_error(
             "Fehler beim updaten der Textur für die Tiles: " + std::string(SDL_GetError()));
     }
 
-    this->m_numberTextures = tmp;
+    this->m_numberTextures = tmp_number;
     this->m_numberWidth = 8;
     this->m_numberHeight = 8;
 
@@ -402,7 +402,7 @@ Spritesheet::Spritesheet(std::string path, Engine& engine)
     std::vector<std::vector<uint32_t>> bullet_frames;
     bullet_ds.read(bullet_frames);
 
-    std::vector<uint32_t> number_buffer(8 * 8, 0);
+    std::vector<uint32_t> bullet_buffer(8 * 8, 0);
 
     // every animation frame
 
@@ -412,28 +412,28 @@ Spritesheet::Spritesheet(std::string path, Engine& engine)
         {
             size_t index = (y * 8) + x;
 
-            number_buffer.at(index) = bullet_frames.at(8 - y - 1).at(x);
+            bullet_buffer.at(index) = bullet_frames.at(8 - y - 1).at(x);
         }
     }
 
-    SDL_Texture* tmp = SDL_CreateTexture(
+    SDL_Texture* tmp_bullet = SDL_CreateTexture(
         engine.renderer(), SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STATIC, 8, 8);
 
-    SDL_SetTextureBlendMode(tmp, SDL_BLENDMODE_BLEND);
+    SDL_SetTextureBlendMode(tmp_bullet, SDL_BLENDMODE_BLEND);
 
-    if (tmp == nullptr)
+    if (tmp_bullet == nullptr)
     {
         throw std::runtime_error(
             "Fehler beim Erstellen der Textur für die Bullets: " + std::string(SDL_GetError()));
     }
 
-    if (SDL_UpdateTexture(tmp, NULL, number_buffer.data(), 8 * sizeof(int32_t)) != 0)
+    if (SDL_UpdateTexture(tmp_bullet, NULL, bullet_buffer.data(), 8 * sizeof(int32_t)) != 0)
     {
         throw std::runtime_error(
             "Fehler beim updaten der Textur für die Tiles: " + std::string(SDL_GetError()));
     }
 
-    this->m_bulletTexture = tmp;
+    this->m_bulletTexture = tmp_bullet;
     this->m_bulletWidth = 8;
     this->m_bulletHeight = 8;
 }
