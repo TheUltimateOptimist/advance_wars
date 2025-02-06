@@ -119,7 +119,7 @@ std::shared_ptr<Level> Level::loadLevel(std::string path, Engine& engine)
     {
         if (has_factions[i])
         {
-            turnQ.push(Player(2000, static_cast<PlayerFaction>(i)));
+            turnQ.push(Player(2000, static_cast<UnitFaction>(i)));
         }
     }
 

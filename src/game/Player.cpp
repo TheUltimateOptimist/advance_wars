@@ -4,7 +4,7 @@
 namespace advanced_wars
 {
 
-Player::Player(int money, PlayerFaction faction)
+Player::Player(int money, UnitFaction faction)
     : m_money(money), m_alive(true), m_activeTurn(false), m_faction(faction)
 {
 }
@@ -16,41 +16,9 @@ void Player::startTurn(
 {
     for (auto& [id, unit] : lvUnits)
     {
-        switch (m_faction)
+        if (unit.getFaction() == m_faction)
         {
-        case PlayerFaction::RED:
-            if (unit.getFaction() == UnitFaction::URED)
-            {
-                unit.setState(UnitState::IDLE);
-            }
-            break;
-        case PlayerFaction::BLUE:
-            if (unit.getFaction() == UnitFaction::UBLUE)
-            {
-                unit.setState(UnitState::IDLE);
-            }
-            break;
-        case PlayerFaction::YELLOW:
-            if (unit.getFaction() == UnitFaction::UYELLOW)
-            {
-                unit.setState(UnitState::IDLE);
-            }
-            break;
-        case PlayerFaction::GREEN:
-            if (unit.getFaction() == UnitFaction::UGREEN)
-            {
-                unit.setState(UnitState::IDLE);
-            }
-            break;
-        case PlayerFaction::PURPLE:
-            if (unit.getFaction() == UnitFaction::UPURPLE)
-            {
-                unit.setState(UnitState::IDLE);
-            }
-            break;
-
-        default:
-            break;
+            unit.setState(UnitState::IDLE);
         }
     }
 
@@ -60,31 +28,31 @@ void Player::startTurn(
     {
         switch (m_faction)
         {
-        case PlayerFaction::RED:
+        case UnitFaction::URED:
             if (building.getFaction() == BuildingFaction::URED)
             {
                 underControl++;
             }
             break;
-        case PlayerFaction::BLUE:
+        case UnitFaction::UBLUE:
             if (building.getFaction() == BuildingFaction::UBLUE)
             {
                 underControl++;
             }
             break;
-        case PlayerFaction::YELLOW:
+        case UnitFaction::UYELLOW:
             if (building.getFaction() == BuildingFaction::UYELLOW)
             {
                 underControl++;
             }
             break;
-        case PlayerFaction::GREEN:
+        case UnitFaction::UGREEN:
             if (building.getFaction() == BuildingFaction::UGREEN)
             {
                 underControl++;
             }
             break;
-        case PlayerFaction::PURPLE:
+        case UnitFaction::UPURPLE:
             if (building.getFaction() == BuildingFaction::UPURPLE)
             {
                 underControl++;
@@ -105,43 +73,16 @@ void Player::endTurn(std::unordered_map<int, Unit>& lvUnits)
 {
     for (auto& [id, unit] : lvUnits)
     {
-        switch (m_faction)
+        if (unit.getFaction() == m_faction)
         {
-        case PlayerFaction::RED:
-            if (unit.getFaction() == UnitFaction::URED)
-            {
-                unit.setState(UnitState::UNAVAILABLE);
-            }
-            break;
-        case PlayerFaction::BLUE:
-            if (unit.getFaction() == UnitFaction::UBLUE)
-            {
-                unit.setState(UnitState::UNAVAILABLE);
-            }
-            break;
-        case PlayerFaction::YELLOW:
-            if (unit.getFaction() == UnitFaction::UYELLOW)
-            {
-                unit.setState(UnitState::UNAVAILABLE);
-            }
-            break;
-        case PlayerFaction::GREEN:
-            if (unit.getFaction() == UnitFaction::UGREEN)
-            {
-                unit.setState(UnitState::UNAVAILABLE);
-            }
-            break;
-        case PlayerFaction::PURPLE:
-            if (unit.getFaction() == UnitFaction::UPURPLE)
-            {
-                unit.setState(UnitState::UNAVAILABLE);
-            }
-            break;
-
-        default:
-            break;
+            unit.setState(UnitState::UNAVAILABLE);
         }
     }
     m_activeTurn = false;
+}
+
+UnitFaction Player::getFaction()
+{
+    return m_faction;
 }
 } // namespace advanced_wars
