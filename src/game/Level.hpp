@@ -80,7 +80,7 @@ class Level : public Scene
             std::vector<Building> buildings, std::vector<Unit> units, std::vector<Effect> effects,
             std::queue<Player> turnQ);
 
-        static std::shared_ptr<Level> loadLevel(std::string path, Engine& engine);
+        static std::shared_ptr<Level> loadLevel(const std::string& path, Engine& engine);
 
         void render(Engine& engine);
 

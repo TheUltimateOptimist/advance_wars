@@ -23,6 +23,7 @@ class Menu : public Scene
 {
     private:
         size_t m_selectedOption;              ///< Index of the currently selected menu option.
+        std::string m_level_filepath;         ///< The path from which the level will be loaded.
         std::array<std::string, 3> m_options; ///< The available menu options.
         SDL_Texture* m_backgroundTexture;     ///< Pointer to the background texture (if any).
 
@@ -34,8 +35,9 @@ class Menu : public Scene
          * selected option based on the given index.
          *
          * @param selectedOption The index of the initially selected menu option.
+         * @param level_filepath The path from which the level will be loaded.
          */
-        Menu(int selectedOption);
+        Menu(int selectedOption, const std::string& level_filepath);
 
         /**
          * @brief Renders the menu on the screen.
