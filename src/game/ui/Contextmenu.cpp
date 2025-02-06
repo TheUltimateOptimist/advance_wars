@@ -18,25 +18,9 @@ void ContextMenu::setOptions(const std::vector<std::string>& newOptions)
 void ContextMenu::render(Engine& engine)
 {
 
-    if (TTF_Init() == -1)
-    {
-        std::cerr << "Failed to initialize TTF: " << TTF_GetError() << std::endl;
-        return;
-    }
-
     if (m_options.empty())
     {
         // TODO handle somehow
-        return;
-    }
-
-    std::string basePath = SDL_GetBasePath();
-    std::string relativePath = "res/ARCADECLASSIC.TTF";
-    std::string fullPath = basePath + relativePath;
-    TTF_Font*   font = TTF_OpenFont(fullPath.c_str(), 16);
-    if (!font)
-    {
-        std::cerr << "Failed to load font: " << TTF_GetError() << std::endl;
         return;
     }
 
@@ -54,7 +38,8 @@ void ContextMenu::render(Engine& engine)
     for (size_t i = 0; i < m_options.size(); ++i)
     {
         SDL_Surface* textSurface = TTF_RenderText_Solid(
-            font, m_options[i].c_str(), (i == m_selectedOption) ? yellow : white);
+            engine.getFont().getFont(FontSize::NORMAL), m_options[i].c_str(),
+            (i == m_selectedOption) ? yellow : white);
         if (!textSurface)
         {
             continue;
@@ -68,9 +53,6 @@ void ContextMenu::render(Engine& engine)
         SDL_DestroyTexture(textTexture);
         SDL_FreeSurface(textSurface);
     }
-
-    TTF_CloseFont(font);
-    TTF_Quit();
 }
 
 void ContextMenu::handleEvent(Engine& engine, SDL_Event& event)

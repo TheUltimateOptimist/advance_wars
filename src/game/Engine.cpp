@@ -15,7 +15,8 @@
 namespace advanced_wars
 {
 
-Engine::Engine(Window& window) : m_window(window), m_quit(false), m_unitConfig("../config.xml")
+Engine::Engine(Window& window, Font& font)
+    : m_window(window), m_font(font), m_quit(false), m_unitConfig("../config.xml")
 {
 
     this->m_SDLRenderer = SDL_CreateRenderer(
@@ -128,6 +129,11 @@ Config& Engine::getUnitConfig()
 SDL_Renderer* Engine::renderer()
 {
     return this->m_SDLRenderer;
+}
+
+Font& Engine::getFont()
+{
+    return this->m_font;
 }
 
 Engine::~Engine()

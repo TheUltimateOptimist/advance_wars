@@ -30,11 +30,6 @@ Menu::~Menu()
 
 void Menu::render(Engine& engine)
 {
-    if (TTF_Init() == -1)
-    {
-        std::cerr << "Failed to initialize TTF: " << TTF_GetError() << std::endl;
-        return;
-    }
 
     if (m_backgroundTexture)
     {
@@ -46,28 +41,11 @@ void Menu::render(Engine& engine)
         SDL_RenderClear(engine.renderer());
     }
 
-    std::string basePath = SDL_GetBasePath();
-    std::string relativePath = "res/ARCADECLASSIC.TTF";
-    std::string fullPath = basePath + relativePath;
-    TTF_Font*   titleFont = TTF_OpenFont(fullPath.c_str(), 48);
-    if (!titleFont)
-    {
-        std::cerr << "Failed to load title font: " << fullPath << TTF_GetError() << std::endl;
-        return;
-    }
-
-    TTF_Font* menuFont = TTF_OpenFont(fullPath.c_str(), 24);
-    if (!menuFont)
-    {
-        TTF_CloseFont(titleFont);
-        std::cerr << "Failed to load menu font: " << fullPath << TTF_GetError() << std::endl;
-        return;
-    }
-
     SDL_Color white = {255, 255, 255, 255};
     SDL_Color yellow = {255, 255, 0, 255};
 
-    SDL_Surface* titleSurface = TTF_RenderText_Solid(titleFont, "Advanced Wars", white);
+    SDL_Surface* titleSurface =
+        TTF_RenderText_Solid(engine.getFont().getFont(FontSize::TITLE), "Advanced Wars", white);
     if (titleSurface)
     {
         SDL_Texture* titleTexture = SDL_CreateTextureFromSurface(engine.renderer(), titleSurface);
@@ -81,7 +59,8 @@ void Menu::render(Engine& engine)
     for (size_t i = 0; i < m_options.size(); ++i)
     {
         SDL_Surface* textSurface = TTF_RenderText_Solid(
-            menuFont, m_options[i].c_str(), (i == m_selectedOption) ? yellow : white);
+            engine.getFont().getFont(FontSize::MENU), m_options[i].c_str(),
+            (i == m_selectedOption) ? yellow : white);
         if (!textSurface)
         {
             continue;
@@ -96,11 +75,6 @@ void Menu::render(Engine& engine)
         SDL_DestroyTexture(textTexture);
         SDL_FreeSurface(textSurface);
     }
-
-    TTF_CloseFont(titleFont);
-    TTF_CloseFont(menuFont);
-
-    TTF_Quit();
 }
 
 void Menu::handleEvent(Engine& engine, SDL_Event& event)

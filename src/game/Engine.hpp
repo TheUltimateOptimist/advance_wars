@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Config.hpp"
+#include "Font.hpp"
 #include "SDL_events.h"
 #include "Scene.hpp"
 #include "Spritesheet.hpp"
@@ -24,7 +25,7 @@ class Config;
 class Engine
 {
     public:
-        Engine(Window& window);
+        Engine(Window& window, Font& font);
 
         Engine(const Engine&) = delete;
         Engine& operator=(const Engine&) = delete;
@@ -55,6 +56,8 @@ class Engine
 
         SDL_Renderer* renderer();
 
+        Font& getFont();
+
         ~Engine();
 
     private:
@@ -63,6 +66,7 @@ class Engine
         std::vector<std::shared_ptr<Scene>> m_scenes;
         std::optional<Spritesheet*>         m_spritesheet;
         std::deque<SDL_Event>               m_events;
+        Font&                               m_font;
 
         bool m_quit;
         int  m_stage;
