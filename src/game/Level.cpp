@@ -77,6 +77,31 @@ std::shared_ptr<Level> Level::loadLevel(std::string path, Engine& engine)
     int         height = pt.get<int>("level.height");
     std::string name = pt.get<std::string>("level.name");
 
+    // if level is smaler than 20x20 surround with water tiles
+    if (width < 20 || height < 20) {
+        int w_start = (20 - width) / 2;
+        int h_start = (20 - height) / 2;
+        std::vector<uint8_t> transformed_tiles_array;
+        transformed_tiles_array.reserve(20*20);
+        for (int y = 0; y < 20; y++)
+        {
+            for (int x = 0; x < 20; x++)
+            {
+                if (x < w_start || y < h_start || x >= w_start + width || y >= h_start + height)
+                {
+                    transformed_tiles_array.push_back(1);
+                }
+                else
+                {
+                    transformed_tiles_array.push_back(level_tilesarray[x - w_start + (y - h_start)*width]);
+                }
+            }
+        }
+        level_tilesarray = std::move(transformed_tiles_array);
+        width = 20;
+        height = 20;
+    }
+
     // create tiles, buildings and units vector from tiles array
     std::vector<Tile>     tiles;
     std::vector<Building> buildings;
@@ -126,6 +151,7 @@ std::shared_ptr<Level> Level::loadLevel(std::string path, Engine& engine)
     Level level(name, width, height, tiles, buildings, units, std::vector<Effect>{}, turnQ);
 
     level.m_turnQ.front().startTurn(level.m_units, level.m_buildings);
+    std::cout << "exiting" << std::endl;
     return std::make_shared<Level>(level);
 }
 
