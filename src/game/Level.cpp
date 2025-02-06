@@ -595,30 +595,34 @@ void Level::handleSelectingEvents(Engine& engine, SDL_Event& event)
                             }
                         }
                     }
-                    
+
                     Unit& u = m_units.at(m_selectedUnit);
+
                     
-                    if(u.hasMoved()) {
-                        m_contextMenu.setOptions({"Attack", "Info", "Wait"});
-                    } else {
-                        
-                        for(auto& [id, building] : m_buildings) {
-                            if(building.m_x == u.m_x && building.m_y == u.m_y) {
-                                m_contextMenu.setOptions({"Capture", "Move", "Attack","Info", "Wait"});
-                                m_captureBuilding = id;
-                                break;
-                            }
+
+                    for (auto& [id, building] : m_buildings)
+                    {
+                        if (building.m_x == u.m_x && building.m_y == u.m_y)
+                        {
+                            m_captureBuilding = id;
+                            m_contextMenu.setOptions(
+                                {"Capture", "Move", "Attack", "Info", "Wait"});
+                            break;
                         }
-                        
-                    }                   
+                    }
+                                       
                 }
                 else
-                {   
-                    BuildingId b_id = m_buildings.at(m_selectedBuilding).getBuildingId();
+                {
+                    BuildingId      b_id = m_buildings.at(m_selectedBuilding).getBuildingId();
                     BuildingFaction b_faction = m_buildings.at(m_selectedBuilding).getFaction();
-                    if(b_id == BuildingId::CITY || b_id == BuildingId::HEADQUARTER || b_faction == static_cast<BuildingFaction> (5)) {
+                    if (b_id == BuildingId::CITY || b_id == BuildingId::HEADQUARTER ||
+                        b_faction == static_cast<BuildingFaction>(5))
+                    {
                         m_contextMenu.setOptions({"Info", "Wait"});
-                    } else {
+                    }
+                    else
+                    {
                         m_contextMenu.setOptions({"Train", "Info", "Wait"});
                     }
                 }
@@ -718,12 +722,15 @@ void Level::handleMenuActiveEvents(Engine& engine, SDL_Event& event)
                 std::cout << "no training here" << std::endl;
             }
 
-            if(cmd == "Capture") {
-                Building& b = m_buildings.at(m_captureBuilding);
+            if (cmd == "Capture")
+            {
+                Building&   b = m_buildings.at(m_captureBuilding);
                 UnitFaction u_f = m_units.at(m_selectedUnit).getFaction();
 
-                BuildingFaction b_f = static_cast <BuildingFaction> (static_cast<int> (u_f));
+                BuildingFaction b_f = static_cast<BuildingFaction>(static_cast<int>(u_f));
                 b.switch_faction(b_f);
+                m_selectedBuilding = -1;
+                m_selectedUnit = -1;
             }
         }
 
