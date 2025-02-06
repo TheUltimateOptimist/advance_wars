@@ -30,4 +30,8 @@ void Tile::render(Engine& engine, int scale)
         &dest, 0, NULL, SDL_FLIP_NONE);
 }
 
+TileId Tile::getType() const {
+    return m_id;  // Gibt den gespeicherten TileId zurück
+}
+
 } // namespace advanced_wars

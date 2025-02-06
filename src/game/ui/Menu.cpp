@@ -1,6 +1,7 @@
 #include "Menu.hpp"
 #include "../Building.hpp"
 #include "../Level.hpp"
+#include "../Config.hpp"
 #include "../Spritesheet.hpp"
 #include "../Tile.hpp"
 #include "../Unit.hpp"
@@ -99,7 +100,6 @@ void Menu::render(Engine& engine)
     TTF_CloseFont(titleFont);
     TTF_CloseFont(menuFont);
 
-    SDL_RenderPresent(engine.renderer());
     TTF_Quit();
 }
 
@@ -125,6 +125,7 @@ void Menu::handleEvent(Engine& engine, SDL_Event& event)
             else if (m_options[m_selectedOption] == "Start Game")
             {
                 std::cout << "Starting game..." << std::endl;
+
 
                 // Construct a level
                 std::vector<Tile> tiles;
@@ -179,6 +180,7 @@ void Menu::handleEvent(Engine& engine, SDL_Event& event)
                     }
                 }
 
+                Config config = Config("../config.xml");
                 // Units
                 std::vector<Unit> units;
 
@@ -188,7 +190,7 @@ void Menu::handleEvent(Engine& engine, SDL_Event& event)
                     {
                         units.push_back(Unit(
                             x + 9, y + 2, UnitFaction::URED, static_cast<UnitId>(y),
-                            static_cast<UnitState>(x)));
+                            static_cast<UnitState>(x), config));
                     }
                 }
 

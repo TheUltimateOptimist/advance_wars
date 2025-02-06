@@ -1,22 +1,48 @@
 #include "Unit.hpp"
+#include "Config.hpp"
 #include <iostream>
 
 namespace advanced_wars
 {
 
-Unit::Unit(int x, int y, UnitFaction faction, UnitId id, UnitState state)
+Unit::Unit(int x, int y, UnitFaction faction, UnitId id, UnitState state, Config& config)
     : m_x(x), m_y(y), m_faction(faction), m_id(id), m_state(state), m_maxHealth(100)
 {
-    // das ist nur für Testzwecke
-    if (m_id == UnitId::INFANTERY)
-    {
-        m_secondaryWeapon = Weapon(
-            "Machine-Gun", {
-                               {UnitId::INFANTERY, 55}
-        });
-    }
+    // Allgemeine Einheiteneinstellungen aus Konfiguration holen
+    m_cost = config.getUnitCost(id);
+    m_movementPoints = config.getUnitMovementPoints(id);
+    m_ammo = config.getUnitAmmo(id);
+    m_minRange = config.getUnitMinRange(id);
+    m_maxRange = config.getUnitMaxRange(id);
     m_health = m_maxHealth;
+
+    m_movementType = config.getUnitMovementType(id);
+
+    // Initialisieren der Primär- und Sekundärwaffe
+    std::unordered_map<UnitId, int> primaryDamage;
+    std::unordered_map<UnitId, int> secondaryDamage;
+
+    for (int targetIt = static_cast<int>(UnitId::FIRST); targetIt <= static_cast<int>(UnitId::LAST);
+         ++targetIt)
+    {
+        UnitId targetId = static_cast<UnitId>(targetIt);
+
+        // Prüfen, ob ein gültiger Schadenswert vorhanden ist, und nur dann hinzufügen
+        if (auto damage = config.getUnitPrimaryWeaponDamage(id, targetId))
+        {
+            primaryDamage[targetId] = *damage;
+        }
+        if (auto damage = config.getUnitSecondaryWeaponDamage(id, targetId))
+        {
+            secondaryDamage[targetId] = *damage;
+        }
+    }
+
+    m_primaryWeapon = Weapon(config.getUnitPrimaryWeapon(id), primaryDamage);
+    m_secondaryWeapon = Weapon(config.getUnitSecondaryWeapon(id), secondaryDamage);
 }
+
+ 
 
 void Unit::render(Engine& engine, int scale)
 {
@@ -64,7 +90,7 @@ void Unit::render(Engine& engine, int scale)
 
         SDL_Rect dst;
         dst.x = ((m_x * spritesheet->getUnitWidth()) - 4) * scale;
-        dst.y = ((m_y * spritesheet->getUnitHeight()) - 4) * scale;
+        dst.y = ((m_y * spritesheet->getUnitHeight()) - 8) * scale;
         dst.w = spritesheet->getUnitMovingWidth() * scale;
         dst.h = spritesheet->getUnitMovingHeight() * scale;
 
@@ -77,81 +103,91 @@ void Unit::render(Engine& engine, int scale)
                 .first,
             &src, &dst, 0, NULL, SDL_FLIP_NONE);
     }
+    renderHP(engine, scale);
 }
 
 void Unit::attack(Unit& enemy)
 {
-    // Angenommen, primary_weapon und secondary_weapon wurden bereits korrekt
-    // initialisiert
-    auto primary_weapon_damage_it = m_primaryWeapon.m_damage.find(enemy.m_id);
-    auto secondary_weapon_damage_it = m_secondaryWeapon.m_damage.find(enemy.m_id);
+    int attacker_damage_value = calculateDamage(enemy);
 
-    int attacker_damage_value = 0;
-
-    // Die Waffe mit dem höchsten Schaden wählen
-    if (secondary_weapon_damage_it != m_secondaryWeapon.m_damage.end())
+    if (attacker_damage_value > 0)
     {
-        attacker_damage_value = secondary_weapon_damage_it->second;
-    }
+        performAttack(enemy, attacker_damage_value);
+        std::cout << "Enemy health after attack: " << enemy.m_health << std::endl;
 
-    if (primary_weapon_damage_it != m_primaryWeapon.m_damage.end())
-    {
-        if (primary_weapon_damage_it->second > attacker_damage_value)
+        // Check if the enemy is still alive for counter-attack
+        if (enemy.m_health > 0)
         {
-            // Munitionsabzug sollte hier erfolgen, falls zutreffend
-            attacker_damage_value = primary_weapon_damage_it->second;
+            // Check if the enemy is within attack range
+            int distanceX = std::abs(enemy.m_x - m_x);
+            int distanceY = std::abs(enemy.m_y - m_y);
+            int distance = distanceX + distanceY;
+
+            if (distance >= enemy.m_minRange && distance <= enemy.m_maxRange)
+            {
+                // Now, they are reversed for the counter-attack
+                int defender_damage_value = enemy.calculateDamage(*this);
+                if (defender_damage_value > 0)
+                {
+                    enemy.performAttack(*this, defender_damage_value);
+                    std::cout << "Ally health after retaliation: " << this->m_health << std::endl;
+                }
+            }
+            else
+            {
+                std::cout << "Enemy out of range for counter-attack." << std::endl;
+            }
         }
     }
-
-    if (attacker_damage_value == 0)
+    else
     {
         std::cout << "No damage value found for attack from unit " << static_cast<int>(m_id)
                   << " against unit " << static_cast<int>(enemy.m_id) << std::endl;
     }
-    else
+}
+
+int Unit::calculateDamage(Unit& target)
+{
+    // Pointers to Weapon objects
+    Weapon* primaryWeapon =  &m_primaryWeapon;
+    Weapon* secondaryWeapon = &m_secondaryWeapon;
+    
+    // Find the corresponding damage values
+    auto primary_damage_it = primaryWeapon->m_damage.find(target.m_id);
+    auto secondary_damage_it = secondaryWeapon->m_damage.find(target.m_id);
+
+    int damage_value = 0;
+
+    // Calculate damage using secondary weapon if available
+    if (secondary_damage_it != secondaryWeapon->m_damage.end())
     {
-        int off_damage = attacker_damage_value * (static_cast<float>(m_health) / m_maxHealth);
-        enemy.m_health -= off_damage;
-        enemy.m_health = std::max(
-            0,
-            enemy.m_health); // Sicherstellen, dass die Gesundheit nicht negativ wird
-        std::cout << "Enemy health after attack: " << enemy.m_health << std::endl;
+        damage_value = secondary_damage_it->second;
+    }
 
-        // Prüfen, ob der Gegner noch am Leben ist um zurückzuschlagen
-        if (enemy.m_health > 0)
+    // Calculate damage using primary weapon if higher and ammo is available
+    if (primary_damage_it != primaryWeapon->m_damage.end())
+    {
+        // Check ammo correctly
+        int& ammo = m_ammo;
+
+        if (primary_damage_it->second > damage_value && ammo > 0)
         {
-            // Weapon tables for the defender
-            auto defender_primary_weapon_damage_it = enemy.m_primaryWeapon.m_damage.find(m_id);
-            auto defender_secondary_weapon_damage_it = enemy.m_secondaryWeapon.m_damage.find(m_id);
-
-            int defender_damage_value = 0; // Declare outside for later use
-
-            // Determine the damage value for the defender
-            if (defender_secondary_weapon_damage_it != enemy.m_secondaryWeapon.m_damage.end())
-            {
-                defender_damage_value = defender_secondary_weapon_damage_it->second;
-            }
-
-            if (defender_primary_weapon_damage_it != enemy.m_primaryWeapon.m_damage.end())
-            {
-                if (defender_primary_weapon_damage_it->second > defender_damage_value)
-                {
-                    // Munitionsabzug für primäre Waffe, falls zutreffend
-                    defender_damage_value = defender_primary_weapon_damage_it->second;
-                }
-            }
-
-            // If a valid damage value was determined for retaliation
-            if (defender_damage_value > 0)
-            {
-                int def_damage = static_cast<int>(
-                    defender_damage_value * static_cast<float>(enemy.m_health) / enemy.m_maxHealth);
-                this->m_health -= def_damage;
-                this->m_health = std::max(0, this->m_health); // Safeguard against negative health
-                std::cout << "Ally health after retaliation: " << this->m_health << std::endl;
-            }
+            ammo -= 1;
+            damage_value = primary_damage_it->second;
+            std::cout << " ammo = " << ammo << std::endl;
         }
     }
+
+    return damage_value;
+}
+
+
+
+void Unit::performAttack(Unit& target, int damage)
+{
+    int effective_damage = damage * (static_cast<float>(m_health) / m_maxHealth);
+    target.m_health -= effective_damage;
+    target.m_health = std::max(0, target.m_health);
 }
 
 void Unit::updatePosition(int posX, int posY)
@@ -203,17 +239,89 @@ void Unit::on_left_click(SDL_Event event)
     std::cout << "Left-button pressed on unit: " << this->m_health << std::endl;
 }
 
-bool Unit::inRange(Unit& enemy)
+std::vector<Unit*> Unit::getUnitsInRangeWithDamagePotential(const std::vector<Unit*>& allUnits)
 {
-    if (this->m_x == enemy.m_x)
-    {
-        return abs(this->m_y - enemy.m_y) <= this->m_range;
+    std::vector<Unit*> unitsInRangeWithDamage;
+
+    for (Unit* unit : allUnits)
+    { //Iterate over all units
+        // except itself
+        if (unit == this)
+        {
+            continue;
+        }
+
+        int distanceX = std::abs(unit->m_x - m_x);
+        int distanceY = std::abs(unit->m_y - m_y);
+
+        
+        int distance = distanceX + distanceY;
+        if (distance >= m_minRange && distance <= m_maxRange)
+        {
+            // Prüfen ob Schaden möglich ist
+            auto primaryDamageIt = m_primaryWeapon.m_damage.find(unit->m_id);
+            auto secondaryDamageIt = m_secondaryWeapon.m_damage.find(unit->m_id);
+
+            bool canDealDamage = false;
+
+            // Prüfen, ob Primärwaffe Schaden machen kann
+            if (primaryDamageIt != m_primaryWeapon.m_damage.end() && m_ammo > 0)
+            {
+                canDealDamage = true;
+            }
+            // Prüfen, ob Sekundärwaffe Schaden machen kann
+            if (secondaryDamageIt != m_secondaryWeapon.m_damage.end())
+            {
+                canDealDamage = true;
+            }
+
+            if (canDealDamage)
+            {
+                unitsInRangeWithDamage.push_back(unit);
+            }
+        }
     }
-    else if (this->m_y == enemy.m_y)
+
+    return unitsInRangeWithDamage;
+}
+
+UnitFaction Unit::getFaction()
+{
+    return this->m_faction;
+}
+
+void Unit::renderHP(Engine& engine, int scale)
+{
+    Spritesheet* spritesheet = engine.getSpritesheet();
+
+    SDL_Texture* numbers = spritesheet->getNumberTexture();
+    int          numberWidth = spritesheet->getNumberWidth();
+    int          numberHeight = spritesheet->getNumberHeight();
+
+    int hp = ceil((double)m_health / 10);
+
+    SDL_Rect src;
+    src.x = hp % 10 * numberWidth;
+    src.y = 0;
+    src.w = numberWidth;
+    src.h = numberHeight;
+
+    SDL_Rect dest;
+    dest.x = (m_x * spritesheet->getTileWidth() + 8) * scale;
+    dest.y = (m_y * spritesheet->getTileHeight() + 12) * scale;
+    dest.w = numberWidth * scale;
+    dest.h = numberHeight * scale;
+
+    SDL_RenderCopy(engine.renderer(), numbers, &src, &dest);
+
+    if (hp == 10)
     {
-        return abs(this->m_x - enemy.m_x) <= this->m_range;
+        src.x = 8;
+
+        dest.x = (m_x * spritesheet->getTileWidth() + 1) * scale;
+
+        SDL_RenderCopy(engine.renderer(), numbers, &src, &dest);
     }
-    return false;
 }
 
 UnitFaction Unit::getFaction()
