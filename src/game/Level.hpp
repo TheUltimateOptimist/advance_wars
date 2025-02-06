@@ -10,6 +10,7 @@
 #include "ui/Contextmenu.hpp"
 #include "ui/Recruitingmenu.hpp"
 #include "ui/TileMarker.hpp"
+#include "ui/UnitInfoMenu.hpp"
 #include <SDL.h>
 #include <array>
 #include <queue>
@@ -17,6 +18,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
+
 
 namespace advanced_wars
 {
@@ -164,6 +166,8 @@ class Level : public Scene
         void handleAttack(std::pair<int, int> tilePos);
         void handleMovement(std::pair<int, int> tilePos);
         void handlePositionMarker(Engine& engine, SDL_Event& event);
+
+        UnitInfoMenu m_unitInfoMenu;
 };
 
 } // namespace advanced_wars

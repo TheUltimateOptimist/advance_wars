@@ -123,6 +123,9 @@ class Unit
 
         UnitFaction getFaction();
 
+        int getAmmo() const { return m_ammo; }
+        int getHealth() const { return m_health; }
+
         void setState(UnitState state);
 
         /**

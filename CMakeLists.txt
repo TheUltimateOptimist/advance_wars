@@ -74,6 +74,9 @@ file(GLOB HDF5_FILES ${RES_DIR}/*.h5)
 # Executable erstellen
 add_executable(advanced_wars ${ADVANCED_WARS_SOURCES})
 
+set(CMAKE_MODULE_PATH ${ADVANCED_WARS_SOURCE_DIR}/cmake/ ${CMAKE_MODULE_PATH})
+
+
 # Plattform-spezifische Konfiguration
 if(APPLE)
     # SDL2 Frameworks für macOS
@@ -158,5 +161,3 @@ foreach(H5_FILE ${HDF5_FILES})
             COMMENT "Kopiere HDF5 File: ${H5_FILE} nach ${OUTPUT_RES_DIR}"
     )
 endforeach()
-
-set(CMAKE_MODULE_PATH ${ADVANCED_WARS_SOURCE_DIR}/cmake/ ${CMAKE_MODULE_PATH})
