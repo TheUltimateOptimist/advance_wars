@@ -221,23 +221,38 @@ void LevelScene::setTile(int index, uint8_t id)
     {
         m_tile_occupants[index] = occupy_tile(index, id);
     }
+
+    /* gespiegeltes Setzen 
+    index = m_width * m_height - 1 -index;
+    int swapID[22] ={11,10,9,8,12,16,15,14,13,17,19,18,21,20,25,24,23,22,29,28,27,26};
+    if(id > 7 && id < 30) id = swapID[ id-8 ];
+
+    m_tile_ids[index]=id;
+    if (m_tile_occupants[index] != nullptr)
+    {
+        removeItem(m_tile_occupants[index]);
+        delete m_tile_occupants[index];
+        m_tile_occupants[index] = nullptr;
+    }
+    if (m_tile_ids[index] > 0)
+    {
+        m_tile_occupants[index] = occupy_tile(index, id);
+    }
+    */
 }
 
 void LevelScene::onTileClicked(int index)
 {
-    /*
-    m_tile_ids[index] = m_selected_tile_id;
-    if(!(m_advanced_tile_placement)) return;
-    */
-
 	if (is_border(index) && !is_water_tile(m_selected_tile_id)) {
 		return;
 	}
-	std::cout << m_advanced_tile_placement << std::endl;
+	
 	if (!m_advanced_tile_placement) {
     	m_tile_ids[index] = m_selected_tile_id;
 		return;
 	}
+
+
 	if(m_selected_tile_id > 5 && m_selected_tile_id < 17){	//Straße plaziert
 		placeRoad(index, true);
 		return;
@@ -256,6 +271,7 @@ void LevelScene::onTileClicked(int index)
 		placeCliff(true, index);
 		return;
 	}
+    setTile(index, m_selected_tile_id);     //Gebäude plaziert
 }
 
 void LevelScene::onNewTileIdSelected(uint8_t tile_id)

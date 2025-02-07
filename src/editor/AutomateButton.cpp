@@ -21,7 +21,6 @@ AutomateButton::AutomateButton(const QString text, QWidget* parent) : QCheckBox(
 void AutomateButton::mousePressEvent(QMouseEvent *event)
 {
     QCheckBox::mousePressEvent(event);
-    std::cout << "clicked" << std::endl;
     EventHandler::send([](EventHandler* e) { e->onCheckBoxToggled(); });
 }
 
