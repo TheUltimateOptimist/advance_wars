@@ -26,8 +26,10 @@ class Building
         Changes the faction to the specified one
 
         @param faction The new faction the unit will belong to
+
+        @return true if building was a headquarter
         */
-        void switch_faction(BuildingFaction faction);
+        bool switch_faction(BuildingFaction faction);
 
         /*
         checks if the tile ontop of the building is free

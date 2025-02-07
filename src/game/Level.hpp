@@ -8,9 +8,9 @@
 #include "Tile.hpp"
 #include "Unit.hpp"
 #include "ui/Contextmenu.hpp"
+#include "ui/Helpmenu.hpp"
 #include "ui/Recruitingmenu.hpp"
 #include "ui/TileMarker.hpp"
-#include "ui/Helpmenu.hpp"
 #include <SDL.h>
 #include <array>
 #include <queue>
@@ -122,6 +122,8 @@ class Level : public Scene
 
         std::vector<std::pair<int, int>> m_attackableTiles;
 
+        bool m_gameOver;
+
     private:
         std::string                       m_name;
         int                               m_width;
@@ -137,7 +139,7 @@ class Level : public Scene
         int            m_captureBuilding;
         ContextMenu    m_contextMenu;
         RecruitingMenu m_recruitingMenu;
-        bool toggle_Helpmenu = false;
+        bool           toggle_Helpmenu = false;
         HelpMenu       m_helpMenu;
         int            m_id;
         LevelState     m_state;
@@ -170,7 +172,6 @@ class Level : public Scene
         void handlePositionMarker(Engine& engine, SDL_Event& event);
 
         std::pair<int, int> unit_fallback_position;
-
 };
 
 } // namespace advanced_wars

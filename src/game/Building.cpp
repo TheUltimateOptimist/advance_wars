@@ -34,15 +34,16 @@ BuildingFaction Building::getFaction()
     return this->m_faction;
 }
 
-void Building::switch_faction(BuildingFaction faction)
+bool Building::switch_faction(BuildingFaction faction)
 {
 
     this->m_faction = faction;
 
     if (this->m_id == BuildingId::HEADQUARTER)
     {
-        std::cout << "The game is over!" << std::endl;
+        return true;
     }
+    return false;
 }
 
 // implement call to UI to show available units
@@ -105,7 +106,8 @@ std::vector<UnitId> Building::recruitableUnits()
     return {};
 }
 
-BuildingId Building::getBuildingId() {
+BuildingId Building::getBuildingId()
+{
     return this->m_id;
 }
 
