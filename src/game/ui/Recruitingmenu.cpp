@@ -5,46 +5,40 @@
 namespace advanced_wars
 {
     RecruitingMenu::RecruitingMenu() : m_selectedOption(0), unitNames({
-    {UnitId::INFANTERY, {"Infantry", 100}},
-    {UnitId::MECHANIZED_INFANTERY, {"Bazooka", 200}},
-    {UnitId::RECON, {"Recon", 300}},
-    {UnitId::APC, {"APC", 400}},
-    {UnitId::ARTILLERY, {"Artillery", 500}},
-    {UnitId::ANTI_AIR_TANK, {"AA Tank", 600}},
-    {UnitId::ANTI_AIR_MISSILE_LAUNCHER, {"Rocket AA", 700}},
-    {UnitId::ROCKET_ARTILLERY, {"MLRS", 800}},
-    {UnitId::MEDIUM_TANK, {"Medium Tank", 900}},
-    {UnitId::NEO_TANK, {"Neo Tank", 1000}},
-    {UnitId::HEAVY_TANK, {"Heavy Tank", 1100}},
-    {UnitId::LANDER, {"Lander", 1200}},
-    {UnitId::CRUISER, {"Cruiser", 1300}},
-    {UnitId::SUBMARINE, {"Submarine", 1400}},
-    {UnitId::BATTLESHIP, {"Battleship", 1500}},
-    {UnitId::TRANSPORT_HELICOPTER, {"Chinook", 1600}},
-    {UnitId::BATTLE_HELICOPTER, {"Helicopter", 1700}},
-    {UnitId::FIGHTER, {"Fighter", 1800}},
-    {UnitId::BOMBER, {"Bomber", 1900}}
-    }) {
+    {UnitId::INFANTERY, "Infantry"},
+    {UnitId::MECHANIZED_INFANTERY, "Bazooka"},
+    {UnitId::RECON, "Recon"},
+    {UnitId::APC, "APC"},
+    {UnitId::ARTILLERY, "Artillery"},
+    {UnitId::ANTI_AIR_TANK, "AA Tank"},
+    {UnitId::ANTI_AIR_MISSILE_LAUNCHER, "Rocket AA"},
+    {UnitId::ROCKET_ARTILLERY, "MLRS"},
+    {UnitId::MEDIUM_TANK, "Medium Tank"},
+    {UnitId::NEO_TANK, "Neo Tank"},
+    {UnitId::HEAVY_TANK, "Heavy Tank"},
+    {UnitId::LANDER, "Lander"},
+    {UnitId::CRUISER, "Cruiser"},
+    {UnitId::SUBMARINE, "Submarine"},
+    {UnitId::BATTLESHIP, "Battleship"},
+    {UnitId::TRANSPORT_HELICOPTER, "Chinook"},
+    {UnitId::BATTLE_HELICOPTER, "Helicopter"},
+    {UnitId::FIGHTER, "Fighter"},
+    {UnitId::BOMBER, "Bomber"}
+    })
+    {
 
     }
 
     void RecruitingMenu::setOptions(const std::vector<UnitId> recruitableUnits) {
 
-        std::vector<std::pair<std::string, int>> options;
-
-        for (UnitId id : recruitableUnits) {
-            options.push_back(unitNames.at(id));
-            cost2UnitId.insert(std::make_pair(unitNames.at(id).second, id));
-
-        }
-
-        m_options = options;
+        m_options = recruitableUnits;
         m_selectedOption = 0;
+
     }
 
     void RecruitingMenu::render(Engine& engine)
 {
-
+    Config& config = engine.getUnitConfig();
     Spritesheet* spritesheet = engine.getSpritesheet();
 
     if (TTF_Init() == -1)
@@ -75,21 +69,21 @@ namespace advanced_wars
     int spacing = 20; // Abstand zwischen den Optionen
     // box around options
     SDL_SetRenderDrawColor(engine.renderer(), 0, 0, 255, 255);
-    SDL_Rect box = {m_x, m_y - 3, 150, static_cast<int>(m_options.size() * spacing)};
+    SDL_Rect box = {m_x, m_y - 3, 175, static_cast<int>(m_options.size() * spacing)};
     SDL_RenderFillRect(engine.renderer(), &box);
 
     SDL_SetRenderDrawColor(engine.renderer(), 0, 0, 0, 255);
     int i = 0;
 
-    for (auto& [render_name, cost] : m_options)
+    for (UnitId id : m_options)
     {
         //std::pair<std::string, int> unit_option = unitNames.at(cost2UnitId.at(cost));
         if(i == m_selectedOption) {
-            m_selectedId = cost2UnitId.at(cost);
+            m_selectedId = id;
         }
         
         SDL_Surface* textSurface = TTF_RenderText_Solid(
-            font, render_name.c_str(), (i == m_selectedOption) ? yellow : white);
+            font, unitNames.at(id).c_str(), (i == m_selectedOption) ? yellow : white);
         if (!textSurface)
         {
             continue;
@@ -100,10 +94,10 @@ namespace advanced_wars
             m_x + 10 + 16, m_y + static_cast<int>(i * spacing), textSurface->w, textSurface->h};
         SDL_RenderCopy(engine.renderer(), textTexture, nullptr, &textRect);
 
-
+        
         SDL_Texture* unit_texture = spritesheet->getUnitTextures()
                 .at(static_cast<int>(UnitFaction::URED))
-                .at(static_cast<int>(cost2UnitId.at(cost)))
+                .at(static_cast<int>(id))
                 .at(static_cast<int>(UnitState::IDLE))
                 .first;
 
@@ -124,7 +118,7 @@ namespace advanced_wars
         SDL_RenderCopy(engine.renderer(), unit_texture, &src_rect, &trgt_rect);
 
         SDL_Surface* costSurface = TTF_RenderText_Solid(
-            font, std::to_string(cost).c_str(), (i == m_selectedOption) ? yellow : white);
+            font, std::to_string(config.getUnitCost(id)).c_str(), (i == m_selectedOption) ? yellow : white);
         if (!textSurface)
         {
             continue;

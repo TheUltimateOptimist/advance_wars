@@ -76,7 +76,6 @@ add_executable(advanced_wars ${ADVANCED_WARS_SOURCES})
 
 set(CMAKE_MODULE_PATH ${ADVANCED_WARS_SOURCE_DIR}/cmake/ ${CMAKE_MODULE_PATH})
 
-
 # Plattform-spezifische Konfiguration
 if(APPLE)
     # SDL2 Frameworks für macOS

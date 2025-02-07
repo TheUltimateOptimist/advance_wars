@@ -130,6 +130,8 @@ class Unit
 
         void setState(UnitState state);
 
+        inline UnitState getState() const { return m_state; }
+
         /**
          * Retrieves units within range that this unit can deal damage to.
          * Considers all units provided in 'allUnits', excluding itself, and checks movement and
@@ -139,6 +141,9 @@ class Unit
          * @return Vector of pointers to units in range that can be engaged.
          */
         std::vector<Unit*> getUnitsInRangeWithDamagePotential(const std::vector<Unit*>& allUnits);
+
+        bool hasMoved();
+        bool hasAttacked();
 
     private:
         UnitFaction m_faction; // The faction to which this unit belongs.

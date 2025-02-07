@@ -242,7 +242,7 @@ std::vector<Unit*> Unit::getUnitsInRangeWithDamagePotential(const std::vector<Un
     for (Unit* unit : allUnits)
     { // Iterate over all units
         // except itself
-        if (unit == this)
+        if (unit->getFaction() == this->m_faction)
         {
             continue;
         }
@@ -322,6 +322,14 @@ UnitFaction Unit::getFaction()
 void Unit::setState(UnitState state)
 {
     this->m_state = state;
+}
+
+bool Unit::hasAttacked() {
+    return this->m_hasAttacked;
+}
+
+bool Unit::hasMoved() {
+    return this->m_hasMoved;
 }
 
 } // namespace advanced_wars

@@ -8,6 +8,7 @@
 #include "Tile.hpp"
 #include "Unit.hpp"
 #include "ui/Contextmenu.hpp"
+#include "ui/Helpmenu.hpp"
 #include "ui/Recruitingmenu.hpp"
 #include "ui/TileMarker.hpp"
 #include "ui/UnitInfoMenu.hpp"
@@ -82,7 +83,7 @@ class Level : public Scene
             std::vector<Building> buildings, std::vector<Unit> units, std::vector<Effect> effects,
             std::queue<Player> turnQ);
 
-        static std::shared_ptr<Level> loadLevel(std::string path, Engine& engine);
+        static std::shared_ptr<Level> loadLevel(const std::string& path, Engine& engine);
 
         void render(Engine& engine);
 
@@ -123,6 +124,8 @@ class Level : public Scene
 
         std::vector<std::pair<int, int>> m_attackableTiles;
 
+        bool m_gameOver;
+
     private:
         std::string                       m_name;
         int                               m_width;
@@ -135,8 +138,11 @@ class Level : public Scene
 
         int            m_selectedUnit;
         int            m_selectedBuilding;
+        int            m_captureBuilding;
         ContextMenu    m_contextMenu;
         RecruitingMenu m_recruitingMenu;
+        bool           toggle_Helpmenu = false;
+        HelpMenu       m_helpMenu;
         int            m_id;
         LevelState     m_state;
 
@@ -170,6 +176,8 @@ class Level : public Scene
         UnitInfoMenu m_unitInfoMenu;
 
         bool m_showUnitInfoMenu = false;
+
+        std::pair<int, int> unit_fallback_position;
 };
 
 } // namespace advanced_wars

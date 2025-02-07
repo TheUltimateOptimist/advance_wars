@@ -26,8 +26,10 @@ class Building
         Changes the faction to the specified one
 
         @param faction The new faction the unit will belong to
+
+        @return true if building was a headquarter
         */
-        void switch_faction(BuildingFaction faction);
+        bool switch_faction(BuildingFaction faction);
 
         /*
         checks if the tile ontop of the building is free
@@ -38,12 +40,6 @@ class Building
         checks if the player has enough money for the unit to be recruited
         */
         bool check_money(int price, int playerMoney);
-
-        /*
-        When the building is selected, the player should have the ability to recruit a selection of
-        units They should be displayed by the UI On_click();
-        */
-        void recruit_unit();
 
         /**
         If the building is clicked, it shows information to the player, here it will be a list of
@@ -56,6 +52,8 @@ class Building
          *
          */
         std::vector<UnitId> recruitableUnits();
+
+        BuildingId getBuildingId();
 };
 
 } // namespace advanced_wars

@@ -106,7 +106,8 @@ void Engine::render()
     std::shared_ptr<Scene> currentScene = m_scenes.back();
 
     currentScene->render(*this);
-
+    // prevent epilepsy
+    SDL_SetRenderDrawColor(this->m_SDLRenderer, 128, 128, 128, 128);
     SDL_RenderPresent(this->m_SDLRenderer);
 }
 
