@@ -804,7 +804,10 @@ void Level::handleMenuActiveEvents(Engine& engine, SDL_Event& event)
         }
         if (event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_DOWN)
         {
-            m_contextMenu.handleEvent(engine, event);
+            if (!m_showUnitInfoMenu)
+            {
+                m_contextMenu.handleEvent(engine, event);
+            }
         }
         if (event.key.keysym.sym == SDLK_RETURN)
         {
