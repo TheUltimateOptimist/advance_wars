@@ -30,12 +30,18 @@ Menu::~Menu()
 
 void Menu::render(Engine& engine)
 {
+    // Initialisiere TTF, falls noch nicht geschehen.
     if (TTF_Init() == -1)
     {
         std::cerr << "Failed to initialize TTF: " << TTF_GetError() << std::endl;
         return;
     }
 
+    // Erhalte die Fenstergröße dynamisch
+    int windowWidth = engine.getWindow().w();
+    int windowHeight = engine.getWindow().h();
+
+    // Hintergrund rendern
     if (m_backgroundTexture)
     {
         SDL_RenderCopy(engine.renderer(), m_backgroundTexture, nullptr, nullptr);
@@ -46,38 +52,44 @@ void Menu::render(Engine& engine)
         SDL_RenderClear(engine.renderer());
     }
 
+    // Pfad zur Schriftart
     std::string basePath = SDL_GetBasePath();
     std::string relativePath = "res/ARCADECLASSIC.TTF";
     std::string fullPath = basePath + relativePath;
-    TTF_Font*   titleFont = TTF_OpenFont(fullPath.c_str(), 48);
+
+    // Schriftarten laden
+    TTF_Font* titleFont = TTF_OpenFont(fullPath.c_str(), 48);
     if (!titleFont)
     {
-        std::cerr << "Failed to load title font: " << fullPath << TTF_GetError() << std::endl;
+        std::cerr << "Failed to load title font: " << fullPath << " " << TTF_GetError()
+                  << std::endl;
         return;
     }
-
     TTF_Font* menuFont = TTF_OpenFont(fullPath.c_str(), 24);
     if (!menuFont)
     {
         TTF_CloseFont(titleFont);
-        std::cerr << "Failed to load menu font: " << fullPath << TTF_GetError() << std::endl;
+        std::cerr << "Failed to load menu font: " << fullPath << " " << TTF_GetError() << std::endl;
         return;
     }
 
     SDL_Color white = {255, 255, 255, 255};
     SDL_Color yellow = {255, 255, 0, 255};
 
+    // Titel rendern und zentrieren
     SDL_Surface* titleSurface = TTF_RenderText_Solid(titleFont, "Advanced Wars", white);
     if (titleSurface)
     {
         SDL_Texture* titleTexture = SDL_CreateTextureFromSurface(engine.renderer(), titleSurface);
         SDL_Rect     titleRect = {
-            static_cast<int>((800 - titleSurface->w) / 2), 50, titleSurface->w, titleSurface->h};
+            static_cast<int>((windowWidth - titleSurface->w) / 2), 50, titleSurface->w,
+            titleSurface->h};
         SDL_RenderCopy(engine.renderer(), titleTexture, nullptr, &titleRect);
         SDL_DestroyTexture(titleTexture);
         SDL_FreeSurface(titleSurface);
     }
 
+    // Menüoptionen rendern und zentrieren
     for (size_t i = 0; i < m_options.size(); ++i)
     {
         SDL_Surface* textSurface = TTF_RenderText_Solid(
@@ -86,20 +98,17 @@ void Menu::render(Engine& engine)
         {
             continue;
         }
-
         SDL_Texture* textTexture = SDL_CreateTextureFromSurface(engine.renderer(), textSurface);
         SDL_Rect     textRect = {
-            static_cast<int>((800 - textSurface->w) / 2), static_cast<int>(150 + i * 50),
+            static_cast<int>((windowWidth - textSurface->w) / 2), static_cast<int>(150 + i * 50),
             textSurface->w, textSurface->h};
         SDL_RenderCopy(engine.renderer(), textTexture, nullptr, &textRect);
-
         SDL_DestroyTexture(textTexture);
         SDL_FreeSurface(textSurface);
     }
 
     TTF_CloseFont(titleFont);
     TTF_CloseFont(menuFont);
-
     TTF_Quit();
 }
 

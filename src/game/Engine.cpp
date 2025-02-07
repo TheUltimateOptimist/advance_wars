@@ -111,6 +111,11 @@ void Engine::render()
     SDL_RenderPresent(this->m_SDLRenderer);
 }
 
+Window& Engine::getWindow()
+{
+    return this->m_window;
+}
+
 int Engine::getStage()
 {
     return SDL_GetTicks() / 300;

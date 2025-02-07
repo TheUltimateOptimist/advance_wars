@@ -55,6 +55,8 @@ class Engine
 
         SDL_Renderer* renderer();
 
+        Window& getWindow();
+
         ~Engine();
 
     private:
