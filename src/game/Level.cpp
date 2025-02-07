@@ -842,9 +842,12 @@ void Level::handleMenuActiveEvents(Engine& engine, SDL_Event& event)
 
                 BuildingFaction b_f = static_cast<BuildingFaction>(u_f);
                 b.switch_faction(b_f);
+                m_units.at(m_selectedUnit).setState(UnitState::UNAVAILABLE);
                 m_state = LevelState::SELECTING_STATE;
                 m_selectedBuilding = -1;
                 m_selectedUnit = -1;
+                m_showReachableTiles = false;
+                m_showAttackableTiles = false;
             }
             if (cmd == "End Turn")
             {
