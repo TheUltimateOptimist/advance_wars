@@ -125,6 +125,8 @@ class Unit
 
         void setState(UnitState state);
 
+        inline UnitState getState() const { return m_state; }
+
         /**
          * Retrieves units within range that this unit can deal damage to.
          * Considers all units provided in 'allUnits', excluding itself, and checks movement and

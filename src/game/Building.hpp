@@ -37,7 +37,7 @@ class Building
         /*
         checks if the player has enough money for the unit to be recruited
         */
-        bool check_money(int price);
+        bool check_money(int price, int playerMoney);
 
         /**
         If the building is clicked, it shows information to the player, here it will be a list of

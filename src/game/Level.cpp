@@ -7,6 +7,7 @@
 #include "Unit.hpp"
 #include "highfive/H5File.hpp"
 #include "ui/Contextmenu.hpp"
+#include "ui/Helpmenu.hpp"
 #include "ui/Pausemenu.hpp"
 #include <SDL.h>
 #include <algorithm>
@@ -57,7 +58,7 @@ Level::Level(
     m_selectedUnit = -1;
 };
 
-std::shared_ptr<Level> Level::loadLevel(std::string path, Engine& engine)
+std::shared_ptr<Level> Level::loadLevel(const std::string& path, Engine& engine)
 {
     HighFive::File file(path, HighFive::File::ReadOnly);
 
@@ -119,7 +120,7 @@ std::shared_ptr<Level> Level::loadLevel(std::string path, Engine& engine)
     {
         if (has_factions[i])
         {
-            turnQ.push(Player(2000, static_cast<PlayerFaction>(i)));
+            turnQ.push(Player(2000, static_cast<UnitFaction>(i)));
         }
     }
 
@@ -178,6 +179,13 @@ int Level::selectBuilding(int tileX, int tileY)
 
 void Level::handleEvent(Engine& engine, SDL_Event& event)
 {
+    if (event.type == SDL_KEYDOWN)
+    {
+        if (event.key.keysym.sym == SDLK_h)
+        {
+            toggle_Helpmenu = !toggle_Helpmenu;
+        }
+    }
     switch (m_state)
     {
     case LevelState::MENUACTIVE_STATE:
@@ -348,6 +356,11 @@ void Level::render(Engine& engine)
         m_recruitingMenu.render(engine);
     }
     m_currentPos.render(engine);
+
+    if (toggle_Helpmenu)
+    {
+        m_helpMenu.render(engine);
+    }
 }
 
 int Level::addBuilding(Building building)
@@ -409,6 +422,7 @@ void Level::changeTurn()
     m_turnQ.push(temp);
 
     m_turnQ.front().startTurn(m_units, m_buildings);
+    m_currentPos.setMarkerColor(m_turnQ.front().getFaction());
 }
 
 void Level::handleRecruitingEvent(Engine& engine, SDL_Event& event)
@@ -430,16 +444,24 @@ void Level::handleRecruitingEvent(Engine& engine, SDL_Event& event)
             Building&   b = m_buildings.at(m_selectedBuilding);
             UnitFaction u_faction = static_cast<UnitFaction>(b.m_faction);
             UnitId      unit_id = m_recruitingMenu.getSelectedOption();
+            int         cost = engine.getUnitConfig().getUnitCost(unit_id);
 
-            if (b.check_money(500))
+            if (b.check_money(cost, m_turnQ.front().getMoney()))
             {
                 if (b.check_spawn(m_units))
                 {
                     addUnit(Unit(
                         b.m_x, b.m_y, u_faction, unit_id, UnitState::IDLE, engine.getUnitConfig()));
                     m_state = LevelState::SELECTING_STATE;
+                    m_turnQ.front().spendMoney(cost);
                     m_selectedBuilding = -1;
                 }
+            }
+            else
+            {
+                std::cout << "You dont have enough money, current money: "
+                          << m_turnQ.front().getMoney() << " || needed money: " << cost
+                          << std::endl;
             }
         }
     }
@@ -467,6 +489,10 @@ void Level::handleAttack(std::pair<int, int> tilePos)
             if (attacking.m_health <= 0)
             {
                 removeUnit(m_selectedUnit);
+            }
+            else
+            {
+                attacking.setState(UnitState::UNAVAILABLE);
             }
             if (defending.m_health <= 0)
             {
@@ -514,10 +540,46 @@ void Level::handleMovement(std::pair<int, int> tilePos)
     if (isReachable)
     {
         m_units.at(m_selectedUnit).updatePosition(tilePos.first, tilePos.second);
-        m_selectedUnit = -1;
-        m_showAttackableTiles = false;
+
+        m_contextMenu.update(
+            (tilePos.first * 16 + 15) * RENDERING_SCALE,
+            (tilePos.second * 16 + 15) * RENDERING_SCALE);
+
+        std::vector<Unit*> allUnits;
+
+        for (auto& [id, unit] : m_units)
+        {
+            allUnits.push_back(&unit);
+        }
+
+        std::vector<Unit*> attackableTargets =
+            m_units.at(m_selectedUnit).getUnitsInRangeWithDamagePotential(allUnits);
+
+        m_attackableTiles.clear();
+        m_showAttackableTiles = true;
+        m_attackableUnitIds.clear();
+
+        for (Unit* target : attackableTargets)
+        {
+            // Füge die Position jedes angreifbaren Ziels hinzu
+            m_attackableTiles.emplace_back(target->m_x, target->m_y);
+
+            // Angreifbaren Einheits-ID setzen
+            for (auto& [id, unit] : m_units)
+            {
+                if (&unit == target)
+                {
+                    m_attackableUnitIds.insert(id);
+                    break;
+                }
+            }
+        }
+
         m_showReachableTiles = false;
-        m_state = LevelState::SELECTING_STATE;
+
+        m_contextMenu.setOptions({"Attack", "Wait", "End Turn"});
+
+        m_state = LevelState::MENUACTIVE_STATE;
     }
     else
     {
@@ -551,7 +613,6 @@ void Level::handleSelectingEvents(Engine& engine, SDL_Event& event)
 
         if (event.key.keysym.sym == SDLK_RETURN)
         {
-
             std::pair<int, int> tilePos = m_currentPos.getPosition();
             selectEntity(
                 tilePos.first * 16 * RENDERING_SCALE, tilePos.second * 16 * RENDERING_SCALE);
@@ -580,6 +641,10 @@ void Level::handleSelectingEvents(Engine& engine, SDL_Event& event)
                     m_showAttackableTiles = true;
                     m_attackableUnitIds.clear();
 
+                    // Set Fallback_position if movement will be canceled
+                    unit_fallback_position = std::make_pair(
+                        m_units.at(m_selectedUnit).m_x, m_units.at(m_selectedUnit).m_y);
+
                     for (Unit* target : attackableTargets)
                     {
                         // Füge die Position jedes angreifbaren Ziels hinzu
@@ -597,24 +662,37 @@ void Level::handleSelectingEvents(Engine& engine, SDL_Event& event)
                     }
 
                     Unit& u = m_units.at(m_selectedUnit);
-                    m_captureBuilding = -1;
-                    for (auto& [id, building] : m_buildings)
+
+                    if (m_units.at(m_selectedUnit).getFaction() == m_turnQ.front().getFaction() &&
+                        m_units.at(m_selectedUnit).getState() != UnitState::UNAVAILABLE)
                     {
-                        if (building.m_x == u.m_x && building.m_y == u.m_y)
-                        {   
-                            if(building.getFaction() != static_cast<BuildingFaction> (u.getFaction())){
-                                m_captureBuilding = id;
-                                m_contextMenu.setOptions(
-                                {"Capture", "Move", "Attack", "Info", "Wait"});
-                            break;
+                        m_captureBuilding = -1;
+                        for (auto& [id, building] : m_buildings)
+                        {
+                            if (building.m_x == u.m_x && building.m_y == u.m_y)
+                            {
+                                if (building.getFaction() !=
+                                    static_cast<BuildingFaction>(u.getFaction()))
+                                {
+                                    m_captureBuilding = id;
+                                    m_contextMenu.setOptions(
+                                        {"Capture", "Move", "Attack", "Info", "Wait", "End Turn"});
+                                    break;
+                                }
                             }
                         }
-                    } 
 
-                    if(m_captureBuilding == -1) {
-                        m_contextMenu.setOptions({"Move", "Attack", "Info", "Wait"});
+                        if (m_captureBuilding == -1)
+                        {
+                            m_contextMenu.setOptions(
+                                {"Move", "Attack", "Info", "Wait", "End Turn"});
+                        }
                     }
-                                       
+                    else
+                    {
+                        m_contextMenu.setOptions({"Info", "End Turn"});
+                    }
+                    m_state = LevelState::MENUACTIVE_STATE;
                 }
                 else
                 {
@@ -623,14 +701,24 @@ void Level::handleSelectingEvents(Engine& engine, SDL_Event& event)
                     if (b_id == BuildingId::CITY || b_id == BuildingId::HEADQUARTER ||
                         b_faction == static_cast<BuildingFaction>(5))
                     {
-                        m_contextMenu.setOptions({"Info", "Wait"});
+                        m_contextMenu.setOptions({"Info", "End Turn"});
                     }
                     else
                     {
-                        m_contextMenu.setOptions({"Train", "Info", "Wait"});
+                        // Show according menu options if building has same/different faction than
+                        // current player
+                        if (m_buildings.at(m_selectedBuilding).getFaction() ==
+                            static_cast<BuildingFaction>(m_turnQ.front().getFaction()))
+                        {
+                            m_contextMenu.setOptions({"Train", "Info", "End Turn"});
+                        }
+                        else
+                        {
+                            m_contextMenu.setOptions({"Info", "End Turn"});
+                        }
                     }
+                    m_state = LevelState::MENUACTIVE_STATE;
                 }
-                m_state = LevelState::MENUACTIVE_STATE;
             }
         }
         break;
@@ -674,6 +762,13 @@ void Level::handleMenuActiveEvents(Engine& engine, SDL_Event& event)
     case SDL_KEYDOWN:
         if (event.key.keysym.sym == SDLK_ESCAPE)
         {
+            if (m_selectedUnit > -1 &&
+                unit_fallback_position !=
+                    std::make_pair(m_units.at(m_selectedUnit).m_x, m_units.at(m_selectedUnit).m_y))
+            {
+                m_units.at(m_selectedUnit)
+                    .updatePosition(unit_fallback_position.first, unit_fallback_position.second);
+            }
             m_selectedUnit = -1;
             m_selectedBuilding = -1;
             m_state = LevelState::SELECTING_STATE;
@@ -689,11 +784,21 @@ void Level::handleMenuActiveEvents(Engine& engine, SDL_Event& event)
             std::string cmd = m_contextMenu.getSelectedOption();
             if (cmd == "Wait")
             {
-                m_state = LevelState::SELECTING_STATE;
-                m_selectedBuilding = -1;
-                m_selectedUnit = -1;
-                m_showReachableTiles = false;
-                m_showAttackableTiles = false;
+                auto it = m_units.find(m_selectedUnit);
+                if (it != m_units.end())
+                {
+                    it->second.setState(UnitState::UNAVAILABLE);
+                    std::cout << "Unit state set to UNAVAILABLE." << std::endl;
+                    m_state = LevelState::SELECTING_STATE;
+                    m_selectedUnit = -1;
+                    m_selectedBuilding = -1;
+                    m_showAttackableTiles = false;
+                    m_showReachableTiles = false;
+                }
+                else
+                {
+                    std::cerr << "Selected unit id is invalid: " << m_selectedUnit << std::endl;
+                }
             }
             if (cmd == "Move")
             {
@@ -741,8 +846,14 @@ void Level::handleMenuActiveEvents(Engine& engine, SDL_Event& event)
                 m_selectedBuilding = -1;
                 m_selectedUnit = -1;
             }
+            if (cmd == "End Turn")
+            {
+                m_state = LevelState::SELECTING_STATE;
+                m_showAttackableTiles = false;
+                m_showReachableTiles = false;
+                changeTurn();
+            }
         }
-
         break;
     default:
         break;
@@ -780,6 +891,12 @@ void Level::handleMovementEvents(Engine& engine, SDL_Event& event)
 
 void Level::handleAttackingEvents(Engine& engine, SDL_Event& event)
 {
+    if (m_attackableUnitIds.empty())
+    {
+        std::cout << "No units are within attack range." << std::endl;
+        m_state = LevelState::MENUACTIVE_STATE;
+        return; // Early exit if no units to attack
+    }
     switch (event.type)
     {
     case SDL_KEYDOWN:
@@ -805,5 +922,7 @@ void Level::handleAttackingEvents(Engine& engine, SDL_Event& event)
         break;
     }
 }
-//************end event handler delegates for different level states*****************************
+//************end event handler delegates for different level
+// states*****************************
+
 } // namespace advanced_wars
