@@ -4,6 +4,7 @@
  * @date 30.1.2025
  * @author Frederik Keens
  * @author David Maul
+ * @author David Hermann
  */
 
 #include "Spritesheet.hpp"
@@ -395,6 +396,56 @@ Spritesheet::Spritesheet(std::string path, Engine& engine)
     this->m_numberTextures = tmp;
     this->m_numberWidth = 8;
     this->m_numberHeight = 8;
+
+    // Hole den Datensatz für die Bullet aus der HDF5-Datei
+    HighFive::DataSet bullet_ds = file.getDataSet("/misc/bullet");
+
+    // Wir nehmen an, dass die Bullet als 2D-Array von uint32_t gespeichert ist.
+    std::vector<std::vector<uint32_t>> bullet_frames;
+    bullet_ds.read(bullet_frames);
+
+    // Prüfe, ob der Datensatz gültig ist
+    if (bullet_frames.empty() || bullet_frames[0].empty())
+    {
+        throw std::runtime_error("Bullet texture data is empty.");
+    }
+
+    // Bestimme Breite und Höhe der Bullet (Annahme: 1 Frame)
+    m_bulletHeight = bullet_frames.size();
+    m_bulletWidth = bullet_frames[0].size();
+
+    // Erstelle einen Buffer, der alle Pixel enthält. Falls du die Bullet vertikal spiegeln möchtest
+    // (wie bei Numbers), dann:
+    std::vector<uint32_t> bullet_buffer(m_bulletWidth * m_bulletHeight, 0);
+    for (int y = 0; y < m_bulletHeight; y++)
+    {
+        for (int x = 0; x < m_bulletWidth; x++)
+        {
+            // Hier wird vertikal gespiegelt, sodass die obere Zeile unten ist:
+            int index = y * m_bulletWidth + x;
+            bullet_buffer[index] = bullet_frames.at(m_bulletHeight - y - 1).at(x);
+        }
+    }
+
+    // Erstelle die SDL-Textur für die Bullet
+    m_bulletTextures = SDL_CreateTexture(
+        engine.renderer(), SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STATIC, m_bulletWidth,
+        m_bulletHeight);
+
+    SDL_SetTextureBlendMode(m_bulletTextures, SDL_BLENDMODE_BLEND);
+
+    if (m_bulletTextures == nullptr)
+    {
+        throw std::runtime_error(
+            "Fehler beim Erstellen der Bullet-Textur: " + std::string(SDL_GetError()));
+    }
+
+    if (SDL_UpdateTexture(
+            m_bulletTextures, NULL, bullet_buffer.data(), m_bulletWidth * sizeof(uint32_t)) != 0)
+    {
+        throw std::runtime_error(
+            "Fehler beim updaten der Bullet-Textur: " + std::string(SDL_GetError()));
+    }
 }
 
 // Tiles
@@ -486,6 +537,22 @@ int Spritesheet::getNumberHeight()
 SDL_Texture* Spritesheet::getNumberTexture()
 {
     return this->m_numberTextures;
+}
+
+// Bullet
+int Spritesheet::getBulletWidth()
+{
+    return this->m_bulletWidth;
+}
+
+int Spritesheet::getBulletHeight()
+{
+    return this->m_bulletHeight;
+}
+
+SDL_Texture* Spritesheet::getBulletTexture()
+{
+    return this->m_bulletTextures;
 }
 
 Spritesheet::~Spritesheet()

@@ -375,6 +375,61 @@ void Level::render(Engine& engine)
         unit.update(1.0f / 60.0f);
     }
 
+    // Bullet
+    float deltaTime =
+        1.0f / 60.0f; // Hier solltest du idealerweise den tatsächlichen Delta-Time-Wert verwenden.
+    int bulletWidth = 8;  // Unskalierte Bullet-Breite
+    int bulletHeight = 8; // Unskalierte Bullet-Höhe
+
+    if (m_projectile.has_value())
+    {
+        m_projectile->bullet.update(deltaTime);
+        m_projectile->bullet.render(engine.renderer(), RENDERING_SCALE, bulletWidth, bulletHeight);
+
+        if (m_projectile->bullet.isFinished())
+        {
+            // Wende den Schaden an:
+            // Hier: Der Angreifer (m_projectile->attacker) wendet den Schaden auf den Verteidiger
+            // an.
+            m_projectile->attacker->performAttack(*m_projectile->defender, m_projectile->damage);
+
+            // Speichere Zeiger für eine mögliche Gegenangriff-Logik
+            Unit* originalAttacker = m_projectile->attacker;
+            Unit* originalDefender = m_projectile->defender;
+            bool  wasCounter = m_projectile->isCounterattack;
+            m_projectile.reset();
+
+            // Falls es ein initialer Angriff war und der Verteidiger noch lebt,
+            // starte automatisch einen Gegenangriff
+            if (!wasCounter && originalDefender->getHealth() > 0)
+            {
+                int counterDamage = originalDefender->calculateDamage(*originalAttacker);
+                if (counterDamage > 0)
+                {
+                    int   tileWidth = engine.getSpritesheet()->getTileWidth();
+                    int   tileHeight = engine.getSpritesheet()->getTileHeight();
+                    float tileCenterOffset = 0.5f;
+                    float startX = (originalDefender->m_x + tileCenterOffset) * tileWidth;
+                    float startY = (originalDefender->m_y + tileCenterOffset) * tileHeight;
+                    float targetX = (originalAttacker->m_x + tileCenterOffset) * tileWidth;
+                    float targetY = (originalAttacker->m_y + tileCenterOffset) * tileHeight;
+                    float bulletDuration =
+                        1.5f; // Dauer des Gegenangriffs-Projektils (kann angepasst werden)
+                    SDL_Texture* bulletTexture = engine.getSpritesheet()->getBulletTexture();
+                    Bullet       counterBullet(
+                        startX, startY, targetX, targetY, bulletDuration, bulletTexture);
+
+                    // Erzeuge das Projectile für den Gegenangriff (isCounterattack == true)
+                    m_projectile = Projectile(
+                        counterBullet, originalDefender, originalAttacker, counterDamage, true);
+
+                    // Setze den Verteidiger in den "UNAVAILABLE"-Zustand
+                    originalDefender->setState(UnitState::UNAVAILABLE);
+                }
+            }
+        }
+    }
+
     // Effects
     std::vector<int> effects_to_remove;
     for (auto& [id, effect] : m_effects)
@@ -524,7 +579,7 @@ void Level::handleRecruitingEvent(Engine& engine, SDL_Event& event)
 
 //*******************helper functions for event Handling*************************************
 
-void Level::handleAttack(std::pair<int, int> tilePos)
+void Level::handleAttack(Engine& engine, std::pair<int, int> tilePos)
 {
     int targetedUnit = selectUnit(tilePos.first, tilePos.second);
     if (targetedUnit >= 0)
@@ -540,19 +595,46 @@ void Level::handleAttack(std::pair<int, int> tilePos)
 
         if (m_attackableUnitIds.find(targetedUnit) != m_attackableUnitIds.end())
         {
-            attacking.attack(defending);
-            if (attacking.m_health <= 0)
+            // Falls bereits ein Projektil existiert, ignoriere den Angriff
+            if (m_projectile.has_value())
             {
-                removeUnit(m_selectedUnit);
+                std::cout << "A projectile is already active. Please wait." << std::endl;
+                return;
+            }
+
+            // Berechne den Schaden
+            int damageValue = attacking.calculateDamage(defending);
+            if (damageValue > 0)
+            {
+                // Hole die Tile-Größe (um von Tile- zu Pixelkoordinaten zu konvertieren)
+                int   tileWidth = engine.getSpritesheet()->getTileWidth();
+                int   tileHeight = engine.getSpritesheet()->getTileHeight();
+                float tileCenterOffset = 0.5f; // Mittelpunkt: Tile-Koordinate + 0.5
+
+                // Berechne die Pixelkoordinaten des Mittelpunkts
+                float startX = (attacking.m_x + tileCenterOffset) * tileWidth;
+                float startY = (attacking.m_y + tileCenterOffset) * tileHeight;
+                float targetX = (defending.m_x + tileCenterOffset) * tileWidth;
+                float targetY = (defending.m_y + tileCenterOffset) * tileHeight;
+
+                // Erzeuge eine Bullet mit einer Dauer von z. B. 1.5 Sekunden
+                float        bulletDuration = 1.5f;
+                SDL_Texture* bulletTexture = engine.getSpritesheet()->getBulletTexture();
+                Bullet bullet(startX, startY, targetX, targetY, bulletDuration, bulletTexture);
+
+                // Erzeuge das Projectile (initialer Angriff: isCounterattack == false)
+                m_projectile = Projectile(bullet, &attacking, &defending, damageValue, false);
+
+                // Setze ggf. den Angreifer in den "UNAVAILABLE"-Zustand
+                attacking.setState(UnitState::UNAVAILABLE);
             }
             else
             {
-                attacking.setState(UnitState::UNAVAILABLE);
+                std::cout << "No damage value found for attack from unit "
+                          << static_cast<int>(attacking.getId()) << " against unit "
+                          << static_cast<int>(defending.getId()) << std::endl;
             }
-            if (defending.m_health <= 0)
-            {
-                removeUnit(targetedUnit);
-            }
+
             m_selectedUnit = -1;
             m_showAttackableTiles = false;
             m_showReachableTiles = false;
@@ -939,7 +1021,7 @@ void Level::handleAttackingEvents(Engine& engine, SDL_Event& event)
         }
         if (event.key.keysym.sym == SDLK_RETURN)
         {
-            handleAttack(m_currentPos.getPosition());
+            handleAttack(engine, m_currentPos.getPosition());
         }
         break;
     default:

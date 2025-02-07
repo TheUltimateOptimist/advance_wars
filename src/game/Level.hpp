@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Building.hpp"
+#include "Bullet.hpp"
 #include "Effect.hpp"
 #include "Engine.hpp"
 #include "Player.hpp"
@@ -70,6 +71,23 @@ enum class LevelState
     MENUACTIVE_STATE,
     ATTACKING_STATE,
     RECRUITING_STATE,
+};
+
+// In Level.hpp (innerhalb des namespace advanced_wars) – füge am besten unter den privaten Membern
+// hinzu:
+struct Projectile
+{
+        Bullet bullet;
+        // Zeiger auf die beteiligten Units (diese sollten während der Animation gültig bleiben)
+        Unit* attacker;
+        Unit* defender;
+        int   damage; // Der berechnete Schadenwert
+        bool  isCounterattack;
+
+        Projectile(const Bullet& b, Unit* a, Unit* d, int dmg, bool counter = false)
+            : bullet(b), attacker(a), defender(d), damage(dmg), isCounterattack(counter)
+        {
+        }
 };
 
 /**
@@ -169,7 +187,7 @@ class Level : public Scene
 
         std::unordered_set<int> m_attackableUnitIds;
 
-        void handleAttack(std::pair<int, int> tilePos);
+        void handleAttack(Engine& engine, std::pair<int, int> tilePos);
         void handleMovement(std::pair<int, int> tilePos);
         void handlePositionMarker(Engine& engine, SDL_Event& event);
 
@@ -178,6 +196,8 @@ class Level : public Scene
         bool m_showUnitInfoMenu = false;
 
         std::pair<int, int> unit_fallback_position;
+
+        std::optional<Projectile> m_projectile;
 };
 
 } // namespace advanced_wars

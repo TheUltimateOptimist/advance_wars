@@ -4,6 +4,7 @@
  * @date 30.1.2025
  * @author Frederik Keens
  * @author David Maul
+ * @author David Hermann
  */
 
 #pragma once
@@ -173,6 +174,24 @@ class Spritesheet
          */
         SDL_Texture* getNumberTexture();
 
+        // Bullets
+        /**
+         * @return The width of a bullet in pixels
+         */
+        int getBulletWidth();
+
+        /**
+         * @return The height of a bullet in pixels
+         */
+        int getBulletHeight();
+
+        /**
+         * The texture represents the individual texture for all bullets linearised.
+         *
+         * @return bullet texture
+         */
+        SDL_Texture* getBulletTexture();
+
     private:
         // Tiles
         std::vector<std::pair<SDL_Texture*, int>> m_tileTextures;
@@ -205,5 +224,11 @@ class Spritesheet
 
         int m_numberWidth;
         int m_numberHeight;
+
+        // Bullets
+        SDL_Texture* m_bulletTextures;
+
+        int m_bulletWidth;
+        int m_bulletHeight;
 };
 } // namespace advanced_wars
