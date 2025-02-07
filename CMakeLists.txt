@@ -78,6 +78,7 @@ set(CMAKE_MODULE_PATH ${ADVANCED_WARS_SOURCE_DIR}/cmake/ ${CMAKE_MODULE_PATH})
 
 # Plattform-spezifische Konfiguration
 if(APPLE)
+    set(CMAKE_OSX_SYSROOT "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk")
     # SDL2 Frameworks für macOS
     set(SDL2_PATH "/Library/Frameworks")
     set(CMAKE_OSX_ARCHITECTURES "arm64")
