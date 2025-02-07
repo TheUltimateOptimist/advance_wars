@@ -15,7 +15,9 @@ int main(int argc, char* argv[])
 {
     if (argc <= 1)
     {
-        std::cerr << "Please provide the path to the level that you want to play as a command line argument." << std::endl;
+        std::cerr << "Please provide the path to the level that you want to play as a command line "
+                     "argument."
+                  << std::endl;
         return 1;
     }
 
