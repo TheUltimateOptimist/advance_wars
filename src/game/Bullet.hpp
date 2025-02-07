@@ -36,6 +36,9 @@ class Bullet
         // Liefert zurück, ob die Bullet ihr Ziel erreicht hat
         bool isFinished() const { return m_finished; }
 
+        float getCurrentX() const { return m_currentX; }
+        float getCurrentY() const { return m_currentY; }
+
     private:
         float m_startX; // Startposition (in Tilekoordinaten, z. B. x + 0.5 für den Mittelpunkt)
         float m_startY; // Startposition (in Tilekoordinaten, z. B. y + 0.5 für den Mittelpunkt)

@@ -28,7 +28,8 @@ class Effect
         EffectId m_id;
 
         bool m_repeat;
-        int  m_start;
+        // m_start speichert den Zeitpunkt (in Millisekunden), zu dem der Effekt begonnen hat
+        Uint32 m_start;
 };
 
 } // namespace advanced_wars

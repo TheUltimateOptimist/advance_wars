@@ -381,45 +381,75 @@ void Level::render(Engine& engine)
     int bulletWidth = 8;  // Unskalierte Bullet-Breite
     int bulletHeight = 8; // Unskalierte Bullet-Höhe
 
+    std::cout << "Projectile bullet: " << m_projectile.has_value() << std::endl;
     if (m_projectile.has_value())
     {
         m_projectile->bullet.update(deltaTime);
         m_projectile->bullet.render(engine.renderer(), RENDERING_SCALE, bulletWidth, bulletHeight);
 
+        std::cout << "Projectile bullet finished: " << m_projectile->defender->getHealth()
+                  << std::endl;
         if (m_projectile->bullet.isFinished())
         {
-            // Wende den Schaden an:
-            // Hier: Der Angreifer (m_projectile->attacker) wendet den Schaden auf den Verteidiger
-            // an.
+            // Schaden anwenden: Der Angreifer wendet den Schaden auf den Verteidiger an.
             m_projectile->attacker->performAttack(*m_projectile->defender, m_projectile->damage);
 
-            // Speichere Zeiger für eine mögliche Gegenangriff-Logik
+            // Prüfen, ob der Verteidiger tot ist.
+            std::cout << "Defender health after attack: " << m_projectile->defender->getHealth()
+                      << std::endl;
+            if (m_projectile->defender->getHealth() <= 0)
+            {
+                // Berechne die Explosionseffekt-Position:
+                int tileWidth = engine.getSpritesheet()->getTileWidth();
+                int tileHeight = engine.getSpritesheet()->getTileHeight();
+                // Hier verwenden wir die aktuellen Pixelkoordinaten der Bullet,
+                // um in Tile-Koordinaten (z. B. für den Effekt) umzurechnen.
+                int effectX = static_cast<int>(m_projectile->bullet.getCurrentX()) / tileWidth;
+                int effectY = static_cast<int>(m_projectile->bullet.getCurrentY()) / tileHeight;
+
+                // Erzeuge den Explosionseffekt – hier z. B. mit dem Effekt "LAND_EXPLOSION"
+                Effect explosion(effectX, effectY, EffectId::LAND_EXPLOSION, false);
+                std::cout << "Explosion at " << effectX << ", " << effectY << std::endl;
+                this->addEffect(explosion);
+
+                // Entferne die Unit aus der Spielwelt (m_units)
+                // Wir gehen dazu über die m_units-Map und suchen die Unit, deren Adresse mit
+                // m_projectile->defender übereinstimmt.
+                for (auto it = m_units.begin(); it != m_units.end(); ++it)
+                {
+                    if (&(it->second) == m_projectile->defender)
+                    {
+                        removeUnit(it->first);
+                        break;
+                    }
+                }
+            }
+
+            // Speichere Zeiger für den (möglichen) Gegenangriff
             Unit* originalAttacker = m_projectile->attacker;
             Unit* originalDefender = m_projectile->defender;
             bool  wasCounter = m_projectile->isCounterattack;
             m_projectile.reset();
 
             // Falls es ein initialer Angriff war und der Verteidiger noch lebt,
-            // starte automatisch einen Gegenangriff
+            // starte automatisch einen Gegenangriff.
             if (!wasCounter && originalDefender->getHealth() > 0)
             {
                 int counterDamage = originalDefender->calculateDamage(*originalAttacker);
                 if (counterDamage > 0)
                 {
-                    int   tileWidth = engine.getSpritesheet()->getTileWidth();
-                    int   tileHeight = engine.getSpritesheet()->getTileHeight();
-                    float tileCenterOffset = 0.5f;
-                    float startX = (originalDefender->m_x + tileCenterOffset) * tileWidth;
-                    float startY = (originalDefender->m_y + tileCenterOffset) * tileHeight;
-                    float targetX = (originalAttacker->m_x + tileCenterOffset) * tileWidth;
-                    float targetY = (originalAttacker->m_y + tileCenterOffset) * tileHeight;
-                    float bulletDuration =
-                        1.5f; // Dauer des Gegenangriffs-Projektils (kann angepasst werden)
+                    int          tileWidth = engine.getSpritesheet()->getTileWidth();
+                    int          tileHeight = engine.getSpritesheet()->getTileHeight();
+                    float        tileCenterOffset = 0.5f;
+                    float        startX = (originalDefender->m_x + tileCenterOffset) * tileWidth;
+                    float        startY = (originalDefender->m_y + tileCenterOffset) * tileHeight;
+                    float        targetX = (originalAttacker->m_x + tileCenterOffset) * tileWidth;
+                    float        targetY = (originalAttacker->m_y + tileCenterOffset) * tileHeight;
+                    float        bulletDuration = 1.5f; // Dauer des Gegenangriffs-Projektils
                     SDL_Texture* bulletTexture = engine.getSpritesheet()->getBulletTexture();
                     Bullet       counterBullet(
                         startX, startY, targetX, targetY, bulletDuration, bulletTexture);
 
-                    // Erzeuge das Projectile für den Gegenangriff (isCounterattack == true)
                     m_projectile = Projectile(
                         counterBullet, originalDefender, originalAttacker, counterDamage, true);
 
