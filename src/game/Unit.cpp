@@ -6,7 +6,11 @@ namespace advanced_wars
 {
 
 Unit::Unit(int x, int y, UnitFaction faction, UnitId id, UnitState state, Config& config)
-    : m_x(x), m_y(y), m_faction(faction), m_id(id), m_state(state), m_maxHealth(100)
+    : m_x(x), m_y(y), m_faction(faction), m_id(id), m_state(state), m_maxHealth(100),
+      m_currentPosX(static_cast<float>(x)), m_currentPosY(static_cast<float>(y)),
+      m_startPosX(static_cast<float>(x)), m_startPosY(static_cast<float>(y)),
+      m_targetPosX(static_cast<float>(x)), m_targetPosY(static_cast<float>(y)),
+      m_moveDuration(0.0f), m_elapsedMoveTime(0.0f), m_isMoving(false)
 {
     // Allgemeine Einheiteneinstellungen aus Konfiguration holen
     m_cost = config.getUnitCost(id);
@@ -42,6 +46,47 @@ Unit::Unit(int x, int y, UnitFaction faction, UnitId id, UnitState state, Config
     m_secondaryWeapon = Weapon(config.getUnitSecondaryWeapon(id), secondaryDamage);
 }
 
+void Unit::update(float deltaTime)
+{
+    if (m_isMoving)
+    {
+        m_elapsedMoveTime += deltaTime;
+        float t = m_elapsedMoveTime / m_moveDuration;
+        if (t >= 1.0f)
+        {
+            t = 1.0f;
+            m_isMoving = false;
+            m_state = UnitState::IDLE;
+        }
+        // Lineare Interpolation: m_currentPosX/Y werden schrittweise von Start- zu Zielposition
+        // aktualisiert.
+        m_currentPosX = m_startPosX + t * (m_targetPosX - m_startPosX);
+        m_currentPosY = m_startPosY + t * (m_targetPosY - m_startPosY);
+    }
+}
+
+void Unit::updatePosition(int posX, int posY)
+{
+    // Setze die logische Zielposition (für Spiel-Logik, Kollisionsabfragen etc.)
+    m_x = posX;
+    m_y = posY;
+
+    // Initialisiere die Animation:
+    // Als Startposition wird die aktuell interpolierte Position verwendet,
+    // damit auch eine bereits laufende Animation nahtlos fortgeführt wird.
+    m_startPosX = m_currentPosX;
+    m_startPosY = m_currentPosY;
+    m_targetPosX = static_cast<float>(posX);
+    m_targetPosY = static_cast<float>(posY);
+
+    m_elapsedMoveTime = 0.0f;
+    m_moveDuration = 2.0f; // Beispiel: 0.5 Sekunden für die Bewegung (anpassbar)
+    m_isMoving = true;
+
+    // Aktualisiere den Bewegungszustand (Richtung, falls benötigt)
+    calcState(/* posX, posY */);
+}
+
 void Unit::render(Engine& engine, int scale)
 {
     Spritesheet* spritesheet = engine.getSpritesheet();
@@ -51,6 +96,9 @@ void Unit::render(Engine& engine, int scale)
                                        .at(static_cast<int>(m_id))
                                        .at(static_cast<int>(m_state))
                                        .second;
+
+    int renderX = static_cast<int>(m_currentPosX);
+    int renderY = static_cast<int>(m_currentPosY);
 
     if (m_state == UnitState::IDLE || m_state == UnitState::UNAVAILABLE)
     {
@@ -62,8 +110,8 @@ void Unit::render(Engine& engine, int scale)
         src.h = spritesheet->getUnitHeight();
 
         SDL_Rect dst;
-        dst.x = m_x * spritesheet->getUnitWidth() * scale;
-        dst.y = m_y * spritesheet->getUnitHeight() * scale;
+        dst.x = renderX * spritesheet->getUnitWidth() * scale;
+        dst.y = renderY * spritesheet->getUnitHeight() * scale;
         dst.w = spritesheet->getUnitWidth() * scale;
         dst.h = spritesheet->getUnitHeight() * scale;
 
@@ -87,8 +135,8 @@ void Unit::render(Engine& engine, int scale)
         src.h = spritesheet->getUnitMovingHeight();
 
         SDL_Rect dst;
-        dst.x = ((m_x * spritesheet->getUnitWidth()) - 4) * scale;
-        dst.y = ((m_y * spritesheet->getUnitHeight()) - 8) * scale;
+        dst.x = ((renderX * spritesheet->getUnitWidth()) - 4) * scale;
+        dst.y = ((renderY * spritesheet->getUnitHeight()) - 8) * scale;
         dst.w = spritesheet->getUnitMovingWidth() * scale;
         dst.h = spritesheet->getUnitMovingHeight() * scale;
 
@@ -186,45 +234,42 @@ void Unit::performAttack(Unit& target, int damage)
     target.m_health = std::max(0, target.m_health);
 }
 
-void Unit::updatePosition(int posX, int posY)
+/* void Unit::updatePosition(int posX, int posY)
 {
     calcState(posX, posY);
 
     this->m_x = posX;
     this->m_y = posY;
-}
+} */
 
-void Unit::calcState(int posX, int posY)
+void Unit::calcState(/* int posX, int posY */)
 {
-    int deltaX = this->m_x - posX;
-    int deltaY = this->m_y - posY;
+    /* int deltaX = this->m_x - posX;
+    int deltaY = this->m_y - posY; */
 
-    if (deltaX == 0 && deltaY == 0)
-    {
-        // Unit is already at the target position
-        return;
-    }
+    float deltaX = m_targetPosX - m_startPosX;
+    float deltaY = m_targetPosY - m_startPosY;
 
-    if (abs(deltaX) >= abs(deltaY))
+    if (std::fabs(deltaX) >= std::fabs(deltaY))
     {
-        if (deltaX > 0)
+        if (deltaX < 0)
         {
-            this->m_state = advanced_wars::UnitState::MOVEMENTLEFT;
+            m_state = UnitState::MOVEMENTLEFT;
         }
         else
         {
-            this->m_state = advanced_wars::UnitState::MOVEMENTRIGHT;
+            m_state = UnitState::MOVEMENTRIGHT;
         }
     }
     else
     {
-        if (deltaY > 0)
+        if (deltaY < 0)
         {
-            this->m_state = advanced_wars::UnitState::MOVEMENTUP;
+            m_state = UnitState::MOVEMENTUP;
         }
         else
         {
-            this->m_state = advanced_wars::UnitState::MOVEMENTDOWN;
+            m_state = UnitState::MOVEMENTDOWN;
         }
     }
 }
@@ -282,6 +327,9 @@ std::vector<Unit*> Unit::getUnitsInRangeWithDamagePotential(const std::vector<Un
 
 void Unit::renderHP(Engine& engine, int scale)
 {
+    int renderX = static_cast<int>(m_currentPosX);
+    int renderY = static_cast<int>(m_currentPosY);
+
     Spritesheet* spritesheet = engine.getSpritesheet();
 
     SDL_Texture* numbers = spritesheet->getNumberTexture();
@@ -297,8 +345,8 @@ void Unit::renderHP(Engine& engine, int scale)
     src.h = numberHeight;
 
     SDL_Rect dest;
-    dest.x = (m_x * spritesheet->getTileWidth() + 8) * scale;
-    dest.y = (m_y * spritesheet->getTileHeight() + 12) * scale;
+    dest.x = (renderX * spritesheet->getTileWidth() + 8) * scale;
+    dest.y = (renderY * spritesheet->getTileHeight() + 12) * scale;
     dest.w = numberWidth * scale;
     dest.h = numberHeight * scale;
 
@@ -308,7 +356,7 @@ void Unit::renderHP(Engine& engine, int scale)
     {
         src.x = 8;
 
-        dest.x = (m_x * spritesheet->getTileWidth() + 1) * scale;
+        dest.x = (renderX * spritesheet->getTileWidth() + 1) * scale;
 
         SDL_RenderCopy(engine.renderer(), numbers, &src, &dest);
     }
@@ -324,11 +372,13 @@ void Unit::setState(UnitState state)
     this->m_state = state;
 }
 
-bool Unit::hasAttacked() {
+bool Unit::hasAttacked()
+{
     return this->m_hasAttacked;
 }
 
-bool Unit::hasMoved() {
+bool Unit::hasMoved()
+{
     return this->m_hasMoved;
 }
 

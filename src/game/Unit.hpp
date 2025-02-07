@@ -41,6 +41,8 @@ class Unit
          */
         ~Unit() {};
 
+        void update(float deltaTime);
+
         /**
          * Renders the unit on the game screen.
          * Uses the engine's rendering capabilities to draw the unit based on its state and faction.
@@ -111,7 +113,7 @@ class Unit
          * @param posX The x-coordinate of the desired position.
          * @param posY The y-coordinate of the desired position.
          */
-        void calcState(int posX, int posY);
+        void calcState(/* int posX, int posY */);
 
         /**
          * Processes a left-click event on this unit.
@@ -123,10 +125,10 @@ class Unit
 
         UnitFaction getFaction();
 
-        int getAmmo() const { return m_ammo; }
-        int getHealth() const { return m_health; }
-        int getCost() const { return m_cost; }
-        UnitId getId() const { return m_id;}
+        int    getAmmo() const { return m_ammo; }
+        int    getHealth() const { return m_health; }
+        int    getCost() const { return m_cost; }
+        UnitId getId() const { return m_id; }
 
         void setState(UnitState state);
 
@@ -167,5 +169,15 @@ class Unit
         int m_maxRange; // The maximum range of the unit's attack capability.
 
         void renderHP(Engine& engine, int scale);
+
+        float m_currentPosX;     // Aktuelle (interpolierte) X-Position
+        float m_currentPosY;     // Aktuelle (interpolierte) Y-Position
+        float m_startPosX;       // Startposition der aktuellen Bewegung (X)
+        float m_startPosY;       // Startposition der aktuellen Bewegung (Y)
+        float m_targetPosX;      // Zielposition (X)
+        float m_targetPosY;      // Zielposition (Y)
+        float m_moveDuration;    // Dauer der Animation in Sekunden (z. B. 0.5f)
+        float m_elapsedMoveTime; // Seit Beginn der Animation verstrichene Zeit
+        bool  m_isMoving;        // Flag, ob aktuell eine animierte Bewegung läuft
 };
 } // namespace advanced_wars

@@ -372,6 +372,7 @@ void Level::render(Engine& engine)
     for (auto& [id, unit] : m_units)
     {
         unit.render(engine, RENDERING_SCALE);
+        unit.update(1.0f / 60.0f);
     }
 
     // Effects
