@@ -54,9 +54,9 @@ Thumbs.db
 *.gcov
 coverage/
 
-*.png
-
 docs/generated/
+
+clang-tidy-warnings.txt
 
 bin/
 lib/
