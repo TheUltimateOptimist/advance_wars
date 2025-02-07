@@ -20,7 +20,6 @@
 #include <unordered_set>
 #include <vector>
 
-
 namespace advanced_wars
 {
 
@@ -35,6 +34,7 @@ const std::array<std::array<int, NUM_MOVEMENT_TYPES>, NUM_TILE_IDS> moveCostTabl
         {1, 3, 2, 1, 999, 999},     // FOREST
         {2, 999, 999, 1, 999, 999}, // MOUNTAIN
         {1, 1, 1, 1, 999, 999},     // BRIDGE_HORIZONTAL
+        {1, 1, 1, 1, 999, 999},     // BRIDE_VERTICAL
         {1, 1, 1, 1, 999, 999},     // STREET_HORIZONTAL
         {1, 1, 1, 1, 999, 999},     // STREET_VERTICAL
         {1, 1, 1, 1, 999, 999},     // STREET_CROSSING
