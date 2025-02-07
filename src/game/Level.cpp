@@ -7,6 +7,7 @@
 #include "Unit.hpp"
 #include "highfive/H5File.hpp"
 #include "ui/Contextmenu.hpp"
+#include "ui/Endscreen.hpp"
 #include "ui/Helpmenu.hpp"
 #include "ui/Pausemenu.hpp"
 #include <SDL.h>
@@ -29,7 +30,8 @@ Level::Level(
     : m_name(name), m_width(width), m_height(height), m_tiles(tiles), m_selectedUnit(-1),
       m_selectedBuilding(-1), m_contextMenu(ContextMenu()), m_id(0),
       m_state(LevelState::SELECTING_STATE),
-      m_currentPos(TileMarker(RENDERING_SCALE, 1, 1, m_width, m_height)), m_turnQ(turnQ)
+      m_currentPos(TileMarker(RENDERING_SCALE, 1, 1, m_width, m_height)), m_turnQ(turnQ),
+      m_gameOver(false)
 {
 
     m_contextMenu.setOptions({"Move", "Info", "Wait"});
@@ -179,6 +181,12 @@ int Level::selectBuilding(int tileX, int tileY)
 
 void Level::handleEvent(Engine& engine, SDL_Event& event)
 {
+    if (m_gameOver)
+    {
+        engine.pushScene(std::make_shared<Endscreen>(Endscreen(m_turnQ.front())));
+        return;
+    }
+
     if (event.type == SDL_KEYDOWN)
     {
         if (event.key.keysym.sym == SDLK_h)
@@ -841,7 +849,8 @@ void Level::handleMenuActiveEvents(Engine& engine, SDL_Event& event)
                 UnitFaction u_f = m_units.at(m_selectedUnit).getFaction();
 
                 BuildingFaction b_f = static_cast<BuildingFaction>(u_f);
-                b.switch_faction(b_f);
+                m_gameOver = b.switch_faction(b_f);
+
                 m_units.at(m_selectedUnit).setState(UnitState::UNAVAILABLE);
                 m_state = LevelState::SELECTING_STATE;
                 m_selectedBuilding = -1;
