@@ -109,7 +109,7 @@ Spritesheet::Spritesheet(std::string path, Engine& engine)
 
     // Buildings
     std::vector<std::string> building_factions(
-        {"red", "blue", "yellow", "green", "purple", "neutral"});
+        {"red", "blue", "green", "yellow", "purple", "neutral"});
 
     // every sub data set of buildings
     for (std::string faction : building_factions)

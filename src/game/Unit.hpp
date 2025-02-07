@@ -137,6 +137,9 @@ class Unit
          */
         std::vector<Unit*> getUnitsInRangeWithDamagePotential(const std::vector<Unit*>& allUnits);
 
+        bool hasMoved();
+        bool hasAttacked();
+
     private:
         UnitFaction m_faction; // The faction to which this unit belongs.
         UnitId      m_id;      // The identifier for the unit type.

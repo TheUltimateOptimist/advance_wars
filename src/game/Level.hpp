@@ -134,6 +134,7 @@ class Level : public Scene
 
         int            m_selectedUnit;
         int            m_selectedBuilding;
+        int            m_captureBuilding;
         ContextMenu    m_contextMenu;
         RecruitingMenu m_recruitingMenu;
         bool toggle_Helpmenu = false;

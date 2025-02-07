@@ -105,4 +105,8 @@ std::vector<UnitId> Building::recruitableUnits()
     return {};
 }
 
+BuildingId Building::getBuildingId() {
+    return this->m_id;
+}
+
 } // namespace advanced_wars

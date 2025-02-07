@@ -11,10 +11,10 @@ namespace advanced_wars
         private: 
 
         size_t m_selectedOption;
-        std::vector<std::pair<std::string, int>> m_options;
+        std::vector<UnitId> m_options;
         int m_x;
         int m_y;
-        const std::unordered_map <UnitId ,std::pair <std::string, int>> unitNames;
+        const std::unordered_map <UnitId , std::string> unitNames;
         std::unordered_map<int, UnitId> cost2UnitId;
         UnitId m_selectedId;
     

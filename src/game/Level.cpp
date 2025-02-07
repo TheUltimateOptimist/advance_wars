@@ -613,7 +613,6 @@ void Level::handleSelectingEvents(Engine& engine, SDL_Event& event)
 
         if (event.key.keysym.sym == SDLK_RETURN)
         {
-
             std::pair<int, int> tilePos = m_currentPos.getPosition();
             selectEntity(
                 tilePos.first * 16 * RENDERING_SCALE, tilePos.second * 16 * RENDERING_SCALE);
@@ -662,33 +661,64 @@ void Level::handleSelectingEvents(Engine& engine, SDL_Event& event)
                         }
                     }
 
-                    // Show according menu options if unit has same/different faction than current
-                    // player
+                    Unit& u = m_units.at(m_selectedUnit);
+
                     if (m_units.at(m_selectedUnit).getFaction() == m_turnQ.front().getFaction() &&
                         m_units.at(m_selectedUnit).getState() != UnitState::UNAVAILABLE)
                     {
-                        m_contextMenu.setOptions({"Move", "Attack", "Info", "Wait", "End Turn"});
+                        m_captureBuilding = -1;
+                        for (auto& [id, building] : m_buildings)
+                        {
+                            if (building.m_x == u.m_x && building.m_y == u.m_y)
+                            {
+                                if (building.getFaction() !=
+                                    static_cast<BuildingFaction>(u.getFaction()))
+                                {
+                                    m_captureBuilding = id;
+                                    m_contextMenu.setOptions(
+                                        {"Capture", "Move", "Attack", "Info", "Wait", "End Turn"});
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (m_captureBuilding == -1)
+                        {
+                            m_contextMenu.setOptions(
+                                {"Move", "Attack", "Info", "Wait", "End Turn"});
+                        }
                     }
                     else
                     {
                         m_contextMenu.setOptions({"Info", "End Turn"});
                     }
+                    m_state = LevelState::MENUACTIVE_STATE;
                 }
                 else
                 {
-                    // Show according menu options if building has same/different faction than
-                    // current player
-                    if (m_buildings.at(m_selectedBuilding).getFaction() ==
-                        static_cast<BuildingFaction>(m_turnQ.front().getFaction()))
-                    {
-                        m_contextMenu.setOptions({"Train", "Info", "End Turn"});
-                    }
-                    else
+                    BuildingId      b_id = m_buildings.at(m_selectedBuilding).getBuildingId();
+                    BuildingFaction b_faction = m_buildings.at(m_selectedBuilding).getFaction();
+                    if (b_id == BuildingId::CITY || b_id == BuildingId::HEADQUARTER ||
+                        b_faction == static_cast<BuildingFaction>(5))
                     {
                         m_contextMenu.setOptions({"Info", "End Turn"});
                     }
+                    else
+                    {
+                        // Show according menu options if building has same/different faction than
+                        // current player
+                        if (m_buildings.at(m_selectedBuilding).getFaction() ==
+                            static_cast<BuildingFaction>(m_turnQ.front().getFaction()))
+                        {
+                            m_contextMenu.setOptions({"Train", "Info", "End Turn"});
+                        }
+                        else
+                        {
+                            m_contextMenu.setOptions({"Info", "End Turn"});
+                        }
+                    }
+                    m_state = LevelState::MENUACTIVE_STATE;
                 }
-                m_state = LevelState::MENUACTIVE_STATE;
             }
         }
         break;
@@ -801,12 +831,23 @@ void Level::handleMenuActiveEvents(Engine& engine, SDL_Event& event)
                 m_recruitingMenu.update(
                     (tilePos.first * 16 + 15) * RENDERING_SCALE,
                     (tilePos.second * 16 + 15) * RENDERING_SCALE);
-                m_recruitingMenu.setOptions(
-                    {UnitId::INFANTERY, UnitId::MECHANIZED_INFANTERY, UnitId::RECON, UnitId::APC,
-                     UnitId::ARTILLERY, UnitId::ANTI_AIR_TANK, UnitId::ANTI_AIR_MISSILE_LAUNCHER,
-                     UnitId::ROCKET_ARTILLERY, UnitId::MEDIUM_TANK, UnitId::NEO_TANK,
-                     UnitId::HEAVY_TANK});
+                m_recruitingMenu.setOptions(m_buildings.at(m_selectedBuilding).recruitableUnits());
                 std::cout << "no training here" << std::endl;
+            }
+
+            if (cmd == "Capture")
+            {
+                Building&   b = m_buildings.at(m_captureBuilding);
+                UnitFaction u_f = m_units.at(m_selectedUnit).getFaction();
+
+                BuildingFaction b_f = static_cast<BuildingFaction>(u_f);
+                b.switch_faction(b_f);
+                m_units.at(m_selectedUnit).setState(UnitState::UNAVAILABLE);
+                m_state = LevelState::SELECTING_STATE;
+                m_selectedBuilding = -1;
+                m_selectedUnit = -1;
+                m_showReachableTiles = false;
+                m_showAttackableTiles = false;
             }
             if (cmd == "End Turn")
             {
@@ -816,7 +857,6 @@ void Level::handleMenuActiveEvents(Engine& engine, SDL_Event& event)
                 changeTurn();
             }
         }
-
         break;
     default:
         break;
@@ -831,7 +871,6 @@ void Level::handleMovementEvents(Engine& engine, SDL_Event& event)
         handlePositionMarker(engine, event);
         if (event.key.keysym.sym == SDLK_RETURN)
         {
-
             handleMovement(m_currentPos.getPosition());
         }
         if (event.key.keysym.sym == SDLK_ESCAPE)
@@ -886,5 +925,7 @@ void Level::handleAttackingEvents(Engine& engine, SDL_Event& event)
         break;
     }
 }
-//************end event handler delegates for different level states*****************************
+//************end event handler delegates for different level
+// states*****************************
+
 } // namespace advanced_wars
