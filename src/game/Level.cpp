@@ -81,11 +81,12 @@ std::shared_ptr<Level> Level::loadLevel(const std::string& path, Engine& engine)
     std::string name = pt.get<std::string>("level.name");
 
     // if level is smaler than 20x20 surround with water tiles
-    if (width < 20 || height < 20) {
-        int w_start = (20 - width) / 2;
-        int h_start = (20 - height) / 2;
+    if (width < 20 || height < 20)
+    {
+        int                  w_start = (20 - width) / 2;
+        int                  h_start = (20 - height) / 2;
         std::vector<uint8_t> transformed_tiles_array;
-        transformed_tiles_array.reserve(20*20);
+        transformed_tiles_array.reserve(20 * 20);
         for (int y = 0; y < 20; y++)
         {
             for (int x = 0; x < 20; x++)
@@ -96,7 +97,8 @@ std::shared_ptr<Level> Level::loadLevel(const std::string& path, Engine& engine)
                 }
                 else
                 {
-                    transformed_tiles_array.push_back(level_tilesarray[x - w_start + (y - h_start)*width]);
+                    transformed_tiles_array.push_back(
+                        level_tilesarray[x - w_start + (y - h_start) * width]);
                 }
             }
         }
@@ -774,34 +776,6 @@ void Level::handleSelectingEvents(Engine& engine, SDL_Event& event)
             }
         }
         break;
-    case SDL_MOUSEBUTTONDOWN:
-        if (event.button.button == SDL_BUTTON_LEFT)
-        {
-            selectEntity(event.button.x, event.button.y);
-            if (m_selectedUnit >= 0 || m_selectedBuilding >= 0)
-            {
-                std::pair<int, int> tilePos = calcTilePos(event.button.x, event.button.y);
-                m_currentPos.setPosition(tilePos.first, tilePos.second);
-                m_contextMenu.update(
-                    (tilePos.first * 16 + 15) * RENDERING_SCALE,
-                    (tilePos.second * 16 + 15) * RENDERING_SCALE);
-                if (m_selectedUnit >= 0)
-                {
-                    m_contextMenu.setOptions({"Move", "Attack", "Info", "Wait"});
-                }
-                else
-                {
-                    m_contextMenu.setOptions({"Train", "Info", "Wait"});
-                }
-                m_state = LevelState::MENUACTIVE_STATE;
-            }
-            else
-            {
-                m_showReachableTiles = false;
-                m_showAttackableTiles = false;
-                m_state = LevelState::SELECTING_STATE;
-            }
-        }
     default:
         break;
     }
@@ -873,7 +847,7 @@ void Level::handleMenuActiveEvents(Engine& engine, SDL_Event& event)
                 {
                     Unit& u = m_units.at(m_selectedUnit);
                     std::cout << "Health: " << u.m_health << std::endl;
-                    m_showUnitInfoMenu = !m_showUnitInfoMenu; 
+                    m_showUnitInfoMenu = !m_showUnitInfoMenu;
                 }
                 if (m_selectedBuilding > -1)
                 {
@@ -938,15 +912,6 @@ void Level::handleMovementEvents(Engine& engine, SDL_Event& event)
             m_state = LevelState::MENUACTIVE_STATE;
         }
         break;
-    case SDL_MOUSEBUTTONDOWN:
-        if (event.button.button == SDL_BUTTON_LEFT)
-        {
-            // Bei Movement animation in ANIMATING_STATE gehen
-            std::pair<int, int> tilePos = calcTilePos(event.button.x, event.button.y);
-            m_currentPos.setPosition(tilePos.first, tilePos.second);
-            handleMovement(tilePos);
-        }
-        break;
     default:
         break;
     }
@@ -971,14 +936,6 @@ void Level::handleAttackingEvents(Engine& engine, SDL_Event& event)
         if (event.key.keysym.sym == SDLK_RETURN)
         {
             handleAttack(m_currentPos.getPosition());
-        }
-        break;
-    case SDL_MOUSEBUTTONDOWN:
-        if (event.button.button == SDL_BUTTON_LEFT)
-        {
-            std::pair<int, int> tilePos = calcTilePos(event.button.x, event.button.y);
-            m_currentPos.setPosition(tilePos.first, tilePos.second);
-            handleAttack(tilePos);
         }
         break;
     default:
