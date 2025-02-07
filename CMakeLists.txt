@@ -160,4 +160,3 @@ foreach(H5_FILE ${HDF5_FILES})
             COMMENT "Kopiere HDF5 File: ${H5_FILE} nach ${OUTPUT_RES_DIR}"
     )
 endforeach()
-
