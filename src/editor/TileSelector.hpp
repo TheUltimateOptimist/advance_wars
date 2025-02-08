@@ -2,8 +2,8 @@
 * TileSelector.cpp
 *
 * @date 28.01.2025
-* @author Jonathan Dueck (jonathan.dueck@informatik.hs-fulda.de) skeleton
 * @author Nils Jonathan Friedrich Eckardt implementation
+* @author Jonathan Dueck (jonathan.dueck@informatik.hs-fulda.de) skeleton
 */
 
 #pragma once
