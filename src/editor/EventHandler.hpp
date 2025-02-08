@@ -100,7 +100,7 @@ public:
      * Overwrite this event method to handle the change of tile placement method due
      * to the user selecting automatic tile placement assisstance.
      */
-    virtual void onCheckBoxToggled(){};
+    virtual void onAdvancedPlacementToggled(){};
 
     /**
      * Overwrite this event method to handle the dispatch of a new delta due to 

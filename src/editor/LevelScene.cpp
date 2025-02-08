@@ -279,7 +279,7 @@ void LevelScene::onNewTileIdSelected(uint8_t tile_id)
     m_selected_tile_id = tile_id;
 }
 
-void LevelScene::onCheckBoxToggled()
+void LevelScene::onAdvancedPlacementToggled()
 {
     m_advanced_tile_placement = !m_advanced_tile_placement;
 }

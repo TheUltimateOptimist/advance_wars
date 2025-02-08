@@ -38,7 +38,7 @@ private:
     void onTileExited(int index) override;
     void onTileClicked(int index) override;
     void onNewTileIdSelected(uint8_t tile_id) override;
-    void onCheckBoxToggled() override;
+    void onAdvancedPlacementToggled() override;
     void setTile(int index, uint8_t id);
     void placeCliff(bool placedLand, int index);
     void placeRoad(int index, bool updateFlag);

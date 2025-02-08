@@ -21,7 +21,7 @@ AdvancedPlacementSwitch::AdvancedPlacementSwitch(const QString text, QWidget* pa
 void AdvancedPlacementSwitch::mousePressEvent(QMouseEvent *event)
 {
     QCheckBox::mousePressEvent(event);
-    EventHandler::send([](EventHandler* e) { e->onCheckBoxToggled(); });
+    EventHandler::send([](EventHandler* e) { e->onAdvancedPlacementToggled(); });
 }
 
 } // namespace editor
