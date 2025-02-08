@@ -27,10 +27,6 @@ class Tile
          */
         Tile(TileId id, int x, int y);
 
-        TileId m_id; // This tiles type
-        int    m_x;  // This tiles x-position
-        int    m_y;  // This tiles y-position
-
         /**
          * Renders the tile
          *
@@ -41,9 +37,9 @@ class Tile
         TileId getType() const;
 
     private:
-        TileId m_id;
-        int    m_x;
-        int    m_y;
+        TileId m_id; // This tiles type
+        int    m_x;  // This tiles x-position
+        int    m_y;  // This tiles y-position
 };
 
 } // namespace advanced_wars

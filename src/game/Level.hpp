@@ -236,22 +236,6 @@ class Level : public Scene
         int            m_id;
         LevelState     m_state; // Current level state
 
-        std::unordered_map<int, Unit> m_units; /* the units of the level
-                                                   mapped to their uniqie ids*/
-
-        std::unordered_map<int, Effect> m_effects; /* the effects of the level
-                                                   mapped to their unique ids*/
-
-        std::queue<Player> m_turnQ; /* The queue of players,
-                                    the player at the front is currently active*/
-
-        int            m_selectedUnit;     // The unique id of the currently selected unit
-        int            m_selectedBuilding; // The unqique id of the currently selected building
-        ContextMenu    m_contextMenu;      // The context menu
-        RecruitingMenu m_recruitingMenu;   // The recruiting menu
-        int            m_id;               // TODO add comment
-        LevelState     m_state;            // The current state of the level
-
         /**
          * TODO subject to remove?
          */
