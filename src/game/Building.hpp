@@ -14,18 +14,40 @@
 namespace advanced_wars
 {
 
+/**
+ * Representation of a building
+ */
 class Building
 {
     public:
+        /**
+         * Constructor
+         *
+         * @param x The tile-based x-position
+         * @param y The tile-based y-position
+         * @param id The building type
+         * @param faction The faction of this building
+         */
         Building(int x, int y, BuildingId id, BuildingFaction faction);
 
-        int             m_x;
-        int             m_y;
-        BuildingId      m_id;
-        BuildingFaction m_faction;
+        int             m_x;       // Tile-basded x-position
+        int             m_y;       // Tile-based y-position
+        BuildingId      m_id;      // Building's type
+        BuildingFaction m_faction; // Building's faction
 
+        /**
+         * Render this object
+         *
+         * @param engine An engine object with valid rendering context
+         * @param scale A factor to scale the rendering
+         */
         void render(Engine& engine, int scale);
 
+        /**
+         * Faction getter
+         *
+         * @return This buildings faction
+         */
         BuildingFaction getFaction();
 
         /**
