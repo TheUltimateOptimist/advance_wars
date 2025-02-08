@@ -17,7 +17,7 @@
 #include "ZoomInButton.hpp"
 #include "ZoomInfo.hpp"
 #include "ZoomOutButton.hpp"
-#include "AutomateButton.hpp"
+#include "AdvancedPlacementSwitch.hpp"
 
 namespace editor
 {
@@ -41,7 +41,7 @@ TopBar::TopBar(const std::string& level_name, QWidget* parent) : QToolBar(parent
     QPushButton* zoom_in = new ZoomInButton(right_container);
     QPushButton* zoom_out = new ZoomOutButton(right_container);
     QPushButton* zoom_info = new ZoomInfo(right_container);
-    AutomateButton* checkedBox = new AutomateButton("Kacheln automatisch setzen", container);
+    AdvancedPlacementSwitch* checkedBox = new AdvancedPlacementSwitch("Kacheln automatisch setzen", container);
     left_layout->addWidget(checkedBox);
     right_layout->addStretch();
     right_layout->addWidget(zoom_out);

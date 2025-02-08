@@ -5,7 +5,7 @@
 * @author Nils Jonathan Friedrich Eckardt implementation
 */
 
-#include "AutomateButton.hpp"
+#include "AdvancedPlacementSwitch.hpp"
 #include "EventHandler.hpp"
 #include <QMessageBox>
 #include <QEvent>
@@ -13,12 +13,12 @@
 namespace editor
 {
 
-AutomateButton::AutomateButton(const QString text, QWidget* parent) : QCheckBox(text,parent)
+AdvancedPlacementSwitch::AdvancedPlacementSwitch(const QString text, QWidget* parent) : QCheckBox(text,parent)
 {
     setChecked(false);
 }
 
-void AutomateButton::mousePressEvent(QMouseEvent *event)
+void AdvancedPlacementSwitch::mousePressEvent(QMouseEvent *event)
 {
     QCheckBox::mousePressEvent(event);
     EventHandler::send([](EventHandler* e) { e->onCheckBoxToggled(); });

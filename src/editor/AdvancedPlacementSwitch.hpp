@@ -14,9 +14,9 @@
 namespace editor
 {
 
-class AutomateButton : public QCheckBox {
+class AdvancedPlacementSwitch : public QCheckBox {
 public:
-    AutomateButton(const QString text, QWidget *parent = nullptr);
+    AdvancedPlacementSwitch(const QString text, QWidget *parent = nullptr);
 protected:
     void mousePressEvent(QMouseEvent *event) override;
 };
