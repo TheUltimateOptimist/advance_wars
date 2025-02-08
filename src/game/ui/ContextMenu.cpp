@@ -1,4 +1,4 @@
-#include "Contextmenu.hpp"
+#include "ContextMenu.hpp"
 #include <SDL_ttf.h>
 #include <iostream>
 
@@ -41,12 +41,12 @@ void ContextMenu::render(Engine& engine)
     }
 
     SDL_Color white = {255, 255, 255, 255};
-    SDL_Color yellow = {192, 255, 0, 255};
+    SDL_Color yellow = {0, 0, 0, 255};
 
     int spacing = 20; // Abstand zwischen den Optionen
     // box around options
     SDL_SetRenderDrawColor(engine.renderer(), 0, 0, 255, 255);
-    SDL_Rect box = {m_x, m_y - 3, 50, static_cast<int>(m_options.size() * spacing)};
+    SDL_Rect box = {m_x, m_y - 3, 80, static_cast<int>(m_options.size() * spacing)};
     SDL_RenderFillRect(engine.renderer(), &box);
 
     SDL_SetRenderDrawColor(engine.renderer(), 0, 0, 0, 255);

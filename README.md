@@ -1,5 +1,14 @@
 # Advanced Wars
 
+## clang-tidy
+
+- Um `clang-tidy` für eine einzelne Datei (z.B. `main.cpp`) auszuführen:
+
+   `clang-tidy src/game/main.cpp -header-filter="src/game/main\.cpp" -p build/`
+
+- Um `clang-tidy` für das ganze Projekt auszuführen und die Warnings in die Datei `clang-tidy-warnings.txt` zu schreiben:
+
+   `find src/game -name '*.cpp' -o -name '*.hpp' | xargs clang-tidy -header-filter="src/game/.*" -p build/ 1> clang-tidy-warnings.txt`
 ## Build-Anleitung
 
 ### Linux/MacOS
@@ -82,3 +91,6 @@ CMake kann mit verschiedenen Optionen konfiguriert werden:
 cmake .. -DCMAKE_BUILD_TYPE=Release    # Release-Build
 cmake .. -DCMAKE_BUILD_TYPE=Debug      # Debug-Build
 ```
+
+## Prerequisites for Leveleditor
+- QT 6: ```sudo apt install qt6-base-dev```

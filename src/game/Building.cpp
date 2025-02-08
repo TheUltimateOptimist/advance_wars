@@ -34,15 +34,16 @@ BuildingFaction Building::getFaction()
     return this->m_faction;
 }
 
-void Building::switch_faction(BuildingFaction faction)
+bool Building::switch_faction(BuildingFaction faction)
 {
 
     this->m_faction = faction;
 
     if (this->m_id == BuildingId::HEADQUARTER)
     {
-        std::cout << "The game is over!" << std::endl;
+        return true;
     }
+    return false;
 }
 
 // implement call to UI to show available units
@@ -56,7 +57,8 @@ bool Building::check_spawn(std::unordered_map<int, advanced_wars::Unit>& units)
 
     for (auto& [id, unit] : units)
     {
-        if (unit.m_x == this->m_x && unit.m_y == this->m_y)
+        if (unit.getXPosition() == this->getXPosition() &&
+            unit.getYPosition() == this->getYPosition())
         {
             return false;
         }
@@ -103,6 +105,21 @@ std::vector<UnitId> Building::recruitableUnits()
     }
 
     return {};
+}
+
+int Building::getXPosition()
+{
+    return m_x;
+}
+
+int Building::getYPosition()
+{
+    return m_y;
+}
+
+BuildingId Building::getId()
+{
+    return this->m_id;
 }
 
 } // namespace advanced_wars

@@ -15,11 +15,6 @@ namespace advanced_wars
 
 class Player
 {
-    private:
-        int         m_money;      // The players current amound of money
-        bool        m_alive;      // Signals if the player is alive or not
-        bool        m_activeTurn; // Signals if this player is currently the active player
-        UnitFaction m_faction;    // The players commanding faction
 
     public:
         /**
@@ -64,6 +59,12 @@ class Player
          * @param toSpend The money to subtract
          */
         void spendMoney(int toSpend);
+
+    private:
+        int         m_money;      // The players current amound of money
+        bool        m_alive;      // Signals if the player is alive or not
+        bool        m_activeTurn; // Signals if this player is currently the active player
+        UnitFaction m_faction;    // The players commanding faction
 };
 
 } // namespace advanced_wars

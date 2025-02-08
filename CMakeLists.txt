@@ -41,8 +41,8 @@ find_package(Boost 1.71.0 REQUIRED COMPONENTS graph)
 
 # Quellen sammeln
 file(GLOB_RECURSE ADVANCED_WARS_SOURCES
-        "${PROJECT_SOURCE_DIR}/src/*.cpp"
-        "${PROJECT_SOURCE_DIR}/src/*.hpp"
+        "${PROJECT_SOURCE_DIR}/src/game/*.cpp"
+        "${PROJECT_SOURCE_DIR}/src/game/*.hpp"
 )
 
 # C++ Standard festlegen
@@ -73,6 +73,8 @@ file(GLOB HDF5_FILES ${RES_DIR}/*.h5)
 
 # Executable erstellen
 add_executable(advanced_wars ${ADVANCED_WARS_SOURCES})
+
+set(CMAKE_MODULE_PATH ${ADVANCED_WARS_SOURCE_DIR}/cmake/ ${CMAKE_MODULE_PATH})
 
 # Plattform-spezifische Konfiguration
 if(APPLE)
@@ -130,9 +132,40 @@ else()
         box2d
         m
     )
-
-    target_include_directories(advanced_wars PRIVATE ${highfive_SOURCE_DIR}/include)
 endif()
+
+# leveleditor
+# Find Qt
+find_package(Qt6 REQUIRED COMPONENTS Widgets)
+
+file(GLOB_RECURSE LEVELEDITOR_SOURCES
+        "${PROJECT_SOURCE_DIR}/src/editor/*.cpp"
+        "${PROJECT_SOURCE_DIR}/src/editor/*.hpp"
+)
+
+# Add executable
+add_executable(editor ${LEVELEDITOR_SOURCES})
+
+# Link Qt libraries
+target_link_libraries(editor PRIVATE Qt6::Widgets ${HDF5_LIBRARIES})
+
+target_include_directories(editor
+    PRIVATE 
+        ${highfive_SOURCE_DIR}/include
+)
+
+
+# writelevel
+add_executable(writelevel ${PROJECT_SOURCE_DIR}/src/util/writelevel.cpp)
+target_include_directories(writelevel
+    PRIVATE 
+        ${highfive_SOURCE_DIR}/include
+)
+target_link_libraries(writelevel
+        ${HDF5_LIBRARIES}
+    )
+
+target_include_directories(advanced_wars PRIVATE ${highfive_SOURCE_DIR}/include)
 
 # Ressourcen kopieren (plattformübergreifend)
 foreach(FONT ${FONT_FILES})
@@ -158,5 +191,3 @@ foreach(H5_FILE ${HDF5_FILES})
             COMMENT "Kopiere HDF5 File: ${H5_FILE} nach ${OUTPUT_RES_DIR}"
     )
 endforeach()
-
-set(CMAKE_MODULE_PATH ${ADVANCED_WARS_SOURCE_DIR}/cmake/ ${CMAKE_MODULE_PATH})

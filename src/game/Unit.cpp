@@ -151,19 +151,19 @@ int Unit::calculateDamage(Unit& target)
     Weapon* secondaryWeapon = &m_secondaryWeapon;
 
     // Find the corresponding damage values
-    auto primary_damage_it = primaryWeapon->m_damage.find(target.m_id);
-    auto secondary_damage_it = secondaryWeapon->m_damage.find(target.m_id);
+    auto primary_damage_it = primaryWeapon->getDamage().find(target.m_id);
+    auto secondary_damage_it = secondaryWeapon->getDamage().find(target.m_id);
 
     int damage_value = 0;
 
     // Calculate damage using secondary weapon if available
-    if (secondary_damage_it != secondaryWeapon->m_damage.end())
+    if (secondary_damage_it != secondaryWeapon->getDamage().end())
     {
         damage_value = secondary_damage_it->second;
     }
 
     // Calculate damage using primary weapon if higher and ammo is available
-    if (primary_damage_it != primaryWeapon->m_damage.end())
+    if (primary_damage_it != primaryWeapon->getDamage().end())
     {
         // Check ammo correctly
         int& ammo = m_ammo;
@@ -242,7 +242,7 @@ std::vector<Unit*> Unit::getUnitsInRangeWithDamagePotential(const std::vector<Un
     for (Unit* unit : allUnits)
     { // Iterate over all units
         // except itself
-        if (unit == this)
+        if (unit->getFaction() == this->m_faction)
         {
             continue;
         }
@@ -254,18 +254,18 @@ std::vector<Unit*> Unit::getUnitsInRangeWithDamagePotential(const std::vector<Un
         if (distance >= m_minRange && distance <= m_maxRange)
         {
             // Prüfen ob Schaden möglich ist
-            auto primaryDamageIt = m_primaryWeapon.m_damage.find(unit->m_id);
-            auto secondaryDamageIt = m_secondaryWeapon.m_damage.find(unit->m_id);
+            auto primaryDamageIt = m_primaryWeapon.getDamage().find(unit->m_id);
+            auto secondaryDamageIt = m_secondaryWeapon.getDamage().find(unit->m_id);
 
             bool canDealDamage = false;
 
             // Prüfen, ob Primärwaffe Schaden machen kann
-            if (primaryDamageIt != m_primaryWeapon.m_damage.end() && m_ammo > 0)
+            if (primaryDamageIt != m_primaryWeapon.getDamage().end() && m_ammo > 0)
             {
                 canDealDamage = true;
             }
             // Prüfen, ob Sekundärwaffe Schaden machen kann
-            if (secondaryDamageIt != m_secondaryWeapon.m_damage.end())
+            if (secondaryDamageIt != m_secondaryWeapon.getDamage().end())
             {
                 canDealDamage = true;
             }
@@ -322,6 +322,35 @@ UnitFaction Unit::getFaction()
 void Unit::setState(UnitState state)
 {
     this->m_state = state;
+}
+
+bool Unit::hasAttacked()
+{
+    return this->m_hasAttacked;
+}
+
+bool Unit::hasMoved()
+{
+    return this->m_hasMoved;
+}
+
+int Unit::getXPosition()
+{
+    return m_x;
+}
+
+int Unit::getYPosition()
+{
+    return m_y;
+}
+
+int Unit::getMovementPoints()
+{
+    return m_movementPoints;
+}
+MovementType Unit::getMovementType()
+{
+    return m_movementType;
 }
 
 } // namespace advanced_wars

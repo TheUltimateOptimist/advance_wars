@@ -30,32 +30,50 @@ class Building
          */
         Building(int x, int y, BuildingId id, BuildingFaction faction);
 
-        int             m_x;       // Tile-basded x-position
-        int             m_y;       // Tile-based y-position
-        BuildingId      m_id;      // Building's type
-        BuildingFaction m_faction; // Building's faction
-
         /**
-         * Render this object
+         * Render the building.Building
          *
          * @param engine An engine object with valid rendering context
-         * @param scale A factor to scale the rendering
+         * @param scale The scaling factor for the current game
          */
         void render(Engine& engine, int scale);
 
         /**
+         * X-Position getter
+         *
+         * @return tile-based x-position
+         */
+        int getXPosition();
+
+        /**
+         * Y-Position getter
+         *
+         * @return tile-based y-position
+         */
+        int getYPosition();
+
+        /**
          * Faction getter
          *
-         * @return This buildings faction
+         * @return This building's current faction
          */
         BuildingFaction getFaction();
+
+        /**
+         * ID getter
+         *
+         * @return This building's type
+         */
+        BuildingId getId();
 
         /**
         Changes the faction to the specified one
 
         @param faction The new faction the unit will belong to
+
+        @return true if building was a headquarter
         */
-        void switch_faction(BuildingFaction faction);
+        bool switch_faction(BuildingFaction faction);
 
         /*
         checks if the tile ontop of the building is free
@@ -66,12 +84,6 @@ class Building
         checks if the player has enough money for the unit to be recruited
         */
         bool check_money(int price, int playerMoney);
-
-        /*
-        When the building is selected, the player should have the ability to recruit a selection of
-        units They should be displayed by the UI On_click();
-        */
-        void recruit_unit();
 
         /**
         If the building is clicked, it shows information to the player, here it will be a list of
@@ -84,6 +96,12 @@ class Building
          *
          */
         std::vector<UnitId> recruitableUnits();
+
+    private:
+        int             m_x;       // Tile-basded x-position
+        int             m_y;       // Tile-based y-position
+        BuildingId      m_id;      // Building's type
+        BuildingFaction m_faction; // Building's faction
 };
 
 } // namespace advanced_wars

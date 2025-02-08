@@ -1,7 +1,7 @@
 #include "Engine.hpp"
 #include "Spritesheet.hpp"
 #include "Window.hpp"
-#include "ui/Contextmenu.hpp"
+#include "ui/ContextMenu.hpp"
 #include "ui/Menu.hpp"
 #include <SDL2/SDL.h>
 #include <SDL_image.h>
@@ -11,8 +11,15 @@
 
 using namespace advanced_wars;
 
-int main()
+int main(int argc, char* argv[])
 {
+    if (argc <= 1)
+    {
+        std::cerr << "Please provide the path to the level that you want to play as a command line "
+                     "argument."
+                  << std::endl;
+        return 1;
+    }
 
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {
@@ -34,7 +41,7 @@ int main()
 
     engine.setSpritesheet(spritesheet);
 
-    std::shared_ptr<Menu>        menu = std::make_shared<Menu>(0);
+    std::shared_ptr<Menu>        menu = std::make_shared<Menu>(0, argv[1]);
     std::shared_ptr<ContextMenu> context_menu = std::make_shared<ContextMenu>();
     context_menu->setOptions({"Move", "Info", "Wait"});
 

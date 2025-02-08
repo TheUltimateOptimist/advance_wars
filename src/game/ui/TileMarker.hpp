@@ -5,6 +5,7 @@
  */
 
 #pragma once
+#include "../Player.hpp"
 #include "../Scene.hpp"
 
 namespace advanced_wars
@@ -61,13 +62,16 @@ class TileMarker : public Scene
          */
         void setPosition(int x, int y);
 
+        void setMarkerColor(UnitFaction faction);
+
     private:
-        int m_x;              // x-position
-        int m_y;              // y-position
-        int m_renderingScale; // rendering scale, has to be same as the level
-        int m_width;          // width of the marker (normally same as tile)
-        int m_height;         // height of the marker (normally same as tile)
-        int m_levelHeight;    // height of the overlying level
-        int m_levelWidth;     // width of the overlying level
+        int       m_x;              // x-position
+        int       m_y;              // y-position
+        int       m_renderingScale; // rendering scale, has to be same as the level
+        int       m_width;          // width of the marker (normally same as tile)
+        int       m_height;         // height of the marker (normally same as tile)
+        int       m_levelHeight;    // height of the overlying level
+        int       m_levelWidth;     // width of the overlying level
+        SDL_Color m_markerColor;    // The color of the Marker
 };
 } // namespace advanced_wars

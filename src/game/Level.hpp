@@ -13,9 +13,11 @@
 #include "Scene.hpp"
 #include "Tile.hpp"
 #include "Unit.hpp"
-#include "ui/Contextmenu.hpp"
-#include "ui/Recruitingmenu.hpp"
+#include "ui/ContextMenu.hpp"
+#include "ui/HelpMenu.hpp"
+#include "ui/RecruitingMenu.hpp"
 #include "ui/TileMarker.hpp"
+#include "ui/UnitInfoMenu.hpp"
 #include <SDL.h>
 #include <array>
 #include <queue>
@@ -39,6 +41,7 @@ const std::array<std::array<int, NUM_MOVEMENT_TYPES>, NUM_TILE_IDS> moveCostTabl
         {1, 3, 2, 1, 999, 999},     // FOREST
         {2, 999, 999, 1, 999, 999}, // MOUNTAIN
         {1, 1, 1, 1, 999, 999},     // BRIDGE_HORIZONTAL
+        {1, 1, 1, 1, 999, 999},     // BRIDE_VERTICAL
         {1, 1, 1, 1, 999, 999},     // STREET_HORIZONTAL
         {1, 1, 1, 1, 999, 999},     // STREET_VERTICAL
         {1, 1, 1, 1, 999, 999},     // STREET_CROSSING
@@ -105,7 +108,7 @@ class Level : public Scene
          * @param path A path to a hdf5 level file
          * @param engine An engine Object with valid unit config
          */
-        static std::shared_ptr<Level> loadLevel(std::string path, Engine& engine);
+        static std::shared_ptr<Level> loadLevel(const std::string& path, Engine& engine);
 
         void render(Engine& engine);
 
@@ -213,13 +216,25 @@ class Level : public Scene
         std::vector<std::pair<int, int>> m_attackableTiles;
 
     private:
-        std::string m_name;   // the name of the level
-        int         m_width;  // the width of the level
-        int         m_height; // the height of the level
+        bool                              m_gameOver;  // toggles game end screen
+        std::string                       m_name;      // name of the level
+        int                               m_width;     // width of the level
+        int                               m_height;    // height of the level
+        std::vector<Tile>                 m_tiles;     // vector of all floor tiles
+        std::unordered_map<int, Building> m_buildings; // map of buildings with unique ids as key
+        std::unordered_map<int, Unit>     m_units;     // map of units with unique ids as key
+        std::unordered_map<int, Effect>   m_effects;   // map of units with unique ids as key
+        std::queue<Player>                m_turnQ; // player turn order, front is currently active
 
-        std::vector<Tile>                 m_tiles;     // the tiles of the level
-        std::unordered_map<int, Building> m_buildings; /* the buildings of the level
-                                                       mapped to their unique ids*/
+        int            m_selectedUnit;     // unique id of the currently selcted unit
+        int            m_selectedBuilding; // unique id of the currently selected building
+        int            m_captureBuilding;
+        ContextMenu    m_contextMenu;           // A contextMenu when selecting something
+        RecruitingMenu m_recruitingMenu;        // Menu when trying to train new units
+        bool           toggle_Helpmenu = false; // toggles tutorial screen
+        HelpMenu       m_helpMenu;              // The Tutorial screen
+        int            m_id;
+        LevelState     m_state; // Current level state
 
         std::unordered_map<int, Unit> m_units; /* the units of the level
                                                    mapped to their uniqie ids*/
@@ -355,6 +370,12 @@ class Level : public Scene
          * @param event The SDL event to handle
          */
         void handlePositionMarker(Engine& engine, SDL_Event& event);
+
+        UnitInfoMenu m_unitInfoMenu;
+
+        bool m_showUnitInfoMenu = false;
+
+        std::pair<int, int> unit_fallback_position;
 };
 
 } // namespace advanced_wars

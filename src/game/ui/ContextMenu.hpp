@@ -20,13 +20,6 @@ namespace advanced_wars
  */
 class ContextMenu : public Scene
 {
-    private:
-        std::vector<std::string> m_options;        // The menu options
-        size_t                   m_selectedOption; // The currently selected option
-
-        int m_x; // x-position
-        int m_y; // y-position
-
     public:
         /**
          * Constructor
@@ -74,6 +67,13 @@ class ContextMenu : public Scene
          * Destructor
          */
         ~ContextMenu();
+
+    private:
+        std::vector<std::string> m_options;        // vector of all options
+        size_t                   m_selectedOption; // The currently selected option
+
+        int m_x; // x-position
+        int m_y; // y-position
 };
 
 } // namespace advanced_wars

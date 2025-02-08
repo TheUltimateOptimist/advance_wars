@@ -52,6 +52,7 @@ class Effect
          */
         bool is_finished(Engine& engine);
 
+    private:
         int      m_x;  // The tile-based x-position
         int      m_y;  // The tile-based y-position
         EffectId m_id; // The kind of effect

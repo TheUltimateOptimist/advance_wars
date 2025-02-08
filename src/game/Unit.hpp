@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include "Config.hpp"
 #include "Engine.hpp"
 
 #include "Weapon.hpp"
@@ -29,19 +30,15 @@ using MatchupTable = std::unordered_map<UnitId, std::unordered_map<UnitId, int>>
 class Unit
 {
     public:
-        int m_x;      // Tile x-position
-        int m_y;      // Tile y-position
-        int m_health; // Current health of the unit, initialized to max health at construction.
-        int m_price;  // The cost to train this unit at a building
-
-        int          m_movementPoints; // The number of tiles this unit can move per turn.
-        MovementType m_movementType;   // The type of movement this unit has (e.g., foot, wheeled).
-
         /**
          * Constructor for Unit.
          * Initializes the unit's position, faction, identifier, state, and configuration settings.
          */
         Unit(int x, int y, UnitFaction faction, UnitId id, UnitState state, Config& config);
+
+        int getXPosition();
+
+        int getYPosition();
 
         /**
          * Destructor for Unit.
@@ -136,7 +133,17 @@ class Unit
          */
         UnitFaction getFaction();
 
+        int    getAmmo() const { return m_ammo; }
+        int    getHealth() const { return m_health; }
+        int    getCost() const { return m_cost; }
+        UnitId getId() const { return m_id; }
+
+        int          getMovementPoints();
+        MovementType getMovementType();
+
         void setState(UnitState state);
+
+        inline UnitState getState() const { return m_state; }
 
         /**
          * Retrieves units within range that this unit can deal damage to.
@@ -148,7 +155,18 @@ class Unit
          */
         std::vector<Unit*> getUnitsInRangeWithDamagePotential(const std::vector<Unit*>& allUnits);
 
+        bool hasMoved();
+        bool hasAttacked();
+
     private:
+        int m_x;      // Tile-based x-position
+        int m_y;      // Tile-based y-position
+        int m_health; // Current health of the unit, initialized to max health at construction.
+        int m_price;  // The cost to train this unit
+
+        int          m_movementPoints; // The number of tiles this unit can move per turn.
+        MovementType m_movementType;   // The type of movement this unit has (e.g., foot, wheeled).
+
         UnitFaction m_faction; // The faction to which this unit belongs.
         UnitId      m_id;      // The identifier for the unit type.
         UnitState   m_state;   // The current state of the unit (idle, moving, etc.).
