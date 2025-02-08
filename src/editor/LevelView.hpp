@@ -30,14 +30,17 @@ public:
      * @param parent The widget to set as this widget's parent.
      */
     LevelView(LevelScene* scene, QWidget* parent = nullptr);
+
 private:
     /**
      * The current value by which the contained scene is scaled up or down.
      * E.g 2.0 => twice the size, 0.5 => half the size
      */
     double scale_val;
+
     /**
      * Zoom by the specified delta.
+     * @param delta The amount by which to zoom.
      */
     void onZoomed(double delta) override;
 };

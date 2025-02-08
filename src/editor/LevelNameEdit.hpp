@@ -26,6 +26,11 @@ public:
      */
     LevelNameEdit(const std::string& level_name, QWidget* parent = nullptr);
 protected:
+    /**
+     * Receives a QKeyEvent when the user presses a key to change the content of the QLineEdit.
+     * The onLevelNameUpdated event method is subsequently emitted. 
+     * @param event The QKeyEvent for the Key Press.
+     */
     void keyPressEvent(QKeyEvent* event) override;
 };
 
