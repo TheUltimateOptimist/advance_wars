@@ -25,10 +25,6 @@ namespace advanced_wars
  */
 class PauseMenu : public Scene
 {
-    private:
-        size_t m_selectedOption;              ///< Index of the currently selected menu option.
-        std::array<std::string, 3> m_options; ///< The available pause menu options.
-        SDL_Texture* m_backgroundTexture;     ///< Pointer to the background texture (if available).
 
     public:
         /**
@@ -89,6 +85,11 @@ class PauseMenu : public Scene
          * and ensures that SDL_ttf is properly shut down.
          */
         ~PauseMenu();
+
+    private:
+        size_t m_selectedOption;              ///< Index of the currently selected menu option.
+        std::array<std::string, 3> m_options; ///< The available pause menu options.
+        SDL_Texture* m_backgroundTexture;     ///< Pointer to the background texture (if available).
 };
 
 } // namespace advanced_wars

@@ -10,12 +10,14 @@ class Tile
 {
     public:
         Tile(TileId id, int x, int y);
-        TileId m_id;
-        int    m_x;
-        int    m_y;
 
         void   render(Engine& engine, int scale);
         TileId getType() const;
+
+    private:
+        TileId m_id;
+        int    m_x;
+        int    m_y;
 };
 
 } // namespace advanced_wars

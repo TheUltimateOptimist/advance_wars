@@ -21,11 +21,6 @@ namespace advanced_wars
  */
 class Menu : public Scene
 {
-    private:
-        size_t m_selectedOption;              ///< Index of the currently selected menu option.
-        std::string m_level_filepath;         ///< The path from which the level will be loaded.
-        std::array<std::string, 3> m_options; ///< The available menu options.
-        SDL_Texture* m_backgroundTexture;     ///< Pointer to the background texture (if any).
 
     public:
         /**
@@ -85,6 +80,12 @@ class Menu : public Scene
          * and ensures that SDL_Image is properly shut down.
          */
         ~Menu();
+
+    private:
+        size_t      m_selectedOption;         ///< Index of the currently selected menu option.
+        std::string m_level_filepath;         ///< The path from which the level will be loaded.
+        std::array<std::string, 3> m_options; ///< The available menu options.
+        SDL_Texture* m_backgroundTexture;     ///< Pointer to the background texture (if any).
 };
 
 } // namespace advanced_wars

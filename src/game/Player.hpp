@@ -9,11 +9,6 @@ namespace advanced_wars
 
 class Player
 {
-    private:
-        int         m_money;
-        bool        m_alive;
-        bool        m_activeTurn;
-        UnitFaction m_faction;
 
     public:
         Player(int money, UnitFaction faction);
@@ -42,6 +37,12 @@ class Player
         int getMoney();
 
         void spendMoney(int toSpend);
+
+    private:
+        int         m_money;
+        bool        m_alive;
+        bool        m_activeTurn;
+        UnitFaction m_faction;
 };
 
 } // namespace advanced_wars

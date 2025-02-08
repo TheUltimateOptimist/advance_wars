@@ -1,4 +1,4 @@
-#include "Endscreen.hpp"
+#include "EndScreen.hpp"
 #include "Menu.hpp"
 #include <SDL_image.h>
 #include <SDL_ttf.h>

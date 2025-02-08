@@ -13,14 +13,15 @@ class Building
     public:
         Building(int x, int y, BuildingId id, BuildingFaction faction);
 
-        int             m_x;
-        int             m_y;
-        BuildingId      m_id;
-        BuildingFaction m_faction;
-
         void render(Engine& engine, int scale);
 
+        int xPosition();
+
+        int yPosition();
+
         BuildingFaction getFaction();
+
+        BuildingId getId();
 
         /**
         Changes the faction to the specified one
@@ -53,7 +54,11 @@ class Building
          */
         std::vector<UnitId> recruitableUnits();
 
-        BuildingId getBuildingId();
+    private:
+        int             m_x;
+        int             m_y;
+        BuildingId      m_id;
+        BuildingFaction m_faction;
 };
 
 } // namespace advanced_wars
