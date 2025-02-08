@@ -3,7 +3,8 @@
 *
 * @date 28.01.2025
 * @author Jonathan Dueck (jonathan.dueck@informatik.hs-fulda.de)
-* @author Nils Jonathan Friedrich Eckardt minor changes
+* @author Nils Jonathan Friedrich Eckardt implementing advanced placement
+*         (onTileClicked, setTile, placeCliff, placeRoad, calcDir)
 */
 
 #pragma once

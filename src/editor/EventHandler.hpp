@@ -1,9 +1,9 @@
 /**
-* EventHandler.cpp
+* EventHandler.hpp
 *
 * @date 29.01.2025
 * @author Jonathan Dueck (jonathan.dueck@informatik.hs-fulda.de)
-* @author Nils Jonathan Friedrich Eckardt onCheckBoxToggle added
+* @author Nils Jonathan Friedrich Eckardt onAdvancedPlaement added
 */
 
 #pragma once

@@ -4,6 +4,7 @@
 * @date 28.01.2025
 * @author Jonathan Dueck (jonathan.dueck@informatik.hs-fulda.de)
 * @author Nils Jonathan Friedrich Eckardt implemented advanced placement
+*         (onTileClicked, setTile, placeCliff, placeRoad, calcDir)
 */
 
 #include "LevelScene.hpp"

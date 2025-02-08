@@ -1,8 +1,9 @@
 /**
-* TileSelector.hpp
+* AdvancedPlacementSwitch.hpp
 *
 * @date 06.02.2025
 * @author Nils Jonathan Friedrich Eckardt implementation
+* @author Jonathan Dueck (jonathan.dueck@informatik.hs-fulda.de) small changes
 */
 
 #pragma once
