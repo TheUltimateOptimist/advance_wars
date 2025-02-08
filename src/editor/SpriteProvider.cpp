@@ -37,6 +37,50 @@ void SpriteProvider::initialize(const std::string& path)
         return;
     }
 
+/**
+ * Provides all terrain tile names.
+ * They are necessary to create the correct path to 
+ * the hdf5 dataset that contains the pixels for a given terrain tile.
+ */
+const std::vector<std::string> tile_names({"plain",
+                                  "water",
+                                  "forest",
+                                  "mountain",
+                                  "bridge_horizontal",
+                                  "bridge_vertical",
+                                  "street_horizontal",
+                                  "street_vertical",
+                                  "street_crossing",
+                                  "street_junction_right",
+                                  "street_junction_left",
+                                  "street_junction_down",
+                                  "street_junction_up",
+                                  "street_corner_top_left",
+                                  "street_corner_top_right",
+                                  "street_corner_bottom_left",
+                                  "street_corner_bottom_right",
+                                  "riff",
+                                  "cliff_top",
+                                  "cliff_bottom",
+                                  "cliff_left",
+                                  "cliff_right",
+                                  "cliff_corner_top_left",
+                                  "cliff_corner_top_right",
+                                  "cliff_corner_bottom_left",
+                                  "cliff_corner_bottom_right",
+                                  "cliff_inverse_corner_top_left",
+                                  "cliff_inverse_corner_top_right",
+                                  "cliff_inverse_corner_bottom_left",
+                                  "cliff_inverse_corner_bottom_right"});
+
+    /**
+ * Provides the names for all factions in the game.
+ * The names can be used to create the path to the hdf5 dataset
+ * containing the buildings for a given faction.
+ */
+const std::vector<std::string> faction_names(
+      {"red", "blue", "green", "yellow", "purple", "neutral"});
+
     HighFive::File file(path, HighFive::File::ReadOnly);
     sprites.reserve(60); // we now that we will load 60 sprites
 
