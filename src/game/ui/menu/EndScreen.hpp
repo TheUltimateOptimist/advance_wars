@@ -1,0 +1,22 @@
+#pragma once
+
+#include "../../core/Scene.hpp"
+#include "../../player/Player.hpp"
+
+namespace advanced_wars
+{
+class Endscreen : public Scene
+{
+    public:
+        Endscreen(Player& player);
+        void render(Engine& engine);
+
+        void handleEvent(Engine& engine, SDL_Event& event);
+
+    private:
+        SDL_Color   m_color;
+        int         m_moenyLeft;
+        std::string m_playerString;
+};
+
+} // namespace advanced_wars

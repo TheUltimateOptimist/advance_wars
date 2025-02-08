@@ -54,6 +54,8 @@ set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_CXX_FLAGS_DEBUG "-g -O0 -Wall -Wextra -Wpedantic")
 set(CMAKE_C_FLAGS_DEBUG "-g -O0 -Wall -Wextra -Wpedantic")
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 add_definitions(-DDEBUG)
 
 # Compiler-Warnungen aktivieren
@@ -150,7 +152,7 @@ add_executable(editor ${LEVELEDITOR_SOURCES})
 target_link_libraries(editor PRIVATE Qt6::Widgets ${HDF5_LIBRARIES})
 
 target_include_directories(editor
-    PRIVATE 
+    PRIVATE
         ${highfive_SOURCE_DIR}/include
 )
 
@@ -158,7 +160,7 @@ target_include_directories(editor
 # writelevel
 add_executable(writelevel ${PROJECT_SOURCE_DIR}/src/util/writelevel.cpp)
 target_include_directories(writelevel
-    PRIVATE 
+    PRIVATE
         ${highfive_SOURCE_DIR}/include
 )
 target_link_libraries(writelevel

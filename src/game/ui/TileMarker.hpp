@@ -1,6 +1,6 @@
 #pragma once
-#include "../Player.hpp"
-#include "../Scene.hpp"
+
+#include "../core/Scene.hpp"
 
 namespace advanced_wars
 {

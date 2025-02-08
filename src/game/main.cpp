@@ -1,10 +1,12 @@
-#include "Engine.hpp"
-#include "Spritesheet.hpp"
-#include "Window.hpp"
-#include "ui/ContextMenu.hpp"
-#include "ui/Menu.hpp"
+#include "core/Engine.hpp"
+#include "core/Spritesheet.hpp"
+#include "core/Window.hpp"
+#include "ui/context/ContextMenu.hpp"
+#include "ui/menu/Menu.hpp"
+
 #include <SDL2/SDL.h>
 #include <SDL_image.h>
+#include <iostream>
 #include <memory>
 #include <stdexcept>
 #include <vector>

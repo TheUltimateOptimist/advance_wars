@@ -1,4 +1,5 @@
 #include "TileMarker.hpp"
+
 #include <iostream>
 
 namespace advanced_wars
