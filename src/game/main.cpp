@@ -1,7 +1,7 @@
 #include "Engine.hpp"
 #include "Spritesheet.hpp"
 #include "Window.hpp"
-#include "ui/Contextmenu.hpp"
+#include "ui/ContextMenu.hpp"
 #include "ui/Menu.hpp"
 #include <SDL2/SDL.h>
 #include <SDL_image.h>

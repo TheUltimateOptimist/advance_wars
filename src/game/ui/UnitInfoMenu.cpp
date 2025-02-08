@@ -32,23 +32,27 @@ std::string UnitInfoMenu::getMovementTypeString(MovementType type)
 }
 
 std::unordered_map<UnitId, std::string> unitDescriptions = {
-    {                UnitId::INFANTERY,"Infanterie   Kostenguenstig   und   vielseitig   einsetzbar" },
-    {     UnitId::MECHANIZED_INFANTERY,"Mech-Infanterie   Stark   gegen   Panzer   langsam   aber   effizient"                                 },
-    {                    UnitId::RECON,         "Aufklaerung   Schnell   und   ideal   für   frühe   Aufklaerung"},
-    {              UnitId::MEDIUM_TANK,   "Mittlerer   Panzer   Guter   Allrounder   stark   und   ausgewogen"},
+    {                UnitId::INFANTERY,"Infanterie   Kostenguenstig   und   vielseitig   einsetzbar"                                       },
+    {     UnitId::MECHANIZED_INFANTERY,
+     "Mech-Infanterie   Stark   gegen   Panzer   langsam   aber   effizient"                                   },
+    {                    UnitId::RECON,       "Aufklaerung   Schnell   und   ideal   für   frühe   Aufklaerung"},
+    {              UnitId::MEDIUM_TANK,    "Mittlerer   Panzer   Guter   Allrounder   stark   und   ausgewogen"},
     {               UnitId::HEAVY_TANK, "Schwerer   Panzer   Langsam   aber   sehr   stark   und   beschützend"},
     {                 UnitId::NEO_TANK,             "Neo Tank   Einer der besten Panzer   stark und vielseitig"},
     {                      UnitId::APC,         "Transporter   Traeger fuer Infanterie   keine Offensivkraefte"},
-    {            UnitId::ANTI_AIR_TANK,                        "FlugabwehrPanzer   Ideal zur Luftverteidigung"},
+    {            UnitId::ANTI_AIR_TANK,                         "FlugabwehrPanzer   Ideal zur Luftverteidigung"},
     {                UnitId::ARTILLERY,  "Artillerie   Kann aus Distanz zufuegen   aber verletzbar im Nahkampf"},
-    {         UnitId::ROCKET_ARTILLERY,"Raketenartillerie   Grosse Reichweite   ideal fuer defensive Taktiken"                                   },
-    {UnitId::ANTI_AIR_MISSILE_LAUNCHER, "Raketenwerfer   Kann Flugeinheiten auf grosse Distanz angreifen"                                         },
+    {         UnitId::ROCKET_ARTILLERY,
+     "Raketenartillerie   Grosse Reichweite   ideal fuer defensive Taktiken"                                   },
+    {UnitId::ANTI_AIR_MISSILE_LAUNCHER,
+     "Raketenwerfer   Kann Flugeinheiten auf grosse Distanz angreifen"                                         },
     {                  UnitId::FIGHTER,                                "Jaeger   Ideal fuer Luftueberlegenheit"},
-    {                   UnitId::BOMBER, "Bomber   Stark gegen Boden- und Seeziele   aber verletzbar gegen Luft-und Flak"                          },
+    {                   UnitId::BOMBER,
+     "Bomber   Stark gegen Boden- und Seeziele   aber verletzbar gegen Luft-und Flak"                          },
     {        UnitId::BATTLE_HELICOPTER,         "Kampfhubschrauber   Stark gegen Bodenfahrzeuge und Infanterie"},
     {     UnitId::TRANSPORT_HELICOPTER,         "Transporthubschrauber   Kann Einheiten schnell transportieren"},
     {               UnitId::BATTLESHIP,              "Schlachtschiff   Langreichweitenangriff auf See und Land"},
-    {                  UnitId::CRUISER,               "Kreuzer   Verteidigung gegen Luft und U-Boot-Einheiten"},
+    {                  UnitId::CRUISER,                "Kreuzer   Verteidigung gegen Luft und U-Boot-Einheiten"},
     {                   UnitId::LANDER,                             "Landungsschiff   Transport und Versorgung"},
     {                UnitId::SUBMARINE,           "U-Boot   Versteckt sich und kann Ueberwasserziele angreifen"}
 };
@@ -95,9 +99,9 @@ void UnitInfoMenu::render(Engine& engine)
     // Textzeilen, einschließlich der Beschreibung
     std::vector<std::string> info_lines = {
         "HP   " + std::to_string(m_currentUnit->getHealth()),
-        "Movement   " + std::to_string(m_currentUnit->m_movementPoints),
+        "Movement   " + std::to_string(m_currentUnit->getMovementPoints()),
         "Ammo   " + std::to_string(m_currentUnit->getAmmo()),
-        "Movement   Type   " + getMovementTypeString(m_currentUnit->m_movementType),
+        "Movement   Type   " + getMovementTypeString(m_currentUnit->getMovementType()),
         "Cost   " + std::to_string(m_currentUnit->getCost()),
         unitDescriptions[unitId] // Beschreibung einfügen
     };

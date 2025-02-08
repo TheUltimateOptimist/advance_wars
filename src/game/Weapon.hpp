@@ -21,6 +21,9 @@ class Weapon
         // Methode, um einen Schadenswert abzurufen
         int getDamageValue(UnitId unitId) const;
 
+        std::unordered_map<UnitId, int>& getDamage();
+
+    private:
         // Name der Waffe
         std::string m_name;
 

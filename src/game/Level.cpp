@@ -6,10 +6,10 @@
 #include "Spritesheet.hpp"
 #include "Unit.hpp"
 #include "highfive/H5File.hpp"
-#include "ui/Contextmenu.hpp"
-#include "ui/Endscreen.hpp"
-#include "ui/Helpmenu.hpp"
-#include "ui/Pausemenu.hpp"
+#include "ui/ContextMenu.hpp"
+#include "ui/EndScreen.hpp"
+#include "ui/HelpMenu.hpp"
+#include "ui/PauseMenu.hpp"
 #include <SDL.h>
 #include <algorithm>
 #include <boost/property_tree/ptree.hpp>
@@ -199,7 +199,7 @@ int Level::selectUnit(int tileX, int tileY)
 {
     for (auto& [id, unit] : m_units)
     {
-        if (unit.m_x == tileX && unit.m_y == tileY)
+        if (unit.getXPosition() == tileX && unit.getYPosition() == tileY)
         {
             return id;
         }
@@ -211,7 +211,7 @@ int Level::selectBuilding(int tileX, int tileY)
 {
     for (auto& [id, building] : m_buildings)
     {
-        if (building.m_x == tileX && building.m_y == tileY)
+        if (building.getXPosition() == tileX && building.getYPosition() == tileY)
         {
             return id;
         }
@@ -264,7 +264,8 @@ std::vector<std::pair<int, int>> Level::calculateMovementRange(Unit& unit)
     std::vector<std::pair<int, int>>      reachableTiles;
     std::queue<std::tuple<int, int, int>> wavefrontQueue; // x, y, remainingMovement
 
-    wavefrontQueue.push(std::make_tuple(unit.m_x, unit.m_y, unit.m_movementPoints));
+    wavefrontQueue.push(
+        std::make_tuple(unit.getXPosition(), unit.getYPosition(), unit.getMovementPoints()));
     std::unordered_map<int, std::unordered_map<int, bool>> visited;
 
     while (!wavefrontQueue.empty())
@@ -279,9 +280,10 @@ std::vector<std::pair<int, int>> Level::calculateMovementRange(Unit& unit)
 
         // Check if a unit is on the current tile, skip adding it if true
         bool isOccupied = false;
-        for (const auto& [id, otherUnit] : m_units)
+        for (auto& [id, otherUnit] : m_units)
         {
-            if (otherUnit.m_x == x && otherUnit.m_y == y && id != m_selectedUnit)
+            if (otherUnit.getXPosition() == x && otherUnit.getYPosition() == y &&
+                id != m_selectedUnit)
             {
                 isOccupied = true;
                 break;
@@ -308,7 +310,7 @@ std::vector<std::pair<int, int>> Level::calculateMovementRange(Unit& unit)
             if (nx < 0 || nx >= m_width || ny < 0 || ny >= m_height)
                 continue; // Boundary check
 
-            int cost = getMoveCost(m_tiles[ny * m_width + nx].getType(), unit.m_movementType);
+            int cost = getMoveCost(m_tiles[ny * m_width + nx].getType(), unit.getMovementType());
             if (cost >= 0 && remainingMovement >= cost)
             {
                 wavefrontQueue.push(std::make_tuple(nx, ny, remainingMovement - cost));
@@ -496,7 +498,7 @@ void Level::handleRecruitingEvent(Engine& engine, SDL_Event& event)
         if (event.key.keysym.sym == SDLK_RETURN)
         {
             Building&   b = m_buildings.at(m_selectedBuilding);
-            UnitFaction u_faction = static_cast<UnitFaction>(b.m_faction);
+            UnitFaction u_faction = static_cast<UnitFaction>(b.getFaction());
             UnitId      unit_id = m_recruitingMenu.getSelectedOption();
             int         cost = engine.getUnitConfig().getUnitCost(unit_id);
 
@@ -505,7 +507,8 @@ void Level::handleRecruitingEvent(Engine& engine, SDL_Event& event)
                 if (b.check_spawn(m_units))
                 {
                     addUnit(Unit(
-                        b.m_x, b.m_y, u_faction, unit_id, UnitState::IDLE, engine.getUnitConfig()));
+                        b.getXPosition(), b.getYPosition(), u_faction, unit_id, UnitState::IDLE,
+                        engine.getUnitConfig()));
                     m_state = LevelState::SELECTING_STATE;
                     m_turnQ.front().spendMoney(cost);
                     m_selectedBuilding = -1;
@@ -540,7 +543,7 @@ void Level::handleAttack(std::pair<int, int> tilePos)
         if (m_attackableUnitIds.find(targetedUnit) != m_attackableUnitIds.end())
         {
             attacking.attack(defending);
-            if (attacking.m_health <= 0)
+            if (attacking.getHealth() <= 0)
             {
                 removeUnit(m_selectedUnit);
             }
@@ -548,7 +551,7 @@ void Level::handleAttack(std::pair<int, int> tilePos)
             {
                 attacking.setState(UnitState::UNAVAILABLE);
             }
-            if (defending.m_health <= 0)
+            if (defending.getHealth() <= 0)
             {
                 removeUnit(targetedUnit);
             }
@@ -572,7 +575,7 @@ void Level::handleMovement(std::pair<int, int> tilePos)
 {
     for (auto& [id, unit] : m_units)
     {
-        if (unit.m_x == tilePos.first && unit.m_y == tilePos.second)
+        if (unit.getXPosition() == tilePos.first && unit.getYPosition() == tilePos.second)
         {
             // unit already at clicked position (maybe even selected unit)
             std::cout << "Unit already at clicked position" << std::endl;
@@ -616,7 +619,7 @@ void Level::handleMovement(std::pair<int, int> tilePos)
         for (Unit* target : attackableTargets)
         {
             // Füge die Position jedes angreifbaren Ziels hinzu
-            m_attackableTiles.emplace_back(target->m_x, target->m_y);
+            m_attackableTiles.emplace_back(target->getXPosition(), target->getYPosition());
 
             // Angreifbaren Einheits-ID setzen
             for (auto& [id, unit] : m_units)
@@ -697,12 +700,14 @@ void Level::handleSelectingEvents(Engine& engine, SDL_Event& event)
 
                     // Set Fallback_position if movement will be canceled
                     unit_fallback_position = std::make_pair(
-                        m_units.at(m_selectedUnit).m_x, m_units.at(m_selectedUnit).m_y);
+                        m_units.at(m_selectedUnit).getXPosition(),
+                        m_units.at(m_selectedUnit).getYPosition());
 
                     for (Unit* target : attackableTargets)
                     {
                         // Füge die Position jedes angreifbaren Ziels hinzu
-                        m_attackableTiles.emplace_back(target->m_x, target->m_y);
+                        m_attackableTiles.emplace_back(
+                            target->getXPosition(), target->getYPosition());
 
                         // Angreifbaren Einheits-ID setzen
                         for (auto& [id, unit] : m_units)
@@ -723,7 +728,8 @@ void Level::handleSelectingEvents(Engine& engine, SDL_Event& event)
                         m_captureBuilding = -1;
                         for (auto& [id, building] : m_buildings)
                         {
-                            if (building.m_x == u.m_x && building.m_y == u.m_y)
+                            if (building.getXPosition() == u.getXPosition() &&
+                                building.getXPosition() == u.getYPosition())
                             {
                                 if (building.getFaction() !=
                                     static_cast<BuildingFaction>(u.getFaction()))
@@ -750,7 +756,7 @@ void Level::handleSelectingEvents(Engine& engine, SDL_Event& event)
                 }
                 else
                 {
-                    BuildingId      b_id = m_buildings.at(m_selectedBuilding).getBuildingId();
+                    BuildingId      b_id = m_buildings.at(m_selectedBuilding).getId();
                     BuildingFaction b_faction = m_buildings.at(m_selectedBuilding).getFaction();
                     if (b_id == BuildingId::CITY || b_id == BuildingId::HEADQUARTER ||
                         b_faction == static_cast<BuildingFaction>(5))
@@ -789,8 +795,9 @@ void Level::handleMenuActiveEvents(Engine& engine, SDL_Event& event)
         if (event.key.keysym.sym == SDLK_ESCAPE)
         {
             if (m_selectedUnit > -1 &&
-                unit_fallback_position !=
-                    std::make_pair(m_units.at(m_selectedUnit).m_x, m_units.at(m_selectedUnit).m_y))
+                unit_fallback_position != std::make_pair(
+                                              m_units.at(m_selectedUnit).getXPosition(),
+                                              m_units.at(m_selectedUnit).getYPosition()))
             {
                 m_units.at(m_selectedUnit)
                     .updatePosition(unit_fallback_position.first, unit_fallback_position.second);
@@ -849,14 +856,15 @@ void Level::handleMenuActiveEvents(Engine& engine, SDL_Event& event)
                 if (m_selectedUnit > -1)
                 {
                     Unit& u = m_units.at(m_selectedUnit);
-                    std::cout << "Health: " << u.m_health << std::endl;
+                    std::cout << "Health: " << u.getHealth() << std::endl;
                     m_showUnitInfoMenu = !m_showUnitInfoMenu;
                 }
                 if (m_selectedBuilding > -1)
                 {
                     Building b = m_buildings.at(m_selectedBuilding);
-                    std::cout << "Building ID: " << static_cast<int>(b.m_id) << " || "
-                              << "Building Faction: " << static_cast<int>(b.m_faction) << std::endl;
+                    std::cout << "Building ID: " << static_cast<int>(b.getId()) << " || "
+                              << "Building Faction: " << static_cast<int>(b.getFaction())
+                              << std::endl;
                 }
             }
             if (cmd == "Train")

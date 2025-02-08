@@ -1,4 +1,4 @@
-#include "Pausemenu.hpp"
+#include "PauseMenu.hpp"
 #include "../Engine.hpp"
 #include <SDL_ttf.h>
 

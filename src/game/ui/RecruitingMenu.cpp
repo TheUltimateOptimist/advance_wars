@@ -1,44 +1,44 @@
-#include "Recruitingmenu.hpp"
-#include <iostream>
+#include "RecruitingMenu.hpp"
 #include <SDL_ttf.h>
+#include <iostream>
 
 namespace advanced_wars
 {
-    RecruitingMenu::RecruitingMenu() : m_selectedOption(0), unitNames({
-    {UnitId::INFANTERY, "Infantry"},
-    {UnitId::MECHANIZED_INFANTERY, "Bazooka"},
-    {UnitId::RECON, "Recon"},
-    {UnitId::APC, "APC"},
-    {UnitId::ARTILLERY, "Artillery"},
-    {UnitId::ANTI_AIR_TANK, "AA Tank"},
-    {UnitId::ANTI_AIR_MISSILE_LAUNCHER, "Rocket AA"},
-    {UnitId::ROCKET_ARTILLERY, "MLRS"},
-    {UnitId::MEDIUM_TANK, "Medium Tank"},
-    {UnitId::NEO_TANK, "Neo Tank"},
-    {UnitId::HEAVY_TANK, "Heavy Tank"},
-    {UnitId::LANDER, "Lander"},
-    {UnitId::CRUISER, "Cruiser"},
-    {UnitId::SUBMARINE, "Submarine"},
-    {UnitId::BATTLESHIP, "Battleship"},
-    {UnitId::TRANSPORT_HELICOPTER, "Chinook"},
-    {UnitId::BATTLE_HELICOPTER, "Helicopter"},
-    {UnitId::FIGHTER, "Fighter"},
-    {UnitId::BOMBER, "Bomber"}
-    })
-    {
-
-    }
-
-    void RecruitingMenu::setOptions(const std::vector<UnitId> recruitableUnits) {
-
-        m_options = recruitableUnits;
-        m_selectedOption = 0;
-
-    }
-
-    void RecruitingMenu::render(Engine& engine)
+RecruitingMenu::RecruitingMenu()
+    : m_selectedOption(0), unitNames({
+                               {                UnitId::INFANTERY,    "Infantry"},
+                               {     UnitId::MECHANIZED_INFANTERY,     "Bazooka"},
+                               {                    UnitId::RECON,       "Recon"},
+                               {                      UnitId::APC,         "APC"},
+                               {                UnitId::ARTILLERY,   "Artillery"},
+                               {            UnitId::ANTI_AIR_TANK,     "AA Tank"},
+                               {UnitId::ANTI_AIR_MISSILE_LAUNCHER,   "Rocket AA"},
+                               {         UnitId::ROCKET_ARTILLERY,        "MLRS"},
+                               {              UnitId::MEDIUM_TANK, "Medium Tank"},
+                               {                 UnitId::NEO_TANK,    "Neo Tank"},
+                               {               UnitId::HEAVY_TANK,  "Heavy Tank"},
+                               {                   UnitId::LANDER,      "Lander"},
+                               {                  UnitId::CRUISER,     "Cruiser"},
+                               {                UnitId::SUBMARINE,   "Submarine"},
+                               {               UnitId::BATTLESHIP,  "Battleship"},
+                               {     UnitId::TRANSPORT_HELICOPTER,     "Chinook"},
+                               {        UnitId::BATTLE_HELICOPTER,  "Helicopter"},
+                               {                  UnitId::FIGHTER,     "Fighter"},
+                               {                   UnitId::BOMBER,      "Bomber"}
+})
 {
-    Config& config = engine.getUnitConfig();
+}
+
+void RecruitingMenu::setOptions(const std::vector<UnitId> recruitableUnits)
+{
+
+    m_options = recruitableUnits;
+    m_selectedOption = 0;
+}
+
+void RecruitingMenu::render(Engine& engine)
+{
+    Config&      config = engine.getUnitConfig();
     Spritesheet* spritesheet = engine.getSpritesheet();
 
     if (TTF_Init() == -1)
@@ -77,11 +77,12 @@ namespace advanced_wars
 
     for (UnitId id : m_options)
     {
-        //std::pair<std::string, int> unit_option = unitNames.at(cost2UnitId.at(cost));
-        if(i == m_selectedOption) {
+        // std::pair<std::string, int> unit_option = unitNames.at(cost2UnitId.at(cost));
+        if (i == m_selectedOption)
+        {
             m_selectedId = id;
         }
-        
+
         SDL_Surface* textSurface = TTF_RenderText_Solid(
             font, unitNames.at(id).c_str(), (i == m_selectedOption) ? yellow : white);
         if (!textSurface)
@@ -94,31 +95,21 @@ namespace advanced_wars
             m_x + 10 + 16, m_y + static_cast<int>(i * spacing), textSurface->w, textSurface->h};
         SDL_RenderCopy(engine.renderer(), textTexture, nullptr, &textRect);
 
-        
         SDL_Texture* unit_texture = spritesheet->getUnitTextures()
-                .at(static_cast<int>(UnitFaction::URED))
-                .at(static_cast<int>(id))
-                .at(static_cast<int>(UnitState::IDLE))
-                .first;
+                                        .at(static_cast<int>(UnitFaction::URED))
+                                        .at(static_cast<int>(id))
+                                        .at(static_cast<int>(UnitState::IDLE))
+                                        .first;
 
-        SDL_Rect trgt_rect = {
-            m_x + 5, 
-            m_y + static_cast<int>(i * spacing),                  
-            16,                           
-            16                                
-        };
+        SDL_Rect trgt_rect = {m_x + 5, m_y + static_cast<int>(i * spacing), 16, 16};
 
-        SDL_Rect src_rect = {
-            5,
-            0,
-            10,
-            10
-        };
+        SDL_Rect src_rect = {5, 0, 10, 10};
 
         SDL_RenderCopy(engine.renderer(), unit_texture, &src_rect, &trgt_rect);
 
         SDL_Surface* costSurface = TTF_RenderText_Solid(
-            font, std::to_string(config.getUnitCost(id)).c_str(), (i == m_selectedOption) ? yellow : white);
+            font, std::to_string(config.getUnitCost(id)).c_str(),
+            (i == m_selectedOption) ? yellow : white);
         if (!textSurface)
         {
             continue;
@@ -126,12 +117,8 @@ namespace advanced_wars
 
         SDL_Texture* costTexture = SDL_CreateTextureFromSurface(engine.renderer(), costSurface);
 
-        SDL_Rect cost_rect {
-            m_x + 120 ,
-            m_y + static_cast<int>(i * spacing),
-            costSurface->w, 
-            costSurface->h
-        };
+        SDL_Rect cost_rect{
+            m_x + 120, m_y + static_cast<int>(i * spacing), costSurface->w, costSurface->h};
         SDL_RenderCopy(engine.renderer(), costTexture, nullptr, &cost_rect);
 
         SDL_DestroyTexture(costTexture);
@@ -166,8 +153,9 @@ void RecruitingMenu::update(int x, int y)
     this->m_y = y;
 }
 
-UnitId RecruitingMenu::getSelectedOption(){
+UnitId RecruitingMenu::getSelectedOption()
+{
     return m_selectedId;
 }
 
-}//namespace advance_wars
+} // namespace advanced_wars

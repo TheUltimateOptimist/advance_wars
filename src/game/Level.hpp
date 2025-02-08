@@ -7,9 +7,9 @@
 #include "Scene.hpp"
 #include "Tile.hpp"
 #include "Unit.hpp"
-#include "ui/Contextmenu.hpp"
-#include "ui/Helpmenu.hpp"
-#include "ui/Recruitingmenu.hpp"
+#include "ui/ContextMenu.hpp"
+#include "ui/HelpMenu.hpp"
+#include "ui/RecruitingMenu.hpp"
 #include "ui/TileMarker.hpp"
 #include "ui/UnitInfoMenu.hpp"
 #include <SDL.h>
@@ -124,9 +124,8 @@ class Level : public Scene
 
         std::vector<std::pair<int, int>> m_attackableTiles;
 
-        bool m_gameOver;
-
     private:
+        bool                              m_gameOver;
         std::string                       m_name;
         int                               m_width;
         int                               m_height;

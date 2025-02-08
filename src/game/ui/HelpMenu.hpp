@@ -8,6 +8,15 @@ namespace advanced_wars
 class HelpMenu : public Scene
 {
 
+    public:
+        void handleEvent(Engine& engine, SDL_Event& event);
+
+        void update(int x, int y);
+
+        HelpMenu();
+
+        void render(Engine& engine) override;
+
     private:
         size_t                                   m_selectedOption;
         std::vector<std::pair<std::string, int>> m_options;
@@ -20,15 +29,6 @@ class HelpMenu : public Scene
 
         void
         renderTexture(SDL_Texture* texture, Engine& engine, int x, int y, int src_x, int src_y);
-
-    public:
-        void handleEvent(Engine& engine, SDL_Event& event);
-
-        void update(int x, int y);
-
-        HelpMenu();
-
-        void render(Engine& engine) override;
 };
 
 } // namespace advanced_wars

@@ -57,7 +57,8 @@ bool Building::check_spawn(std::unordered_map<int, advanced_wars::Unit>& units)
 
     for (auto& [id, unit] : units)
     {
-        if (unit.m_x == this->m_x && unit.m_y == this->m_y)
+        if (unit.getXPosition() == this->getXPosition() &&
+            unit.getYPosition() == this->getYPosition())
         {
             return false;
         }
@@ -106,7 +107,17 @@ std::vector<UnitId> Building::recruitableUnits()
     return {};
 }
 
-BuildingId Building::getBuildingId()
+int Building::getXPosition()
+{
+    return m_x;
+}
+
+int Building::getYPosition()
+{
+    return m_y;
+}
+
+BuildingId Building::getId()
 {
     return this->m_id;
 }

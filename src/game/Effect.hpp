@@ -23,6 +23,7 @@ class Effect
 
         bool is_finished(Engine& engine);
 
+    private:
         int      m_x;
         int      m_y;
         EffectId m_id;

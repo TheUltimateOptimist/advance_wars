@@ -11,13 +11,6 @@ namespace advanced_wars
 
 class ContextMenu : public Scene
 {
-    private:
-        std::vector<std::string> m_options;
-        size_t                   m_selectedOption;
-
-        int m_x;
-        int m_y;
-
     public:
         ContextMenu();
 
@@ -32,6 +25,13 @@ class ContextMenu : public Scene
         std::string getSelectedOption();
 
         ~ContextMenu();
+
+    private:
+        std::vector<std::string> m_options;
+        size_t                   m_selectedOption;
+
+        int m_x;
+        int m_y;
 };
 
 } // namespace advanced_wars

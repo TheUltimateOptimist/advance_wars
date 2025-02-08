@@ -26,4 +26,9 @@ int Weapon::getDamageValue(UnitId unitId) const
     return 0; // oder ein Fehlerwert
 }
 
+std::unordered_map<UnitId, int>& Weapon::getDamage()
+{
+    return m_damage;
+}
+
 } // namespace advanced_wars
