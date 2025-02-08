@@ -17,7 +17,7 @@ ZoomOutButton::ZoomOutButton(QWidget* parent) : QPushButton("-", parent)
     setFixedWidth(20);
 }
 
-void ZoomOutButton::mousePressEvent(QMouseEvent* event)
+void ZoomOutButton::mousePressEvent(QMouseEvent*)
 {
     EventHandler::send([](EventHandler* e) { e->onZoomed(-0.25); });
 }

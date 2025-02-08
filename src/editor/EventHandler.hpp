@@ -59,47 +59,46 @@ public:
      * by the level name edit field.
      * @param new_name The new level name.
      */
-    virtual void onLevelNameUpdated(std::string new_name){};
+    virtual void onLevelNameUpdated(std::string){};
 
     /**
      * Overwrite this event method to handle the dispatch of a request to write 
      * the level to disk by the save button.
      * @param file_path The path to the file into which the level should be written.
      */
-    virtual void onLevelWriteRequested(QString file_path){};
+    virtual void onLevelWriteRequested(QString){};
 
     /**
      * Overwrite this event method to handle the dispatch of a new tile index due
      * to the mouse entering its boundaries.
      * @param index The index of the entered tile.
      */
-    virtual void onTileEntered(int index){};
+    virtual void onTileEntered(int){};
 
     /**
      * Overwrite this event method to handle the dispatch of a new tile index due
      * to the mouse leaving its boundaries.
      * @param index The index of the exited tile.
      */
-    virtual void onTileExited(int index){};
+    virtual void onTileExited(int){};
 
     /**
      * Overwrite this event method to handle the dispatch of a new tile index due
      * to the user clicking it.
      * @param index The index of the clicked tile.
      */
-    virtual void onTileClicked(int index){};
+    virtual void onTileClicked(int){};
 
     /**
      * Overwrite this event method to handle the dispatch of a new tile_id due to 
      * the user selecting a different tile type in the TileSelector on the right.
      * @param tile_id Id of the tile to use when an existing tile is clicked on the levelmap.
      */
-    virtual void onNewTileIdSelected(uint8_t tile_id){};
+    virtual void onNewTileIdSelected(uint8_t){};
 
     /**
      * Overwrite this event method to handle the change of tile placement method due
      * to the user selecting automatic tile placement assisstance.
-     * @param isToggled Boolean that enables tile placing assisstment.
      */
     virtual void onCheckBoxToggled(){};
 
@@ -108,7 +107,7 @@ public:
      * the user pressing the zoom in or zoom out button.
      * @param delta Amount to zoom in or out, e.g 0.2 => 20% in, -0.2 => 20% out.
      */
-    virtual void onZoomed(double delta){}
+    virtual void onZoomed(double){}
 
 private:
     /**

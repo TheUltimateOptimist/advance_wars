@@ -16,7 +16,7 @@ class ZoomOutButton : public QPushButton {
 public:
     ZoomOutButton(QWidget* parent = nullptr);
 private:
-    void mousePressEvent(QMouseEvent* event) override;
+    void mousePressEvent(QMouseEvent*) override;
 };
 
 } // namespace editor

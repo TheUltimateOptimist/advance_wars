@@ -18,19 +18,19 @@ Tile::Tile(int index, uint8_t id) : QGraphicsPixmapItem(SpriteProvider::get_spri
     this->setAcceptHoverEvents(true);
 }
 
-void Tile::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
+void Tile::hoverEnterEvent(QGraphicsSceneHoverEvent*)
 {
     int index = this->m_index;
     EventHandler::send([index](EventHandler* e) { e->onTileEntered(index); });
 }
 
-void Tile::hoverLeaveEvent(QGraphicsSceneHoverEvent* event)
+void Tile::hoverLeaveEvent(QGraphicsSceneHoverEvent*)
 {
     int index = this->m_index;
     EventHandler::send([index](EventHandler* e) { e->onTileExited(index); });
 }
 
-void Tile::mousePressEvent(QGraphicsSceneMouseEvent* event)
+void Tile::mousePressEvent(QGraphicsSceneMouseEvent*)
 {
     int index = this->m_index;
     EventHandler::send([index](EventHandler* e) { e->onTileClicked(index); });

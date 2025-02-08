@@ -17,7 +17,7 @@ ZoomInButton::ZoomInButton(QWidget* parent) : QPushButton("+", parent)
     setFixedWidth(20);
 }
 
-void ZoomInButton::mousePressEvent(QMouseEvent* event)
+void ZoomInButton::mousePressEvent(QMouseEvent*)
 {
     EventHandler::send([](EventHandler* e) { e->onZoomed(0.25); });
 }

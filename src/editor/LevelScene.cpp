@@ -13,6 +13,7 @@
 #include <QPoint>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/xml_parser.hpp>
+#include <stdexcept>
 
 
 #include "highfive/H5File.hpp"
@@ -25,13 +26,12 @@ LevelScene::LevelScene(
     const std::string& name, int width, int height, std::vector<uint8_t> tile_ids,
     const std::string& file_path, QWidget* parent)
     : QGraphicsScene(parent), m_name(name), m_width(width), m_height(height), m_tile_ids(tile_ids),
-      m_file_path(file_path), m_selected_tile_id(2)
+      m_file_path(file_path), m_selected_tile_id(2), m_advanced_tile_placement(false)
 {
     setSceneRect(0, 0, m_width * 16, m_height * 16);
-    m_advanced_tile_placement = false;
     m_tile_occupants = {};
     m_tile_occupants.reserve(tile_ids.size());
-    for (int index = 0; index < tile_ids.size(); index++)
+    for (size_t index = 0; index < tile_ids.size(); index++)
     {
         int   x = (index % m_width) * 16;
         int   y = (index / m_width) * 16;
@@ -184,7 +184,7 @@ void LevelScene::onTileEntered(int index)
         delete m_tile_occupants[index];
         m_tile_occupants[index] = nullptr;
     }
-    if (!is_border(index) && m_selected_tile_id > 0 || is_border(index))
+    if ((!is_border(index) && m_selected_tile_id > 0) || is_border(index))
     {
         m_tile_occupants[index] = occupy_tile(index, m_selected_tile_id);
     }
@@ -483,6 +483,7 @@ int LevelScene::calcDir(int i, int index){
     if(i==5) return (index + m_width - 1);
     if(i==6) return (index - 1);
     if(i==7) return (index - m_width - 1);
+    throw std::invalid_argument("i has to be 0 <= i <= 7");
 }
 
 bool LevelScene::isntIdentical(int16_t id, int index){
