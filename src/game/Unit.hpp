@@ -26,9 +26,9 @@ class Unit
          */
         Unit(int x, int y, UnitFaction faction, UnitId id, UnitState state, Config& config);
 
-        int xPosition();
+        int getXPosition();
 
-        int yPosition();
+        int getYPosition();
 
         /**
          * Destructor for Unit.

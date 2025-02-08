@@ -334,12 +334,12 @@ bool Unit::hasMoved()
     return this->m_hasMoved;
 }
 
-int Unit::xPosition()
+int Unit::getXPosition()
 {
     return m_x;
 }
 
-int Unit::yPosition()
+int Unit::getYPosition()
 {
     return m_y;
 }

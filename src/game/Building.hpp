@@ -15,9 +15,9 @@ class Building
 
         void render(Engine& engine, int scale);
 
-        int xPosition();
+        int getXPosition();
 
-        int yPosition();
+        int getYPosition();
 
         BuildingFaction getFaction();
 
